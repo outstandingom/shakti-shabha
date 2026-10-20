@@ -73,7 +73,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 1550px;
-  height: 92vh; /* increased from 84vh */
+  height: 92vh; /* increased for PC */
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: clamp(6px, 1.1vw, 16px);
@@ -99,32 +99,47 @@
 }
 
 .imgItem {
-  width: 33.3333%;
+  width: 33.3333%; /* Kept for PC animation/initial state */
   object-fit: cover;
   border-radius: 1.15rem;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
   will-change: width, transform;
 }
 
-/* Increased height ratios for tall, impactful portrait gallery */
+/* Increased height ratios for tall, impactful portrait gallery on PC */
 .h_4_12 {
-  height: 55%; /* was 48% */
+  height: 55%;
 }
 
 .h_6_12 {
-  height: 70%; /* was 64% */
+  height: 70%;
 }
 
 .h_8_12 {
-  height: 84%; /* was 78% */
+  height: 84%;
 }
 
 .h_10_12 {
-  height: 95%; /* was 90% */
+  height: 95%;
 }
 
 .h_11_12 {
-  height: 100%; /* kept at 100% (capped) */
+  height: 100%;
+}
+
+/* 📱 MOBILE ADJUSTMENTS (Width and Grid) */
+@media (max-width: 639px) {
+  .heroImages {
+    /* Change grid from 9 columns to 5 so the images have more room */
+    grid-template-columns: repeat(5, 1fr); 
+    height: 65vh; /* Slightly shorter so they don't look overly stretched */
+    gap: 10px; /* Consistent gap */
+  }
+
+  .imgItem {
+    /* Make the images fill the new wider 5-column grid */
+    width: 100%; 
+  }
 }
 
 /* Restore all columns on tablet and up */
