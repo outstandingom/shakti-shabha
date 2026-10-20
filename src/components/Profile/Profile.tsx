@@ -44,8 +44,8 @@ export default function Profile() {
         <div className={s.right}>
           <span data-p="eyebrow" className={s.eyebrow}>Founder & Visionary</span>
           <h2 data-p="name" className={s.name}>
-            Smt. Lalita Devi<br/>
-            <span className={s.title} style={{fontFamily:'var(--ff-dev)'}}>ललिता देवी</span>
+            Smt. Harshita Mankar<br/>
+            <span className={s.title} style={{fontFamily:'var(--ff-dev)'}}>श्रीमती हर्षिता मानकरी</span>
           </h2>
           <p data-p="bio" className={s.bio}>
             A social warrior who chose the village over the boardroom. For twelve unbroken years, Lalita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them — building Shakti Sabha from a single camp in Wardha into a movement that spans hundreds of schools and villages.
