@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shakti Sabha | शक्ति सभा — Union of Peace &amp; Revolution</title>
+  <meta name="description" content="Shakti Sabha — 12 years of on-ground transformation, women empowerment, self-defense, and cultural awakening across 400+ schools and villages." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --night: #060606;
+      --ash: #111111;
+      --panel: #0D0D0D;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(201, 169, 110, 0.22);
+      --fire: #C2410C;
+      --ember: #EA580C;
+      --flame: #F97316;
+      --forest: #14532D;
+      --sage: #4D7C61;
+      --mist: #A7C4B5;
+      --gold: #C9A96E;
+      --gold-bright: #E8C98A;
+      --gold-deep: #9A7340;
+      --indigo: #4F46E5;
+      --indigo-pale: #818CF8;
+      --text: #F0EBE3;
+      --text-dim: #A89880;
+      --text-mute: #6A6055;
+      --ff-display: 'Cinzel', Georgia, serif;
+      --ff-body: 'Outfit', system-ui, sans-serif;
+      --ff-dev: 'Noto Sans Devanagari', sans-serif;
+      --ff-poppins: 'Poppins', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--night);
+      color: var(--text);
+      font-family: var(--ff-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 1.25rem; }
+    }
+
+    /* Buttons */
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: var(--ff-body);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      padding: 0.8rem 2rem;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid transparent;
+    }
+    .btn-gold {
+      background: var(--gold);
+      color: var(--night);
+    }
+    .btn-gold:hover {
+      background: var(--gold-bright);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(201, 169, 110, 0.25);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--gold);
+      border-color: var(--border-gold);
+    }
+    .btn-ghost:hover {
+      background: rgba(201, 169, 110, 0.08);
+      border-color: var(--gold);
+    }
+
+    /* ─── NAVIGATION ─── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 1.25rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.35s ease;
+      background: rgba(6, 6, 6, 0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .nav.scrolled {
+      background: rgba(6, 6, 6, 0.94);
+      border-bottom: 1px solid var(--border-gold);
+      padding: 0.9rem 3rem;
+    }
+    .logo {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+    .logo-main {
+      font-family: var(--ff-display);
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+      color: var(--gold);
+    }
+    .logo-dev {
+      font-family: var(--ff-dev);
+      font-size: 0.7rem;
+      color: var(--text-mute);
+      margin-top: 3px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .nav-link {
+      font-size: 0.825rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+      transition: color 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--text);
+    }
+    .nav-cta {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--gold);
+      border: 1px solid var(--border-gold);
+      padding: 0.5rem 1.4rem;
+      border-radius: 2px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover {
+      background: var(--gold);
+      color: var(--night);
+    }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+    .nav-hamburger span {
+      width: 22px;
+      height: 2px;
+      background: var(--text);
+    }
+    @media (max-width: 960px) {
+      .nav { padding: 1rem 1.25rem; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ─── HERO SECTION ─── */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: hidden;
+      background: var(--night);
+      font-family: var(--ff-poppins);
+      padding-top: clamp(5.5rem, 12vh, 8rem);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.85rem;
+      padding: 0 1.5rem;
+      opacity: 0;
+      text-align: center;
+      transform: translateY(25px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero-content.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .hero-title {
+      font-family: var(--ff-poppins);
+      font-weight: 600;
+      font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+      line-height: 1.16;
+      color: #ffffff;
+      letter-spacing: -0.015em;
+      text-align: center;
+    }
+    .hero-btn {
+      margin-top: 0.6rem;
+      padding: 0.65rem 2.25rem;
+      font-family: var(--ff-poppins);
+      font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero-btn:hover {
+      background: #ffffff;
+      border-color: #ffffff;
+      color: #060606;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-images {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      max-width: 1550px;
+      height: 84vh; /* Increased height */
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: clamp(6px, 1.1vw, 16px);
+      padding: 0 clamp(8px, 2vw, 24px);
+      align-items: center;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .hero-col {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .hero-img {
+      width: 33.3333%;
+      object-fit: cover;
+      border-radius: 1.15rem;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: width, transform;
+    }
+    .h-4-12  { height: 48%; }
+    .h-6-12  { height: 64%; }
+    .h-8-12  { height: 78%; }
+    .h-10-12 { height: 90%; }
+    .h-11-12 { height: 100%; }
+
+    /* ─── SECTION STYLING ─── */
+    section {
+      padding: 7rem 0;
+      position: relative;
+    }
+    .section-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+    .section-title {
+      font-family: var(--ff-display);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-dev {
+      font-family: var(--ff-dev);
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    /* ─── PROFILE / FOUNDER ─── */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 4.5rem;
+      align-items: center;
+    }
+    .founder-card {
+      background: radial-gradient(circle at center, #1a1612, #0c0a08);
+      border: 1px solid var(--border-gold);
+      border-radius: 1.25rem;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .founder-avatar {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .profile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin: 2.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 0;
+    }
+    .stat-number {
+      font-family: var(--ff-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-mute);
+    }
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .team-item {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      text-align: center;
+    }
+    @media (max-width: 900px) {
+      .profile-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .team-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ─── THREE PILLARS (ABOUT) ─── */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .pillar-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .pillar-card:hover {
+      border-color: var(--border-gold);
+      transform: translateY(-4px);
+    }
+    .pillar-num {
+      font-family: var(--ff-display);
+      font-size: 2.5rem;
+      color: rgba(255, 255, 255, 0.1);
+      margin-bottom: 1rem;
+    }
+    .pillar-tag {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .pillar-name {
+      font-family: var(--ff-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .pillar-dev {
+      font-family: var(--ff-dev);
+      font-size: 0.9rem;
+      color: var(--text-mute);
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 900px) {
+      .pillars-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── AARYAVEERA ─── */
+    .aaryaveera-section {
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(194, 65, 12, 0.15), transparent 75%);
+      text-align: center;
+    }
+    .aaryaveera-title {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 900;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+    }
+    .aaryaveera-motto {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: 3.5rem;
+      display: block;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      text-align: left;
+    }
+    .feature-card {
+      background: rgba(13, 13, 13, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 2.25rem;
+      backdrop-filter: blur(8px);
+    }
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: var(--gold);
+    }
+    @media (max-width: 900px) {
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── EVENTS ─── */
+    .events-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 2.5rem;
+    }
+    .event-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem 2rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      transition: all 0.25s ease;
+    }
+    .event-item:hover {
+      border-color: var(--border-gold);
+      background: #141414;
+    }
+    .event-date {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+    .event-day {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .event-month {
+      font-size: 0.75rem;
+      color: var(--text-mute);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .event-badge {
+      font-size: 0.75rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      border: 1px solid var(--border-gold);
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    @media (max-width: 650px) {
+      .event-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 0;
+      font-size: 0.85rem;
+      color: var(--text-mute);
+    }
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    /* ─── INTERACTIVE TIMELINE ─── */
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .timeline-node {
+      border-top: 2px solid var(--border-gold);
+      padding-top: 1.25rem;
+      position: relative;
+    }
+    .timeline-year {
+      font-family: var(--ff-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+    .timeline-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    @media (max-width: 900px) {
+      .timeline { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── NAVIGATION ─── -->
+  <nav class="nav" id="mainNav">
+    <a href="#" class="logo">
+      <span class="logo-main">Shakti Sabha</span>
+      <span class="logo-dev">शक्ति सभा</span>
+    </a>
+    <div class="nav-links">
+      <a href="#about" class="nav-link">Pillars</a>
+      <a href="#founder" class="nav-link">Founder</a>
+      <a href="#aaryaveera" class="nav-link">Aaryaveera</a>
+      <a href="#events" class="nav-link">Events</a>
+      <a href="#courses" class="nav-link">Courses</a>
+      <a href="#history" class="nav-link">History</a>
+    </div>
+    <a href="#aaryaveera" class="nav-cta">Brand Identity</a>
+    <button class="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ─── HERO SECTION ─── -->
+  <section class="hero-section" id="hero">
+    <div class="hero-content" id="heroContent">
+      <h1 class="hero-title">
+        Discover the world <br /> through people
+      </h1>
+      <button class="hero-btn" id="startExploreBtn">
+        Start Exploring
+      </button>
+    </div>
+
+    <div class="hero-images" id="heroImages">
+      <div class="hero-col">
+        <img class="hero-img h-4-12" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 1" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-6-12" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 2" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-8-12" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 3" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-10-12" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 4" />
+      </div>
+      <!-- Center Image (Tallest) -->
+      <div class="hero-col">
+        <img class="hero-img h-11-12" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait Center" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-10-12" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 6" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-8-12" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 7" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-6-12" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 8" />
+      </div>
+      <div class="hero-col">
+        <img class="hero-img h-4-12" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 9" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOUNDER & PROFILE SECTION ─── -->
+  <section id="founder">
+    <div class="container">
+      <div class="profile-grid">
+        <div class="founder-card">
+          <span class="founder-avatar">👩‍💼</span>
+          <h3 style="font-family: var(--ff-display); color: var(--gold); font-size: 1.5rem;">Smt. Lalita Devi</h3>
+          <p style="font-family: var(--ff-dev); color: var(--text-mute);">ललिता देवी · संस्थापक</p>
+          <div class="stat-number" style="margin-top: 1.5rem; font-size: 2.8rem;">12</div>
+          <div class="stat-label">Years of Unbroken Ground Leadership</div>
+        </div>
+        <div>
+          <span class="section-eyebrow">Founder &amp; Visionary</span>
+          <h2 class="section-title">A Social Warrior Who Chose the Village</h2>
+          <span class="section-dev">गाँव से क्रांति की शुरुआत</span>
+          <p style="color: var(--text-dim); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem;">
+            For twelve unbroken years, Lalita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them — building Shakti Sabha from a single camp in Wardha into a grassroots movement that spans hundreds of schools and villages.
+          </p>
+          <div class="profile-stats">
+            <div>
+              <div class="stat-number">12</div>
+              <div class="stat-label">Years Active</div>
+            </div>
+            <div>
+              <div class="stat-number">400+</div>
+              <div class="stat-label">Schools Reached</div>
+            </div>
+            <div>
+              <div class="stat-number">∞</div>
+              <div class="stat-label">Lives Changed</div>
+            </div>
+          </div>
+          <div class="team-grid">
+            <div class="team-item">
+              <div>👩 Priya Sharma</div>
+              <div style="font-size: 0.75rem; color: var(--text-mute);">Program Director</div>
+            </div>
+            <div class="team-item">
+              <div>🧑 Arjun Mehta</div>
+              <div style="font-size: 0.75rem; color: var(--text-mute);">Field Coordinator</div>
+            </div>
+            <div class="team-item">
+              <div>👩 Kavita Rao</div>
+              <div style="font-size: 0.75rem; color: var(--text-mute);">Lead Counselor</div>
+            </div>
+            <div class="team-item">
+              <div>🧑 Dev Patil</div>
+              <div style="font-size: 0.75rem; color: var(--text-mute);">Tech &amp; Media</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── THREE PILLARS (ABOUT) ─── -->
+  <section id="about" style="background: #090909;">
+    <div class="container">
+      <div style="text-align: center; max-width: 720px; margin: 0 auto 3.5rem;">
+        <span class="section-eyebrow">The Foundation</span>
+        <h2 class="section-title">The Union of Peace &amp; Revolution</h2>
+        <span class="section-dev">शांति और क्रांति का संगम</span>
+        <p style="color: var(--text-dim);">
+          Everything Shakti Sabha builds lives within one of three streams — each distinct in method, unified in purpose: dignity, safety, and awakening for every woman.
+        </p>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-num">01</div>
+          <div class="pillar-tag" style="color: var(--ember);">Revolution</div>
+          <div class="pillar-name">Mardini</div>
+          <div class="pillar-dev">मर्दिनी</div>
+          <p style="color: var(--text-dim); font-size: 0.95rem; line-height: 1.7;">
+            Self-defense. Lathi-Kaushal. Sword training. Village camps across Maharashtra and beyond. The revolution that begins in the body and spreads to the spirit.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-num">02</div>
+          <div class="pillar-tag" style="color: var(--sage);">Healing</div>
+          <div class="pillar-name">Shakti Bhava</div>
+          <div class="pillar-dev">शक्ति भव</div>
+          <p style="color: var(--text-dim); font-size: 0.95rem; line-height: 1.7;">
+            Counseling. Anonymized case studies. Breaking silence on trafficking, PTSD, puberty, and trauma. The safe sanctuary where survivors discover their inner warrior.
+          </p>
+        </div>
+        <div class="pillar-card">
+          <div class="pillar-num">03</div>
+          <div class="pillar-tag" style="color: var(--indigo-pale);">Discourse</div>
+          <div class="pillar-name">Shakti Varta</div>
+          <div class="pillar-dev">शक्ति वार्ता</div>
+          <p style="color: var(--text-dim); font-size: 0.95rem; line-height: 1.7;">
+            White papers. Legal research. Podcasts. Seminars. The intellectual engine that backs the revolution with verified historical knowledge and rights awareness.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── AARYAVEERA FLAGSHIP ─── -->
+  <section id="aaryaveera" class="aaryaveera-section">
+    <div class="container">
+      <span class="section-eyebrow">Signature Movement</span>
+      <h2 class="aaryaveera-title">AARYAVEERA</h2>
+      <span class="section-dev">आर्यवीरा · The Warrior Spirit</span>
+      <span class="aaryaveera-motto">"Shakti Se Shanti — From Strength, Peace"</span>
+
+      <div class="cards-grid">
+        <div class="feature-card">
+          <div class="card-icon">⚔</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff;">Self-Defense &amp; Training</h3>
+          <p style="color: var(--text-dim); font-size: 0.925rem; line-height: 1.7;">
+            Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom and absolute self-reliance.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🔥</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff;">Character &amp; Leadership</h3>
+          <p style="color: var(--text-dim); font-size: 0.925rem; line-height: 1.7;">
+            Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma, Vedic roots, and unwavering community service.
+          </p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">◎</div>
+          <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem; color: #fff;">Dialogue &amp; Legal Rights</h3>
+          <p style="color: var(--text-dim); font-size: 0.925rem; line-height: 1.7;">
+            "Aaryaveera Dialogues" podcasts and legal collages — honest discourse on true masculinity, Paurush, and constitutional rights.
+          </p>
+        </div>
+      </div>
+
+      <div style="margin-top: 3.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="#courses" class="btn btn-gold">Explore Courses</a>
+        <a href="#events" class="btn btn-ghost">View Upcoming Camps</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── UPCOMING EVENTS ─── -->
+  <section id="events">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+        <div>
+          <span class="section-eyebrow">On-Ground Schedule</span>
+          <h2 class="section-title">Upcoming Camps &amp; Seminars</h2>
+          <span class="section-dev">आगामी कार्यक्रम और शिविर</span>
+        </div>
+        <button class="btn btn-ghost">View Calendar →</button>
+      </div>
+
+      <div class="events-list">
+        <div class="event-item">
+          <div style="display: flex; align-items: center; gap: 2rem;">
+            <div class="event-date">
+              <span class="event-day">14</span>
+              <span class="event-month">Nov 2026</span>
+            </div>
+            <div>
+              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Aaryaveera 3-Day Self-Defense Camp</h4>
+              <p style="color: var(--text-dim); font-size: 0.85rem;">Wardha, Maharashtra · Limited seats · ₹1,200</p>
+            </div>
+          </div>
+          <span class="event-badge">Camp</span>
+        </div>
+
+        <div class="event-item">
+          <div style="display: flex; align-items: center; gap: 2rem;">
+            <div class="event-date">
+              <span class="event-day">22</span>
+              <span class="event-month">Nov 2026</span>
+            </div>
+            <div>
+              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Shakti Varta Seminar — The Legal Collage</h4>
+              <p style="color: var(--text-dim); font-size: 0.85rem;">Online · IPC &amp; BNS Analysis · Free for members</p>
+            </div>
+          </div>
+          <span class="event-badge">Webinar</span>
+        </div>
+
+        <div class="event-item">
+          <div style="display: flex; align-items: center; gap: 2rem;">
+            <div class="event-date">
+              <span class="event-day">05</span>
+              <span class="event-month">Dec 2026</span>
+            </div>
+            <div>
+              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Vedic Parenting in Modern India Workshop</h4>
+              <p style="color: var(--text-dim); font-size: 0.85rem;">Nagpur · Full-day intensive session · ₹800</p>
+            </div>
+          </div>
+          <span class="event-badge">Workshop</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HISTORY & TODAY'S SUCCESS GIRLS ─── -->
+  <section id="history" style="background: #090909;">
+    <div class="container">
+      <span class="section-eyebrow">Living Heritage</span>
+      <h2 class="section-title">From Legends to Today's Warriors</h2>
+      <span class="section-dev">इतिहास से आज की सफलता तक</span>
+
+      <div class="timeline">
+        <div class="timeline-node">
+          <div class="timeline-year">2012</div>
+          <div class="timeline-desc">First self-defense camp in Wardha. 12 girls, one mat, one instructor.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-year">2015</div>
+          <div class="timeline-desc">Expanded to 50 schools across Vidarbha region. Media and impact archive begins.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-year">2018</div>
+          <div class="timeline-desc">Shakti Varta launches — research white papers, survivor legal aid collage.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-year">2022</div>
+          <div class="timeline-desc">Aaryaveera brand established. First Warrior Certification class graduates.</div>
+        </div>
+        <div class="timeline-node">
+          <div class="timeline-year">2026</div>
+          <div class="timeline-desc">400+ schools reached. Platform launch. Digital chapter begins.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="container footer-content">
+      <div style="font-family: var(--ff-display); font-weight: 700; font-size: 1.1rem; color: var(--gold);">
+        Shakti Sabha <span style="font-family: var(--ff-dev); font-size: 0.85rem; color: var(--text-mute); margin-left: 0.5rem;">शक्ति सभा</span>
+      </div>
+      <div>FCRA Compliant · Domestic Payments Only · SRS v1.2</div>
+      <div>Built with Pride by PrintingTask</div>
+    </div>
+  </footer>
+
+  <!-- ─── HERO INTERACTIVE SCRIPT ─── -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Nav scroll effect
+      const nav = document.getElementById('mainNav');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 40) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+
+      // Smooth scroll for hero button
+      const exploreBtn = document.getElementById('startExploreBtn');
+      exploreBtn.addEventListener('click', () => {
+        const founderSection = document.getElementById('founder');
+        if (founderSection) {
+          founderSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+
+      // Hero Animation Sequence
+      const images = document.querySelectorAll('.hero-images .hero-img');
+      const content = document.getElementById('heroContent');
+      const centerIndex = Math.floor(images.length / 2); // 4
+      const STAGGER = 0.18; // seconds
+      const DURATION = 1000; // ms
+
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (prefersReduced) {
+        images.forEach(img => {
+          img.style.width = '100%';
+          img.style.transform = 'translateY(50vh)';
+        });
+        content.classList.add('active');
+        return;
+      }
+
+      // Phase 1: Expand widths outward from center
+      images.forEach((img, idx) => {
+        const delayMs = Math.abs(idx - centerIndex) * STAGGER * 1000;
+        setTimeout(() => {
+          img.style.width = '100%';
+        }, delayMs);
+      });
+
+      const maxDelayMs = Math.max(...Array.from(images).map((_, i) => Math.abs(i - centerIndex) * STAGGER * 1000));
+      const phase2StartTime = maxDelayMs + DURATION;
+
+      // Phase 2: Drop images downward (to 50vh) so they don't overlap with upper text
+      setTimeout(() => {
+        images.forEach((img, idx) => {
+          const dropDelayMs = Math.abs(idx - centerIndex) * STAGGER * 1000;
+          setTimeout(() => {
+            img.style.transform = 'translateY(50vh)';
+          }, dropDelayMs);
+        });
+      }, phase2StartTime);
+
+      // Phase 3: Fade in hero text cleanly above the photos
+      setTimeout(() => {
+        content.classList.add('active');
+      }, phase2StartTime + 350);
+    });
+  </script>
+</body>
+</html>

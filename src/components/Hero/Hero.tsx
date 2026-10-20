@@ -63,7 +63,7 @@ export default function Hero() {
 
     if (prefersReducedMotion) {
       images.forEach(img => {
-        gsap.set(img, { width: '100%', y: '40vh' })
+        gsap.set(img, { width: '100%', y: '50vh' })
       })
       if (content) {
         gsap.set(content, { opacity: 1, y: 0 })
@@ -97,13 +97,13 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2: drop images downward, center outward
+      // Phase 2: drop images downward, center outward (to 50vh so no overlap with shifted text)
       images.forEach((image, index) => {
         const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
           {
-            y: '40vh',
+            y: '50vh',
             duration: DURATION,
             ease: 'power2.out',
           },
@@ -111,18 +111,18 @@ export default function Hero() {
         )
       })
 
-      // Phase 3: fade in hero content
+      // Phase 3: fade in hero content cleanly above the photos
       if (content) {
         tl.fromTo(
           content,
-          { opacity: 0, y: 40 },
+          { opacity: 0, y: 25 },
           {
             opacity: 1,
             y: 0,
             duration: DURATION,
             ease: 'power2.out',
           },
-          totalFirstAnimationTime + 0.5
+          totalFirstAnimationTime + 0.4
         )
       }
     }, secRef)
