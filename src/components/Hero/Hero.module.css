@@ -73,7 +73,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 1550px;
-  height: 84vh;
+  height: 92vh; /* increased from 84vh */
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: clamp(6px, 1.1vw, 16px);
@@ -90,6 +90,14 @@
   height: 100%;
 }
 
+/* Hide outer columns on mobile to reduce image count */
+.col:nth-child(1),
+.col:nth-child(2),
+.col:nth-child(8),
+.col:nth-child(9) {
+  display: none;
+}
+
 .imgItem {
   width: 33.3333%;
   object-fit: cover;
@@ -100,23 +108,33 @@
 
 /* Increased height ratios for tall, impactful portrait gallery */
 .h_4_12 {
-  height: 48%;
+  height: 55%; /* was 48% */
 }
 
 .h_6_12 {
-  height: 64%;
+  height: 70%; /* was 64% */
 }
 
 .h_8_12 {
-  height: 78%;
+  height: 84%; /* was 78% */
 }
 
 .h_10_12 {
-  height: 90%;
+  height: 95%; /* was 90% */
 }
 
 .h_11_12 {
-  height: 100%;
+  height: 100%; /* kept at 100% (capped) */
+}
+
+/* Restore all columns on tablet and up */
+@media (min-width: 640px) {
+  .col:nth-child(1),
+  .col:nth-child(2),
+  .col:nth-child(8),
+  .col:nth-child(9) {
+    display: flex;
+  }
 }
 
 /* Fallback for no-anim / reduced motion */
