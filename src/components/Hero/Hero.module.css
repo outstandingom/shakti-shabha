@@ -1,3 +1,6 @@
+/* =========================================
+   HERO SECTION BASE
+   ========================================= */
 .heroSection {
   position: relative;
   width: 100%;
@@ -7,7 +10,7 @@
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
-  background: var(--night, #060606);
+  background: #060606;
   font-family: 'Poppins', sans-serif;
   padding-top: clamp(5rem, 11vh, 7.5rem);
   padding-bottom: 2rem;
@@ -27,7 +30,6 @@
   padding: 0 1.5rem;
   opacity: 0;
   text-align: center;
-  pointer-events: auto;
 }
 
 .title {
@@ -37,14 +39,12 @@
   line-height: 1.18;
   color: #ffffff;
   letter-spacing: -0.015em;
-  text-align: center;
   margin: 0;
 }
 
 .ctaBtn {
   margin-top: 0.65rem;
   padding: 0.65rem 2.25rem;
-  font-family: 'Poppins', sans-serif;
   font-size: clamp(0.8rem, 1.1vw, 0.95rem);
   font-weight: 500;
   text-transform: uppercase;
@@ -55,7 +55,6 @@
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -70,7 +69,7 @@
 }
 
 /* =========================================
-   BACKGROUND IMAGE GRID (GSAP Target)
+   ANIMATED BACKGROUND PORTRAITS (GSAP)
    ========================================= */
 .heroImages {
   position: absolute;
@@ -96,7 +95,6 @@
   height: 100%;
 }
 
-/* Hide outer columns on mobile */
 .col:nth-child(1),
 .col:nth-child(2),
 .col:nth-child(8),
@@ -112,7 +110,6 @@
   will-change: width, transform;
 }
 
-/* Stagger Heights */
 .h_4_12 { height: 55%; }
 .h_6_12 { height: 70%; }
 .h_8_12 { height: 84%; }
@@ -120,7 +117,7 @@
 .h_11_12 { height: 100%; }
 
 /* =========================================
-   CAROUSEL STYLES
+   MAIN CAROUSEL
    ========================================= */
 .carouselWrapper {
   width: 100%;
@@ -130,7 +127,7 @@
   justify-content: center;
   align-items: center;
   margin-top: 2rem;
-  z-index: 30; /* Above background images */
+  z-index: 30; 
 }
 
 .carouselContainer {
@@ -167,7 +164,7 @@
   pointer-events: auto;
 }
 
-/* Slide Content */
+/* Carousel Slide Content */
 .itemContent {
   position: absolute;
   top: 50%;
@@ -178,15 +175,15 @@
   text-shadow: 0 2px 8px rgba(0,0,0,0.8);
 }
 
-.carouselItem.active .itemContent .itemName {
+.carouselItem.active .itemName {
   animation: animateContent 1s ease-in-out 1 forwards;
 }
 
-.carouselItem.active .itemContent .itemDes {
+.carouselItem.active .itemDes {
   animation: animateContent 1s ease-in-out 0.3s 1 forwards;
 }
 
-.carouselItem.active .itemContent .itemBtn {
+.carouselItem.active .itemBtn {
   animation: animateContent 1s ease-in-out 0.6s 1 forwards;
 }
 
@@ -194,7 +191,6 @@
   font-size: 42px;
   text-transform: uppercase;
   font-weight: 600;
-  font-family: 'Poppins', sans-serif;
   margin-bottom: 10px;
   opacity: 0;
 }
@@ -228,7 +224,7 @@
   to   { opacity: 1; transform: translate(0);       filter: blur(0); }
 }
 
-/* Nav Buttons */
+/* Carousel Navigation Arrows */
 .buttonGroup {
   position: absolute;
   bottom: 20px;
@@ -263,7 +259,7 @@
   transform: scale(0.95);
 }
 
-/* Previews */
+/* Prev & Next Previews */
 .previewPair {
   position: absolute;
   bottom: 20px;
@@ -321,10 +317,7 @@
     padding-bottom: 2vh;
   }
 
-  .imgItem {
-    width: 100%;
-  }
-
+  .imgItem { width: 100%; }
   .h_4_12 { height: 40%; }
   .h_6_12 { height: 55%; }
   .h_8_12 { height: 70%; }
@@ -349,13 +342,8 @@
     transform: none;
   }
 
-  .itemName {
-    font-size: 28px;
-  }
-
-  .itemDes {
-    font-size: 13px;
-  }
+  .itemName { font-size: 28px; }
+  .itemDes { font-size: 13px; }
 
   .buttonGroup {
     bottom: 15px;
