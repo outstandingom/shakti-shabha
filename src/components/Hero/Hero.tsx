@@ -2,7 +2,13 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
-const GIRL_IMAGES = [
+type ImageData = {
+  src: string
+  alt: string
+  heightClass: string
+}
+
+const GIRL_IMAGES: ImageData[] = [
   {
     src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80',
     alt: 'Portrait of girl 1',
@@ -59,15 +65,15 @@ export default function Hero() {
     const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
     const content = contentRef.current
 
+    if (!images.length || !content) return
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
       images.forEach(img => {
         gsap.set(img, { width: '100%', y: '50vh' })
       })
-      if (content) {
-        gsap.set(content, { opacity: 1, y: 0 })
-      }
+      gsap.set(content, { opacity: 1, y: 0 })
       return
     }
 
@@ -112,19 +118,17 @@ export default function Hero() {
       })
 
       // Phase 3: fade in hero content cleanly above the photos
-      if (content) {
-        tl.fromTo(
-          content,
-          { opacity: 0, y: 25 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: DURATION,
-            ease: 'power2.out',
-          },
-          totalFirstAnimationTime + 0.4
-        )
-      }
+      tl.fromTo(
+        content,
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION,
+          ease: 'power2.out',
+        },
+        totalFirstAnimationTime + 0.4
+      )
     }, secRef)
 
     return () => ctx.revert()
