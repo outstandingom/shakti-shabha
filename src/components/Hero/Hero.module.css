@@ -73,7 +73,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 1550px;
-  height: 92vh; /* increased for PC */
+  height: 92vh; /* Increased for PC */
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: clamp(6px, 1.1vw, 16px);
@@ -99,7 +99,7 @@
 }
 
 .imgItem {
-  width: 33.3333%; /* Kept for PC animation/initial state */
+  width: 33.3333%;
   object-fit: cover;
   border-radius: 1.15rem;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
@@ -129,34 +129,36 @@
 
 /* 📱 MOBILE ADJUSTMENTS */
 @media (max-width: 639px) {
-  /* Push the text down slightly from the header */
-  .heroContent {
-    margin-top: 3vh; 
-  }
-
   .heroImages {
-    /* Anchor the gallery to the bottom of the screen */
-    top: auto;
-    bottom: 0;
-    transform: translateX(-50%);
-    
-    /* Change grid from 9 columns to 5 */
+    /* Change grid to 5 columns for the reduced image count */
     grid-template-columns: repeat(5, 1fr); 
-    height: 60vh; /* Set a solid height for the image area */
     
-    /* Align images to the bottom so they are cut off nicely by the screen edge */
+    /* Stretch container to fill the empty space */
+    height: 80vh; 
+    
+    /* Anchor to bottom so images grow upwards towards the text */
+    top: auto; 
+    bottom: 0;
+    transform: translateX(-50%); 
+    
+    /* Align images to the bottom */
     align-items: flex-end; 
-    padding-bottom: 0; 
-    gap: 8px; 
-  }
-
-  .col {
-    align-items: flex-end;
+    
+    gap: 8px;
+    padding-bottom: 2vh; 
   }
 
   .imgItem {
+    /* Make the images fill the width of the 5-column grid */
     width: 100%; 
   }
+
+  /* Adjust the height ratios slightly for mobile to keep a nice stagger */
+  .h_4_12 { height: 40%; }
+  .h_6_12 { height: 55%; }
+  .h_8_12 { height: 70%; }
+  .h_10_12 { height: 85%; }
+  .h_11_12 { height: 100%; }
 }
 
 /* Restore all columns on tablet and up */
