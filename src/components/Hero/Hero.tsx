@@ -48,9 +48,33 @@ export default function Hero() {
   const containerRef = useRef<HTMLElement>(null)
   const slideRefs = useRef<(HTMLDivElement | null)[]>([])
   const [activeSlide, setActiveSlide] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
+  const [loadPercent, setLoadPercent] = useState(0)
 
   const currentIndexRef = useRef(-1)
   const animatingRef = useRef(false)
+
+  // Preload all slide images before showing
+  useEffect(() => {
+    let count = 0
+    const total = SLIDES.length
+
+    SLIDES.forEach(slide => {
+      const img = new Image()
+      img.src = slide.bgUrl
+      const onDone = () => {
+        count++
+        setLoadPercent(Math.round((count / total) * 100))
+        if (count >= total) {
+          setTimeout(() => {
+            setImagesLoaded(true)
+          }, 250)
+        }
+      }
+      img.onload = onDone
+      img.onerror = onDone
+    })
+  }, [])
 
   const calculateDirection = (current: number, target: number) => {
     const sequenceIndex = (target - current + SLIDES.length) % SLIDES.length % 4
@@ -90,7 +114,7 @@ export default function Hero() {
         gsap.to(currentSection, {
           ...animationProps,
           autoAlpha: 0,
-          duration: 1,
+          duration: 0.85,
           ease: 'power2.inOut',
         })
       }
@@ -102,7 +126,7 @@ export default function Hero() {
       x: 0,
       y: 0,
       autoAlpha: 1,
-      duration: 1,
+      duration: 0.85,
       ease: 'power2.inOut',
       onComplete: () => {
         animatingRef.current = false
@@ -112,37 +136,55 @@ export default function Hero() {
     })
   }, [])
 
+  // Mount animation once images are loaded
   useEffect(() => {
-    // Initial mount transition to slide 0
-    animateSection(0, 'right')
+    if (imagesLoaded && currentIndexRef.current === -1) {
+      animateSection(0, 'right')
+    }
+  }, [imagesLoaded, animateSection])
 
-    const container = containerRef.current
-    if (!container) return
+  // Scroll lock and slide progression handler
+  useEffect(() => {
+    if (!imagesLoaded) return
 
     const handleWheel = (e: WheelEvent) => {
-      if (animatingRef.current) return
+      // Only handle if user is at the top of the page (within the hero section)
+      if (window.scrollY > 20) return
 
-      // If wheel is moving down
-      if (e.deltaY > 20) {
+      // Moving down
+      if (e.deltaY > 15) {
         if (currentIndexRef.current < SLIDES.length - 1) {
+          // Trap scroll so page cannot skip to other sections until all images are seen
           e.preventDefault()
-          const nextIndex = currentIndexRef.current + 1
-          animateSection(nextIndex, calculateDirection(currentIndexRef.current, nextIndex))
+          e.stopPropagation()
+
+          if (!animatingRef.current) {
+            const nextIndex = currentIndexRef.current + 1
+            animateSection(nextIndex, calculateDirection(currentIndexRef.current, nextIndex))
+          }
+        } else {
+          // On final slide (index 4 - "Win"):
+          // Allow normal scroll so user can now proceed to the rest of the website!
         }
-      } else if (e.deltaY < -20) {
+      } else if (e.deltaY < -15) {
+        // Moving up
         if (currentIndexRef.current > 0) {
           e.preventDefault()
-          const prevIndex = currentIndexRef.current - 1
-          animateSection(prevIndex, calculateDirection(currentIndexRef.current, prevIndex))
+          e.stopPropagation()
+
+          if (!animatingRef.current) {
+            const prevIndex = currentIndexRef.current - 1
+            animateSection(prevIndex, calculateDirection(currentIndexRef.current, prevIndex))
+          }
         }
       }
     }
 
-    container.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('wheel', handleWheel, { passive: false })
     return () => {
-      container.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('wheel', handleWheel)
     }
-  }, [animateSection])
+  }, [imagesLoaded, animateSection])
 
   const handleNavClick = (index: number) => {
     if (animatingRef.current || index === activeSlide) return
@@ -161,6 +203,18 @@ export default function Hero() {
 
   return (
     <section ref={containerRef} className={s.heroContainer}>
+      {/* Visual Preloader Screen until all images are loaded */}
+      <div className={`${s.preloader} ${imagesLoaded ? s.preloaderHidden : ''}`}>
+        <div className={s.preloaderLogo}>
+          Shakti Sabha
+          <span className={s.preloaderDev}>शक्ति सभा</span>
+        </div>
+        <div className={s.progressBarTrack}>
+          <div className={s.progressBarFill} style={{ width: `${loadPercent}%` }} />
+        </div>
+        <span className={s.preloaderText}>Loading Experience {loadPercent}%</span>
+      </div>
+
       <header className={s.heroHeader}>
         <nav className={s.navLinks}>
           {SLIDES.map((slide, idx) => (
@@ -200,13 +254,27 @@ export default function Hero() {
         </div>
       ))}
 
+      {/* Progress Dots & Counter */}
+      <div className={s.slideCounter}>
+        <div className={s.slideDots}>
+          {SLIDES.map((_, i) => (
+            <span
+              key={i}
+              onClick={() => handleNavClick(i)}
+              className={`${s.slideDot} ${activeSlide === i ? s.slideDotActive : ''}`}
+            />
+          ))}
+        </div>
+        <span>0{activeSlide + 1} / 0{SLIDES.length}</span>
+      </div>
+
       <button
         type="button"
         onClick={handleScrollDown}
         className={s.scrollDownIndicator}
         aria-label="Scroll down to content"
       >
-        <span>Explore</span>
+        <span>{activeSlide === SLIDES.length - 1 ? 'Explore Site' : 'Scroll'}</span>
         <div className={s.scrollDownLine} />
       </button>
     </section>

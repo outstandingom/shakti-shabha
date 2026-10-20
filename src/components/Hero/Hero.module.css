@@ -9,6 +9,69 @@
   user-select: none;
 }
 
+/* Preloader Screen */
+.preloader {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  background: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.preloaderHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.preloaderLogo {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  font-weight: 700;
+  color: var(--gold, #C9A96E);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.preloaderDev {
+  font-family: 'Noto Sans Devanagari', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-mute, #6A6055);
+  letter-spacing: 0.05em;
+}
+
+.progressBarTrack {
+  width: 240px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--gold, #C9A96E);
+  transition: width 0.25s ease;
+}
+
+.preloaderText {
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
 .heroHeader {
   position: absolute;
   top: 5.5rem;
@@ -114,6 +177,42 @@
 .title:hover {
   color: #b8ebff;
   text-shadow: 0 0 10px hsl(0, 0%, 80%);
+}
+
+/* Slide Progress & Status */
+.slideCounter {
+  position: absolute;
+  bottom: 2.25rem;
+  right: clamp(1.5rem, 5vw, 4rem);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.slideDots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.slideDot {
+  width: 16px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.slideDotActive {
+  background: var(--gold, #C9A96E);
+  width: 28px;
 }
 
 .scrollDownIndicator {
