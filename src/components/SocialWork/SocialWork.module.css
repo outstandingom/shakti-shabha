@@ -1,0 +1,21 @@
+
+.section { padding: 7rem 3rem; border-top: 1px solid var(--border); }
+.inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+.left h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
+.dev { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 0.9rem; color: var(--text-mute); margin-bottom: 1.5rem; display: block; }
+.desc { font-size: 0.95rem; line-height: 1.85; color: var(--text-dim); max-width: 46ch; margin-bottom: 2.5rem; }
+.stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 2px; border: 1px solid var(--border); margin-bottom: 2.5rem; }
+.stat { padding: 1.5rem 1.25rem; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.stat:nth-child(even) { border-right: none; }
+.stat:nth-child(n+3) { border-bottom: none; }
+.statNum { font-family: 'Cinzel', serif; font-size: 2.5rem; font-weight: 700; color: var(--gold); line-height: 1; }
+.statLabel { font-size: 0.75rem; color: var(--text-mute); margin-top: 0.35rem; }
+.right {}
+.mapBox { aspect-ratio: 1; border: 1px solid var(--border); background: rgba(20,83,45,0.04); position: relative; overflow: hidden; margin-bottom: 1.25rem; }
+.mapGrid { position: absolute; inset: 0; background-image: linear-gradient(rgba(77,124,97,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(77,124,97,0.08) 1px, transparent 1px); background-size: 40px 40px; }
+.mapDot { position: absolute; width: 8px; height: 8px; border-radius: 50%; background: var(--sage); border: 1px solid var(--forest); animation: dotPulse 2s ease-in-out infinite; }
+.mapDot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1px solid rgba(77,124,97,0.3); animation: dotRing 2s ease-in-out infinite; }
+@keyframes dotPulse { 0%,100%{ transform: scale(1); opacity:0.6 } 50%{ transform: scale(1.3); opacity:1 } }
+@keyframes dotRing { 0%{ transform: scale(1); opacity:0.5 } 100%{ transform: scale(2.5); opacity:0 } }
+.mapLabel { text-align: center; font-size: 0.75rem; color: var(--text-mute); letter-spacing: 0.08em; }
+@media (max-width: 900px) { .inner { grid-template-columns: 1fr; gap: 2.5rem; } .section { padding: 5rem 1.25rem; } }

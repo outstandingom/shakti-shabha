@@ -1,0 +1,17 @@
+
+.section { padding: 7rem 3rem; border-top: 1px solid var(--border); }
+.header { margin-bottom: 0.75rem; }
+.header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--text); }
+.headerDev { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 0.9rem; color: var(--text-mute); margin-bottom: 1rem; display: block; }
+.desc { font-size: 0.95rem; color: var(--text-dim); max-width: 56ch; line-height: 1.8; margin-bottom: 3.5rem; }
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; border: 1px solid var(--border); margin-bottom: 3rem; }
+.card { padding: 2.5rem 2rem; border-right: 1px solid var(--border); transition: background 0.3s; }
+.card:last-child { border-right: none; }
+.card:hover { background: rgba(255,255,255,0.015); }
+.cardIcon { font-size: 1.75rem; margin-bottom: 1.25rem; }
+.cardTag { font-size: 0.65rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-mute); margin-bottom: 0.75rem; }
+.cardTitle { font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 600; color: var(--text); margin-bottom: 0.75rem; }
+.cardList { display: flex; flex-direction: column; gap: 0.45rem; }
+.cardItem { font-size: 0.82rem; color: var(--text-dim); padding-left: 1rem; position: relative; }
+.cardItem::before { content: '—'; position: absolute; left: 0; color: var(--text-mute); font-size: 0.7rem; top: 2px; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .card { border-right: none; border-bottom: 1px solid var(--border); } .section { padding: 5rem 1.25rem; } }
