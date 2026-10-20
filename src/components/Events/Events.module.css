@@ -1,7 +1,7 @@
 
 .section { padding: 7rem 3rem; border-top: 1px solid var(--border); }
 .header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
-.header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--text); }
+.header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--fire); }
 .list { display: flex; flex-direction: column; }
 .item { display: grid; grid-template-columns: 90px 1fr auto; gap: 2rem; align-items: center; padding: 1.75rem 0; border-bottom: 1px solid var(--border); transition: background 0.2s; }
 .item:first-child { border-top: 1px solid var(--border); }

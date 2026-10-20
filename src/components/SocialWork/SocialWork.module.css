@@ -1,7 +1,7 @@
 
 .section { padding: 7rem 3rem; border-top: 1px solid var(--border); }
 .inner { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-.left h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 0.5rem; }
+.left h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--fire); line-height: 1.1; margin-bottom: 0.5rem; }
 .dev { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 0.9rem; color: var(--text-mute); margin-bottom: 1.5rem; display: block; }
 .desc { font-size: 0.95rem; line-height: 1.85; color: var(--text-dim); max-width: 46ch; margin-bottom: 2.5rem; }
 .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 2px; border: 1px solid var(--border); margin-bottom: 2.5rem; }

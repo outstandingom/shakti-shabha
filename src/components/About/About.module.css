@@ -1,7 +1,7 @@
 
 .section { padding: 7rem 3rem; border-top: 1px solid var(--border); }
 .header { margin-bottom: 4rem; max-width: 60ch; }
-.header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--text); line-height: 1.1; margin-bottom: 1rem; }
+.header h2 { font-family: 'Cinzel', serif; font-size: clamp(1.75rem,3.5vw,2.5rem); font-weight: 700; color: var(--fire); line-height: 1.1; margin-bottom: 1rem; }
 .header p { font-size: 1rem; line-height: 1.8; color: var(--text-dim); }
 .pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; border: 1px solid var(--border); }
 .pillar { padding: 2.5rem 2rem; border-right: 1px solid var(--border); position: relative; overflow: hidden; transition: background 0.3s; }

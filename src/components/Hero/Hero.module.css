@@ -4,8 +4,8 @@
   height: 100vh;
   min-height: 600px;
   overflow: hidden;
-  background: #000000;
-  color: #ffffff;
+  background: var(--ash);
+  color: var(--night);
   user-select: none;
 }
 
@@ -14,7 +14,7 @@
   position: absolute;
   inset: 0;
   z-index: 100;
-  background: #000000;
+  background: var(--ash);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,7 +45,7 @@
 .preloaderDev {
   font-family: 'Noto Sans Devanagari', sans-serif;
   font-size: 0.85rem;
-  color: var(--text-mute, #6A6055);
+  color: var(--text-mute, #64748B);
   letter-spacing: 0.05em;
 }
 
@@ -98,7 +98,7 @@
 }
 
 .navLink {
-  color: #ffffff;
+  color: var(--night);
   text-decoration: none;
   font-family: 'Nunito Sans', sans-serif;
   transition: color 0.3s, text-shadow 0.3s;
@@ -115,17 +115,17 @@
   text-shadow: 0 0 10px currentColor;
 }
 
-.navLink:nth-child(1):hover { color: #e57373; }
-.navLink:nth-child(2):hover { color: #81c784; }
-.navLink:nth-child(3):hover { color: #64b5f6; }
-.navLink:nth-child(4):hover { color: #ffb74d; }
-.navLink:nth-child(5):hover { color: #ba68c8; }
+.navLink:nth-child(1):hover { color: var(--ember); }
+.navLink:nth-child(2):hover { color: var(--sage); }
+.navLink:nth-child(3):hover { color: var(--fire); }
+.navLink:nth-child(4):hover { color: var(--gold-deep); }
+.navLink:nth-child(5):hover { color: var(--ember); }
 
-.activeLink0 { color: #e57373 !important; text-shadow: 0 0 12px #e57373; }
-.activeLink1 { color: #81c784 !important; text-shadow: 0 0 12px #81c784; }
-.activeLink2 { color: #64b5f6 !important; text-shadow: 0 0 12px #64b5f6; }
-.activeLink3 { color: #ffb74d !important; text-shadow: 0 0 12px #ffb74d; }
-.activeLink4 { color: #ba68c8 !important; text-shadow: 0 0 12px #ba68c8; }
+.activeLink0 { color: var(--ember) !important; text-shadow: 0 0 12px rgba(217,56,30,0.55); }
+.activeLink1 { color: var(--sage) !important; text-shadow: 0 0 12px rgba(61,90,69,0.55); }
+.activeLink2 { color: var(--fire) !important; text-shadow: 0 0 12px rgba(185,28,28,0.55); }
+.activeLink3 { color: var(--gold-deep) !important; text-shadow: 0 0 12px rgba(201,169,110,0.55); }
+.activeLink4 { color: var(--ember) !important; text-shadow: 0 0 12px rgba(217,56,30,0.55); }
 
 .sectionSlide {
   height: 100%;
@@ -165,7 +165,7 @@
   text-align: center;
   letter-spacing: 0.5em;
   margin-right: -0.5em;
-  color: hsl(0, 0%, 80%);
+  color: var(--night);
   width: 90vw;
   max-width: 1200px;
   transition: color 0.5s ease, text-shadow 0.5s ease;
@@ -175,8 +175,8 @@
 }
 
 .title:hover {
-  color: #b8ebff;
-  text-shadow: 0 0 10px hsl(0, 0%, 80%);
+  color: var(--gold-bright);
+  text-shadow: 0 0 10px rgba(201,169,110,0.7);
 }
 
 /* Slide Progress & Status */
@@ -236,7 +236,7 @@
 }
 
 .scrollDownIndicator:hover {
-  color: #ffffff;
+  color: var(--night);
 }
 
 .scrollDownLine {

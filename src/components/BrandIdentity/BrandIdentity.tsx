@@ -4,15 +4,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './BrandIdentity.module.css'
 
-const SWATCHES = [
-  { color: '#C2410C', name: 'Revolution Red',  desc: 'Primary · Mardini · Fire' },
-  { color: '#C9A96E', name: 'Aaryaveera Gold', desc: 'Signature · Bridge colour' },
-  { color: '#14532D', name: 'Forest Night',    desc: 'Peace · Shakti Bhava' },
-  { color: '#4D7C61', name: 'Sage',            desc: 'Secondary green · Healing' },
-  { color: '#4F46E5', name: 'Varta Indigo',    desc: 'Discourse · Shakti Varta' },
-  { color: '#F0EBE3', name: 'Smoke White',     desc: 'Primary text' },
-]
-
 export default function BrandIdentity() {
   const secRef = useRef<HTMLElement>(null)
   useEffect(() => {
@@ -32,21 +23,6 @@ export default function BrandIdentity() {
         <p>The visual language of Shakti Sabha — crimson fire, forest peace, and Aaryaveera gold. Full guidelines, logo files, and brand assets on the Brand page.</p>
       </div>
       <div className={s.grid}>
-        <div data-br className={s.panel}>
-          <p className={s.panelTitle}>Colour Palette</p>
-          <div className={s.swatches}>
-            {SWATCHES.map(sw => (
-              <div key={sw.color} className={s.swatch}>
-                <div className={s.swatchColor} style={{ background: sw.color }} />
-                <div>
-                  <div className={s.swatchName}>{sw.name}</div>
-                  <div className={s.swatchHex}>{sw.desc}</div>
-                </div>
-                <div className={s.swatchHex} style={{ fontFamily: 'monospace' }}>{sw.color}</div>
-              </div>
-            ))}
-          </div>
-        </div>
         <div data-br className={s.panel}>
           <p className={s.panelTitle}>Typography</p>
           <div className={s.typeRow}>

@@ -8,7 +8,7 @@
 .photoLabel { font-size: 0.75rem; letter-spacing: 0.1em; }
 .right {}
 .eyebrow { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember); margin-bottom: 1.25rem; display: block; opacity: 0; }
-.name { font-family: 'Cinzel', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--text); line-height: 1.05; margin-bottom: 0.5rem; }
+.name { font-family: 'Cinzel', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--fire); line-height: 1.05; margin-bottom: 0.5rem; }
 .title { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 0.95rem; color: var(--text-dim); margin-bottom: 2rem; }
 .bio { font-size: 0.95rem; line-height: 1.85; color: rgba(240,235,227,0.65); max-width: 52ch; margin-bottom: 2.5rem; }
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1px solid var(--border); margin-bottom: 2.5rem; }

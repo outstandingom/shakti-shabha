@@ -1,6 +1,6 @@
 
 .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 200; padding: 1.25rem 3rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.4s; }
-.navScrolled { background: rgba(6,6,6,0.9); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,169,110,0.1); }
+.navScrolled { background: rgba(248,250,252,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(201,169,110,0.3); }
 .logo { display: flex; flex-direction: column; line-height: 1; text-decoration: none; }
 .logoMain { font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.15rem; letter-spacing: 0.06em; color: var(--gold); }
 .logoDev { font-family: 'Noto Sans Devanagari', sans-serif; font-size: 0.7rem; color: var(--text-mute); margin-top: 2px; }
@@ -9,7 +9,7 @@
 .link::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 1px; background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.25s cubic-bezier(0.16,1,0.3,1); }
 .link:hover { color: var(--text); }
 .link:hover::after { transform: scaleX(1); }
-.linkActive { color: var(--text) !important; }
+.linkActive { color: var(--fire) !important; }
 .linkActive::after { transform: scaleX(1) !important; }
 .cta { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; color: var(--gold); border: 1px solid rgba(201,169,110,0.22); padding: 0.55rem 1.5rem; border-radius: 2px; text-decoration: none; transition: background 0.2s, color 0.2s; will-change: transform; display: inline-block; }
 .cta:hover { background: var(--gold); color: var(--night); }
