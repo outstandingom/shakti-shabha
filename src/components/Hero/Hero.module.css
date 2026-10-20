@@ -1,183 +1,177 @@
-.heroSection {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-  min-height: 680px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  overflow: hidden;
-  background: var(--night, #060606);
-  font-family: 'Poppins', sans-serif;
-  padding-top: clamp(5rem, 11vh, 7.5rem);
+import { useEffect, useRef } from 'react'
+import gsap from 'gsap'
+import s from './Hero.module.css'
+
+type ImageData = {
+  src: string
+  alt: string
+  heightClass: string
 }
 
-.heroContent {
-  position: relative;
-  z-index: 25;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
-  padding: 0 1.5rem;
-  opacity: 0;
-  text-align: center;
-  pointer-events: auto;
-}
+const GIRL_IMAGES: ImageData[] = [
+  {
+    src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 1',
+    heightClass: s.h_4_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 2',
+    heightClass: s.h_6_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 3',
+    heightClass: s.h_8_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 4',
+    heightClass: s.h_10_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 5 (center)',
+    heightClass: s.h_11_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 6',
+    heightClass: s.h_10_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 7',
+    heightClass: s.h_8_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 8',
+    heightClass: s.h_6_12,
+  },
+  {
+    src: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
+    alt: 'Portrait of girl 9',
+    heightClass: s.h_4_12,
+  },
+]
 
-.title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: clamp(2rem, 4.5vw, 3.4rem);
-  line-height: 1.18;
-  color: #ffffff;
-  letter-spacing: -0.015em;
-  text-align: center;
-  margin: 0;
-}
+export default function Hero() {
+  const secRef = useRef<HTMLElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+  const imgRefs = useRef<(HTMLImageElement | null)[]>([])
 
-.ctaBtn {
-  margin-top: 0.65rem;
-  padding: 0.65rem 2.25rem;
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
+  useEffect(() => {
+    const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
+    const content = contentRef.current
 
-.ctaBtn:hover {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #060606;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.18);
-}
+    if (!images.length || !content) return
 
-.heroImages {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 1550px;
-  height: 92vh; /* Increased for PC */
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  gap: clamp(6px, 1.1vw, 16px);
-  padding: 0 clamp(8px, 2vw, 24px);
-  align-items: center;
-  pointer-events: none;
-  z-index: 10;
-}
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-.col {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
+    if (prefersReducedMotion) {
+      images.forEach(img => {
+        gsap.set(img, { width: '100%', y: '50vh' })
+      })
+      gsap.set(content, { opacity: 1, y: 0 })
+      return
+    }
 
-/* Hide outer columns on mobile to reduce image count */
-.col:nth-child(1),
-.col:nth-child(2),
-.col:nth-child(8),
-.col:nth-child(9) {
-  display: none;
-}
+    const centerIndex = Math.floor(images.length / 2)
+    const STAGGER = 0.2
+    const DURATION = 1
 
-.imgItem {
-  width: 33.3333%;
-  object-fit: cover;
-  border-radius: 1.15rem;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
-  will-change: width, transform;
-}
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline()
 
-/* Increased height ratios for tall, impactful portrait gallery on PC */
-.h_4_12 {
-  height: 55%;
-}
+      // Phase 1: expand widths from the center outward
+      images.forEach((image, index) => {
+        const delay = Math.abs(index - centerIndex) * STAGGER
+        tl.to(
+          image,
+          {
+            width: '100%',
+            duration: DURATION,
+            ease: 'power2.inOut',
+          },
+          delay
+        )
+      })
 
-.h_6_12 {
-  height: 70%;
-}
+      const maxDelay = Math.max(
+        ...images.map((_, index) => Math.abs(index - centerIndex) * STAGGER)
+      )
+      const totalFirstAnimationTime = maxDelay + DURATION
 
-.h_8_12 {
-  height: 84%;
-}
+      // Phase 2: drop images downward, center outward (to 50vh so no overlap with shifted text)
+      images.forEach((image, index) => {
+        const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
+        tl.to(
+          image,
+          {
+            y: '50vh',
+            duration: DURATION,
+            ease: 'power2.out',
+          },
+          delay
+        )
+      })
 
-.h_10_12 {
-  height: 95%;
-}
+      // Phase 3: fade in hero content cleanly above the photos
+      tl.fromTo(
+        content,
+        { opacity: 0, y: 25 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION,
+          ease: 'power2.out',
+        },
+        totalFirstAnimationTime + 0.4
+      )
+    }, secRef)
 
-.h_11_12 {
-  height: 100%;
-}
+    return () => ctx.revert()
+  }, [])
 
-/* 📱 MOBILE ADJUSTMENTS */
-@media (max-width: 639px) {
-  .heroImages {
-    /* Change grid to 5 columns for the reduced image count */
-    grid-template-columns: repeat(5, 1fr); 
-    
-    /* Stretch container to fill the empty space */
-    height: 80vh; 
-    
-    /* Anchor to bottom so images grow upwards towards the text */
-    top: auto; 
-    bottom: 0;
-    transform: translateX(-50%); 
-    
-    /* Align images to the bottom */
-    align-items: flex-end; 
-    
-    gap: 8px;
-    padding-bottom: 2vh; 
+  const handleExplore = () => {
+    const nextEl = secRef.current?.nextElementSibling
+    if (nextEl) {
+      nextEl.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+    }
   }
 
-  .imgItem {
-    /* Make the images fill the width of the 5-column grid */
-    width: 100%; 
-  }
+  return (
+    <section ref={secRef} className={s.heroSection}>
+      <div ref={contentRef} className={s.heroContent}>
+        <h1 className={s.title}>
+          Discover the world <br /> through people
+        </h1>
+        <button
+          type="button"
+          onClick={handleExplore}
+          className={s.ctaBtn}
+        >
+          Start Exploring
+        </button>
+      </div>
 
-  /* Adjust the height ratios slightly for mobile to keep a nice stagger */
-  .h_4_12 { height: 40%; }
-  .h_6_12 { height: 55%; }
-  .h_8_12 { height: 70%; }
-  .h_10_12 { height: 85%; }
-  .h_11_12 { height: 100%; }
-}
-
-/* Restore all columns on tablet and up */
-@media (min-width: 640px) {
-  .col:nth-child(1),
-  .col:nth-child(2),
-  .col:nth-child(8),
-  .col:nth-child(9) {
-    display: flex;
-  }
-}
-
-/* Fallback for no-anim / reduced motion */
-:global(.no-anim) .heroContent {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-:global(.no-anim) .imgItem {
-  width: 100% !important;
-  transform: translateY(50vh) !important;
+      <div className={s.heroImages}>
+        {GIRL_IMAGES.map((item, idx) => (
+          <div key={idx} className={s.col}>
+            <img
+              ref={el => {
+                imgRefs.current[idx] = el
+              }}
+              src={item.src}
+              alt={item.alt}
+              className={`${s.imgItem} ${item.heightClass}`}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
 }
