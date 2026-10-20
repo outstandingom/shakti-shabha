@@ -1,58 +1,57 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
-type ImageData = {
-  src: string
-  alt: string
+type SlideData = {
+  id: string
+  name: string
+  description: string
+  image: string
   heightClass: string
 }
 
-const GIRL_IMAGES: ImageData[] = [
+const GIRL_IMAGES: SlideData[] = [
   {
-    src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 1',
+    id: '1015',
+    name: 'Mountain',
+    description: 'Discover the breathtaking peaks and serene landscapes that touch the sky.',
+    image: 'https://picsum.photos/id/1015/1200/800',
     heightClass: s.h_4_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 2',
+    id: '1043',
+    name: 'Forest',
+    description: 'Wander through the lush greens and find peace in the heart of nature.',
+    image: 'https://picsum.photos/id/1043/1200/800',
     heightClass: s.h_6_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 3',
+    id: '1069',
+    name: 'Ocean',
+    description: 'Experience the vastness of the deep blue and the rhythm of the waves.',
+    image: 'https://picsum.photos/id/1069/1200/800',
     heightClass: s.h_8_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 4',
+    id: '1080',
+    name: 'Desert',
+    description: 'Find beauty in the golden dunes and the quiet solitude of the sands.',
+    image: 'https://picsum.photos/id/1080/1200/800',
     heightClass: s.h_10_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 5 (center)',
+    id: '109',
+    name: 'City',
+    description: 'Explore the vibrant streets, lights, and endless energy of urban life.',
+    image: 'https://picsum.photos/id/109/1200/800',
     heightClass: s.h_11_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 6',
+    id: '106',
+    name: 'Aurora',
+    description: 'Witness the magical dance of colors painting the night sky.',
+    image: 'https://picsum.photos/id/106/1200/800',
     heightClass: s.h_10_12,
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 7',
-    heightClass: s.h_8_12,
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 8',
-    heightClass: s.h_6_12,
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 9',
-    heightClass: s.h_4_12,
   },
 ]
 
@@ -60,7 +59,11 @@ export default function Hero() {
   const secRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
+  
+  // Carousel State
+  const [activeIndex, setActiveIndex] = useState(0)
 
+  // GSAP Animation for the Hero Images
   useEffect(() => {
     const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
     const content = contentRef.current
@@ -84,18 +87,10 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
 
-      // Phase 1: expand widths from the center outward
+      // Phase 1: Expand widths
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
-        tl.to(
-          image,
-          {
-            width: '100%',
-            duration: DURATION,
-            ease: 'power2.inOut',
-          },
-          delay
-        )
+        tl.to(image, { width: '100%', duration: DURATION, ease: 'power2.inOut' }, delay)
       })
 
       const maxDelay = Math.max(
@@ -103,36 +98,32 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2: drop images downward, center outward (to 50vh so no overlap with shifted text)
+      // Phase 2: Drop images down
       images.forEach((image, index) => {
         const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
-        tl.to(
-          image,
-          {
-            y: '50vh',
-            duration: DURATION,
-            ease: 'power2.out',
-          },
-          delay
-        )
+        tl.to(image, { y: '50vh', duration: DURATION, ease: 'power2.out' }, delay)
       })
 
-      // Phase 3: fade in hero content cleanly above the photos
+      // Phase 3: Fade in content
       tl.fromTo(
         content,
         { opacity: 0, y: 25 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: DURATION,
-          ease: 'power2.out',
-        },
+        { opacity: 1, y: 0, duration: DURATION, ease: 'power2.out' },
         totalFirstAnimationTime + 0.4
       )
     }, secRef)
 
     return () => ctx.revert()
   }, [])
+
+  // Carousel Logic
+  const handleNext = () => {
+    setActiveIndex((prev) => (prev + 1) % GIRL_IMAGES.length)
+  }
+
+  const handlePrev = () => {
+    setActiveIndex((prev) => (prev - 1 + GIRL_IMAGES.length) % GIRL_IMAGES.length)
+  }
 
   const handleExplore = () => {
     const nextEl = secRef.current?.nextElementSibling
@@ -143,35 +134,90 @@ export default function Hero() {
     }
   }
 
+  // Helper to get preview indices safely
+  const prevIndex = (activeIndex - 1 + GIRL_IMAGES.length) % GIRL_IMAGES.length
+  const nextIndex = (activeIndex + 1) % GIRL_IMAGES.length
+
   return (
     <section ref={secRef} className={s.heroSection}>
+      
+      {/* Hero Text Content */}
       <div ref={contentRef} className={s.heroContent}>
         <h1 className={s.title}>
           Discover the world <br /> through people
         </h1>
-        <button
-          type="button"
-          onClick={handleExplore}
-          className={s.ctaBtn}
-        >
+        <button type="button" onClick={handleExplore} className={s.ctaBtn}>
           Start Exploring
         </button>
       </div>
 
+      {/* Decorative Animated Background Images */}
       <div className={s.heroImages}>
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
             <img
-              ref={el => {
-                imgRefs.current[idx] = el
-              }}
-              src={item.src}
-              alt={item.alt}
+              ref={el => { imgRefs.current[idx] = el }}
+              src={item.image}
+              alt={item.name}
               className={`${s.imgItem} ${item.heightClass}`}
             />
           </div>
         ))}
       </div>
+
+      {/* Integrated Carousel */}
+      <div className={s.carouselWrapper}>
+        <div className={s.carouselContainer}>
+          
+          {/* Carousel Slides */}
+          <div className={s.slide}>
+            {GIRL_IMAGES.map((item, index) => {
+              const isActive = index === activeIndex;
+              return (
+                <div
+                  key={item.id}
+                  className={`${s.carouselItem} ${isActive ? s.active : ''}`}
+                  style={{ backgroundImage: `url('${item.image}')` }}
+                >
+                  <div className={s.itemContent}>
+                    <div className={s.itemName}>{item.name}</div>
+                    <div className={s.itemDes}>{item.description}</div>
+                    <button className={s.itemBtn}>See more</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Navigation Arrows */}
+          <div className={s.buttonGroup}>
+            <button className={s.navBtn} onClick={handlePrev}>←</button>
+            <button className={s.navBtn} onClick={handleNext}>→</button>
+          </div>
+
+          {/* Prev & Next Previews */}
+          <div className={s.previewPair}>
+            <div
+              className={s.previewCard}
+              onClick={handlePrev}
+              style={{ backgroundImage: `url('${GIRL_IMAGES[prevIndex].image}')` }}
+              title="Previous photo"
+            >
+              <span className={s.tag}>◀ PREV</span>
+            </div>
+            <div
+              className={s.previewCard}
+              onClick={handleNext}
+              style={{ backgroundImage: `url('${GIRL_IMAGES[nextIndex].image}')` }}
+              title="Next photo"
+            >
+              <span className={s.tag}>NEXT ▶</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   )
 }
