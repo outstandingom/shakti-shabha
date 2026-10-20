@@ -60,10 +60,9 @@ export default function Hero() {
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
   
-  // Carousel State
   const [activeIndex, setActiveIndex] = useState(0)
 
-  // GSAP Animation for the Hero Images
+  // GSAP Animation for the background portrait grid
   useEffect(() => {
     const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
     const content = contentRef.current
@@ -73,9 +72,7 @@ export default function Hero() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
-      images.forEach(img => {
-        gsap.set(img, { width: '100%', y: '50vh' })
-      })
+      images.forEach(img => gsap.set(img, { width: '100%', y: '50vh' }))
       gsap.set(content, { opacity: 1, y: 0 })
       return
     }
@@ -87,7 +84,7 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
 
-      // Phase 1: Expand widths
+      // Expand widths
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
         tl.to(image, { width: '100%', duration: DURATION, ease: 'power2.inOut' }, delay)
@@ -98,13 +95,13 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2: Drop images down
+      // Drop images down
       images.forEach((image, index) => {
         const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(image, { y: '50vh', duration: DURATION, ease: 'power2.out' }, delay)
       })
 
-      // Phase 3: Fade in content
+      // Fade in content
       tl.fromTo(
         content,
         { opacity: 0, y: 25 },
@@ -116,25 +113,11 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  // Carousel Logic
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % GIRL_IMAGES.length)
-  }
+  // Carousel Controls
+  const handleNext = () => setActiveIndex((prev) => (prev + 1) % GIRL_IMAGES.length)
+  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + GIRL_IMAGES.length) % GIRL_IMAGES.length)
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + GIRL_IMAGES.length) % GIRL_IMAGES.length)
-  }
-
-  const handleExplore = () => {
-    const nextEl = secRef.current?.nextElementSibling
-    if (nextEl) {
-      nextEl.scrollIntoView({ behavior: 'smooth' })
-    } else {
-      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
-    }
-  }
-
-  // Helper to get preview indices safely
+  // Previews Math
   const prevIndex = (activeIndex - 1 + GIRL_IMAGES.length) % GIRL_IMAGES.length
   const nextIndex = (activeIndex + 1) % GIRL_IMAGES.length
 
@@ -146,12 +129,12 @@ export default function Hero() {
         <h1 className={s.title}>
           Discover the world <br /> through people
         </h1>
-        <button type="button" onClick={handleExplore} className={s.ctaBtn}>
+        <button type="button" className={s.ctaBtn}>
           Start Exploring
         </button>
       </div>
 
-      {/* Decorative Animated Background Images */}
+      {/* Animated Background Portraits */}
       <div className={s.heroImages}>
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
@@ -165,11 +148,10 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* Integrated Carousel */}
+      {/* Main Carousel */}
       <div className={s.carouselWrapper}>
         <div className={s.carouselContainer}>
           
-          {/* Carousel Slides */}
           <div className={s.slide}>
             {GIRL_IMAGES.map((item, index) => {
               const isActive = index === activeIndex;
