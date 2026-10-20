@@ -9,7 +9,10 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- GSAP CDN for standalone transitions -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
   <style>
     :root {
@@ -35,13 +38,15 @@
       --ff-display: 'Cinzel', Georgia, serif;
       --ff-body: 'Outfit', system-ui, sans-serif;
       --ff-dev: 'Noto Sans Devanagari', sans-serif;
-      --ff-poppins: 'Poppins', sans-serif;
+      --ff-playfair: 'Playfair Display', serif;
+      --ff-nunito: 'Nunito Sans', sans-serif;
     }
 
     *, *::before, *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      user-select: none;
     }
 
     html {
@@ -103,15 +108,6 @@
       background: var(--gold-bright);
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(201, 169, 110, 0.25);
-    }
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border-color: var(--border);
-    }
-    .btn-outline:hover {
-      border-color: rgba(255, 255, 255, 0.35);
-      background: rgba(255, 255, 255, 0.04);
     }
     .btn-ghost {
       background: transparent;
@@ -210,109 +206,153 @@
       .nav-hamburger { display: flex; }
     }
 
-    /* ─── HERO SECTION ─── */
-    .hero-section {
+    /* ─── HERO SLIDER BANNER ─── */
+    .hero-banner {
       position: relative;
-      width: 100%;
       height: 100vh;
-      min-height: 700px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+      min-height: 600px;
+      width: 100%;
       overflow: hidden;
-      background: var(--night);
-      font-family: var(--ff-poppins);
-      padding-top: clamp(5.5rem, 12vh, 8rem);
+      background: #000;
     }
-    .hero-content {
+
+    .hero-slider-header {
+      position: absolute;
+      top: 5.5rem;
+      left: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5%;
+      z-index: 30;
+      font-family: var(--ff-nunito);
+      font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+    }
+
+    .hero-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(1rem, 3.5vw, 3rem);
+      flex-wrap: wrap;
+    }
+
+    .hero-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-family: var(--ff-nunito);
+      transition: color 0.3s, text-shadow 0.3s;
+      cursor: pointer;
+      padding: 0.4rem 0.2rem;
+    }
+
+    .hero-nav a:hover {
+      text-shadow: 0 0 10px currentColor;
+    }
+    .hero-nav a:nth-child(1):hover { color: #e57373; }
+    .hero-nav a:nth-child(2):hover { color: #81c784; }
+    .hero-nav a:nth-child(3):hover { color: #64b5f6; }
+    .hero-nav a:nth-child(4):hover { color: #ffb74d; }
+    .hero-nav a:nth-child(5):hover { color: #ba68c8; }
+
+    .hero-nav a.active-0 { color: #e57373 !important; text-shadow: 0 0 12px #e57373; }
+    .hero-nav a.active-1 { color: #81c784 !important; text-shadow: 0 0 12px #81c784; }
+    .hero-nav a.active-2 { color: #64b5f6 !important; text-shadow: 0 0 12px #64b5f6; }
+    .hero-nav a.active-3 { color: #ffb74d !important; text-shadow: 0 0 12px #ffb74d; }
+    .hero-nav a.active-4 { color: #ba68c8 !important; text-shadow: 0 0 12px #ba68c8; }
+
+    .hero-slide {
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      position: absolute;
+      visibility: hidden;
+      overflow: hidden;
+    }
+
+    .hero-slide .wrapper-outer,
+    .hero-slide .wrapper-inner {
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
       position: relative;
+    }
+
+    .hero-slide .background {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero-slide h2 {
+      font-size: clamp(1.4rem, 4vw, 3.4rem);
+      font-family: var(--ff-playfair);
+      font-weight: 400;
+      text-align: center;
+      letter-spacing: 0.5em;
+      margin-right: -0.5em;
+      color: hsl(0, 0%, 80%);
+      width: 90vw;
+      max-width: 1200px;
+      transition: color 0.5s ease, text-shadow 0.5s ease;
+      z-index: 2;
+      text-transform: uppercase;
+      will-change: transform;
+    }
+
+    .hero-slide h2:hover {
+      color: #b8ebff;
+      text-shadow: 0 0 10px hsl(0, 0%, 80%);
+    }
+
+    .hero-explore-btn {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 30;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 0.85rem;
-      padding: 0 1.5rem;
-      opacity: 0;
-      text-align: center;
-      transform: translateY(25px);
-      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .hero-content.active {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .hero-title {
-      font-family: var(--ff-poppins);
-      font-weight: 600;
-      font-size: clamp(2.2rem, 4.6vw, 3.6rem);
-      line-height: 1.16;
-      color: #ffffff;
-      letter-spacing: -0.015em;
-      text-align: center;
-    }
-    .hero-btn {
-      margin-top: 0.6rem;
-      padding: 0.65rem 2.25rem;
-      font-family: var(--ff-poppins);
-      font-size: clamp(0.8rem, 1.1vw, 0.95rem);
-      font-weight: 500;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      border-radius: 9999px;
+      background: none;
+      border: none;
       cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .hero-btn:hover {
-      background: #ffffff;
-      border-color: #ffffff;
-      color: #060606;
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+      transition: color 0.25s;
     }
 
-    .hero-images {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      max-width: 1550px;
-      height: 84vh; /* Increased height */
-      display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap: clamp(6px, 1.1vw, 16px);
-      padding: 0 clamp(8px, 2vw, 24px);
-      align-items: center;
-      pointer-events: none;
-      z-index: 10;
+    .hero-explore-btn:hover {
+      color: #ffffff;
     }
-    .hero-col {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
+
+    .scroll-line {
+      width: 1px;
+      height: 28px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), transparent);
+      animation: scrollPulse 1.8s infinite;
     }
-    .hero-img {
-      width: 33.3333%;
-      object-fit: cover;
-      border-radius: 1.15rem;
-      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
-      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      will-change: width, transform;
+
+    @keyframes scrollPulse {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
     }
-    .h-4-12  { height: 48%; }
-    .h-6-12  { height: 64%; }
-    .h-8-12  { height: 78%; }
-    .h-10-12 { height: 90%; }
-    .h-11-12 { height: 100%; }
 
     /* ─── SECTION STYLING ─── */
     section {
@@ -344,7 +384,7 @@
       display: block;
     }
 
-    /* ─── PROFILE / FOUNDER ─── */
+    /* ─── FOUNDER & PROFILE ─── */
     .profile-grid {
       display: grid;
       grid-template-columns: 1fr 1.35fr;
@@ -492,59 +532,6 @@
       .cards-grid { grid-template-columns: 1fr; }
     }
 
-    /* ─── EVENTS ─── */
-    .events-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      margin-top: 2.5rem;
-    }
-    .event-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem 2rem;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 0.5rem;
-      transition: all 0.25s ease;
-    }
-    .event-item:hover {
-      border-color: var(--border-gold);
-      background: #141414;
-    }
-    .event-date {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 80px;
-    }
-    .event-day {
-      font-family: var(--ff-display);
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
-    }
-    .event-month {
-      font-size: 0.75rem;
-      color: var(--text-mute);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .event-badge {
-      font-size: 0.75rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: 9999px;
-      border: 1px solid var(--border-gold);
-      color: var(--gold);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    @media (max-width: 650px) {
-      .event-item { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    }
-
     /* ─── FOOTER ─── */
     footer {
       border-top: 1px solid var(--border);
@@ -558,34 +545,6 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 1.5rem;
-    }
-
-    /* ─── INTERACTIVE TIMELINE ─── */
-    .timeline {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1.5rem;
-      margin-top: 3rem;
-    }
-    .timeline-node {
-      border-top: 2px solid var(--border-gold);
-      padding-top: 1.25rem;
-      position: relative;
-    }
-    .timeline-year {
-      font-family: var(--ff-display);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--gold);
-      margin-bottom: 0.5rem;
-    }
-    .timeline-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-    @media (max-width: 900px) {
-      .timeline { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -601,9 +560,6 @@
       <a href="#about" class="nav-link">Pillars</a>
       <a href="#founder" class="nav-link">Founder</a>
       <a href="#aaryaveera" class="nav-link">Aaryaveera</a>
-      <a href="#events" class="nav-link">Events</a>
-      <a href="#courses" class="nav-link">Courses</a>
-      <a href="#history" class="nav-link">History</a>
     </div>
     <a href="#aaryaveera" class="nav-cta">Brand Identity</a>
     <button class="nav-hamburger" aria-label="Menu">
@@ -611,47 +567,72 @@
     </button>
   </nav>
 
-  <!-- ─── HERO SECTION ─── -->
-  <section class="hero-section" id="hero">
-    <div class="hero-content" id="heroContent">
-      <h1 class="hero-title">
-        Discover the world <br /> through people
-      </h1>
-      <button class="hero-btn" id="startExploreBtn">
-        Start Exploring
-      </button>
+  <!-- ─── HERO SLIDER BANNER ─── -->
+  <section class="hero-banner" id="hero">
+    <header class="hero-slider-header">
+      <nav class="hero-nav" id="heroNav">
+        <a href="#first" data-idx="0">Dream</a>
+        <a href="#second" data-idx="1">Some</a>
+        <a href="#third" data-idx="2">Follow</a>
+        <a href="#fourth" data-idx="3">Stay</a>
+        <a href="#fifth" data-idx="4">Win</a>
+      </nav>
+    </header>
+
+    <div class="hero-slide first" id="first">
+      <div class="wrapper-outer">
+        <div class="wrapper-inner">
+          <div class="background" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1435348773030-a1d74f568bc2?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDc1OTY5NTJ8&ixlib=rb-4.0.3&q=85');">
+            <h2>Dream Big</h2>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="hero-images" id="heroImages">
-      <div class="hero-col">
-        <img class="hero-img h-4-12" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 1" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-6-12" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 2" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-8-12" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 3" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-10-12" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 4" />
-      </div>
-      <!-- Center Image (Tallest) -->
-      <div class="hero-col">
-        <img class="hero-img h-11-12" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait Center" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-10-12" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 6" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-8-12" src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 7" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-6-12" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 8" />
-      </div>
-      <div class="hero-col">
-        <img class="hero-img h-4-12" src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80" alt="Girl Portrait 9" />
+    <div class="hero-slide second" id="second">
+      <div class="wrapper-outer">
+        <div class="wrapper-inner">
+          <div class="background" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1489846986031-7cea03ab8fd0?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDc1OTY5NTJ8&ixlib=rb-4.0.3&q=85');">
+            <h2>Some journeys we take alone</h2>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div class="hero-slide third" id="third">
+      <div class="wrapper-outer">
+        <div class="wrapper-inner">
+          <div class="background" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1484359755660-c7ed8f31f0cc?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDc1OTcyODB8&ixlib=rb-4.0.3&q=85');">
+            <h2>Follow your own path</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-slide fourth" id="fourth">
+      <div class="wrapper-outer">
+        <div class="wrapper-inner">
+          <div class="background" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1517825738774-7de9363ef735?crop=entropy&cs=srgb&fm=jpg&ixid=M3wzMjM4NDZ8MHwxfHJhbmRvbXx8fHx8fHx8fDE3MDc1OTc3OTJ8&ixlib=rb-4.0.3&q=85');">
+            <h2>Stay Hungry</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-slide fifth" id="fifth">
+      <div class="wrapper-outer">
+        <div class="wrapper-inner">
+          <div class="background" style="background-image: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 100%), url('https://images.unsplash.com/photo-1604948501466-4e9c339b9c24?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+            <h2>Win</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="hero-explore-btn" id="exploreBtn">
+      <span>Explore</span>
+      <div class="scroll-line"></div>
+    </button>
   </section>
 
   <!-- ─── FOUNDER & PROFILE SECTION ─── -->
@@ -784,101 +765,6 @@
           </p>
         </div>
       </div>
-
-      <div style="margin-top: 3.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="#courses" class="btn btn-gold">Explore Courses</a>
-        <a href="#events" class="btn btn-ghost">View Upcoming Camps</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── UPCOMING EVENTS ─── -->
-  <section id="events">
-    <div class="container">
-      <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
-        <div>
-          <span class="section-eyebrow">On-Ground Schedule</span>
-          <h2 class="section-title">Upcoming Camps &amp; Seminars</h2>
-          <span class="section-dev">आगामी कार्यक्रम और शिविर</span>
-        </div>
-        <button class="btn btn-ghost">View Calendar →</button>
-      </div>
-
-      <div class="events-list">
-        <div class="event-item">
-          <div style="display: flex; align-items: center; gap: 2rem;">
-            <div class="event-date">
-              <span class="event-day">14</span>
-              <span class="event-month">Nov 2026</span>
-            </div>
-            <div>
-              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Aaryaveera 3-Day Self-Defense Camp</h4>
-              <p style="color: var(--text-dim); font-size: 0.85rem;">Wardha, Maharashtra · Limited seats · ₹1,200</p>
-            </div>
-          </div>
-          <span class="event-badge">Camp</span>
-        </div>
-
-        <div class="event-item">
-          <div style="display: flex; align-items: center; gap: 2rem;">
-            <div class="event-date">
-              <span class="event-day">22</span>
-              <span class="event-month">Nov 2026</span>
-            </div>
-            <div>
-              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Shakti Varta Seminar — The Legal Collage</h4>
-              <p style="color: var(--text-dim); font-size: 0.85rem;">Online · IPC &amp; BNS Analysis · Free for members</p>
-            </div>
-          </div>
-          <span class="event-badge">Webinar</span>
-        </div>
-
-        <div class="event-item">
-          <div style="display: flex; align-items: center; gap: 2rem;">
-            <div class="event-date">
-              <span class="event-day">05</span>
-              <span class="event-month">Dec 2026</span>
-            </div>
-            <div>
-              <h4 style="font-size: 1.15rem; color: #fff; margin-bottom: 0.25rem;">Vedic Parenting in Modern India Workshop</h4>
-              <p style="color: var(--text-dim); font-size: 0.85rem;">Nagpur · Full-day intensive session · ₹800</p>
-            </div>
-          </div>
-          <span class="event-badge">Workshop</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── HISTORY & TODAY'S SUCCESS GIRLS ─── -->
-  <section id="history" style="background: #090909;">
-    <div class="container">
-      <span class="section-eyebrow">Living Heritage</span>
-      <h2 class="section-title">From Legends to Today's Warriors</h2>
-      <span class="section-dev">इतिहास से आज की सफलता तक</span>
-
-      <div class="timeline">
-        <div class="timeline-node">
-          <div class="timeline-year">2012</div>
-          <div class="timeline-desc">First self-defense camp in Wardha. 12 girls, one mat, one instructor.</div>
-        </div>
-        <div class="timeline-node">
-          <div class="timeline-year">2015</div>
-          <div class="timeline-desc">Expanded to 50 schools across Vidarbha region. Media and impact archive begins.</div>
-        </div>
-        <div class="timeline-node">
-          <div class="timeline-year">2018</div>
-          <div class="timeline-desc">Shakti Varta launches — research white papers, survivor legal aid collage.</div>
-        </div>
-        <div class="timeline-node">
-          <div class="timeline-year">2022</div>
-          <div class="timeline-desc">Aaryaveera brand established. First Warrior Certification class graduates.</div>
-        </div>
-        <div class="timeline-node">
-          <div class="timeline-year">2026</div>
-          <div class="timeline-desc">400+ schools reached. Platform launch. Digital chapter begins.</div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -893,71 +779,105 @@
     </div>
   </footer>
 
-  <!-- ─── HERO INTERACTIVE SCRIPT ─── -->
+  <!-- ─── HERO SLIDER CONTROLLER SCRIPT ─── -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Nav scroll effect
-      const nav = document.getElementById('mainNav');
+      const mainNav = document.getElementById('mainNav');
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 40) {
-          nav.classList.add('scrolled');
-        } else {
-          nav.classList.remove('scrolled');
-        }
+        if (window.scrollY > 40) mainNav.classList.add('scrolled');
+        else mainNav.classList.remove('scrolled');
       });
 
-      // Smooth scroll for hero button
-      const exploreBtn = document.getElementById('startExploreBtn');
-      exploreBtn.addEventListener('click', () => {
-        const founderSection = document.getElementById('founder');
-        if (founderSection) {
-          founderSection.scrollIntoView({ behavior: 'smooth' });
-        }
+      // Scroll to next section
+      document.getElementById('exploreBtn').addEventListener('click', () => {
+        document.getElementById('founder').scrollIntoView({ behavior: 'smooth' });
       });
 
-      // Hero Animation Sequence
-      const images = document.querySelectorAll('.hero-images .hero-img');
-      const content = document.getElementById('heroContent');
-      const centerIndex = Math.floor(images.length / 2); // 4
-      const STAGGER = 0.18; // seconds
-      const DURATION = 1000; // ms
+      // Slider Animation Setup
+      const sections = document.querySelectorAll('.hero-slide');
+      const navLinks = document.querySelectorAll('#heroNav a');
+      const heroContainer = document.getElementById('hero');
+      let currentIndex = -1;
+      let animating = false;
 
-      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const directions = ['left', 'right', 'up', 'down'];
 
-      if (prefersReduced) {
-        images.forEach(img => {
-          img.style.width = '100%';
-          img.style.transform = 'translateY(50vh)';
-        });
-        content.classList.add('active');
-        return;
+      function calculateDirection(curr, target) {
+        const seq = (target - curr + sections.length) % sections.length % 4;
+        return directions[seq];
       }
 
-      // Phase 1: Expand widths outward from center
-      images.forEach((img, idx) => {
-        const delayMs = Math.abs(idx - centerIndex) * STAGGER * 1000;
-        setTimeout(() => {
-          img.style.width = '100%';
-        }, delayMs);
+      function updateActiveNav(idx) {
+        navLinks.forEach((a, i) => {
+          a.className = i === idx ? `active-${idx}` : '';
+        });
+      }
+
+      function animateSection(targetIndex, direction) {
+        if (animating || targetIndex === currentIndex) return;
+        animating = true;
+
+        const targetSection = sections[targetIndex];
+        let animationProps = {};
+
+        switch (direction) {
+          case 'left':  animationProps = { x: '-100%', autoAlpha: 0 }; break;
+          case 'right': animationProps = { x: '100%', autoAlpha: 0 }; break;
+          case 'up':    animationProps = { y: '-100%', autoAlpha: 0 }; break;
+          case 'down':  animationProps = { y: '100%', autoAlpha: 0 }; break;
+        }
+
+        if (currentIndex >= 0) {
+          const currentSection = sections[currentIndex];
+          gsap.to(currentSection, { ...animationProps, autoAlpha: 0, duration: 1, ease: 'power2.inOut' });
+        }
+
+        gsap.set(targetSection, { x: 0, y: 0, autoAlpha: 0, zIndex: 5 });
+
+        gsap.to(targetSection, {
+          x: 0,
+          y: 0,
+          autoAlpha: 1,
+          duration: 1,
+          ease: 'power2.inOut',
+          onComplete: () => {
+            animating = false;
+            currentIndex = targetIndex;
+            updateActiveNav(targetIndex);
+          }
+        });
+      }
+
+      // Wheel listener on hero
+      heroContainer.addEventListener('wheel', (e) => {
+        if (animating) return;
+        if (e.deltaY > 20) {
+          if (currentIndex < sections.length - 1) {
+            e.preventDefault();
+            const target = currentIndex + 1;
+            animateSection(target, calculateDirection(currentIndex, target));
+          }
+        } else if (e.deltaY < -20) {
+          if (currentIndex > 0) {
+            e.preventDefault();
+            const target = currentIndex - 1;
+            animateSection(target, calculateDirection(currentIndex, target));
+          }
+        }
+      }, { passive: false });
+
+      // Click on hero nav links
+      navLinks.forEach((a, idx) => {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (animating || idx === currentIndex) return;
+          animateSection(idx, calculateDirection(currentIndex, idx));
+        });
       });
 
-      const maxDelayMs = Math.max(...Array.from(images).map((_, i) => Math.abs(i - centerIndex) * STAGGER * 1000));
-      const phase2StartTime = maxDelayMs + DURATION;
-
-      // Phase 2: Drop images downward (to 50vh) so they don't overlap with upper text
-      setTimeout(() => {
-        images.forEach((img, idx) => {
-          const dropDelayMs = Math.abs(idx - centerIndex) * STAGGER * 1000;
-          setTimeout(() => {
-            img.style.transform = 'translateY(50vh)';
-          }, dropDelayMs);
-        });
-      }, phase2StartTime);
-
-      // Phase 3: Fade in hero text cleanly above the photos
-      setTimeout(() => {
-        content.classList.add('active');
-      }, phase2StartTime + 350);
+      // Initial transition to slide 0
+      animateSection(0, 'right');
     });
   </script>
 </body>
