@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
@@ -294,6 +294,7 @@ class Leaf {
 type LeavesEngine = {
   destroy: () => void
   setPointer: (x: number, y: number, active: boolean) => void
+  setColorMode: (on: boolean) => void
 }
 
 function createLeavesEngine(
@@ -381,6 +382,11 @@ function createLeavesEngine(
     pointerActive = active
   }
 
+  let colorMode = false
+  const setColorMode = (on: boolean) => {
+    colorMode = on
+  }
+
   let lastTime = 0
   let raf = 0
   let running = true
@@ -400,15 +406,20 @@ function createLeavesEngine(
       particles[i].draw(sceneCtx, true)
     }
 
-    // grayscale layer (always visible)
+    // grayscale layer (visible when NOT in color mode)
     grayCtx.clearRect(0, 0, width, height)
-    for (let i = 0; i < particles.length; i++) {
-      particles[i].draw(grayCtx, false)
+    if (colorMode) {
+      // full color — leaves become colorful with each other
+      grayCtx.drawImage(sceneCanvas, 0, 0, width, height)
+    } else {
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].draw(grayCtx, false)
+      }
     }
 
     // color reveal around the pointer
     revealCtx.clearRect(0, 0, width, height)
-    if (pointerActive) {
+    if (pointerActive && !colorMode) {
       maskCtx.clearRect(0, 0, width, height)
       const grad = maskCtx.createRadialGradient(
         pointerX,
@@ -442,11 +453,12 @@ function createLeavesEngine(
       cancelAnimationFrame(raf)
     },
     setPointer,
+    setColorMode,
   }
 }
 
 /* ============================================================
-   Component — your original code, plus the leaves layer
+   Component — your original code + leaves + color mode
    ============================================================ */
 
 export default function Hero() {
@@ -454,11 +466,14 @@ export default function Hero() {
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
 
-  // NEW refs — only for the leaves feature
+  // leaves refs
   const grayCanvasRef = useRef<HTMLCanvasElement>(null)
   const revealCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<LeavesEngine | null>(null)
+
+  // color mode (triggered by hovering a photo)
+  const [colorMode, setColorMode] = useState(false)
 
   /* ---- YOUR ORIGINAL GSAP TIMELINE — unchanged ---- */
   useEffect(() => {
@@ -518,7 +533,7 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  /* ---- NEW: leaves engine + pointer tracking ---- */
+  /* ---- leaves engine + pointer tracking ---- */
   useEffect(() => {
     const gray = grayCanvasRef.current
     const reveal = revealCanvasRef.current
@@ -565,6 +580,11 @@ export default function Hero() {
     }
   }, [])
 
+  /* ---- sync colorMode into the leaves engine ---- */
+  useEffect(() => {
+    engineRef.current?.setColorMode(colorMode)
+  }, [colorMode])
+
   const handleExplore = () => {
     const nextEl = secRef.current?.nextElementSibling
     if (nextEl) {
@@ -575,8 +595,12 @@ export default function Hero() {
   }
 
   return (
-    <section ref={secRef} className={s.heroSection}>
-      {/* NEW: falling leaves behind everything */}
+    <section
+      ref={secRef}
+      className={s.heroSection}
+      data-color={colorMode ? 'true' : 'false'}
+    >
+      {/* falling leaves behind everything */}
       <div ref={leavesWrapRef} className={s.leavesWrap} aria-hidden="true">
         <canvas ref={grayCanvasRef} className={s.leavesCanvas} />
         <canvas ref={revealCanvasRef} className={s.revealCanvas} />
@@ -595,7 +619,12 @@ export default function Hero() {
         </button>
       </div>
 
-      <div className={s.heroImages}>
+      <div
+        className={s.heroImages}
+        onPointerEnter={() => setColorMode(true)}
+        onPointerLeave={() => setColorMode(false)}
+        onPointerCancel={() => setColorMode(false)}
+      >
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
             <img
