@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
+
 type ImageData = {
   src: string
   alt: string
