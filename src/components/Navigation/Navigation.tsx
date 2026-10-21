@@ -17,18 +17,52 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const ctaRef = useRef<HTMLAnchorElement>(null)
+  const logoImgRef = useRef<HTMLImageElement>(null)
+  const logoMainRef = useRef<HTMLSpanElement>(null)
+  const logoDevRef = useRef<HTMLSpanElement>(null)
   const location = useLocation()
 
-  // scrolled state
+  // scroll state
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40)
-    fn() // initial check (page may load mid-scroll)
+    fn()
     window.addEventListener('scroll', fn, { passive: true })
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
   // close mobile menu on route change
   useEffect(() => { setOpen(false) }, [location.pathname])
+
+  // logo intro: flip → writing reveal → subtext fade
+  useEffect(() => {
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
+
+    if (logoImgRef.current) {
+      tl.fromTo(
+        logoImgRef.current,
+        { rotateY: -90, scale: 0.8, opacity: 0 },
+        { rotateY: 0, scale: 1, opacity: 1, duration: 0.8 }
+      )
+    }
+
+    if (logoMainRef.current) {
+      tl.fromTo(
+        logoMainRef.current,
+        { clipPath: 'inset(0 100% 0 0)' },
+        { clipPath: 'inset(0 0% 0 0)', duration: 1, ease: 'power2.inOut' },
+        '-=0.2'
+      )
+    }
+
+    if (logoDevRef.current) {
+      tl.fromTo(
+        logoDevRef.current,
+        { opacity: 0, y: 4 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' },
+        '-=0.35'
+      )
+    }
+  }, [])
 
   const onMove = (e: MouseEvent<HTMLAnchorElement>) => {
     const el = ctaRef.current
@@ -41,7 +75,6 @@ export default function Navigation() {
       ease: 'power2.out',
     })
   }
-
   const onLeave = () => {
     if (ctaRef.current) {
       gsap.to(ctaRef.current, { x: 0, y: 0, duration: 0.6, ease: 'elastic.out(1,0.4)' })
@@ -50,22 +83,34 @@ export default function Navigation() {
 
   return (
     <nav className={`${s.nav} ${scrolled ? s.navScrolled : ''}`}>
-      <Link to="/" className={s.logo}>
-        <span className={s.logoMain}>Shakti Sabha</span>
-        <span className={s.logoDev}>शक्ति सभा</span>
+      {/* ---------- logo: flip image + writing text ---------- */}
+      <Link to="/" className={s.logo} aria-label="Shakti Sabha home">
+        <img
+          ref={logoImgRef}
+          src="/logo.jpeg"
+          alt="Shakti Sabha logo"
+          className={s.logoImg}
+        />
+        <div className={s.logoText}>
+          <span ref={logoMainRef} className={s.logoMain}>Shakti Sabha</span>
+          <span ref={logoDevRef} className={s.logoDev}>शक्ति सभा</span>
+        </div>
       </Link>
 
-      <div className={`${s.links} ${open ? s.linksOpen : ''}`}>
-        {LINKS.map(l => (
-          <NavLink
-            key={l.to}
-            to={l.to}
-            className={({ isActive }) => `${s.link} ${isActive ? s.linkActive : ''}`}
-            onClick={() => setOpen(false)}
-          >
-            {l.label}
-          </NavLink>
-        ))}
+      {/* ---------- links wrapped in a single rectangle ---------- */}
+      <div className={`${s.linksBox} ${open ? s.linksBoxOpen : ''}`}>
+        <div className={s.links}>
+          {LINKS.map(l => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              className={({ isActive }) => `${s.link} ${isActive ? s.linkActive : ''}`}
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </NavLink>
+          ))}
+        </div>
       </div>
 
       <Link
