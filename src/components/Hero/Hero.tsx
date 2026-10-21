@@ -60,7 +60,6 @@ const GIRL_IMAGES: ImageData[] = [
     heightClass: s.h_8_12,
   },
   {
-    // rename file in /public → youngest-ias-officer.jpg
     src: '/youngest-ias-officer.jpg',
     fallback:
       'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
@@ -68,7 +67,6 @@ const GIRL_IMAGES: ImageData[] = [
     heightClass: s.h_6_12,
   },
   {
-    // rename file in /public → youngestbillionaire.jpeg
     src: '/youngestbillionaire.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
@@ -611,7 +609,6 @@ export default function Hero() {
     }
   }
 
-  /* ---------- fallback: swap local → unsplash on 404 ---------- */
   const handleImgError =
     (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget
