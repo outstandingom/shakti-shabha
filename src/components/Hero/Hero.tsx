@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+ * ============================================================
+   Hero Section — mobile-first
+   ============================================================ */
+
+.heroSection import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
@@ -502,15 +506,17 @@ export default function Hero() {
       '(prefers-reduced-motion: reduce)'
     ).matches
 
+    // ---------- Responsive offsets ----------
+    // Desktop keeps the ORIGINAL behaviour exactly (50vh / content y = 0),
+    // so the sliding "diamond preview" is preserved 1:1.
+    // Mobile gets a gentler push (28vh) — still reveals the diamond via
+    // the slide-in motion, but doesn't push images so far down that the
+    // top of the hero looks empty.
     const isMobile = window.matchMedia('(max-width: 767px)').matches
     const isTablet = window.matchMedia('(max-width: 1023px)').matches
 
-    // ---------- RESPONSIVE OFFSETS ----------
-    // Changed IMG_Y from 50vh to 35vh to close the gap between the button & images
-    const IMG_Y = isMobile ? '25vh' : isTablet ? '30vh' : '35vh'
-    
-    // Slightly pushed the text down to balance the space
-    const CONTENT_END_Y = isMobile ? 40 : isTablet ? 20 : 15
+    const IMG_Y = isMobile ? '28vh' : isTablet ? '40vh' : '50vh'
+    const CONTENT_END_Y = isMobile ? 45 : isTablet ? 20 : 0
     const CONTENT_START_Y = isMobile ? 80 : isTablet ? 50 : 25
 
     if (prefersReducedMotion) {
@@ -543,7 +549,7 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2 – slide images down
+      // Phase 2 – slide images down (responsive amount)
       images.forEach((image, index) => {
         const delay =
           totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
@@ -554,7 +560,7 @@ export default function Hero() {
         )
       })
 
-      // Phase 3 – fade content in
+      // Phase 3 – fade content in (settles lower only on smaller screens)
       tl.fromTo(
         content,
         { opacity: 0, y: CONTENT_START_Y },
@@ -630,6 +636,7 @@ export default function Hero() {
     }
   }
 
+  /* ---------- fallback: swap local → unsplash on 404 ---------- */
   const handleImgError =
     (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget
@@ -651,8 +658,7 @@ export default function Hero() {
 
       <div ref={contentRef} className={s.heroContent}>
         <h1 className={s.title}>
-          <span className={s.crimson}>Discover the</span> world <br /> through
-          people
+          Discover the world <br /> through people
         </h1>
         <button
           type="button"
