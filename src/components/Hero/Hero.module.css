@@ -115,8 +115,8 @@
 
 .col:nth-child(1),
 .col:nth-child(2),
-.col:nth-child(8),
-.col:nth-child(9) {
+.col:nth-child(6),
+.col:nth-child(7) {
   display: none;
 }
 
@@ -167,8 +167,8 @@
 @media (min-width: 640px) {
   .col:nth-child(1),
   .col:nth-child(2),
-  .col:nth-child(8),
-  .col:nth-child(9) {
+  .col:nth-child(6),
+  .col:nth-child(7) {
     display: flex;
   }
 }
@@ -211,7 +211,6 @@
 
 /* ============================================================
    Color mode — triggered by hovering any photo
-   (leaves colorize via JS, hero text + CTA colorize via these rules)
    ============================================================ */
 
 .heroSection[data-color="true"] .title {
