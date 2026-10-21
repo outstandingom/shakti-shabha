@@ -502,7 +502,7 @@ export default function Hero() {
 
     if (prefersReducedMotion) {
       images.forEach((img) => {
-        gsap.set(img, { width: '100%', y: '50vh' })
+        gsap.set(img, { width: '100%', height: '100%', y: 0 })
       })
       gsap.set(content, { opacity: 1, y: 0 })
       return
@@ -511,15 +511,29 @@ export default function Hero() {
     const centerIndex = Math.floor(images.length / 2)
     const STAGGER = 0.2
     const DURATION = 1
+    // This check dictates the animation style
+    const isMobile = window.matchMedia('(max-width: 639px)').matches
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
+
+      // Initial state for images (Mobile grows from 0 height, Desktop expands width)
+      if (isMobile) {
+        images.forEach((img) => {
+          gsap.set(img, { height: '0%' })
+        })
+      }
 
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
-          { width: '100%', duration: DURATION, ease: 'power2.inOut' },
+          {
+            // On mobile we animate height up, on desktop we animate width
+            ...(isMobile ? { height: '100%' } : { width: '100%' }),
+            duration: DURATION,
+            ease: 'power2.inOut',
+          },
           delay
         )
       })
@@ -529,21 +543,31 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      images.forEach((image, index) => {
-        const delay =
-          totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
-        tl.to(
-          image,
-          { y: '50vh', duration: DURATION, ease: 'power2.out' },
-          delay
-        )
-      })
+      // Wait, we want the images to "drop" on desktop, but stay put on mobile.
+      // On desktop, the initial state is width: 0, so this makes them expand then drop.
+      // On mobile, they just grow from the bottom, so we don't need the drop phase.
+      if (!isMobile) {
+        images.forEach((image, index) => {
+          const delay =
+            totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
+          tl.to(
+            image,
+            { y: '50vh', duration: DURATION, ease: 'power2.out' },
+            delay
+          )
+        })
+      }
 
       tl.fromTo(
         content,
         { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: DURATION, ease: 'power2.out' },
-        totalFirstAnimationTime + 0.4
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION,
+          ease: 'power2.out',
+        },
+        isMobile ? totalFirstAnimationTime - 0.4 : totalFirstAnimationTime + 0.4 // text fades in as the heights finish
       )
     }, secRef)
 
