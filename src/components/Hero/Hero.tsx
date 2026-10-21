@@ -59,21 +59,22 @@ const GIRL_IMAGES: ImageData[] = [
     alt: 'Police',
     heightClass: s.h_8_12,
   },
-   {
-    src: '/youngest ias officier.jpg',
+  {
+    // rename file in /public → youngest-ias-officer.jpg
+    src: '/youngest-ias-officer.jpg',
     fallback:
       'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
-    alt: 'ias',
+    alt: 'Youngest IAS officer',
     heightClass: s.h_6_12,
   },
-   {
-    src: '/ youngestbilenare.jpeg',
+  {
+    // rename file in /public → youngestbillionaire.jpeg
+    src: '/youngestbillionaire.jpeg',
     fallback:
-      'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
-    alt: 'billionare',
+      'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
+    alt: 'Youngest billionaire',
     heightClass: s.h_4_12,
   },
- 
 ]
 
 /* ============================================================
@@ -611,13 +612,13 @@ export default function Hero() {
   }
 
   /* ---------- fallback: swap local → unsplash on 404 ---------- */
-  const handleImgError = (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
-    const img = e.currentTarget
-    // only swap once (guard against infinite loops if fallback also fails)
-    if (img.dataset.fallbackApplied === '1') return
-    img.dataset.fallbackApplied = '1'
-    img.src = GIRL_IMAGES[idx].fallback
-  }
+  const handleImgError =
+    (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+      const img = e.currentTarget
+      if (img.dataset.fallbackApplied === '1') return
+      img.dataset.fallbackApplied = '1'
+      img.src = GIRL_IMAGES[idx].fallback
+    }
 
   return (
     <section
