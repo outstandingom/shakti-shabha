@@ -10,7 +10,7 @@
   overflow: hidden;
   background: var(--night, #060606);
   font-family: 'Poppins', sans-serif;
-  /* Increased padding-top to shift the content slightly down */
+  /* Adjusted padding-top to shift the content slightly down */
   padding-top: clamp(7rem, 16vh, 10rem);
 }
 
@@ -74,7 +74,7 @@
   transform: translate(-50%, -50%);
   width: 100%;
   max-width: 1550px;
-  height: 92vh; /* Increased for PC */
+  height: 92vh;
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   gap: clamp(6px, 1.1vw, 16px);
@@ -128,37 +128,41 @@
   height: 100%;
 }
 
-/* 📱 MOBILE ADJUSTMENTS */
+/* 📱 MOBILE ADJUSTMENTS (FIXED) */
 @media (max-width: 639px) {
   .heroImages {
-    /* Change grid to 5 columns for the reduced image count */
     grid-template-columns: repeat(5, 1fr); 
     
-    /* Stretch container to fill the empty space */
-    height: 80vh; 
+    /* Decreased height so images aren't massively zoomed in */
+    height: 55vh; 
     
-    /* Anchor to bottom so images grow upwards towards the text */
+    /* 
+      Set bottom to 50vh. When GSAP animates 'y: 50vh', 
+      it will push the images down by 50vh, perfectly landing them at the bottom (0vh). 
+    */
     top: auto; 
-    bottom: 0;
+    bottom: 50vh;
     transform: translateX(-50%); 
     
-    /* Align images to the bottom */
     align-items: flex-end; 
+    gap: 8px;
     
-    gap: 6px;
-    padding-bottom: 2vh; 
+    /* Lift images slightly off the bottom edge */
+    padding-bottom: 5vh; 
   }
 
   .imgItem {
-    /* Make the images fill the width of the 5-column grid */
     width: 100%; 
+    border-radius: 1rem;
+    /* Shifts the focus of the image upwards so faces/heads aren't cut off */
+    object-position: center 25%; 
   }
 
-  /* Adjust the height ratios slightly for mobile to keep a nice stagger */
-  .h_4_12 { height: 40%; }
-  .h_6_12 { height: 55%; }
-  .h_8_12 { height: 70%; }
-  .h_10_12 { height: 85%; }
+  /* Adjusted ratios to maintain a nice wave without being too tall */
+  .h_4_12 { height: 45%; }
+  .h_6_12 { height: 60%; }
+  .h_8_12 { height: 75%; }
+  .h_10_12 { height: 90%; }
   .h_11_12 { height: 100%; }
 }
 
