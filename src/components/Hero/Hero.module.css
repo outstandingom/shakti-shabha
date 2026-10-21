@@ -1,191 +1,245 @@
+/* ============================================================
+   Hero Section — falling leaves bg + grayscale-to-color reveal
+   ============================================================ */
+
 .heroSection {
   position: relative;
   width: 100%;
-  height: 100vh;
-  min-height: 680px;
+  min-height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  overflow: hidden;
-  background: var(--night, #060606);
-  font-family: 'Poppins', sans-serif;
-  padding-top: clamp(7rem, 16vh, 10rem);
+  justify-content: center;
+  background: #f9f5ec;
+  isolation: isolate;
 }
+
+/* ============================================================
+   Falling leaves background (two stacked canvases)
+   ============================================================ */
+
+.leavesWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Bottom layer — the always-visible grayscale leaves */
+.leavesCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Top layer — the color scene, masked by a radial gradient
+   centered on the pointer. Invisible until the user touches/hovers. */
+.revealCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  /* subtle blend so the color pops against the cream bg */
+  mix-blend-mode: normal;
+  /* smooth appear/disappear as pointer enters/leaves */
+  transition: opacity 0.25s ease;
+  opacity: 1;
+}
+
+/* ============================================================
+   Hero content (title + CTA)
+   ============================================================ */
 
 .heroContent {
   position: relative;
-  z-index: 25;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.85rem;
-  padding: 0 1.5rem;
-  opacity: 0;
+  z-index: 3;
   text-align: center;
-  pointer-events: auto;
+  padding: 0 1.5rem;
+  /* GSAP fades + slides this in */
+  opacity: 0;
+  transform: translateY(25px);
+  pointer-events: none;
 }
 
 .title {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  font-size: clamp(2rem, 4.5vw, 3.4rem);
-  line-height: 1.18;
-  color: #ffffff;
-  letter-spacing: -0.015em;
-  text-align: center;
-  margin: 0;
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0 0 1.75rem;
+  color: #1a1a1a;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 .ctaBtn {
-  margin-top: 0.65rem;
-  padding: 0.65rem 2.25rem;
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(0.8rem, 1.1vw, 0.95rem);
+  pointer-events: auto;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid #1a1a1a;
+  background: #1a1a1a;
+  color: #f9f5ec;
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.95rem;
   font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 9999px;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
 }
 
 .ctaBtn:hover {
-  background: #ffffff;
-  border-color: #ffffff;
-  color: #060606;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.18);
+  background: #333;
+  color: #fff;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.16);
 }
+
+.ctaBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.ctaBtn:focus-visible {
+  outline: 2px solid #1a1a1a;
+  outline-offset: 4px;
+}
+
+/* ============================================================
+   Hero images (columns of portraits)
+   ============================================================ */
 
 .heroImages {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  max-width: 1550px;
-  height: 92vh;
-  /* Changed from grid to flex for the accordion hover effect */
-  display: flex; 
+  inset: 0;
+  z-index: 2;
+  display: flex;
   justify-content: center;
-  gap: clamp(6px, 1.1vw, 16px);
-  padding: 0 clamp(8px, 2vw, 24px);
-  align-items: center;
-  z-index: 10;
-  /* Note: pointer-events: none was removed so we can hover/click the images */
+  align-items: stretch;
+  gap: 0.5rem;
+  padding: 0 0.5rem;
+  pointer-events: none; /* columns re-enable it */
 }
 
 .col {
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
-  /* flex: 1 makes all columns take equal width initially */
-  flex: 1; 
-  /* Smooth transition for the size increase */
-  transition: flex 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s; 
-}
-
-/* Expand the column on hover (Desktop) */
-.col:hover {
-  flex: 1.8; 
-  z-index: 15;
+  pointer-events: auto;
 }
 
 .imgItem {
-  width: 33.3333%;
+  /* GSAP animates width 0 → 100% */
+  width: 0;
+  max-width: 100%;
+  height: auto;
   object-fit: cover;
-  border-radius: 1.15rem;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
-  will-change: width, transform, filter;
-  /* Default state: Black and White */
-  filter: grayscale(100%);
-  /* Smooth transition for the color change */
-  transition: filter 0.5s ease; 
+  object-position: center;
+  border-radius: 4px;
+  user-select: none;
+  -webkit-user-drag: none;
+  /* default: black & white */
+  filter: grayscale(1) contrast(1.05) brightness(0.95);
+  transition:
+    filter 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.4s ease;
+  will-change: filter, transform, width;
+  transform: translateZ(0);
 }
 
-/* Remove grayscale on hover (Desktop) */
-.col:hover .imgItem {
-  filter: grayscale(0%);
+/* Reveal the original colors on hover / touch */
+.imgItem.reveal {
+  filter: grayscale(0) contrast(1) brightness(1);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
 
-/* Hide outer columns on mobile to reduce image count */
-.col:nth-child(1),
-.col:nth-child(2),
-.col:nth-child(8),
-.col:nth-child(9) {
-  display: none;
-}
+/* ============================================================
+   Height utilities (fractional heights so the arc reads well)
+   ============================================================ */
 
-/* Increased height ratios for tall, impactful portrait gallery on PC */
-.h_4_12 { height: 55%; }
-.h_6_12 { height: 70%; }
-.h_8_12 { height: 84%; }
-.h_10_12 { height: 95%; }
-.h_11_12 { height: 100%; }
+.h_4_12  { height: 33.333%; }
+.h_6_12  { height: 50%; }
+.h_8_12  { height: 66.666%; }
+.h_10_12 { height: 83.333%; }
+.h_11_12 { height: 91.666%; }
 
-/* 📱 MOBILE ADJUSTMENTS */
-@media (max-width: 639px) {
-  .heroImages {
-    display: flex;
-    height: 55vh; 
-    top: auto; 
-    bottom: 50vh;
-    transform: translateX(-50%); 
-    align-items: flex-end; 
-    gap: 6px;
-    padding-bottom: 5vh; 
-  }
+/* ============================================================
+   Responsive tweaks
+   ============================================================ */
 
-  .col {
-    flex: 1;
-  }
-
-  /* Touch interaction for mobile */
-  .col:active {
-    flex: 1.5;
-    z-index: 15;
-  }
-
-  .col:active .imgItem {
-    filter: grayscale(0%);
-  }
-
-  .imgItem {
-    width: 100%; 
-    border-radius: 1rem;
-    object-position: center 25%; 
-  }
-
-  .h_4_12 { height: 45%; }
-  .h_6_12 { height: 60%; }
-  .h_8_12 { height: 75%; }
-  .h_10_12 { height: 90%; }
-  .h_11_12 { height: 100%; }
-}
-
-/* Restore all columns on tablet and up */
-@media (min-width: 640px) {
-  .col:nth-child(1),
-  .col:nth-child(2),
-  .col:nth-child(8),
-  .col:nth-child(9) {
-    display: flex;
+@media (max-width: 900px) {
+  .heroImages { gap: 0.4rem; padding: 0 0.4rem; }
+  .imgItem { border-radius: 3px; }
+  .title { margin-bottom: 1.25rem; }
+  .ctaBtn {
+    padding: 0.8rem 1.6rem;
+    font-size: 0.88rem;
   }
 }
 
-/* Accessibility: Turn off animations if user prefers reduced motion */
+@media (max-width: 720px) {
+  .heroImages { gap: 0.3rem; padding: 0 0.3rem; }
+
+  /* On small screens, narrow columns look better if they don't
+     push the images off-screen — slightly reduce vertical scale */
+  .h_4_12  { height: 28%; }
+  .h_6_12  { height: 42%; }
+  .h_8_12  { height: 56%; }
+  .h_10_12 { height: 70%; }
+  .h_11_12 { height: 78%; }
+}
+
+@media (max-width: 480px) {
+  .heroImages { gap: 0.25rem; padding: 0 0.25rem; }
+  .imgItem { border-radius: 2px; }
+  .title { font-size: clamp(1.75rem, 9vw, 2.5rem); }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  .col, .imgItem {
+  .imgItem {
+    transition: filter 0.2s ease;
+  }
+  .imgItem.reveal {
+    transform: none;
+    box-shadow: none;
+  }
+  .ctaBtn {
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .ctaBtn:hover {
+    transform: none;
+  }
+  .revealCanvas {
     transition: none;
   }
+}
+
+/* ============================================================
+   Fallbacks for older browsers that don't support dvh
+   ============================================================ */
+
+@supports not (height: 100dvh) {
+  .heroSection { min-height: 100vh; }
 }
