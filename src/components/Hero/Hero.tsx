@@ -60,6 +60,7 @@ const GIRL_IMAGES: ImageData[] = [
     heightClass: s.h_8_12,
   },
   {
+    // rename file in /public → youngest-ias-officer.jpg
     src: '/youngest-ias-officer.jpg',
     fallback:
       'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
@@ -67,6 +68,7 @@ const GIRL_IMAGES: ImageData[] = [
     heightClass: s.h_6_12,
   },
   {
+    // rename file in /public → youngestbillionaire.jpeg
     src: '/youngestbillionaire.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
@@ -502,7 +504,7 @@ export default function Hero() {
 
     if (prefersReducedMotion) {
       images.forEach((img) => {
-        gsap.set(img, { width: '100%', height: '100%', y: 0 })
+        gsap.set(img, { width: '100%', y: '50vh' })
       })
       gsap.set(content, { opacity: 1, y: 0 })
       return
@@ -511,29 +513,15 @@ export default function Hero() {
     const centerIndex = Math.floor(images.length / 2)
     const STAGGER = 0.2
     const DURATION = 1
-    // This check dictates the animation style
-    const isMobile = window.matchMedia('(max-width: 639px)').matches
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
-
-      // Initial state for images (Mobile grows from 0 height, Desktop expands width)
-      if (isMobile) {
-        images.forEach((img) => {
-          gsap.set(img, { height: '0%' })
-        })
-      }
 
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
-          {
-            // On mobile we animate height up, on desktop we animate width
-            ...(isMobile ? { height: '100%' } : { width: '100%' }),
-            duration: DURATION,
-            ease: 'power2.inOut',
-          },
+          { width: '100%', duration: DURATION, ease: 'power2.inOut' },
           delay
         )
       })
@@ -543,31 +531,21 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Wait, we want the images to "drop" on desktop, but stay put on mobile.
-      // On desktop, the initial state is width: 0, so this makes them expand then drop.
-      // On mobile, they just grow from the bottom, so we don't need the drop phase.
-      if (!isMobile) {
-        images.forEach((image, index) => {
-          const delay =
-            totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
-          tl.to(
-            image,
-            { y: '50vh', duration: DURATION, ease: 'power2.out' },
-            delay
-          )
-        })
-      }
+      images.forEach((image, index) => {
+        const delay =
+          totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
+        tl.to(
+          image,
+          { y: '50vh', duration: DURATION, ease: 'power2.out' },
+          delay
+        )
+      })
 
       tl.fromTo(
         content,
         { opacity: 0, y: 25 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: DURATION,
-          ease: 'power2.out',
-        },
-        isMobile ? totalFirstAnimationTime - 0.4 : totalFirstAnimationTime + 0.4 // text fades in as the heights finish
+        { opacity: 1, y: 0, duration: DURATION, ease: 'power2.out' },
+        totalFirstAnimationTime + 0.4
       )
     }, secRef)
 
@@ -633,6 +611,7 @@ export default function Hero() {
     }
   }
 
+  /* ---------- fallback: swap local → unsplash on 404 ---------- */
   const handleImgError =
     (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget
