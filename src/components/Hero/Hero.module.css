@@ -1,8 +1,4 @@
-/* ============================================================
-   Hero Section — mobile-first
-   ============================================================ */
-
-.heroSection {
+{
   position: relative;
   width: 100%;
   min-height: 100svh;
@@ -43,16 +39,12 @@
   font-weight: 600;
   font-size: clamp(1.5rem, 7.5vw, 2rem);
   line-height: 1.18;
-  color: #000000;              /* remaining text = black */
+  color: #DC143C;
   letter-spacing: -0.015em;
   text-align: center;
   margin: 0;
   transition: color 0.4s ease, -webkit-text-fill-color 0.4s ease,
     background 0.4s ease;
-}
-
-.crimson {
-  color: #DC143C;              /* "Discover the" = crimson red */
 }
 
 .ctaBtn {
@@ -63,17 +55,13 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-
-  color: #DC143C;                           /* button text crimson */
-  background: rgba(220, 20, 60, 0.06);
-  border: 1px solid rgba(220, 20, 60, 0.45);
+  color: #060606;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 9999px;
   cursor: pointer;
-
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease,
-    color 0.25s ease;
-
+    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -82,11 +70,11 @@
 }
 
 .ctaBtn:hover {
-  background: #DC143C;                      /* crimson pill on hover */
-  border-color: #DC143C;
-  color: #FFFFFF;                           /* readable text on crimson */
+  background: #060606;
+  border-color: #060606;
+  color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
 
 /* ---------- images wrapper (mobile) ---------- */
@@ -95,7 +83,7 @@
   position: relative;
   width: 100%;
   max-width: 640px;
-  height: 56vh;
+  height: 56vh;                 /* taller than before → bigger images */
   margin: 1.25rem 0 0;
   display: flex;
   justify-content: center;
@@ -134,7 +122,8 @@
   filter: grayscale(0%);
 }
 
-/* ---------- mobile: hide the outer 2 on each side ---------- */
+/* ---------- mobile: hide the outer 2 on each side (7 hidden, 5 shown) ---------- */
+/* With 9 columns: hide 1, 2, 8, 9 → visible 3..7 (5 images) */
 
 .col:nth-child(1),
 .col:nth-child(2),
@@ -144,6 +133,7 @@
 }
 
 /* ---------- pyramid heights (mobile) ---------- */
+/* 5 visible columns → arc: 78% 90% 100% 90% 78% */
 
 .h_4_12  { height: 55%; }
 .h_6_12  { height: 70%; }
@@ -171,7 +161,7 @@
 }
 
 /* ============================================================
-   Desktop & tablet (≥ 640px) — full 9-column arc, original size
+   Desktop & tablet (≥ 640px) — full 9-column arc, original look
    ============================================================ */
 
 @media (min-width: 640px) {
@@ -199,13 +189,11 @@
 
   .heroImages {
     position: absolute;
-    /* SHIFTED DOWN: Added 40px to clear the navbar */
-    top: calc(50% + 40px);
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
     max-width: 1550px;
-    /* RESTORED: Back to the original height */
     height: 92vh;
     margin: 0;
     gap: clamp(6px, 1.1vw, 16px);
@@ -241,7 +229,7 @@
     display: flex;
   }
 
-  /* full arc */
+  /* full arc — 55% 70% 84% 95% 100% 95% 84% 70% 55% */
   .h_4_12  { height: 55%; }
   .h_6_12  { height: 70%; }
   .h_8_12  { height: 84%; }
