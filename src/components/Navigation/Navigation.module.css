@@ -1,5 +1,5 @@
 /* ============================================================
-   Navbar — light shade + crimson accents
+   Navigation — light crimson shade + crimson text
    ============================================================ */
 
 .nav {
@@ -12,20 +12,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(247, 245, 242, 0.75);
+  background: rgba(253, 240, 242, 0.78);           /* light crimson shade */
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(220, 20, 60, 0.08);
+  border-bottom: 1px solid rgba(220, 20, 60, 0.10);
   transition: background 0.4s, box-shadow 0.4s, border-color 0.4s;
 }
 
 .navScrolled {
-  background: rgba(247, 245, 242, 0.95);
+  background: rgba(252, 232, 236, 0.96);           /* deeper light crimson on scroll */
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(220, 20, 60, 0.15);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(220, 20, 60, 0.20);
+  box-shadow: 0 4px 24px rgba(220, 20, 60, 0.08);
 }
+
+/* ---------- logo ---------- */
 
 .logo {
   display: flex;
@@ -45,9 +47,11 @@
 .logoDev {
   font-family: 'Noto Sans Devanagari', sans-serif;
   font-size: 0.7rem;
-  color: rgba(20, 20, 20, 0.55);
+  color: rgba(180, 20, 50, 0.65);
   margin-top: 2px;
 }
+
+/* ---------- links ---------- */
 
 .links {
   display: flex;
@@ -57,8 +61,8 @@
 
 .link {
   font-size: 0.8rem;
-  font-weight: 400;
-  color: rgba(20, 20, 20, 0.62);
+  font-weight: 500;
+  color: #DC143C;                                   /* crimson text */
   letter-spacing: 0.02em;
   transition: color 0.2s;
   padding: 0.25rem 0;
@@ -81,7 +85,7 @@
 }
 
 .link:hover {
-  color: rgba(20, 20, 20, 0.95);
+  color: #A00028;                                   /* deeper crimson on hover */
 }
 
 .link:hover::after {
@@ -89,19 +93,22 @@
 }
 
 .linkActive {
-  color: #DC143C !important;
+  color: #A00028 !important;
+  font-weight: 600;
 }
 
 .linkActive::after {
   transform: scaleX(1) !important;
 }
 
+/* ---------- CTA ---------- */
+
 .cta {
   font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   color: #DC143C;
-  border: 1px solid rgba(220, 20, 60, 0.28);
+  border: 1px solid rgba(220, 20, 60, 0.35);
   padding: 0.55rem 1.5rem;
   border-radius: 2px;
   text-decoration: none;
@@ -117,6 +124,8 @@
   color: #FFFFFF;
 }
 
+/* ---------- hamburger ---------- */
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -130,17 +139,40 @@
 .bar {
   width: 22px;
   height: 1.5px;
-  background: rgba(20, 20, 20, 0.7);
+  background: #DC143C;
   display: block;
 }
+
+/* ============================================================
+   Mobile (≤ 900px)
+   ============================================================ */
 
 @media (max-width: 900px) {
   .nav {
     padding: 1rem 1.25rem;
   }
+
   .links {
     display: none;
   }
+
+  .linksOpen {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    gap: 1.25rem;
+    padding: 1.5rem 1.25rem;
+    background: rgba(252, 232, 236, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(220, 20, 60, 0.20);
+    box-shadow: 0 12px 32px rgba(220, 20, 60, 0.10);
+  }
+
   .hamburger {
     display: flex;
   }
