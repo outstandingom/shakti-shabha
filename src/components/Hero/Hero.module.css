@@ -10,7 +10,6 @@
   overflow: hidden;
   background: var(--night, #060606);
   font-family: 'Poppins', sans-serif;
-  /* Adjusted padding-top to shift the content slightly down */
   padding-top: clamp(7rem, 16vh, 10rem);
 }
 
@@ -75,13 +74,14 @@
   width: 100%;
   max-width: 1550px;
   height: 92vh;
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
+  /* Changed from grid to flex for the accordion hover effect */
+  display: flex; 
+  justify-content: center;
   gap: clamp(6px, 1.1vw, 16px);
   padding: 0 clamp(8px, 2vw, 24px);
   align-items: center;
-  pointer-events: none;
   z-index: 10;
+  /* Note: pointer-events: none was removed so we can hover/click the images */
 }
 
 .col {
@@ -89,6 +89,33 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  /* flex: 1 makes all columns take equal width initially */
+  flex: 1; 
+  /* Smooth transition for the size increase */
+  transition: flex 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s; 
+}
+
+/* Expand the column on hover (Desktop) */
+.col:hover {
+  flex: 1.8; 
+  z-index: 15;
+}
+
+.imgItem {
+  width: 33.3333%;
+  object-fit: cover;
+  border-radius: 1.15rem;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
+  will-change: width, transform, filter;
+  /* Default state: Black and White */
+  filter: grayscale(100%);
+  /* Smooth transition for the color change */
+  transition: filter 0.5s ease; 
+}
+
+/* Remove grayscale on hover (Desktop) */
+.col:hover .imgItem {
+  filter: grayscale(0%);
 }
 
 /* Hide outer columns on mobile to reduce image count */
@@ -99,66 +126,46 @@
   display: none;
 }
 
-.imgItem {
-  width: 33.3333%;
-  object-fit: cover;
-  border-radius: 1.15rem;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
-  will-change: width, transform;
-}
-
 /* Increased height ratios for tall, impactful portrait gallery on PC */
-.h_4_12 {
-  height: 55%;
-}
+.h_4_12 { height: 55%; }
+.h_6_12 { height: 70%; }
+.h_8_12 { height: 84%; }
+.h_10_12 { height: 95%; }
+.h_11_12 { height: 100%; }
 
-.h_6_12 {
-  height: 70%;
-}
-
-.h_8_12 {
-  height: 84%;
-}
-
-.h_10_12 {
-  height: 95%;
-}
-
-.h_11_12 {
-  height: 100%;
-}
-
-/* 📱 MOBILE ADJUSTMENTS (FIXED) */
+/* 📱 MOBILE ADJUSTMENTS */
 @media (max-width: 639px) {
   .heroImages {
-    grid-template-columns: repeat(5, 1fr); 
-    
-    /* Decreased height so images aren't massively zoomed in */
+    display: flex;
     height: 55vh; 
-    
-    /* 
-      Set bottom to 50vh. When GSAP animates 'y: 50vh', 
-      it will push the images down by 50vh, perfectly landing them at the bottom (0vh). 
-    */
     top: auto; 
     bottom: 50vh;
     transform: translateX(-50%); 
-    
     align-items: flex-end; 
-    gap: 8px;
-    
-    /* Lift images slightly off the bottom edge */
+    gap: 6px;
     padding-bottom: 5vh; 
+  }
+
+  .col {
+    flex: 1;
+  }
+
+  /* Touch interaction for mobile */
+  .col:active {
+    flex: 1.5;
+    z-index: 15;
+  }
+
+  .col:active .imgItem {
+    filter: grayscale(0%);
   }
 
   .imgItem {
     width: 100%; 
     border-radius: 1rem;
-    /* Shifts the focus of the image upwards so faces/heads aren't cut off */
     object-position: center 25%; 
   }
 
-  /* Adjusted ratios to maintain a nice wave without being too tall */
   .h_4_12 { height: 45%; }
   .h_6_12 { height: 60%; }
   .h_8_12 { height: 75%; }
@@ -173,5 +180,12 @@
   .col:nth-child(8),
   .col:nth-child(9) {
     display: flex;
+  }
+}
+
+/* Accessibility: Turn off animations if user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .col, .imgItem {
+    transition: none;
   }
 }
