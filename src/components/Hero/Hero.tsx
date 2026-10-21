@@ -502,17 +502,15 @@ export default function Hero() {
       '(prefers-reduced-motion: reduce)'
     ).matches
 
-    // ---------- Responsive offsets ----------
-    // Desktop keeps the ORIGINAL behaviour exactly (50vh / content y = 0),
-    // so the sliding "diamond preview" is preserved 1:1.
-    // Mobile gets a gentler push (28vh) — still reveals the diamond via
-    // the slide-in motion, but doesn't push images so far down that the
-    // top of the hero looks empty.
     const isMobile = window.matchMedia('(max-width: 767px)').matches
     const isTablet = window.matchMedia('(max-width: 1023px)').matches
 
-    const IMG_Y = isMobile ? '28vh' : isTablet ? '40vh' : '50vh'
-    const CONTENT_END_Y = isMobile ? 45 : isTablet ? 20 : 0
+    // ---------- RESPONSIVE OFFSETS ----------
+    // Changed IMG_Y from 50vh to 35vh to close the gap between the button & images
+    const IMG_Y = isMobile ? '25vh' : isTablet ? '30vh' : '35vh'
+    
+    // Slightly pushed the text down to balance the space
+    const CONTENT_END_Y = isMobile ? 40 : isTablet ? 20 : 15
     const CONTENT_START_Y = isMobile ? 80 : isTablet ? 50 : 25
 
     if (prefersReducedMotion) {
@@ -545,7 +543,7 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2 – slide images down (responsive amount)
+      // Phase 2 – slide images down
       images.forEach((image, index) => {
         const delay =
           totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
@@ -556,7 +554,7 @@ export default function Hero() {
         )
       })
 
-      // Phase 3 – fade content in (settles lower only on smaller screens)
+      // Phase 3 – fade content in
       tl.fromTo(
         content,
         { opacity: 0, y: CONTENT_START_Y },
@@ -632,7 +630,6 @@ export default function Hero() {
     }
   }
 
-  /* ---------- fallback: swap local → unsplash on 404 ---------- */
   const handleImgError =
     (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
       const img = e.currentTarget
