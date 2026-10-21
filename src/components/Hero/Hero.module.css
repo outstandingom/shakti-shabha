@@ -171,13 +171,8 @@
   }
 }
 
-/* Fallback for no-anim / reduced motion */
-:global(.no-anim) .heroContent {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-:global(.no-anim) .imgItem {
-  width: 100% !important;
-  transform: translateY(50vh) !important;
-}
+/* 
+  Note: The :global(.no-anim) fallback has been removed from the CSS module 
+  because your React component already handles the prefers-reduced-motion 
+  logic using GSAP directly in the useEffect.
+*/
