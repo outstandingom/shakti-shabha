@@ -502,11 +502,25 @@ export default function Hero() {
       '(prefers-reduced-motion: reduce)'
     ).matches
 
+    // ---------- Responsive offsets ----------
+    // On mobile the images were pushed down too far (50vh),
+    // leaving empty space at the top of the hero.
+    // - Reduce the downward travel so images stay higher
+    //   and cover that empty gap.
+    // - Push the content slightly DOWN so it doesn't
+    //   collide visually with the (now higher) images.
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
+    const isTablet = window.matchMedia('(max-width: 1024px)').matches
+
+    const IMG_Y = isMobile ? '18vh' : isTablet ? '35vh' : '50vh'
+    const CONTENT_END_Y = isMobile ? 40 : isTablet ? 20 : 0
+    const CONTENT_START_Y = isMobile ? 75 : isTablet ? 45 : 25
+
     if (prefersReducedMotion) {
       images.forEach((img) => {
-        gsap.set(img, { width: '100%', y: '50vh' })
+        gsap.set(img, { width: '100%', y: IMG_Y })
       })
-      gsap.set(content, { opacity: 1, y: 0 })
+      gsap.set(content, { opacity: 1, y: CONTENT_END_Y })
       return
     }
 
@@ -517,6 +531,7 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
 
+      // Phase 1 – expand images to full column width
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
         tl.to(
@@ -531,20 +546,27 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
+      // Phase 2 – slide images down (responsive amount)
       images.forEach((image, index) => {
         const delay =
           totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
-          { y: '50vh', duration: DURATION, ease: 'power2.out' },
+          { y: IMG_Y, duration: DURATION, ease: 'power2.out' },
           delay
         )
       })
 
+      // Phase 3 – fade content in (settles slightly lower on mobile)
       tl.fromTo(
         content,
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: DURATION, ease: 'power2.out' },
+        { opacity: 0, y: CONTENT_START_Y },
+        {
+          opacity: 1,
+          y: CONTENT_END_Y,
+          duration: DURATION,
+          ease: 'power2.out',
+        },
         totalFirstAnimationTime + 0.4
       )
     }, secRef)
