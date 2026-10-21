@@ -22,49 +22,49 @@ const GIRL_IMAGES: ImageData[] = [
     fallback:
       'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80',
     alt: 'Astronaut',
-    heightClass: s.h_6_12,
+    heightClass: s.h_7_12,
   },
   {
     src: '/cricketer.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80',
     alt: 'Cricketer',
-    heightClass: s.h_8_12,
+    heightClass: s.h_9_12,
   },
   {
     src: '/games.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80',
     alt: 'Games',
-    heightClass: s.h_10_12,
+    heightClass: s.h_11_12,
   },
   {
     src: '/missindia.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80',
     alt: 'Miss India',
-    heightClass: s.h_11_12,
+    heightClass: s.h_13_14,
   },
   {
     src: '/navy.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80',
     alt: 'Navy',
-    heightClass: s.h_10_12,
+    heightClass: s.h_11_12,
   },
   {
     src: '/police.jpeg',
     fallback:
       'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
     alt: 'Police',
-    heightClass: s.h_8_12,
+    heightClass: s.h_9_12,
   },
    {
     src: '/youngest ias officier.jpg',
     fallback:
       'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
     alt: 'ias',
-    heightClass: s.h_8_12,
+    heightClass: s.h_7_12,
   },
 ]
 
