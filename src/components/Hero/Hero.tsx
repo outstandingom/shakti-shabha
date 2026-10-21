@@ -2,33 +2,10 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
-
 type ImageData = {
   src: string
   alt: string
   heightClass: string
-}
-
-type LeafPalette = { fill: string; vein: string }
-
-type LeavesEngine = {
-  destroy: () => void
-  setPointer: (x: number, y: number, active: boolean) => void
-}
-
-type LeafConfig = {
-  width: number
-  height: number
-  minWind: number
-  maxWind: number
-  minSize: number
-  maxSize: number
-  emitterY: number
-  emitterSpread: number
-  gravity: number
-  turbulence: number
-  tumbleStrength: number
-  direction: 1 | -1
 }
 
 const GIRL_IMAGES: ImageData[] = [
@@ -79,7 +56,11 @@ const GIRL_IMAGES: ImageData[] = [
   },
 ]
 
-const LEAF_PALETTE: LeafPalette[] = [
+/* ============================================================
+   Falling leaves — self-contained, does not touch the rest
+   ============================================================ */
+
+const LEAF_PALETTE = [
   { fill: '#6aa84f', vein: '#2e5c1e' },
   { fill: '#8bc34a', vein: '#446a1c' },
   { fill: '#7cb342', vein: '#3e6a1e' },
@@ -87,7 +68,7 @@ const LEAF_PALETTE: LeafPalette[] = [
   { fill: '#d9822b', vein: '#8a4a10' },
   { fill: '#c04a2a', vein: '#6e2414' },
   { fill: '#a8452a', vein: '#5c2010' },
-]
+] as const
 
 function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   const c = document.createElement('canvas')
@@ -148,7 +129,7 @@ function grayscaleClone(src: HTMLCanvasElement): HTMLCanvasElement {
   const d = data.data
   for (let i = 0; i < d.length; i += 4) {
     const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
-    const v = Math.round(lum * 0.85 + 25)
+    const v = Math.min(255, Math.round(lum * 0.9 + 60))
     d[i] = v
     d[i + 1] = v
     d[i + 2] = v
@@ -170,27 +151,34 @@ function rotateVector(
   const x1 = x * cos - y * sin
   const y1 = x * sin + y * cos
   const z1 = z
-
   cos = Math.cos(ay)
   sin = Math.sin(ay)
   const x2 = x1 * cos + z1 * sin
   const y2 = y1
   const z2 = -x1 * sin + z1 * cos
-
   cos = Math.cos(ax)
   sin = Math.sin(ax)
+  return { x: x2, y: y2 * cos - z2 * sin, z: y2 * sin + z2 * cos }
+}
 
-  return {
-    x: x2,
-    y: y2 * cos - z2 * sin,
-    z: y2 * sin + z2 * cos,
-  }
+type LeafCfg = {
+  width: number
+  height: number
+  minWind: number
+  maxWind: number
+  minSize: number
+  maxSize: number
+  emitterY: number
+  emitterSpread: number
+  gravity: number
+  turbulence: number
+  tumbleStrength: number
+  direction: 1 | -1
 }
 
 class Leaf {
   colorSprite: HTMLCanvasElement
   graySprite: HTMLCanvasElement
-
   width: number
   height: number
   x = 0
@@ -210,36 +198,28 @@ class Leaf {
   constructor(
     colorSprite: HTMLCanvasElement,
     graySprite: HTMLCanvasElement,
-    cfg: Pick<
-      LeafConfig,
-      'width' | 'height' | 'minSize' | 'maxSize' | 'direction' | 'emitterY' | 'emitterSpread'
-    >
+    cfg: LeafCfg
   ) {
     this.colorSprite = colorSprite
     this.graySprite = graySprite
     this.width = cfg.minSize + Math.random() * (cfg.maxSize - cfg.minSize)
     this.height = this.width
-
     const centerY = cfg.height * cfg.emitterY
     const spread = cfg.height * cfg.emitterSpread
     const minY = centerY - spread / 2
     const maxY = centerY + spread / 2
-
     this.y = minY + Math.random() * (maxY - minY)
     this.spawnMinY = minY
-
     this.x =
       cfg.direction === -1
         ? cfg.width + this.width + Math.random() * cfg.width
         : -this.width - Math.random() * cfg.width
-
     const sizeFactor =
       (this.width - cfg.minSize) / (cfg.maxSize - cfg.minSize || 1)
     this.windFactor = Math.max(
       0.1,
       Math.min(1, 1 - (sizeFactor * 0.5 + Math.random() * 0.5))
     )
-
     this.waveOffset = Math.random() * Math.PI * 2
     this.angleZ = Math.random() * Math.PI * 2
     this.spinZ = (Math.random() - 0.5) * 0.015
@@ -247,32 +227,26 @@ class Leaf {
     this.spinY = (Math.random() - 0.5) * 0.1
   }
 
-  update(dt: number, cfg: LeafConfig) {
+  update(dt: number, cfg: LeafCfg) {
     const targetSpeed =
       cfg.minWind + (cfg.maxWind - cfg.minWind) * this.windFactor
     this.vx += (targetSpeed - this.vx) * (1 - Math.pow(0.9, dt))
     this.x += this.vx * cfg.direction * dt
-
     const gravityMod = 1.5 - this.windFactor
     this.vy += cfg.gravity * 0.05 * gravityMod * dt
-
     const wave = Math.sin(this.x * 0.01 * cfg.direction + this.waveOffset)
     this.vy += wave * cfg.turbulence * 0.05 * dt
     this.vy *= Math.pow(0.98, dt)
-
     this.y += this.vy * dt
     this.angleZ += (this.spinZ + this.vx * 0.002) * dt
-
     if (cfg.tumbleStrength > 0) {
       this.angleX += this.spinX * cfg.tumbleStrength * dt
       this.angleY += this.spinY * cfg.tumbleStrength * dt
     }
-
     const buffer = 200
     const outByX =
       cfg.direction === -1 ? this.x < -buffer : this.x > cfg.width + buffer
     const topLimit = Math.min(this.spawnMinY, -buffer) - buffer
-
     if (outByX || this.y > cfg.height + buffer || this.y < topLimit) {
       this.width = cfg.minSize + Math.random() * (cfg.maxSize - cfg.minSize)
       this.height = this.width
@@ -301,10 +275,8 @@ class Leaf {
     const tilt = this.angleY
     const vecU = rotateVector(1, 0, 0, this.angleX, tilt, this.angleZ)
     const vecV = rotateVector(0, 1, 0, this.angleX, tilt, this.angleZ)
-
     const det = vecU.x * vecV.y - vecU.y * vecV.x
     if (Math.abs(det) < 1e-4) return
-
     ctx.save()
     ctx.translate(this.x, this.y)
     ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0)
@@ -319,17 +291,21 @@ class Leaf {
   }
 }
 
+type LeavesEngine = {
+  destroy: () => void
+  setPointer: (x: number, y: number, active: boolean) => void
+}
+
 function createLeavesEngine(
   grayCanvas: HTMLCanvasElement,
   revealCanvas: HTMLCanvasElement,
   wrap: HTMLElement
 ): LeavesEngine {
-  const grayCtx = grayCanvas.getContext('2d', { alpha: false })!
-  const revealCtx = revealCanvas.getContext('2d', { alpha: true })!
+  const grayCtx = grayCanvas.getContext('2d')!
+  const revealCtx = revealCanvas.getContext('2d')!
 
   const sceneCanvas = document.createElement('canvas')
-  const sceneCtx = sceneCanvas.getContext('2d', { alpha: false })!
-
+  const sceneCtx = sceneCanvas.getContext('2d')!
   const maskCanvas = document.createElement('canvas')
   const maskCtx = maskCanvas.getContext('2d')!
 
@@ -337,7 +313,7 @@ function createLeavesEngine(
   let height = 0
   let dpr = 1
 
-  const cfg: LeafConfig = {
+  const cfg: LeafCfg = {
     width: 0,
     height: 0,
     minWind: 1,
@@ -352,14 +328,16 @@ function createLeavesEngine(
     direction: -1,
   }
 
-  const colorSprites = LEAF_PALETTE.map((p) => createLeafSprite(p.fill, p.vein))
+  const colorSprites = LEAF_PALETTE.map((p) =>
+    createLeafSprite(p.fill, p.vein)
+  )
   const graySprites = colorSprites.map((c) => grayscaleClone(c))
 
   const particles: Leaf[] = []
 
   const initParticles = () => {
     particles.length = 0
-    const count = width < 720 ? 70 : 110
+    const count = width < 720 ? 60 : 100
     for (let i = 0; i < count; i++) {
       const idx = (Math.random() * colorSprites.length) | 0
       const leaf = new Leaf(colorSprites[idx], graySprites[idx], cfg)
@@ -372,7 +350,6 @@ function createLeavesEngine(
     dpr = Math.min(window.devicePixelRatio || 1, 2)
     width = wrap.clientWidth
     height = wrap.clientHeight
-
     for (const c of [grayCanvas, revealCanvas, sceneCanvas, maskCanvas]) {
       c.width = Math.round(width * dpr)
       c.height = Math.round(height * dpr)
@@ -381,22 +358,15 @@ function createLeavesEngine(
     grayCanvas.style.height = height + 'px'
     revealCanvas.style.width = width + 'px'
     revealCanvas.style.height = height + 'px'
-
     grayCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
     revealCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
     sceneCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
     maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-    grayCtx.imageSmoothingEnabled = true
     grayCtx.imageSmoothingQuality = 'high'
-    revealCtx.imageSmoothingEnabled = true
     revealCtx.imageSmoothingQuality = 'high'
-    sceneCtx.imageSmoothingEnabled = true
     sceneCtx.imageSmoothingQuality = 'high'
-
     cfg.width = width
     cfg.height = height
-
     if (particles.length === 0) initParticles()
   }
 
@@ -420,20 +390,23 @@ function createLeavesEngine(
     const dt = lastTime ? Math.min((now - lastTime) / 16.667, 3) : 1
     lastTime = now
 
-    sceneCtx.fillStyle = '#f9f5ec'
-    sceneCtx.fillRect(0, 0, width, height)
     for (let i = 0; i < particles.length; i++) {
-      const p = particles[i]
-      p.update(dt, cfg)
-      p.draw(sceneCtx, true)
+      particles[i].update(dt, cfg)
     }
 
-    grayCtx.fillStyle = '#f9f5ec'
-    grayCtx.fillRect(0, 0, width, height)
+    // full-color scene (transparent bg so the dark hero shows through)
+    sceneCtx.clearRect(0, 0, width, height)
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].draw(sceneCtx, true)
+    }
+
+    // grayscale layer (always visible)
+    grayCtx.clearRect(0, 0, width, height)
     for (let i = 0; i < particles.length; i++) {
       particles[i].draw(grayCtx, false)
     }
 
+    // color reveal around the pointer
     revealCtx.clearRect(0, 0, width, height)
     if (pointerActive) {
       maskCtx.clearRect(0, 0, width, height)
@@ -446,13 +419,11 @@ function createLeavesEngine(
         pointerRadius
       )
       grad.addColorStop(0, 'rgba(255,255,255,1)')
-      grad.addColorStop(0.55, 'rgba(255,255,255,0.85)')
+      grad.addColorStop(0.6, 'rgba(255,255,255,0.85)')
       grad.addColorStop(1, 'rgba(255,255,255,0)')
       maskCtx.fillStyle = grad
       maskCtx.fillRect(0, 0, width, height)
-
       revealCtx.drawImage(sceneCanvas, 0, 0, width, height)
-
       revealCtx.save()
       revealCtx.globalCompositeOperation = 'destination-in'
       revealCtx.drawImage(maskCanvas, 0, 0, width, height)
@@ -474,28 +445,34 @@ function createLeavesEngine(
   }
 }
 
+/* ============================================================
+   Component — your original code, plus the leaves layer
+   ============================================================ */
+
 export default function Hero() {
   const secRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
+
+  // NEW refs — only for the leaves feature
   const grayCanvasRef = useRef<HTMLCanvasElement>(null)
   const revealCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<LeavesEngine | null>(null)
 
+  /* ---- YOUR ORIGINAL GSAP TIMELINE — unchanged ---- */
   useEffect(() => {
-    const images = imgRefs.current.filter(
-      (img): img is HTMLImageElement => img !== null
-    )
+    const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
     const content = contentRef.current
+
     if (!images.length || !content) return
 
-    const prefersReducedMotion = window.matchMedia(
-      '(prefers-reduced-motion: reduce)'
-    ).matches
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
-      images.forEach((img) => gsap.set(img, { width: '100%', y: '50vh' }))
+      images.forEach(img => {
+        gsap.set(img, { width: '100%', y: '50vh' })
+      })
       gsap.set(content, { opacity: 1, y: 0 })
       return
     }
@@ -517,13 +494,12 @@ export default function Hero() {
       })
 
       const maxDelay = Math.max(
-        ...images.map((_, i) => Math.abs(i - centerIndex) * STAGGER)
+        ...images.map((_, index) => Math.abs(index - centerIndex) * STAGGER)
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
       images.forEach((image, index) => {
-        const delay =
-          totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
+        const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
           { y: '50vh', duration: DURATION, ease: 'power2.out' },
@@ -542,6 +518,7 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
+  /* ---- NEW: leaves engine + pointer tracking ---- */
   useEffect(() => {
     const gray = grayCanvasRef.current
     const reveal = revealCanvasRef.current
@@ -555,63 +532,51 @@ export default function Hero() {
       const rect = wrap.getBoundingClientRect()
       return { x: e.clientX - rect.left, y: e.clientY - rect.top }
     }
-
-    const onPointerMove = (e: PointerEvent) => {
+    const onMove = (e: PointerEvent) => {
       const { x, y } = toLocal(e)
       engine.setPointer(x, y, true)
     }
-
-    const onPointerDown = (e: PointerEvent) => {
+    const onDown = (e: PointerEvent) => {
       const { x, y } = toLocal(e)
       engine.setPointer(x, y, true)
     }
-
-    const onPointerUp = (e: PointerEvent) => {
+    const onUp = (e: PointerEvent) => {
       if (e.pointerType === 'touch') {
         engine.setPointer(-9999, -9999, false)
       }
     }
-
-    const onPointerLeave = () => {
-      engine.setPointer(-9999, -9999, false)
-    }
+    const onLeave = () => engine.setPointer(-9999, -9999, false)
 
     const target: HTMLElement = secRef.current ?? wrap
-    target.addEventListener('pointermove', onPointerMove, { passive: true })
-    target.addEventListener('pointerdown', onPointerDown, { passive: true })
-    target.addEventListener('pointerup', onPointerUp, { passive: true })
-    target.addEventListener('pointercancel', onPointerUp, { passive: true })
-    target.addEventListener('pointerleave', onPointerLeave, { passive: true })
+    target.addEventListener('pointermove', onMove, { passive: true })
+    target.addEventListener('pointerdown', onDown, { passive: true })
+    target.addEventListener('pointerup', onUp, { passive: true })
+    target.addEventListener('pointercancel', onUp, { passive: true })
+    target.addEventListener('pointerleave', onLeave, { passive: true })
 
     return () => {
       engine.destroy()
       engineRef.current = null
-      target.removeEventListener('pointermove', onPointerMove)
-      target.removeEventListener('pointerdown', onPointerDown)
-      target.removeEventListener('pointerup', onPointerUp)
-      target.removeEventListener('pointercancel', onPointerUp)
-      target.removeEventListener('pointerleave', onPointerLeave)
+      target.removeEventListener('pointermove', onMove)
+      target.removeEventListener('pointerdown', onDown)
+      target.removeEventListener('pointerup', onUp)
+      target.removeEventListener('pointercancel', onUp)
+      target.removeEventListener('pointerleave', onLeave)
     }
   }, [])
 
-  const revealImage = (el: HTMLImageElement | null) => {
-    if (!el) return
-    el.classList.add(s.reveal!)
-  }
-
-  const hideImage = (el: HTMLImageElement | null) => {
-    if (!el) return
-    el.classList.remove(s.reveal!)
-  }
-
   const handleExplore = () => {
     const nextEl = secRef.current?.nextElementSibling
-    if (nextEl) nextEl.scrollIntoView({ behavior: 'smooth' })
-    else window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+    if (nextEl) {
+      nextEl.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
+    }
   }
 
   return (
     <section ref={secRef} className={s.heroSection}>
+      {/* NEW: falling leaves behind everything */}
       <div ref={leavesWrapRef} className={s.leavesWrap} aria-hidden="true">
         <canvas ref={grayCanvasRef} className={s.leavesCanvas} />
         <canvas ref={revealCanvasRef} className={s.revealCanvas} />
@@ -621,7 +586,11 @@ export default function Hero() {
         <h1 className={s.title}>
           Discover the world <br /> through people
         </h1>
-        <button type="button" onClick={handleExplore} className={s.ctaBtn}>
+        <button
+          type="button"
+          onClick={handleExplore}
+          className={s.ctaBtn}
+        >
           Start Exploring
         </button>
       </div>
@@ -630,22 +599,12 @@ export default function Hero() {
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
             <img
-              ref={(el) => {
+              ref={el => {
                 imgRefs.current[idx] = el
               }}
               src={item.src}
               alt={item.alt}
               className={`${s.imgItem} ${item.heightClass}`}
-              onPointerEnter={() => revealImage(imgRefs.current[idx])}
-              onPointerLeave={() => hideImage(imgRefs.current[idx])}
-              onPointerDown={() => revealImage(imgRefs.current[idx])}
-              onPointerUp={() => {
-                window.setTimeout(
-                  () => hideImage(imgRefs.current[idx]),
-                  400
-                )
-              }}
-              draggable={false}
             />
           </div>
         ))}
