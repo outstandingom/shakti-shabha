@@ -13,7 +13,8 @@
   overflow: hidden;
   background: var(--night, #060606);
   font-family: 'Poppins', sans-serif;
-  padding-top: 4.5rem;
+  /* Pushed text down slightly from the top */
+  padding-top: 9rem;
 }
 
 @supports not (min-height: 100svh) {
@@ -41,7 +42,7 @@
 .title {
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
-  font-size: clamp(1.5rem, 7.5vw, 2rem);
+  font-size: clamp(1.6rem, 7.5vw, 2.2rem);
   line-height: 1.18;
   color: #ffffff;
   letter-spacing: -0.015em;
@@ -89,12 +90,13 @@
   position: relative;
   width: 100%;
   max-width: 640px;
-  height: 56vh;
-  margin: 1.25rem 0 0;
+  /* INCREASED SIZE: from 56vh to 62vh for bigger images */
+  height: 62vh;
+  margin: 1.5rem 0 0;
   display: flex;
   justify-content: center;
   align-items: flex-end; /* shared bottom baseline → pyramid reads correctly */
-  gap: 6px;
+  gap: 4px;
   padding: 0 0.5rem;
   z-index: 10;
 }
@@ -106,7 +108,8 @@
   justify-content: center;
   height: 100%;
   flex: 0 0 auto;
-  width: calc((100% - 24px) / 5); /* 5 visible cols, 4 gaps of 6px */
+  /* Math updated to make columns wider: (100% - gaps) / 5 */
+  width: calc((100% - 16px) / 5);
   transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s;
 }
 
@@ -116,7 +119,7 @@
   height: 100%;
   object-fit: cover;
   object-position: center 20%;
-  border-radius: 0.8rem;
+  border-radius: 0.6rem;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
   filter: grayscale(100%);
   transition: filter 0.5s ease;
@@ -148,7 +151,7 @@
 
 @media (max-width: 639px) and (max-height: 640px) {
   .heroSection {
-    padding-top: 3.5rem;
+    padding-top: 5rem;
     min-height: auto;
     height: auto;
     padding-bottom: 2rem;
@@ -158,8 +161,9 @@
     font-size: clamp(1.3rem, 6.5vw, 1.75rem);
   }
 
+  /* Slightly smaller on super short phones so it fits */
   .heroImages {
-    height: 44vh;
+    height: 50vh;
   }
 }
 
