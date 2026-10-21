@@ -95,7 +95,7 @@
   position: relative;
   width: 100%;
   max-width: 640px;
-  height: 56vh;                 /* taller than before → bigger images */
+  height: 56vh;
   margin: 1.25rem 0 0;
   display: flex;
   justify-content: center;
@@ -135,7 +135,6 @@
 }
 
 /* ---------- mobile: hide the outer 2 on each side (7 hidden, 5 shown) ---------- */
-/* With 9 columns: hide 1, 2, 8, 9 → visible 3..7 (5 images) */
 
 .col:nth-child(1),
 .col:nth-child(2),
@@ -145,7 +144,6 @@
 }
 
 /* ---------- pyramid heights (mobile) ---------- */
-/* 5 visible columns → arc: 78% 90% 100% 90% 78% */
 
 .h_4_12  { height: 55%; }
 .h_6_12  { height: 70%; }
@@ -173,7 +171,7 @@
 }
 
 /* ============================================================
-   Desktop & tablet (≥ 640px) — full 9-column arc, original look
+   Desktop & tablet (≥ 640px) — full 9-column arc
    ============================================================ */
 
 @media (min-width: 640px) {
@@ -201,12 +199,14 @@
 
   .heroImages {
     position: absolute;
-    top: 50%;
+    /* CHANGED: Pushed down from 50% to 55% to clear the navbar */
+    top: 55%; 
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
     max-width: 1550px;
-    height: 92vh;
+    /* CHANGED: Reduced from 92vh to 85vh to prevent top overlap */
+    height: 85vh; 
     margin: 0;
     gap: clamp(6px, 1.1vw, 16px);
     padding: 0 clamp(8px, 2vw, 24px);
@@ -241,7 +241,7 @@
     display: flex;
   }
 
-  /* full arc — 55% 70% 84% 95% 100% 95% 84% 70% 55% */
+  /* full arc */
   .h_4_12  { height: 55%; }
   .h_6_12  { height: 70%; }
   .h_8_12  { height: 84%; }
