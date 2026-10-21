@@ -103,7 +103,7 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
-      // Phase 2: drop images downward, center outward (to 50vh so no overlap with shifted text)
+      // Phase 2: drop images downward, center outward
       images.forEach((image, index) => {
         const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(
