@@ -13,7 +13,7 @@
   overflow: hidden;
   background: var(--night, #060606);
   font-family: 'Poppins', sans-serif;
-  /* Pushed text down slightly from the top */
+  /* Pushed text down from the top */
   padding-top: 9rem;
 }
 
@@ -34,9 +34,10 @@
   justify-content: center;
   gap: 0.6rem;
   padding: 0 1.25rem;
-  opacity: 0;
   text-align: center;
   pointer-events: auto;
+  /* RESTORED: This is what GSAP animates from */
+  opacity: 0; 
 }
 
 .title {
@@ -90,7 +91,7 @@
   position: relative;
   width: 100%;
   max-width: 640px;
-  /* INCREASED SIZE: from 56vh to 62vh for bigger images */
+  /* INCREASED SIZE for mobile */
   height: 62vh;
   margin: 1.5rem 0 0;
   display: flex;
@@ -108,7 +109,7 @@
   justify-content: center;
   height: 100%;
   flex: 0 0 auto;
-  /* Math updated to make columns wider: (100% - gaps) / 5 */
+  /* Math updated for wider columns */
   width: calc((100% - 16px) / 5);
   transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s;
 }
@@ -161,7 +162,6 @@
     font-size: clamp(1.3rem, 6.5vw, 1.75rem);
   }
 
-  /* Slightly smaller on super short phones so it fits */
   .heroImages {
     height: 50vh;
   }
