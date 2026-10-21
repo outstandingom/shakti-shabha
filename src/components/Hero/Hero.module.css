@@ -11,7 +11,7 @@
   justify-content: flex-start;
   align-items: center;
   overflow: hidden;
-  background: var(--night, #060606);
+  background: var(--night, #FFFFFF);
   font-family: 'Poppins', sans-serif;
   padding-top: 4.5rem;
 }
