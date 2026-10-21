@@ -2,11 +2,41 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
+/* ============================================================
+   Types
+   ============================================================ */
+
 type ImageData = {
   src: string
   alt: string
   heightClass: string
 }
+
+type LeafPalette = { fill: string; vein: string }
+
+type LeavesEngine = {
+  destroy: () => void
+  setPointer: (x: number, y: number, active: boolean) => void
+}
+
+type LeafConfig = {
+  width: number
+  height: number
+  minWind: number
+  maxWind: number
+  minSize: number
+  maxSize: number
+  emitterY: number
+  emitterSpread: number
+  gravity: number
+  turbulence: number
+  tumbleStrength: number
+  direction: 1 | -1
+}
+
+/* ============================================================
+   Static data
+   ============================================================ */
 
 const GIRL_IMAGES: ImageData[] = [
   {
@@ -56,20 +86,19 @@ const GIRL_IMAGES: ImageData[] = [
   },
 ]
 
-/* ------------------------------------------------------------------ */
-/* Falling leaves engine (adapted from your canvas demo)              */
-/* ------------------------------------------------------------------ */
-type LeafPalette = { fill: string; vein: string }
-
 const LEAF_PALETTE: LeafPalette[] = [
-  { fill: '#6aa84f', vein: '#2e5c1e' },
-  { fill: '#8bc34a', vein: '#446a1c' },
-  { fill: '#7cb342', vein: '#3e6a1e' },
-  { fill: '#c8a02e', vein: '#7a5c14' },
-  { fill: '#d9822b', vein: '#8a4a10' },
-  { fill: '#c04a2a', vein: '#6e2414' },
-  { fill: '#a8452a', vein: '#5c2010' },
+  { fill: '#6aa84f', vein: '#2e5c1e' }, // green
+  { fill: '#8bc34a', vein: '#446a1c' }, // fresh green
+  { fill: '#7cb342', vein: '#3e6a1e' }, // light green
+  { fill: '#c8a02e', vein: '#7a5c14' }, // golden
+  { fill: '#d9822b', vein: '#8a4a10' }, // orange
+  { fill: '#c04a2a', vein: '#6e2414' }, // red-brown
+  { fill: '#a8452a', vein: '#5c2010' }, // deep red
 ]
+
+/* ============================================================
+   Leaf sprite generation
+   ============================================================ */
 
 function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   const c = document.createElement('canvas')
@@ -78,6 +107,7 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   const g = c.getContext('2d')!
   g.translate(64, 64)
 
+  // leaf body (tip up, base down)
   g.beginPath()
   g.moveTo(0, -58)
   g.bezierCurveTo(38, -35, 38, 20, 0, 48)
@@ -86,10 +116,12 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   g.fillStyle = fill
   g.fill()
 
+  // soft edge
   g.strokeStyle = 'rgba(0,0,0,0.12)'
   g.lineWidth = 1.5
   g.stroke()
 
+  // midrib
   g.beginPath()
   g.moveTo(0, -50)
   g.lineTo(0, 48)
@@ -97,6 +129,7 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   g.lineWidth = 2
   g.stroke()
 
+  // side veins
   g.lineWidth = 1
   for (let i = -3; i <= 2; i++) {
     const y = i * 11
@@ -109,6 +142,7 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
     g.stroke()
   }
 
+  // stem
   g.beginPath()
   g.moveTo(0, 48)
   g.quadraticCurveTo(2, 58, -2, 66)
@@ -120,7 +154,7 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   return c
 }
 
-/** Create a grayscale clone of a leaf sprite (for the "default" layer) */
+/** Grayscale copy of a sprite — used for the always-visible layer */
 function grayscaleClone(src: HTMLCanvasElement): HTMLCanvasElement {
   const c = document.createElement('canvas')
   c.width = src.width
@@ -140,6 +174,10 @@ function grayscaleClone(src: HTMLCanvasElement): HTMLCanvasElement {
   g.putImageData(data, 0, 0)
   return c
 }
+
+/* ============================================================
+   3D rotation helper
+   ============================================================ */
 
 function rotateVector(
   x: number,
@@ -171,6 +209,10 @@ function rotateVector(
   }
 }
 
+/* ============================================================
+   Leaf particle
+   ============================================================ */
+
 class Leaf {
   colorSprite: HTMLCanvasElement
   graySprite: HTMLCanvasElement
@@ -194,15 +236,10 @@ class Leaf {
   constructor(
     colorSprite: HTMLCanvasElement,
     graySprite: HTMLCanvasElement,
-    cfg: {
-      width: number
-      height: number
-      minSize: number
-      maxSize: number
-      direction: 1 | -1
-      emitterY: number
-      emitterSpread: number
-    }
+    cfg: Pick<
+      LeafConfig,
+      'width' | 'height' | 'minSize' | 'maxSize' | 'direction' | 'emitterY' | 'emitterSpread'
+    >
   ) {
     this.colorSprite = colorSprite
     this.graySprite = graySprite
@@ -236,19 +273,7 @@ class Leaf {
     this.spinY = (Math.random() - 0.5) * 0.1
   }
 
-  update(
-    dt: number,
-    cfg: {
-      width: number
-      height: number
-      minWind: number
-      maxWind: number
-      gravity: number
-      turbulence: number
-      tumbleStrength: number
-      direction: 1 | -1
-    }
-  ) {
+  update(dt: number, cfg: LeafConfig) {
     const targetSpeed =
       cfg.minWind + (cfg.maxWind - cfg.minWind) * this.windFactor
     this.vx += (targetSpeed - this.vx) * (1 - Math.pow(0.9, dt))
@@ -275,7 +300,7 @@ class Leaf {
     const topLimit = Math.min(this.spawnMinY, -buffer) - buffer
 
     if (outByX || this.y > cfg.height + buffer || this.y < topLimit) {
-      // respawn
+      // respawn at the top of the emitter band
       this.width = cfg.minSize + Math.random() * (cfg.maxSize - cfg.minSize)
       this.height = this.width
       const sizeFactor =
@@ -304,6 +329,7 @@ class Leaf {
     const vecU = rotateVector(1, 0, 0, this.angleX, tilt, this.angleZ)
     const vecV = rotateVector(0, 1, 0, this.angleX, tilt, this.angleZ)
 
+    // skip edge-on quads (they flicker otherwise)
     const det = vecU.x * vecV.y - vecU.y * vecV.x
     if (Math.abs(det) < 1e-4) return
 
@@ -321,10 +347,9 @@ class Leaf {
   }
 }
 
-type LeavesEngine = {
-  destroy: () => void
-  setPointer: (x: number, y: number, active: boolean) => void
-}
+/* ============================================================
+   Leaves engine (dual-canvas: grayscale + color-reveal)
+   ============================================================ */
 
 function createLeavesEngine(
   grayCanvas: HTMLCanvasElement,
@@ -334,10 +359,11 @@ function createLeavesEngine(
   const grayCtx = grayCanvas.getContext('2d', { alpha: false })!
   const revealCtx = revealCanvas.getContext('2d', { alpha: true })!
 
-  // offscreen scene buffers
+  // offscreen scene buffer (full-color frame)
   const sceneCanvas = document.createElement('canvas')
   const sceneCtx = sceneCanvas.getContext('2d', { alpha: false })!
 
+  // offscreen mask buffer (radial gradient)
   const maskCanvas = document.createElement('canvas')
   const maskCtx = maskCanvas.getContext('2d')!
 
@@ -345,8 +371,9 @@ function createLeavesEngine(
   let height = 0
   let dpr = 1
 
-  const cfg = {
-    bgColor: '#f9f5ec',
+  const cfg: LeafConfig = {
+    width: 0,
+    height: 0,
     minWind: 1,
     maxWind: 10,
     minSize: 22,
@@ -356,32 +383,24 @@ function createLeavesEngine(
     gravity: 0.6,
     turbulence: 0.8,
     tumbleStrength: 0.4,
-    particleCount: 110,
-    direction: -1 as 1 | -1,
+    direction: -1,
   }
 
   // ---- sprites ----
-  const colorSprites = LEAF_PALETTE.map((p) =>
-    createLeafSprite(p.fill, p.vein)
-  )
+  const colorSprites = LEAF_PALETTE.map((p) => createLeafSprite(p.fill, p.vein))
   const graySprites = colorSprites.map((c) => grayscaleClone(c))
 
   // ---- particles ----
   const particles: Leaf[] = []
+
   const initParticles = () => {
     particles.length = 0
-    for (let i = 0; i < cfg.particleCount; i++) {
+    // fewer particles on small screens for perf
+    const count = width < 720 ? 70 : 110
+    for (let i = 0; i < count; i++) {
       const idx = (Math.random() * colorSprites.length) | 0
-      const leaf = new Leaf(colorSprites[idx], graySprites[idx], {
-        width,
-        height,
-        minSize: cfg.minSize,
-        maxSize: cfg.maxSize,
-        direction: cfg.direction,
-        emitterY: cfg.emitterY,
-        emitterSpread: cfg.emitterSpread,
-      })
-      // seed across the screen initially
+      const leaf = new Leaf(colorSprites[idx], graySprites[idx], cfg)
+      // seed across the screen so the first frame isn't empty
       leaf.x = Math.random() * width * 1.5
       particles.push(leaf)
     }
@@ -414,14 +433,17 @@ function createLeavesEngine(
     sceneCtx.imageSmoothingEnabled = true
     sceneCtx.imageSmoothingQuality = 'high'
 
+    cfg.width = width
+    cfg.height = height
+
     if (particles.length === 0) initParticles()
   }
 
-  // ---- pointer reveal ----
+  // ---- pointer state ----
   let pointerX = -9999
   let pointerY = -9999
   let pointerActive = false
-  let pointerRadius = 140
+  const pointerRadius = 150
 
   const setPointer = (x: number, y: number, active: boolean) => {
     pointerX = x
@@ -429,7 +451,7 @@ function createLeavesEngine(
     pointerActive = active
   }
 
-  // ---- animation ----
+  // ---- animation loop ----
   let lastTime = 0
   let raf = 0
   let running = true
@@ -439,25 +461,27 @@ function createLeavesEngine(
     const dt = lastTime ? Math.min((now - lastTime) / 16.667, 3) : 1
     lastTime = now
 
-    // 1. Draw the full color scene to an offscreen canvas
-    sceneCtx.fillStyle = cfg.bgColor
+    // 1) update + draw full-color scene to offscreen buffer
+    sceneCtx.fillStyle = '#f9f5ec'
     sceneCtx.fillRect(0, 0, width, height)
-    for (const p of particles) {
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i]
       p.update(dt, cfg)
       p.draw(sceneCtx, true)
     }
 
-    // 2. Draw the grayscale scene to the visible gray canvas
-    grayCtx.fillStyle = cfg.bgColor
+    // 2) draw the grayscale version to the visible bottom canvas
+    grayCtx.fillStyle = '#f9f5ec'
     grayCtx.fillRect(0, 0, width, height)
-    for (const p of particles) {
-      p.draw(grayCtx, false)
+    for (let i = 0; i < particles.length; i++) {
+      particles[i].draw(grayCtx, false)
     }
 
-    // 3. Build a radial mask and composite the color scene onto the reveal canvas
+    // 3) reveal: composite color scene into the top canvas, masked by a
+    //    radial gradient around the pointer
     revealCtx.clearRect(0, 0, width, height)
     if (pointerActive) {
-      // build mask on maskCanvas
+      // build soft radial mask
       maskCtx.clearRect(0, 0, width, height)
       const grad = maskCtx.createRadialGradient(
         pointerX,
@@ -468,15 +492,15 @@ function createLeavesEngine(
         pointerRadius
       )
       grad.addColorStop(0, 'rgba(255,255,255,1)')
-      grad.addColorStop(0.55, 'rgba(255,255,255,0.9)')
+      grad.addColorStop(0.55, 'rgba(255,255,255,0.85)')
       grad.addColorStop(1, 'rgba(255,255,255,0)')
       maskCtx.fillStyle = grad
       maskCtx.fillRect(0, 0, width, height)
 
-      // draw color scene into reveal
+      // draw color scene into the reveal canvas
       revealCtx.drawImage(sceneCanvas, 0, 0, width, height)
 
-      // punch out everything outside the mask using destination-in
+      // keep only the masked area
       revealCtx.save()
       revealCtx.globalCompositeOperation = 'destination-in'
       revealCtx.drawImage(maskCanvas, 0, 0, width, height)
@@ -486,7 +510,6 @@ function createLeavesEngine(
     raf = requestAnimationFrame(tick)
   }
 
-  // wait for resize + init, then go
   resize()
   raf = requestAnimationFrame(tick)
 
@@ -499,9 +522,10 @@ function createLeavesEngine(
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Component                                                          */
-/* ------------------------------------------------------------------ */
+/* ============================================================
+   Component
+   ============================================================ */
+
 export default function Hero() {
   const secRef = useRef<HTMLElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -511,7 +535,9 @@ export default function Hero() {
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<LeavesEngine | null>(null)
 
-  // GSAP timeline (unchanged)
+  /* ------------------------------------------------------------
+     GSAP entrance timeline (unchanged from original)
+     ------------------------------------------------------------ */
   useEffect(() => {
     const images = imgRefs.current.filter(
       (img): img is HTMLImageElement => img !== null
@@ -536,6 +562,7 @@ export default function Hero() {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline()
 
+      // Phase 1: expand widths from the center outward
       images.forEach((image, index) => {
         const delay = Math.abs(index - centerIndex) * STAGGER
         tl.to(
@@ -550,6 +577,7 @@ export default function Hero() {
       )
       const totalFirstAnimationTime = maxDelay + DURATION
 
+      // Phase 2: drop images downward, center outward
       images.forEach((image, index) => {
         const delay =
           totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
@@ -560,15 +588,11 @@ export default function Hero() {
         )
       })
 
+      // Phase 3: fade in hero content above the photos
       tl.fromTo(
         content,
         { opacity: 0, y: 25 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: DURATION,
-          ease: 'power2.out',
-        },
+        { opacity: 1, y: 0, duration: DURATION, ease: 'power2.out' },
         totalFirstAnimationTime + 0.4
       )
     }, secRef)
@@ -576,7 +600,9 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  // Leaves engine
+  /* ------------------------------------------------------------
+     Falling leaves engine + pointer tracking
+     ------------------------------------------------------------ */
   useEffect(() => {
     const gray = grayCanvasRef.current
     const reveal = revealCanvasRef.current
@@ -586,35 +612,34 @@ export default function Hero() {
     const engine = createLeavesEngine(gray, reveal, wrap)
     engineRef.current = engine
 
-    // pointer / touch handlers
+    const toLocal = (e: PointerEvent) => {
+      const rect = wrap.getBoundingClientRect()
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top }
+    }
+
     const onPointerMove = (e: PointerEvent) => {
-      const rect = wrap.getBoundingClientRect()
-      engine.setPointer(
-        e.clientX - rect.left,
-        e.clientY - rect.top,
-        true
-      )
+      const { x, y } = toLocal(e)
+      engine.setPointer(x, y, true)
     }
+
     const onPointerDown = (e: PointerEvent) => {
-      const rect = wrap.getBoundingClientRect()
-      engine.setPointer(
-        e.clientX - rect.left,
-        e.clientY - rect.top,
-        true
-      )
+      const { x, y } = toLocal(e)
+      engine.setPointer(x, y, true)
     }
+
     const onPointerUp = (e: PointerEvent) => {
-      // on touch, hide the reveal after release; on mouse, keep following
+      // mouse keeps hovering after click; touch should hide the reveal
       if (e.pointerType === 'touch') {
         engine.setPointer(-9999, -9999, false)
       }
     }
+
     const onPointerLeave = () => {
       engine.setPointer(-9999, -9999, false)
     }
 
-    // Listen on the whole section so both images + leaves react
-    const target = secRef.current ?? wrap
+    // attach to the section so both the leaves and the images react
+    const target: HTMLElement = secRef.current ?? wrap
     target.addEventListener('pointermove', onPointerMove, { passive: true })
     target.addEventListener('pointerdown', onPointerDown, { passive: true })
     target.addEventListener('pointerup', onPointerUp, { passive: true })
@@ -632,30 +657,40 @@ export default function Hero() {
     }
   }, [])
 
-  // Toggle grayscale on hero images on touch/hover
+  /* ------------------------------------------------------------
+     Image hover / touch color reveal
+     ------------------------------------------------------------ */
   const revealImage = (el: HTMLImageElement | null) => {
     if (!el) return
     el.classList.add(s.reveal!)
   }
+
   const hideImage = (el: HTMLImageElement | null) => {
     if (!el) return
     el.classList.remove(s.reveal!)
   }
 
+  /* ------------------------------------------------------------
+     Scroll to next section
+     ------------------------------------------------------------ */
   const handleExplore = () => {
     const nextEl = secRef.current?.nextElementSibling
     if (nextEl) nextEl.scrollIntoView({ behavior: 'smooth' })
     else window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })
   }
 
+  /* ------------------------------------------------------------
+     Render
+     ------------------------------------------------------------ */
   return (
     <section ref={secRef} className={s.heroSection}>
-      {/* Falling leaves background */}
+      {/* Falling leaves background: grayscale + color reveal layers */}
       <div ref={leavesWrapRef} className={s.leavesWrap} aria-hidden="true">
         <canvas ref={grayCanvasRef} className={s.leavesCanvas} />
         <canvas ref={revealCanvasRef} className={s.revealCanvas} />
       </div>
 
+      {/* Content */}
       <div ref={contentRef} className={s.heroContent}>
         <h1 className={s.title}>
           Discover the world <br /> through people
@@ -665,6 +700,7 @@ export default function Hero() {
         </button>
       </div>
 
+      {/* Image columns */}
       <div className={s.heroImages}>
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
@@ -679,9 +715,11 @@ export default function Hero() {
               onPointerLeave={() => hideImage(imgRefs.current[idx])}
               onPointerDown={() => revealImage(imgRefs.current[idx])}
               onPointerUp={() => {
-                // keep color on hover for mouse; for touch release hide
-                // small delay so user sees the effect
-                setTimeout(() => hideImage(imgRefs.current[idx]), 400)
+                // On touch, hide after a beat so the user sees the color
+                window.setTimeout(
+                  () => hideImage(imgRefs.current[idx]),
+                  400
+                )
               }}
               draggable={false}
             />
