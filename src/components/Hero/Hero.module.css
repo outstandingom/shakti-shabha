@@ -81,54 +81,55 @@
   box-shadow: 0 10px 25px rgba(255, 255, 255, 0.18);
 }
 
-/* ---------- images wrapper (mobile) ---------- */
+/* ============================================================
+   MOBILE: images row = real pyramid, cropped portrait strips
+   ============================================================ */
 
 .heroImages {
   position: relative;
   width: 100%;
   max-width: 640px;
-  height: 56vh;                 /* taller than before → bigger images */
+  height: 56vh;
   margin: 1.25rem 0 0;
   display: flex;
   justify-content: center;
-  gap: 4px;
-  padding: 0 0.35rem;
-  align-items: flex-end;
+  align-items: flex-end; /* shared bottom baseline → pyramid reads correctly */
+  gap: 6px;
+  padding: 0 0.5rem;
   z-index: 10;
 }
 
+/* Each column is a fixed slice — no flex-grow on mobile */
 .col {
   display: flex;
   align-items: flex-end;
   justify-content: center;
   height: 100%;
-  flex: 1;
-  transition: flex 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s;
+  flex: 0 0 auto;
+  width: calc((100% - 24px) / 5); /* 5 visible cols, 4 gaps of 6px */
+  transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), z-index 0s;
 }
 
-/* ---------- image tile ---------- */
-
+/* Image fills the column and crops like desktop */
 .imgItem {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 0.9rem;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65);
-  will-change: width, transform, filter;
+  object-position: center 20%;
+  border-radius: 0.8rem;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
   filter: grayscale(100%);
   transition: filter 0.5s ease;
-  object-position: center 20%;
   -webkit-user-drag: none;
   user-select: none;
+  will-change: filter;
 }
 
 .col:active .imgItem {
   filter: grayscale(0%);
 }
 
-/* ---------- mobile: hide the outer 2 on each side (7 hidden, 5 shown) ---------- */
-/* With 9 columns: hide 1, 2, 8, 9 → visible 3..7 (5 images) */
-
+/* mobile: hide the outer 2 on each side (9 total → 5 shown) */
 .col:nth-child(1),
 .col:nth-child(2),
 .col:nth-child(8),
@@ -136,9 +137,7 @@
   display: none;
 }
 
-/* ---------- pyramid heights (mobile) ---------- */
-/* 5 visible columns → arc: 78% 90% 100% 90% 78% */
-
+/* mobile pyramid heights: 78% 90% 100% 90% 78% */
 .h_4_12  { height: 55%; }
 .h_6_12  { height: 70%; }
 .h_8_12  { height: 78%; }
@@ -165,7 +164,7 @@
 }
 
 /* ============================================================
-   Desktop & tablet (≥ 640px) — full 9-column arc, original look
+   DESKTOP & TABLET (≥ 640px) — full 9-column arc
    ============================================================ */
 
 @media (min-width: 640px) {
@@ -207,6 +206,8 @@
 
   .col {
     align-items: center;
+    flex: 1;
+    width: auto;
   }
 
   .col:hover {
@@ -225,7 +226,7 @@
     object-position: center;
   }
 
-  /* show all 9 columns again */
+  /* show all 9 columns */
   .col:nth-child(1),
   .col:nth-child(2),
   .col:nth-child(8),
@@ -233,7 +234,7 @@
     display: flex;
   }
 
-  /* full arc — 55% 70% 84% 95% 100% 95% 84% 70% 55% */
+  /* full desktop arc: 55% 70% 84% 95% 100% 95% 84% 70% 55% */
   .h_4_12  { height: 55%; }
   .h_6_12  { height: 70%; }
   .h_8_12  { height: 84%; }
@@ -284,4 +285,49 @@
   pointer-events: none;
 }
 
-/* =
+/* ============================================================
+   Color mode (hover / tap any photo)
+   ============================================================ */
+
+.heroSection[data-color="true"] .title {
+  background-image: linear-gradient(
+    90deg,
+    #ffb347 0%,
+    #ff7e5f 25%,
+    #feb47b 50%,
+    #7cb342 75%,
+    #4fc3f7 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: titleGradient 6s linear infinite;
+  text-shadow: none;
+}
+
+@keyframes titleGradient {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.heroSection[data-color="true"] .ctaBtn {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b, #7cb342);
+  border-color: transparent;
+  color: #0b0b0b;
+  box-shadow: 0 10px 25px rgba(255, 126, 95, 0.35);
+}
+
+.heroSection[data-color="true"] .ctaBtn:hover {
+  background: linear-gradient(135deg, #ffb347, #ff7e5f, #7cb342);
+  color: #0b0b0b;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(255, 126, 95, 0.5);
+}
+
+@media (max-width: 639px) {
+  .heroSection[data-color="true"] .title {
+    animation-duration: 8s;
+  }
+}
