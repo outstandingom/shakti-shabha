@@ -59,6 +59,13 @@ const GIRL_IMAGES: ImageData[] = [
     alt: 'Police',
     heightClass: s.h_8_12,
   },
+   {
+    src: '/youngest ias officier.jpg',
+    fallback:
+      'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
+    alt: 'ias',
+    heightClass: s.h_8_12,
+  },
 ]
 
 /* ============================================================
