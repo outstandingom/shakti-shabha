@@ -134,7 +134,7 @@
   filter: grayscale(0%);
 }
 
-/* ---------- mobile: hide the outer 2 on each side (7 hidden, 5 shown) ---------- */
+/* ---------- mobile: hide the outer 2 on each side ---------- */
 
 .col:nth-child(1),
 .col:nth-child(2),
@@ -171,7 +171,7 @@
 }
 
 /* ============================================================
-   Desktop & tablet (≥ 640px) — full 9-column arc
+   Desktop & tablet (≥ 640px) — full 9-column arc, original size
    ============================================================ */
 
 @media (min-width: 640px) {
@@ -199,14 +199,14 @@
 
   .heroImages {
     position: absolute;
-    /* CHANGED: Pushed down from 50% to 55% to clear the navbar */
-    top: 55%; 
+    /* SHIFTED DOWN: Added 40px to clear the navbar */
+    top: calc(50% + 40px);
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
     max-width: 1550px;
-    /* CHANGED: Reduced from 92vh to 85vh to prevent top overlap */
-    height: 85vh; 
+    /* RESTORED: Back to the original height */
+    height: 92vh;
     margin: 0;
     gap: clamp(6px, 1.1vw, 16px);
     padding: 0 clamp(8px, 2vw, 24px);
