@@ -4,60 +4,65 @@ import s from './Hero.module.css'
 
 type ImageData = {
   src: string
+  fallback: string
   alt: string
   heightClass: string
 }
 
 const GIRL_IMAGES: ImageData[] = [
   {
-    src: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 1',
+    src: '/IAS.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=80',
+    alt: 'IAS officer',
     heightClass: s.h_4_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 2',
+    src: '/astronaut.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900&auto=format&fit=crop&q=80',
+    alt: 'Astronaut',
     heightClass: s.h_6_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 3',
+    src: '/cricketer.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80',
+    alt: 'Cricketer',
     heightClass: s.h_8_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 4',
+    src: '/games.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=80',
+    alt: 'Games',
     heightClass: s.h_10_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 5 (center)',
+    src: '/missindia.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=900&auto=format&fit=crop&q=80',
+    alt: 'Miss India',
     heightClass: s.h_11_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 6',
+    src: '/navy.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900&auto=format&fit=crop&q=80',
+    alt: 'Navy',
     heightClass: s.h_10_12,
   },
   {
-    src: 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 7',
+    src: '/police.jpeg',
+    fallback:
+      'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80',
+    alt: 'Police',
     heightClass: s.h_8_12,
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 8',
-    heightClass: s.h_6_12,
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=900&auto=format&fit=crop&q=80',
-    alt: 'Portrait of girl 9',
-    heightClass: s.h_4_12,
   },
 ]
 
 /* ============================================================
-   Falling leaves — self-contained, does not touch the rest
+   Falling leaves engine
    ============================================================ */
 
 const LEAF_PALETTE = [
@@ -400,16 +405,13 @@ function createLeavesEngine(
       particles[i].update(dt, cfg)
     }
 
-    // full-color scene (transparent bg so the dark hero shows through)
     sceneCtx.clearRect(0, 0, width, height)
     for (let i = 0; i < particles.length; i++) {
       particles[i].draw(sceneCtx, true)
     }
 
-    // grayscale layer (visible when NOT in color mode)
     grayCtx.clearRect(0, 0, width, height)
     if (colorMode) {
-      // full color — leaves become colorful with each other
       grayCtx.drawImage(sceneCanvas, 0, 0, width, height)
     } else {
       for (let i = 0; i < particles.length; i++) {
@@ -417,7 +419,6 @@ function createLeavesEngine(
       }
     }
 
-    // color reveal around the pointer
     revealCtx.clearRect(0, 0, width, height)
     if (pointerActive && !colorMode) {
       maskCtx.clearRect(0, 0, width, height)
@@ -458,7 +459,7 @@ function createLeavesEngine(
 }
 
 /* ============================================================
-   Component — your original code + leaves + color mode
+   Component
    ============================================================ */
 
 export default function Hero() {
@@ -466,26 +467,27 @@ export default function Hero() {
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
 
-  // leaves refs
   const grayCanvasRef = useRef<HTMLCanvasElement>(null)
   const revealCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const engineRef = useRef<LeavesEngine | null>(null)
 
-  // color mode (triggered by hovering a photo)
   const [colorMode, setColorMode] = useState(false)
 
-  /* ---- YOUR ORIGINAL GSAP TIMELINE — unchanged ---- */
   useEffect(() => {
-    const images = imgRefs.current.filter((img): img is HTMLImageElement => img !== null)
+    const images = imgRefs.current.filter(
+      (img): img is HTMLImageElement => img !== null
+    )
     const content = contentRef.current
 
     if (!images.length || !content) return
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches
 
     if (prefersReducedMotion) {
-      images.forEach(img => {
+      images.forEach((img) => {
         gsap.set(img, { width: '100%', y: '50vh' })
       })
       gsap.set(content, { opacity: 1, y: 0 })
@@ -514,7 +516,8 @@ export default function Hero() {
       const totalFirstAnimationTime = maxDelay + DURATION
 
       images.forEach((image, index) => {
-        const delay = totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
+        const delay =
+          totalFirstAnimationTime + Math.abs(index - centerIndex) * STAGGER
         tl.to(
           image,
           { y: '50vh', duration: DURATION, ease: 'power2.out' },
@@ -533,7 +536,6 @@ export default function Hero() {
     return () => ctx.revert()
   }, [])
 
-  /* ---- leaves engine + pointer tracking ---- */
   useEffect(() => {
     const gray = grayCanvasRef.current
     const reveal = revealCanvasRef.current
@@ -580,7 +582,6 @@ export default function Hero() {
     }
   }, [])
 
-  /* ---- sync colorMode into the leaves engine ---- */
   useEffect(() => {
     engineRef.current?.setColorMode(colorMode)
   }, [colorMode])
@@ -594,13 +595,21 @@ export default function Hero() {
     }
   }
 
+  /* ---------- fallback: swap local → unsplash on 404 ---------- */
+  const handleImgError = (idx: number) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget
+    // only swap once (guard against infinite loops if fallback also fails)
+    if (img.dataset.fallbackApplied === '1') return
+    img.dataset.fallbackApplied = '1'
+    img.src = GIRL_IMAGES[idx].fallback
+  }
+
   return (
     <section
       ref={secRef}
       className={s.heroSection}
       data-color={colorMode ? 'true' : 'false'}
     >
-      {/* falling leaves behind everything */}
       <div ref={leavesWrapRef} className={s.leavesWrap} aria-hidden="true">
         <canvas ref={grayCanvasRef} className={s.leavesCanvas} />
         <canvas ref={revealCanvasRef} className={s.revealCanvas} />
@@ -628,12 +637,14 @@ export default function Hero() {
         {GIRL_IMAGES.map((item, idx) => (
           <div key={idx} className={s.col}>
             <img
-              ref={el => {
+              ref={(el) => {
                 imgRefs.current[idx] = el
               }}
               src={item.src}
               alt={item.alt}
               className={`${s.imgItem} ${item.heightClass}`}
+              onError={handleImgError(idx)}
+              draggable={false}
             />
           </div>
         ))}
