@@ -36,6 +36,8 @@
   letter-spacing: -0.015em;
   text-align: center;
   margin: 0;
+  transition: color 0.4s ease, -webkit-text-fill-color 0.4s ease,
+    background 0.4s ease;
 }
 
 .ctaBtn {
@@ -51,7 +53,8 @@
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 9999px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -177,7 +180,7 @@
 }
 
 /* ============================================================
-   NEW: falling leaves layer (additive — doesn't touch anything above)
+   Falling leaves layer
    ============================================================ */
 
 .leavesWrap {
@@ -194,6 +197,7 @@
   display: block;
   width: 100%;
   height: 100%;
+  transition: opacity 0.4s ease;
 }
 
 .revealCanvas {
@@ -203,4 +207,58 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+}
+
+/* ============================================================
+   Color mode — triggered by hovering any photo
+   (leaves colorize via JS, hero text + CTA colorize via these rules)
+   ============================================================ */
+
+.heroSection[data-color="true"] .title {
+  background-image: linear-gradient(
+    90deg,
+    #ffb347 0%,
+    #ff7e5f 25%,
+    #feb47b 50%,
+    #7cb342 75%,
+    #4fc3f7 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: titleGradient 6s linear infinite;
+  text-shadow: none;
+}
+
+@keyframes titleGradient {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.heroSection[data-color="true"] .ctaBtn {
+  background: linear-gradient(135deg, #ff7e5f, #feb47b, #7cb342);
+  border-color: transparent;
+  color: #0b0b0b;
+  box-shadow: 0 10px 25px rgba(255, 126, 95, 0.35);
+}
+
+.heroSection[data-color="true"] .ctaBtn:hover {
+  background: linear-gradient(135deg, #ffb347, #ff7e5f, #7cb342);
+  color: #0b0b0b;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(255, 126, 95, 0.5);
+}
+
+@media (max-width: 639px) {
+  .heroSection[data-color="true"] .title {
+    animation-duration: 8s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroSection[data-color="true"] .title {
+    animation: none;
+  }
 }
