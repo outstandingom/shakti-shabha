@@ -503,18 +503,17 @@ export default function Hero() {
     ).matches
 
     // ---------- Responsive offsets ----------
-    // On mobile the images were pushed down too far (50vh),
-    // leaving empty space at the top of the hero.
-    // - Reduce the downward travel so images stay higher
-    //   and cover that empty gap.
-    // - Push the content slightly DOWN so it doesn't
-    //   collide visually with the (now higher) images.
-    const isMobile = window.matchMedia('(max-width: 768px)').matches
-    const isTablet = window.matchMedia('(max-width: 1024px)').matches
+    // Desktop keeps the ORIGINAL behaviour exactly (50vh / content y = 0),
+    // so the sliding "diamond preview" is preserved 1:1.
+    // Mobile gets a gentler push (28vh) — still reveals the diamond via
+    // the slide-in motion, but doesn't push images so far down that the
+    // top of the hero looks empty.
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
+    const isTablet = window.matchMedia('(max-width: 1023px)').matches
 
-    const IMG_Y = isMobile ? '18vh' : isTablet ? '35vh' : '50vh'
-    const CONTENT_END_Y = isMobile ? 40 : isTablet ? 20 : 0
-    const CONTENT_START_Y = isMobile ? 75 : isTablet ? 45 : 25
+    const IMG_Y = isMobile ? '28vh' : isTablet ? '40vh' : '50vh'
+    const CONTENT_END_Y = isMobile ? 45 : isTablet ? 20 : 0
+    const CONTENT_START_Y = isMobile ? 80 : isTablet ? 50 : 25
 
     if (prefersReducedMotion) {
       images.forEach((img) => {
@@ -557,7 +556,7 @@ export default function Hero() {
         )
       })
 
-      // Phase 3 – fade content in (settles slightly lower on mobile)
+      // Phase 3 – fade content in (settles lower only on smaller screens)
       tl.fromTo(
         content,
         { opacity: 0, y: CONTENT_START_Y },
