@@ -144,7 +144,7 @@
     /* Align images to the bottom */
     align-items: flex-end; 
     
-    gap: 8px;
+    gap: 6px;
     padding-bottom: 2vh; 
   }
 
