@@ -65,7 +65,11 @@ export default function Sahyog() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sy="text"]', {
-        opacity: 0, y: 22, stagger: 0.08, duration: 0.6, ease: 'power3.out',
+        opacity: 0,
+        y: 22,
+        stagger: 0.08,
+        duration: 0.6,
+        ease: 'power3.out',
         scrollTrigger: { trigger: secRef.current, start: 'top 75%' }
       })
     }, secRef)
@@ -75,12 +79,12 @@ export default function Sahyog() {
   return (
     <section ref={secRef} className={s.section}>
 
-      {/* TOP HALF: Text content */}
+      {/* TOP HALF: Content centered & responsive */}
       <div className={s.top}>
         <div className={s.textCol}>
-          <div data-sy="text" className={s.eyebrow}>Partnerships & Support</div>
+          <div data-sy="text" className={s.eyebrow}>Partnerships &amp; Support</div>
 
-          <div data-sy="text">
+          <div data-sy="text" className={s.titleBlock}>
             <h2 className={s.title}>Our Sahyog</h2>
             <span className={s.hindi}>सहयोग — Together We Rise</span>
           </div>
@@ -100,7 +104,7 @@ export default function Sahyog() {
             ].map(p => (
               <div key={p.title} className={s.pillItem}>
                 <span className={s.pillIcon}>{p.icon}</span>
-                <div>
+                <div className={s.pillInfo}>
                   <div className={s.pillTag}>{p.tag}</div>
                   <div className={s.pillTitle}>{p.title}</div>
                 </div>
