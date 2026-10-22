@@ -76,6 +76,9 @@
 
 .rightTop {
   padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Prevents button from stretching */
 }
 
 .eyebrow { 
@@ -93,7 +96,7 @@
   font-weight: 800; 
   color: #111; 
   line-height: 1.05; 
-  margin: 0 0 1.5rem 0; /* Reduced bottom margin to fit button */
+  margin: 0 0 2rem 0; 
   letter-spacing: -0.02em;
 }
 
@@ -113,26 +116,28 @@
 }
 
 /* ========================================
-   BUTTON (WITH WHITE/CRIMSON HOVER)
+   BUTTON (FORCED VISIBILITY)
    ======================================== */
 .ctaBtn {
   display: inline-block;
-  background: #ffffff;                /* Default white background */
-  color: #DC143C;                     /* Default crimson text */
-  border: 1px solid #DC143C;          /* Crimson border */
-  padding: 0.8rem 1.8rem;
-  font-size: 0.8rem;
-  font-weight: 600;
+  background-color: #ffffff;                
+  color: #DC143C;                           
+  border: 2px solid #DC143C;                
+  padding: 0.8rem 2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  border-radius: 8px;                 /* Rounded corners */
+  border-radius: 8px;                       
   text-decoration: none;
+  transition: all 0.3s ease;                
   
-  transition: all 0.3s ease;          
+  /* Forces the button to show even if GSAP fails */
+  opacity: 1 !important; 
 }
 
 .ctaBtn:hover {
-  background: #DC143C;                /* Crimson background on hover */
-  color: #ffffff;                     /* White text on hover */
+  background-color: #DC143C;                
+  color: #ffffff;                           
   border-color: #DC143C;
 }
 
