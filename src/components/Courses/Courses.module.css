@@ -1,8 +1,12 @@
-.section { 
-  padding: 7rem 0; 
+﻿.section { 
+  padding: 2.5rem 0; 
   border-top: 1px solid var(--border); 
   overflow: hidden; 
-  background: var(--theme-bg, #FFFFFF); 
+  background: var(--theme-bg, #FFFFFF);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .header { 
@@ -10,38 +14,42 @@
   display: flex; 
   align-items: flex-end; 
   justify-content: space-between; 
-  margin-bottom: 3rem; 
+  margin-bottom: 1.75rem; 
   flex-wrap: wrap; 
   gap: 1rem; 
 }
 
 .header h2 { 
   font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: clamp(1.75rem, 3.5vw, 2.5rem); 
+  font-size: clamp(1.5rem, 3vw, 2.1rem); 
   font-weight: 700; 
   color: var(--theme-text-heading, #111111); 
 }
 
 .track { 
   display: flex; 
-  gap: 1.5rem; 
+  gap: 1.25rem; 
   padding: 0 3rem; 
   cursor: grab; 
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+
+.track::-webkit-scrollbar { display: none; }
 
 .track:active { 
   cursor: grabbing; 
 }
 
 .card { 
-  flex: 0 0 340px; 
-  padding: 2.5rem; 
+  flex: 0 0 300px; 
+  padding: 2rem; 
   border: 1px solid var(--border); 
   background: #FFFFFF; 
   transition: border-color 0.25s, box-shadow 0.25s; 
   position: relative; 
   overflow: hidden; 
-  border-radius: 4px; 
+  border-radius: 6px; 
 }
 
 .card::before { 
@@ -59,7 +67,7 @@
 
 .card:hover { 
   border-color: rgba(220, 20, 60, 0.35); 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06); 
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06); 
 }
 
 .card:hover::before { 
@@ -75,39 +83,39 @@
 }
 
 .cardBadge { 
-  font-size: 0.62rem; 
+  font-size: 0.6rem; 
   letter-spacing: 0.14em; 
   text-transform: uppercase; 
   color: var(--theme-primary, #DC143C); 
-  margin-bottom: 1.5rem; 
+  margin-bottom: 1.1rem; 
   font-weight: 600; 
 }
 
 .cardTitle { 
   font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: 1.15rem; 
+  font-size: 1.05rem; 
   font-weight: 600; 
   color: var(--theme-text-heading, #111111); 
-  margin-bottom: 0.5rem; 
+  margin-bottom: 0.4rem; 
   line-height: 1.2; 
 }
 
 .cardDetail { 
-  font-size: 0.82rem; 
+  font-size: 0.8rem; 
   color: var(--theme-text-muted, #555555); 
-  line-height: 1.7; 
-  margin-bottom: 1.5rem; 
+  line-height: 1.65; 
+  margin-bottom: 1.1rem; 
 }
 
 .cardMeta { 
   display: flex; 
-  gap: 1.5rem; 
+  gap: 1.25rem; 
   flex-wrap: wrap; 
-  margin-bottom: 1.75rem; 
+  margin-bottom: 1.4rem; 
 }
 
 .cardMetaItem { 
-  font-size: 0.75rem; 
+  font-size: 0.72rem; 
   color: var(--theme-text-subtle, #777777); 
 }
 
@@ -117,7 +125,7 @@
 }
 
 .enroll { 
-  font-size: 0.78rem; 
+  font-size: 0.75rem; 
   color: var(--theme-primary, #DC143C); 
   letter-spacing: 0.04em; 
   text-decoration: none; 
@@ -132,6 +140,6 @@
 @media (max-width: 768px) { 
   .header { padding: 0 1.25rem; } 
   .track { padding: 0 1.25rem; } 
-  .card { flex: 0 0 280px; } 
-  .section { padding: 5rem 0; } 
+  .card { flex: 0 0 250px; } 
+  .section { padding: 3rem 0; } 
 }
