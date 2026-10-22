@@ -46,7 +46,7 @@ export default function Profile() {
           {/* Main Hero Image */}
           <div ref={photoRef} className={s.photoFrame}>
             <img 
-              src="/harshitama'am.jpg" 
+              src="Gemini_Generated_Image_kdfkbukdfkbukdfk.png" 
               alt="Smt. Harshita Mankar" 
               className={s.heroImg}
             />
