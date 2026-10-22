@@ -1,107 +1,194 @@
-import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import s from './Profile.module.css'
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Inter:wght@400;500;700;800&display=swap');
 
-gsap.registerPlugin(ScrollTrigger)
+/* --- Main Layout --- */
+.section { 
+  padding: 5rem 2rem; 
+  background-color: #f4f4f4; /* Light editorial background */
+  color: #111;
+  font-family: 'Inter', sans-serif;
+}
 
-export default function Profile() {
-  const secRef   = useRef<HTMLElement>(null)
-  const photoRef = useRef<HTMLDivElement>(null)
+.inner { 
+  display: grid; 
+  grid-template-columns: 1fr 1.3fr; /* Left is slightly narrower */
+  gap: 4rem; 
+  align-items: stretch; 
+  max-width: 1300px;
+  margin: 0 auto;
+}
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: { 
-          trigger: secRef.current, 
-          start: 'top 75%', 
-          toggleActions: 'play none none none' 
-        }
-      })
-      
-      // Animate main photo revealing
-      tl.to(photoRef.current, { clipPath: 'inset(0% 0 0 0)', duration: 1.1, ease: 'power4.inOut' })
-        // Animate right side heading
-        .from('[data-p="eyebrow"]', { opacity: 0, y: 10, duration: 0.4 }, '-=0.6')
-        .from('[data-p="heading"]', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
-        .from('[data-p="btn"]',     { opacity: 0, y: 10, duration: 0.4 }, '-=0.3')
-        // Animate sub images
-        .from('[data-p="subimg"]',  { opacity: 0, y: 30, stagger: 0.2, duration: 0.6 }, '-=0.2')
-        // Animate left bottom text
-        .from('[data-p="subtitle"]',{ opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
-        .from('[data-p="bio"]',     { opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
-    }, secRef)
-    return () => ctx.revert()
-  }, [])
+/* ========================================
+   LEFT COLUMN
+   ======================================== */
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
 
-  return (
-    <section ref={secRef} className={s.section}>
-      <div className={s.inner}>
-        
-        {/* ========================================
-            LEFT COLUMN
-            ======================================== */}
-        <div className={s.left}>
-          {/* Main Hero Image */}
-          <div ref={photoRef} className={s.photoFrame}>
-            {/* Public folder image updated here */}
-            <img 
-              src="/Gemini_Generated_Image_kdfkbukdfkbukdfk.png" 
-              alt="Smt. Harshita Mankar" 
-              className={s.heroImg}
-            />
-          </div>
+.photoFrame { 
+  aspect-ratio: 1 / 1.15; /* Square-ish like the fashion image */
+  position: relative; 
+  overflow: hidden; 
+  clip-path: inset(100% 0 0 0); 
+  background: #e6dcd5;
+}
 
-          {/* Bottom Left: Text & Paragraph */}
-          <div className={s.leftBottom}>
-            <h3 data-p="subtitle" className={s.subTitle}>
-              Empowering<br/>the Future
-            </h3>
-            <p data-p="bio" className={s.bio}>
-              A social warrior who chose the village over the boardroom. For twelve unbroken years, Lalita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them.
-            </p>
-          </div>
-        </div>
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 
-        {/* ========================================
-            RIGHT COLUMN
-            ======================================== */}
-        <div className={s.right}>
-          {/* Top Right: Heading & Button */}
-          <div className={s.rightTop}>
-            <span data-p="eyebrow" className={s.eyebrow}>Founder & Visionary</span>
-            
-            <h2 data-p="heading" className={s.heading}>
-              Smt. Harshita <em>Mankar</em><br/>
-              <span className={s.title} style={{fontFamily:'var(--ff-dev)'}}>
-                श्रीमती हर्षिता मानकरी
-              </span>
-            </h2>
+.leftBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+}
 
-            <Link to="/social-work" data-p="btn" className={s.ctaBtn}>
-              View Impact Archive
-            </Link>
-          </div>
+.subTitle {
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0;
+  color: #111;
+}
 
-          {/* Bottom Right: Two Sub Images */}
-          <div className={s.rightBottom}>
-            <div data-p="subimg" className={s.subImg}>
-              <img 
-                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop" 
-                alt="NGO Work 1" 
-              />
-            </div>
-            <div data-p="subimg" className={s.subImg}>
-              <img 
-                src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop" 
-                alt="NGO Work 2" 
-              />
-            </div>
-          </div>
-        </div>
+.bio { 
+  font-size: 0.75rem; 
+  line-height: 1.6; 
+  color: #555; 
+  margin: 0;
+  max-width: 260px;
+}
 
-      </div>
-    </section>
-  )
+/* ========================================
+   RIGHT COLUMN
+   ======================================== */
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 3rem;
+}
+
+.rightTop {
+  padding-top: 0.5rem;
+}
+
+.eyebrow { 
+  font-size: 0.65rem; 
+  font-weight: 700; 
+  letter-spacing: 0.15em; 
+  text-transform: uppercase; 
+  color: #888; 
+  margin-bottom: 0.4rem; /* DECREASED GAP HERE */
+  display: block; 
+}
+
+/* Mixed typography heading */
+.heading { 
+  font-size: clamp(2.5rem, 4.5vw, 4rem); 
+  font-weight: 800; 
+  color: #111; 
+  line-height: 1.05; 
+  margin: 0 0 2rem 0; 
+  letter-spacing: -0.02em;
+}
+
+/* Italic serif part */
+.heading em {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.title { 
+  font-family: 'Noto Sans Devanagari', sans-serif; 
+  font-size: 1.1rem; 
+  color: #666; 
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 400;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: #222;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  text-decoration: none;
+  
+  border-radius: 8px; /* SLIGHTLY ROUNDED CORNERS HERE */
+}
+
+.ctaBtn:hover {
+  background: #000;
+}
+
+/* Bottom Right Sub Images */
+.rightBottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  flex-grow: 1;
+  min-height: 300px;
+}
+
+.subImg {
+  background: #e6dcd5;
+  overflow: hidden;
+  border-radius: 4px; /* Added slight rounding for consistency */
+}
+
+.subImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.subImg:hover img {
+  transform: scale(1.05);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+@media (max-width: 1024px) {
+  .inner { 
+    grid-template-columns: 1fr; 
+    gap: 3rem; 
+  }
+  
+  .right {
+    flex-direction: column; 
+  }
+
+  .rightBottom {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 600px) {
+  .leftBottom {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .rightBottom {
+    grid-template-columns: 1fr; /* Stack images on mobile */
+  }
+  
+  .subImg {
+    aspect-ratio: 4/3;
+  }
 }
