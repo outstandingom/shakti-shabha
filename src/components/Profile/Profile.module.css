@@ -11,7 +11,7 @@
 .inner { 
   display: grid; 
   grid-template-columns: 1fr 1.3fr; 
-  gap: 4rem; 
+  gap: 2rem; 
   align-items: stretch; 
   max-width: 1300px;
   margin: 0 auto;
