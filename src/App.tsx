@@ -1,4 +1,4 @@
-﻿import { useEffect } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 import gsap from 'gsap'
@@ -17,37 +17,49 @@ import AboutPage from './pages/AboutPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const LenisContext = createContext<Lenis | null>(null)
+
 function ScrollToTop() {
   const { pathname } = useLocation()
-  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  const lenis = useContext(LenisContext)
+
+  useEffect(() => {
+    lenis?.scrollTo(0, { immediate: true })
+  }, [lenis, pathname])
+
   return null
 }
 
 function LenisProvider() {
+  const [lenis, setLenis] = useState<Lenis | null>(null)
+
   useEffect(() => {
-    const lenis = new Lenis({
+    const instance = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     })
-    function raf(time: number) {
-      lenis.raf(time)
-      ScrollTrigger.update()
-      requestAnimationFrame(raf)
-    }
-    const id = requestAnimationFrame(raf)
+
+    const updateScrollTrigger = () => ScrollTrigger.update()
+    const updateLenis = (time: number) => instance.raf(time * 1000)
+
+    instance.on('scroll', updateScrollTrigger)
+    gsap.ticker.add(updateLenis)
+    gsap.ticker.lagSmoothing(0)
+    setLenis(instance)
+
     return () => {
-      cancelAnimationFrame(id)
-      lenis.destroy()
+      setLenis(null)
+      instance.off('scroll', updateScrollTrigger)
+      gsap.ticker.remove(updateLenis)
+      instance.destroy()
     }
   }, [])
-  return null
-}
 
-export default function App() {
+  const value = useMemo(() => lenis, [lenis])
+
   return (
-    <BrowserRouter>
-      <LenisProvider />
+    <LenisContext.Provider value={value}>
       <ScrollToTop />
       {/* Global fire cursor — fixed, above all content, pointer-events: none */}
       <FireCursor />
@@ -64,6 +76,14 @@ export default function App() {
         <Route path="/about"               element={<AboutPage />} />
         <Route path="/peace-and-revolution" element={<AboutPage />} />
       </Routes>
+    </LenisContext.Provider>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <LenisProvider />
     </BrowserRouter>
   )
 }
