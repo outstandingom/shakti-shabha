@@ -1,18 +1,19 @@
-﻿/* ============================================================
-   Aaryaveera — Dark Obsidian + Gold | Split: Text + SVG Warrior
+/* ============================================================
+   Aaryaveera — Dark Obsidian + Gold
+   Mobile (default):  text  →  warrior  →  buttons   (single column)
+   Desktop (≥ 901px): text + buttons on the left, warrior on the right
    ============================================================ */
 
 .section {
-  padding: clamp(1rem, 2vw, 1.75rem) clamp(1rem, 3vw, 2.5rem);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 2rem 1rem 2.5rem;
   background: #000000;
   color: #F0EBE3;
   border-top: 1px solid rgba(201, 169, 110, 0.2);
   border-bottom: 1px solid rgba(201, 169, 110, 0.2);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
 }
 
 .glow {
@@ -23,194 +24,183 @@
   z-index: 1;
 }
 
-/* Two-column inner */
+/* ============================================================
+   MOBILE LAYOUT (default)
+   ============================================================ */
 .inner {
-  max-width: 1280px;
-  margin: 0 auto;
   position: relative;
   z-index: 2;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(1.25rem, 3vw, 3rem);
-  align-items: center;
   width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'text'
+    'art'
+    'cta';
+  row-gap: 1.5rem;
 }
 
-/* ── LEFT: text ── */
+/* On mobile the wrapper disappears so text / art / cta can be ordered freely */
 .left {
+  display: contents;
+}
+
+/* ── Text block ── */
+.text {
+  grid-area: text;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  align-items: center;
+  text-align: center;
+  min-width: 0;
 }
 
 .eyebrow {
-  font-size: 0.7rem;
+  display: inline-block;
+  margin-bottom: 0.9rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #D4AF37;
-  margin-bottom: 0.45rem;
-  display: inline-block;
   background: rgba(201, 169, 110, 0.1);
-  padding: 0.2rem 0.7rem;
-  border-radius: 9999px;
   border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 9999px;
 }
 
 .titleClip {
   overflow: hidden;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.6rem;
 }
 
 .title {
+  display: block;
   font-family: var(--font-display, 'Cinzel', serif);
   font-weight: 900;
-  font-size: clamp(1.8rem, 4vw, 3.6rem);
-  letter-spacing: 0.14em;
+  font-size: clamp(1.9rem, 8.5vw, 3rem);
+  letter-spacing: 0.1em;
+  line-height: 1.05;
   color: #E8C98A;
-  line-height: 1;
-  display: block;
   text-shadow: 0 4px 30px rgba(232, 201, 138, 0.25);
 }
 
 .sub {
-  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
-  font-size: 1rem;
-  color: #F0EBE3;
-  margin: 0 0 0.3rem;
   display: block;
+  margin: 0 0 0.35rem;
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.05rem;
   font-weight: 500;
+  color: #F0EBE3;
 }
 
 .motto {
-  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 1.1rem;
+  font-size: 1rem;
   font-style: italic;
   font-weight: 400;
   color: #C9A96E;
-  margin-bottom: 0.55rem;
-  display: block;
 }
 
 .identity {
-  max-width: 42rem;
-  margin-bottom: 0.7rem;
-  padding: 0.65rem 0.85rem;
+  width: 100%;
+  max-width: 40rem;
+  margin-bottom: 1rem;
+  padding: 0.95rem 1.05rem;
+  text-align: left;
   background: rgba(22, 22, 24, 0.72);
   border-left: 2px solid #C9A96E;
   border-radius: 0 6px 6px 0;
 }
 
 .identityLead {
-  margin: 0 0 0.45rem;
-  color: rgba(240, 235, 227, 0.84);
-  font-size: 0.72rem;
-  line-height: 1.45;
+  margin: 0 0 0.75rem;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: rgba(240, 235, 227, 0.88);
 }
 
 .identityList {
   display: grid;
-  gap: 0.15rem;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
-  color: rgba(240, 235, 227, 0.76);
-  font-size: 0.68rem;
-  line-height: 1.35;
+  list-style: none;
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: rgba(240, 235, 227, 0.8);
 }
 
 .identityList strong {
-  color: #E8C98A;
   font-weight: 700;
+  color: #E8C98A;
 }
 
 .poweredBy {
-  font-size: 0.68rem;
-  color: #9A8A75;
-  margin-bottom: 0.65rem;
+  margin: 0;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  color: #9A8A75;
 }
 
-/* Cards */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.4rem, 1vw, 0.8rem);
-  margin-bottom: 0.8rem;
-}
-
-.card {
-  padding: 0.75rem 0.65rem;
-  background: #161618;
-  border: 1px solid rgba(201, 169, 110, 0.22);
-  border-radius: 8px;
-  transition: all 0.35s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #9A7340, #E8C98A, #9A7340);
-  opacity: 0.6;
-  transition: opacity 0.3s;
-}
-
-.card:hover {
-  background: #1D1D20;
-  border-color: #E8C98A;
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
-}
-
-.card:hover::before { opacity: 1; }
-
-.icon {
-  font-size: 1.15rem;
-  margin-bottom: 0.3rem;
-  color: #E8C98A;
-}
-
-.cardTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin-bottom: 0.25rem;
-  line-height: 1.3;
-}
-
-.cardText {
-  font-size: 0.64rem;
-  color: rgba(240, 235, 227, 0.78);
-  line-height: 1.35;
-}
-
-/* CTA */
-.cta {
+/* ── Warrior ── */
+.svgWrap {
+  grid-area: art;
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
-.btnWarriorGold {
+.mainSVG {
+  width: min(78vw, 310px);
+  height: auto;
+  overflow: visible;
+  animation: breathe 4s ease-in-out infinite;
+}
+
+@keyframes breathe {
+  0%, 100% { filter: drop-shadow(0 0 30px rgba(232, 201, 138, 0.14)); }
+  50%      { filter: drop-shadow(0 0 65px rgba(220, 20, 60, 0.35)); }
+}
+
+/* ── Buttons ── */
+.cta {
+  grid-area: cta;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.btnWarriorGold,
+.btnWarriorOutline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.45rem 1rem;
+  width: 100%;
+  max-width: 20rem;
+  min-height: 46px;
+  padding: 0.7rem 1.5rem;
   font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 0.75rem;
   letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 9999px;
+  transition: all 0.25s ease;
+}
+
+.btnWarriorGold {
+  font-weight: 700;
   color: #0A0A0A !important;
   background: #C9A96E;
   border: 1px solid #C9A96E;
-  border-radius: 9999px;
-  text-decoration: none;
-  transition: all 0.25s ease;
   box-shadow: 0 4px 18px rgba(201, 169, 110, 0.3);
 }
 
@@ -222,167 +212,138 @@
 }
 
 .btnWarriorOutline {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.45rem 1rem;
-  font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.65rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: #E8C98A !important;
   background: rgba(201, 169, 110, 0.08);
   border: 1px solid rgba(201, 169, 110, 0.5);
-  border-radius: 9999px;
-  text-decoration: none;
-  transition: all 0.25s ease;
 }
 
 .btnWarriorOutline:hover {
-  background: #C9A96E;
   color: #0A0A0A !important;
+  background: #C9A96E;
   border-color: #C9A96E;
   transform: translateY(-2px);
   box-shadow: 0 10px 28px rgba(201, 169, 110, 0.35);
 }
 
-/* ── RIGHT: SVG wrap ── */
-.svgWrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  transform: translateX(-8%);
+.btnWarriorGold:focus-visible,
+.btnWarriorOutline:focus-visible {
+  outline: 2px solid #E8C98A;
+  outline-offset: 3px;
 }
 
-.mainSVG {
-  width: 100%;
-  max-width: 440px;
-  height: auto;
-  overflow: visible;
-  animation: breathe 4s ease-in-out infinite;
-}
-
-@keyframes breathe {
-  0%, 100% { filter: drop-shadow(0 0 30px rgba(232, 201, 138, 0.14)); }
-  50%       { filter: drop-shadow(0 0 65px rgba(220, 20, 60, 0.35)); }
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .inner {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-  .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .svgWrap {
-    order: -1;
-    transform: none;
-  }
-  .mainSVG {
-    max-width: 230px;
-  }
-
-  .section {
-    min-height: auto;
-    padding: 1rem 0.75rem;
-  }
-}
-
-@media (min-width: 1400px) {
-  .svgWrap {
-    transform: translateX(-12%);
-  }
-}
-
+/* ============================================================
+   DESKTOP LAYOUT (≥ 901px)
+   Left: all text, buttons directly underneath
+   Right: warrior, vertically centred
+   ============================================================ */
 @media (min-width: 901px) {
   .section {
-    padding-top: clamp(0.75rem, 1.5vw, 1.35rem);
-    padding-bottom: clamp(0.75rem, 1.5vw, 1.35rem);
+    min-height: 100vh;
+    padding: 3rem clamp(1.5rem, 4vw, 3.5rem);
   }
 
   .inner {
-    transform: translateY(clamp(-24px, -2vh, -10px));
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    grid-template-areas: 'left art';
+    column-gap: clamp(2rem, 5vw, 5rem);
+    row-gap: 0;
+    align-items: center;
   }
 
+  /* Wrapper becomes a real box again: text, then buttons right below it */
   .left {
+    grid-area: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
     min-width: 0;
   }
 
+  .text {
+    align-items: flex-start;
+    text-align: left;
+  }
+
   .eyebrow {
-    font-size: 0.76rem;
-    margin-bottom: 0.6rem;
+    font-size: 0.78rem;
+    margin-bottom: 1rem;
+  }
+
+  .titleClip {
+    margin-bottom: 0.75rem;
   }
 
   .title {
-    font-size: clamp(2.2rem, 4.4vw, 4rem);
+    font-size: clamp(2.4rem, 4.2vw, 4rem);
+    letter-spacing: 0.14em;
+    line-height: 1;
   }
 
   .sub {
-    font-size: 1.08rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
   }
 
   .motto {
-    font-size: 0.98rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 1.25rem;
   }
 
   .identity {
-    margin-bottom: 0.65rem;
-    padding: 0.7rem 0.9rem;
+    max-width: 38rem;
+    margin-bottom: 1.1rem;
+    padding: 1.1rem 1.3rem;
   }
 
   .identityLead {
-    font-size: 0.8rem;
-    line-height: 1.45;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 0.85rem;
   }
 
   .identityList {
-    font-size: 0.74rem;
-    line-height: 1.35;
+    gap: 0.45rem;
+    font-size: 0.94rem;
   }
 
   .poweredBy {
-    margin-bottom: 0.6rem;
+    font-size: 0.76rem;
   }
 
-  .card {
-    padding: 0.8rem 0.7rem;
-  }
-
-  .icon {
-    font-size: 1.3rem;
-  }
-
-  .cardTitle {
-    font-size: 0.78rem;
-  }
-
-  .cardText {
-    font-size: 0.7rem;
-    line-height: 1.35;
+  .cta {
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
 
   .btnWarriorGold,
   .btnWarriorOutline {
-    padding: 0.5rem 1.15rem;
-    font-size: 0.7rem;
+    width: auto;
+    max-width: none;
+    padding: 0.7rem 1.6rem;
+    font-size: 0.78rem;
   }
 
+  /* Warrior: a little bigger than before, but capped so it never dominates */
   .svgWrap {
-    transform: translate(-8%, -2vh);
+    justify-content: center;
   }
 
   .mainSVG {
-    max-height: calc(100vh - 2rem);
+    width: auto;
+    height: min(62vh, 540px);
+    max-width: 100%;
   }
 }
 
-@media (min-width: 1400px) {
-  .svgWrap {
-    transform: translate(-12%, -2vh);
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .mainSVG {
+    animation: none;
   }
 }
