@@ -1,55 +1,119 @@
-﻿.section { 
-  padding: 2.5rem 0; 
+﻿/* ============================================================
+   Courses Section — Desktop Horizontal Scroll + Mobile Friendly
+   ============================================================ */
+
+.section { 
+  padding: clamp(2.5rem, 5vh, 4rem) 0; 
   border-top: 1px solid var(--border); 
-  overflow: hidden; 
   background: var(--theme-bg, #FFFFFF);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .header { 
-  padding: 0 3rem; 
+  padding: 0 clamp(1.5rem, 4vw, 3.5rem); 
   display: flex; 
   align-items: flex-end; 
   justify-content: space-between; 
-  margin-bottom: 1.75rem; 
+  margin-bottom: 2rem; 
   flex-wrap: wrap; 
-  gap: 1rem; 
+  gap: 1.25rem; 
 }
 
-.header h2 { 
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--theme-primary, #DC143C);
+}
+
+.title { 
   font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: clamp(1.5rem, 3vw, 2.1rem); 
+  font-size: clamp(1.85rem, 3.5vw, 2.75rem); 
   font-weight: 700; 
   color: var(--theme-text-heading, #111111); 
+  line-height: 1.1;
+  margin: 0;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.navArrows {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.arrowBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: #FFFFFF;
+  color: var(--theme-text-heading, #111111);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  user-select: none;
+}
+
+.arrowBtn:hover:not(:disabled) {
+  border-color: var(--theme-primary, #DC143C);
+  background: var(--theme-primary, #DC143C);
+  color: #FFFFFF;
+}
+
+.arrowDisabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Track container */
 .track { 
   display: flex; 
-  gap: 1.25rem; 
-  padding: 0 3rem; 
-  cursor: grab; 
+  gap: 1.5rem; 
+  padding: 0.5rem clamp(1.5rem, 4vw, 3.5rem) 1.5rem; 
   overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
-.track::-webkit-scrollbar { display: none; }
-
-.track:active { 
-  cursor: grabbing; 
+.track::-webkit-scrollbar { 
+  display: none; 
 }
 
+/* Course card */
 .card { 
-  flex: 0 0 300px; 
-  padding: 2rem; 
+  flex: 0 0 320px; 
+  max-width: 85vw;
+  padding: 2.25rem 2rem; 
   border: 1px solid var(--border); 
   background: #FFFFFF; 
-  transition: border-color 0.25s, box-shadow 0.25s; 
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; 
   position: relative; 
   overflow: hidden; 
-  border-radius: 6px; 
+  border-radius: 8px; 
+  display: flex;
+  flex-direction: column;
 }
 
 .card::before { 
@@ -67,7 +131,8 @@
 
 .card:hover { 
   border-color: rgba(220, 20, 60, 0.35); 
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06); 
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08); 
+  transform: translateY(-3px);
 }
 
 .card:hover::before { 
@@ -75,7 +140,8 @@
 }
 
 .featured { 
-  border-color: rgba(220, 20, 60, 0.35); 
+  border-color: rgba(220, 20, 60, 0.4); 
+  background: linear-gradient(180deg, rgba(220, 20, 60, 0.02) 0%, #FFFFFF 100%);
 }
 
 .featured::before { 
@@ -83,35 +149,38 @@
 }
 
 .cardBadge { 
-  font-size: 0.6rem; 
+  font-size: 0.62rem; 
   letter-spacing: 0.14em; 
   text-transform: uppercase; 
   color: var(--theme-primary, #DC143C); 
   margin-bottom: 1.1rem; 
-  font-weight: 600; 
+  font-weight: 700; 
 }
 
 .cardTitle { 
   font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: 1.05rem; 
-  font-weight: 600; 
+  font-size: 1.15rem; 
+  font-weight: 700; 
   color: var(--theme-text-heading, #111111); 
-  margin-bottom: 0.4rem; 
-  line-height: 1.2; 
+  margin-bottom: 0.6rem; 
+  line-height: 1.25; 
 }
 
 .cardDetail { 
-  font-size: 0.8rem; 
+  font-size: 0.82rem; 
   color: var(--theme-text-muted, #555555); 
   line-height: 1.65; 
-  margin-bottom: 1.1rem; 
+  margin-bottom: 1.5rem; 
+  flex-grow: 1;
 }
 
 .cardMeta { 
   display: flex; 
   gap: 1.25rem; 
   flex-wrap: wrap; 
-  margin-bottom: 1.4rem; 
+  margin-bottom: 1.6rem; 
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .cardMetaItem { 
@@ -122,24 +191,78 @@
 .cardMetaItem strong { 
   color: var(--theme-text-heading, #111111); 
   display: block; 
+  font-size: 0.82rem;
+  margin-bottom: 0.1rem;
 }
 
 .enroll { 
   font-size: 0.75rem; 
   color: var(--theme-primary, #DC143C); 
-  letter-spacing: 0.04em; 
+  letter-spacing: 0.05em; 
   text-decoration: none; 
-  transition: opacity 0.2s; 
-  font-weight: 600; 
+  text-transform: uppercase;
+  font-weight: 700; 
+  transition: opacity 0.2s, transform 0.2s; 
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .enroll:hover { 
-  opacity: 0.75; 
+  opacity: 0.85; 
+  transform: translateX(3px);
 }
 
-@media (max-width: 768px) { 
-  .header { padding: 0 1.25rem; } 
-  .track { padding: 0 1.25rem; } 
-  .card { flex: 0 0 250px; } 
-  .section { padding: 3rem 0; } 
+/* Mobile hint */
+.mobileHint {
+  display: none;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--theme-text-subtle, #777777);
+  margin-top: 0.5rem;
+}
+
+/* ============================================================
+   RESPONSIVE DESIGN (Tablets & Mobile)
+   ============================================================ */
+
+@media (max-width: 960px) { 
+  .section { 
+    min-height: auto;
+    height: auto;
+    padding: 3.5rem 0; 
+  } 
+
+  .header { 
+    padding: 0 1.5rem; 
+    margin-bottom: 1.5rem;
+  } 
+
+  .track { 
+    padding: 0.5rem 1.5rem 1.25rem; 
+    gap: 1rem;
+    scroll-snap-type: x mandatory;
+  } 
+
+  .card { 
+    flex: 0 0 280px; 
+    padding: 1.75rem 1.5rem; 
+    scroll-snap-align: start;
+  } 
+
+  .mobileHint {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 0 0 82vw;
+  }
+
+  .navArrows {
+    display: none;
+  }
 }
