@@ -133,3 +133,10 @@
   text-transform: uppercase;
   color: var(--theme-text-subtle);
 }
+
+/* ── Global Fire Cursor — hide OS pointer sitewide (desktop only) ── */
+@media (hover: hover) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
