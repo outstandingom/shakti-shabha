@@ -45,9 +45,9 @@ export default function Profile() {
         <div className={s.left}>
           {/* Main Hero Image */}
           <div ref={photoRef} className={s.photoFrame}>
-            {/* Replace with actual founder image */}
+            {/* Public folder image updated here */}
             <img 
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop" 
+              src="/harshitama'am.jpg" 
               alt="Smt. Harshita Mankar" 
               className={s.heroImg}
             />
