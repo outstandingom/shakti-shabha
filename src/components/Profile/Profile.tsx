@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Profile.module.css'
@@ -21,9 +22,10 @@ export default function Profile() {
       
       // Animate main photo revealing
       tl.to(photoRef.current, { clipPath: 'inset(0% 0 0 0)', duration: 1.1, ease: 'power4.inOut' })
-        // Animate right side heading
+        // Animate right side heading and button
         .from('[data-p="eyebrow"]', { opacity: 0, y: 10, duration: 0.4 }, '-=0.6')
         .from('[data-p="heading"]', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
+        .from('[data-p="btn"]',     { opacity: 0, y: 10, duration: 0.4 }, '-=0.3')
         // Animate sub images
         .from('[data-p="subimg"]',  { opacity: 0, y: 30, stagger: 0.2, duration: 0.6 }, '-=0.2')
         // Animate left bottom text
@@ -44,7 +46,7 @@ export default function Profile() {
           {/* Main Hero Image */}
           <div ref={photoRef} className={s.photoFrame}>
             <img 
-              src="/Gemini_Generated_Image_kdfkbukdfkbukdfk.png" 
+              src="/harshitama'am.jpg" 
               alt="Smt. Harshita Mankar" 
               className={s.heroImg}
             />
@@ -65,7 +67,7 @@ export default function Profile() {
             RIGHT COLUMN
             ======================================== */}
         <div className={s.right}>
-          {/* Top Right: Heading */}
+          {/* Top Right: Heading & Button */}
           <div className={s.rightTop}>
             <span data-p="eyebrow" className={s.eyebrow}>Founder & Visionary</span>
             
@@ -75,6 +77,11 @@ export default function Profile() {
                 श्रीमती हर्षिता मानकरी
               </span>
             </h2>
+
+            {/* BUTTON IS BACK HERE */}
+            <Link to="/social-work" data-p="btn" className={s.ctaBtn}>
+              View Impact Archive
+            </Link>
           </div>
 
           {/* Bottom Right: Two Sub Images */}
