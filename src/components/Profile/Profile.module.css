@@ -84,7 +84,7 @@
   letter-spacing: 0.15em; 
   text-transform: uppercase; 
   color: #888; 
-  margin-bottom: 1rem; 
+  margin-bottom: 0.4rem; /* DECREASED GAP HERE */
   display: block; 
 }
 
@@ -110,7 +110,7 @@
   font-size: 1.1rem; 
   color: #666; 
   display: block;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   font-weight: 400;
 }
 
@@ -125,6 +125,8 @@
   cursor: pointer;
   transition: background 0.3s ease;
   text-decoration: none;
+  
+  border-radius: 8px; /* SLIGHTLY ROUNDED CORNERS HERE */
 }
 
 .ctaBtn:hover {
@@ -143,6 +145,7 @@
 .subImg {
   background: #e6dcd5;
   overflow: hidden;
+  border-radius: 4px; /* Added slight rounding for consistency */
 }
 
 .subImg img {
