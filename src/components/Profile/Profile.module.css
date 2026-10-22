@@ -10,7 +10,7 @@
 
 .inner { 
   display: grid; 
-  grid-template-columns: 1fr 1.3fr; /* Left is slightly narrower */
+  grid-template-columns: 1fr 1.3fr; 
   gap: 4rem; 
   align-items: stretch; 
   max-width: 1300px;
@@ -27,7 +27,7 @@
 }
 
 .photoFrame { 
-  aspect-ratio: 1 / 1.15; /* Square-ish like the fashion image */
+  aspect-ratio: 1 / 1.15; 
   position: relative; 
   overflow: hidden; 
   clip-path: inset(100% 0 0 0); 
@@ -84,11 +84,10 @@
   letter-spacing: 0.15em; 
   text-transform: uppercase; 
   color: #888; 
-  margin-bottom: 0.4rem; /* DECREASED GAP HERE */
+  margin-bottom: 0.4rem; 
   display: block; 
 }
 
-/* Mixed typography heading */
 .heading { 
   font-size: clamp(2.5rem, 4.5vw, 4rem); 
   font-weight: 800; 
@@ -98,7 +97,6 @@
   letter-spacing: -0.02em;
 }
 
-/* Italic serif part */
 .heading em {
   font-family: 'Playfair Display', Georgia, serif;
   font-weight: 400;
@@ -114,26 +112,34 @@
   font-weight: 400;
 }
 
+/* ========================================
+   BUTTON (UPDATED)
+   ======================================== */
 .ctaBtn {
   display: inline-block;
-  background: #222;
-  color: #fff;
-  border: none;
+  background: #ffffff;                /* Default white background */
+  color: #DC143C;                     /* Default crimson text */
+  border: 1px solid #DC143C;          /* Crimson border */
   padding: 0.8rem 1.8rem;
   font-size: 0.8rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease;
+  border-radius: 8px;                 /* Rounded corners */
   text-decoration: none;
   
-  border-radius: 8px; /* SLIGHTLY ROUNDED CORNERS HERE */
+  /* Smooth transition for all hover effects */
+  transition: all 0.3s ease;          
 }
 
 .ctaBtn:hover {
-  background: #000;
+  background: #DC143C;                /* Crimson background on hover */
+  color: #ffffff;                     /* White text on hover */
+  border-color: #DC143C;
 }
 
-/* Bottom Right Sub Images */
+/* ========================================
+   IMAGES
+   ======================================== */
 .rightBottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -145,7 +151,7 @@
 .subImg {
   background: #e6dcd5;
   overflow: hidden;
-  border-radius: 4px; /* Added slight rounding for consistency */
+  border-radius: 4px;
 }
 
 .subImg img {
@@ -185,7 +191,7 @@
   }
   
   .rightBottom {
-    grid-template-columns: 1fr; /* Stack images on mobile */
+    grid-template-columns: 1fr; 
   }
   
   .subImg {
