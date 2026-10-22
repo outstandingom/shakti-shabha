@@ -6,7 +6,7 @@
   padding: clamp(1rem, 2vw, 1.75rem) clamp(1rem, 3vw, 2.5rem);
   position: relative;
   overflow: hidden;
-  background: #0C0C0D;
+  background: #000000;
   color: #F0EBE3;
   border-top: 1px solid rgba(201, 169, 110, 0.2);
   border-bottom: 1px solid rgba(201, 169, 110, 0.2);
