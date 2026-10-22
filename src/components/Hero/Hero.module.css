@@ -1,4 +1,8 @@
-{
+/* ============================================================
+   Hero Section — mobile-first
+   ============================================================ */
+
+.heroSection {
   position: relative;
   width: 100%;
   min-height: 100svh;
@@ -39,12 +43,16 @@
   font-weight: 600;
   font-size: clamp(1.5rem, 7.5vw, 2rem);
   line-height: 1.18;
-  color: #DC143C;
+  color: #000000;              /* remaining text = black */
   letter-spacing: -0.015em;
   text-align: center;
   margin: 0;
   transition: color 0.4s ease, -webkit-text-fill-color 0.4s ease,
     background 0.4s ease;
+}
+
+.crimson {
+  color: #DC143C;              /* "Discover the" = crimson red */
 }
 
 .ctaBtn {
@@ -55,13 +63,17 @@
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #060606;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.25);
+
+  color: #DC143C;                           /* button text crimson */
+  background: rgba(220, 20, 60, 0.06);
+  border: 1px solid rgba(220, 20, 60, 0.45);
   border-radius: 9999px;
   cursor: pointer;
+
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease,
+    color 0.25s ease;
+
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -70,11 +82,11 @@
 }
 
 .ctaBtn:hover {
-  background: #060606;
-  border-color: #060606;
-  color: #FFFFFF;
+  background: #DC143C;                      /* crimson pill on hover */
+  border-color: #DC143C;
+  color: #FFFFFF;                           /* readable text on crimson */
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.35);
 }
 
 /* ---------- images wrapper (mobile) ---------- */
