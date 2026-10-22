@@ -15,7 +15,7 @@ export default function Profile() {
       const tl = gsap.timeline({
         scrollTrigger: { 
           trigger: secRef.current, 
-          start: 'top 75%', 
+          start: 'top 90%', // Triggers earlier so elements don't stay hidden
           toggleActions: 'play none none none' 
         }
       })
@@ -78,7 +78,7 @@ export default function Profile() {
               </span>
             </h2>
 
-            {/* BUTTON IS BACK HERE */}
+            {/* THE BUTTON IS HERE */}
             <Link to="/social-work" data-p="btn" className={s.ctaBtn}>
               View Impact Archive
             </Link>
