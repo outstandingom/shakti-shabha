@@ -7,80 +7,149 @@ import s from './Aaryaveera.module.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const CARDS = [
-  {
-    icon: '⚔',
-    title: 'Self-Defense & Training',
-    text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.',
-  },
-  {
-    icon: '🔥',
-    title: 'Character & Leadership',
-    text: 'Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma and cultural roots.',
-  },
-  {
-    icon: '◎',
-    title: 'Dialogue & Research',
-    text: '"Aaryaveera Dialogues" under Shakti Varta — honest discourse on true masculinity, Paurush, and Dharma.',
-  },
+  { icon: '⚔',  title: 'Self-Defense & Training',  text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.' },
+  { icon: '🔥', title: 'Character & Leadership',    text: 'Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma and cultural roots.' },
+  { icon: '◎',  title: 'Dialogue & Research',       text: '"Aaryaveera Dialogues" under Shakti Varta — honest discourse on true masculinity, Paurush, and Dharma.' },
 ]
 
-const PARTICLE_COLORS = ['#CC230C','#E0550D','#C8433E','#FA9417','#F7A958','#F4BEA2','#D57A84']
-const rnd = (min: number, max: number) => Math.random() * (max - min) + min
-const pick = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+const COLORS = ['#CC230C','#E0550D','#C8433E','#FA9417','#F7A958','#F4BEA2','#D57A84']
+
+function rnd(a: number, b: number) { return gsap.utils.random(a, b) }
+function pickColor()               { return COLORS[Math.floor(Math.random() * COLORS.length)] }
 
 export default function Aaryaveera() {
   const secRef  = useRef<HTMLElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
   const svgRef  = useRef<SVGSVGElement>(null)
 
-  /* ── SVG fire particles ── */
+  /* ── Exact CodePen particle animation (no physics2D — pure GSAP attr tweens) ── */
   useEffect(() => {
     const svg = svgRef.current
     if (!svg) return
-    const NS = 'http://www.w3.org/2000/svg'
-    const timelines: gsap.core.Timeline[] = []
-    const circles: SVGCircleElement[] = []
 
-    function spawn(behind: boolean) {
+    const NS          = 'http://www.w3.org/2000/svg'
+    const allCircles: SVGCircleElement[] = []
+    const mainTl      = gsap.timeline({ paused: true })
+    const NUM         = 100
+
+    /* Helper: clone a new SVG circle */
+    function mkCircle() {
       const c = document.createElementNS(NS, 'circle')
-      const color = pick(PARTICLE_COLORS)
-      const r0  = behind ? rnd(2, 22) : rnd(1, 14)
-      const cx0 = rnd(220, 380)
-      const cy0 = behind ? rnd(350, 430) : rnd(320, 510)
-
-      gsap.set(c, {
-        attr: { cx: cx0, cy: cy0, r: 0 },
-        fill: color,
-        opacity: 0.9,
-        filter: behind ? 'url(#avGlow)' : 'none',
-      })
-
-      if (behind) svg!.insertBefore(c, svg!.firstChild)
-      else        svg!.appendChild(c)
-      circles.push(c)
-
-      const dur    = rnd(4, 7)
-      const driftX = rnd(-45, 45)
-      const rise   = rnd(130, 230)
-
-      const tl = gsap.timeline({ repeat: -1, delay: rnd(0, 4) })
-      tl.to(c, { attr: { r: r0 }, duration: dur * 0.35, ease: 'power1.out' })
-        .to(c, {
-          attr: { cy: cy0 - rise, cx: cx0 + driftX, r: 0 },
-          opacity: 0,
-          duration: dur,
-          ease: 'power1.inOut',
-        }, `-=${dur * 0.25}`)
-
-      timelines.push(tl)
+      c.setAttribute('cx', '0')
+      c.setAttribute('cy', '0')
+      c.setAttribute('r',  '0')
+      allCircles.push(c)
+      return c
     }
 
-    for (let i = 0; i < 40; i++) spawn(true)
-    for (let i = 0; i < 65; i++) spawn(false)
+    /* ── GROUP 1: BEHIND (50 particles, float downward with glow) ── */
+    for (let i = 0; i < NUM / 2; i++) {
+      const p           = mkCircle()
+      svg.insertBefore(p, svg.firstChild)
+
+      const startR  = rnd(2, 32)
+      const startCX = rnd(200, 300)
+      const startCY = 400
+      const driftX  = rnd(-30, 60)   // simulate angle 0–90 (rightward drift)
+      const dur     = rnd(8, 10)
+
+      gsap.set(p, {
+        attr:   { cx: startCX, cy: startCY, r: 0 },
+        filter: 'url(#avGlow)',
+        fill:   pickColor(),
+        opacity: 1,
+      })
+
+      // grow → drift down + shrink (matches original tl structure)
+      const tl = gsap.timeline({ repeat: 3 })
+      tl.to(p, { attr: { r: startR }, duration: dur / 2 })
+        .to(p, {
+            attr: { cy: 700, cx: startCX + driftX, r: 0 },
+            opacity: 0.8,
+            duration: dur,
+            ease: 'power1.inOut',
+          }, `-=${dur / 2}`)
+
+      mainTl.add(tl, i / 10)
+    }
+
+    /* ── GROUP 2: IN FRONT (100 particles, float downward, no glow) ── */
+    for (let i = 0; i < NUM; i++) {
+      const p       = mkCircle()
+      svg.appendChild(p)
+
+      const startR  = rnd(1, 20)
+      const startCX = rnd(250, 350)
+      const startCY = rnd(350, 500)
+      const driftX  = rnd(-60, 0)   // angle 0 to -90 (leftward drift)
+      const dur     = rnd(10, 12)
+
+      gsap.set(p, {
+        attr:   { cx: startCX, cy: startCY, r: 0 },
+        fill:   pickColor(),
+        opacity: 1,
+      })
+
+      const tl = gsap.timeline({ repeat: 3 })
+      tl.to(p, { attr: { r: startR }, duration: dur / 2 })
+        .to(p, {
+            attr: { cy: 650, cx: startCX + driftX, r: 0 },
+            opacity: 0.6,
+            duration: dur,
+            ease: 'power1.in',
+          }, `-=${dur / 2}`)
+
+      mainTl.add(tl, i / 8)
+    }
+
+    /* ── GROUP 3: TOP OF HEAD (100 particles, float UPWARD) ── */
+    for (let i = 0; i < NUM; i++) {
+      const p       = mkCircle()
+      svg.insertBefore(p, svg.firstChild)
+
+      // Skip one color index (original does colorArray.length-1)+1
+      const colorIdx = Math.floor(Math.random() * (COLORS.length - 1)) + 1
+      const startR   = rnd(2, 10)
+      const startCX  = rnd(250, 350)
+      const startCY  = rnd(190, 210)
+      const driftX   = rnd(0, 30)   // cx += 30 max, angle 0–90 rightward
+      const dur      = rnd(6, 10)
+
+      gsap.set(p, {
+        attr:   { cx: startCX, cy: startCY, r: startR },
+        fill:   COLORS[colorIdx],
+        opacity: 1,
+      })
+
+      // gravity: -20 → particles shoot UPWARD off the top of head
+      const t = gsap.fromTo(
+        p,
+        { attr: { r: startR }, opacity: 1 },
+        {
+          attr:    { r: 0, cx: startCX + driftX, cy: startCY - rnd(80, 180) },
+          opacity: 0,
+          duration: dur,
+          repeat:  3,
+          ease:    'power2.out',
+        }
+      )
+
+      mainTl.add(t, i / 6)
+    }
+
+    /* ── Driver: loop mainTimeline over 12s, repeat forever ── */
+    const allTl = gsap.timeline({ repeat: -1, yoyo: false })
+    allTl.timeScale(1.1)
+    allTl.to(mainTl, {
+      time:     mainTl.duration(),
+      duration: 12,
+      ease:     'none',
+    })
 
     return () => {
-      timelines.forEach(t => t.kill())
-      circles.forEach(c => c.parentNode?.removeChild(c))
+      allTl.kill()
+      mainTl.kill()
+      allCircles.forEach(c => c.parentNode?.removeChild(c))
     }
   }, [])
 
@@ -136,7 +205,7 @@ export default function Aaryaveera() {
           </div>
         </div>
 
-        {/* RIGHT: SVG warrior with GSAP fire particles */}
+        {/* RIGHT: SVG warrior — exact CodePen structure */}
         <div data-av="svgwrap" className={s.svgWrap}>
           <svg
             ref={svgRef}
@@ -146,27 +215,32 @@ export default function Aaryaveera() {
             overflow="visible"
           >
             <defs>
-              <filter id="avGlow" x="-50%" y="-50%" width="200%" height="200%"
+              {/* Exact glow filter from reference */}
+              <filter id="avGlow" y="-50%" height="180%"
                 colorInterpolationFilters="sRGB">
-                <feGaussianBlur stdDeviation="5" result="coloredBlur" />
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
+              {/* Gold gradient on the face */}
               <linearGradient id="faceGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%"   stopColor="#E8C98A" />
-                <stop offset="60%"  stopColor="#C9A96E" />
+                <stop offset="55%"  stopColor="#C9A96E" />
                 <stop offset="100%" stopColor="#9A7340" />
               </linearGradient>
-              <radialGradient id="glowBg" cx="50%" cy="60%" r="40%">
-                <stop offset="0%"   stopColor="#DC143C" stopOpacity="0.3" />
+              {/* Crimson bg glow */}
+              <radialGradient id="bgGlow" cx="50%" cy="65%" r="42%">
+                <stop offset="0%"   stopColor="#DC143C" stopOpacity="0.28" />
                 <stop offset="100%" stopColor="#0C0C0D" stopOpacity="0" />
               </radialGradient>
             </defs>
 
-            <ellipse cx="300" cy="390" rx="185" ry="205" fill="url(#glowBg)" />
+            {/* bg radial glow */}
+            <ellipse cx="300" cy="390" rx="190" ry="210" fill="url(#bgGlow)" />
 
+            {/* Exact face path from reference — gold gradient instead of #000 */}
             <path
               fill="url(#faceGrad)"
               filter="url(#avGlow)"
@@ -179,18 +253,15 @@ export default function Aaryaveera() {
                 L250.1,477.1z"
             />
 
-            <line x1="300" y1="145" x2="300" y2="505"
-              stroke="#E8C98A" strokeWidth="1.5" opacity="0.15"
-              strokeDasharray="6 9" />
-
-            <text x="300" y="542" textAnchor="middle"
+            {/* Labels */}
+            <text x="300" y="548" textAnchor="middle"
               fontFamily="Cinzel, serif" fontSize="18" fontWeight="700"
               letterSpacing="6" fill="#E8C98A" opacity="0.9">
               AARYAVEERA
             </text>
-            <text x="300" y="564" textAnchor="middle"
-              fontFamily="Noto Sans Devanagari, sans-serif" fontSize="13"
-              fill="#C9A96E" opacity="0.7">
+            <text x="300" y="570" textAnchor="middle"
+              fontFamily="Noto Sans Devanagari, sans-serif"
+              fontSize="13" fill="#C9A96E" opacity="0.7">
               आर्यवीरा
             </text>
           </svg>
