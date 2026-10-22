@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { Physics2DPlugin } from 'gsap/Physics2DPlugin'
 import s from './Aaryaveera.module.css'
 
-gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger, Physics2DPlugin)
 
 const CARDS = [
   { icon: '⚔',  title: 'Self-Defense & Training',  text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.' },
@@ -22,7 +23,7 @@ export default function Aaryaveera() {
   const glowRef = useRef<HTMLDivElement>(null)
   const svgRef  = useRef<SVGSVGElement>(null)
 
-  /* ── Exact CodePen particle animation (no physics2D — pure GSAP attr tweens) ── */
+  /* ── CodePen particle animation converted to TypeScript ── */
   useEffect(() => {
     const svg = svgRef.current
     if (!svg) return
@@ -48,27 +49,30 @@ export default function Aaryaveera() {
       svg.insertBefore(p, svg.firstChild)
 
       const startR  = rnd(2, 32)
-      const startCX = rnd(200, 300)
-      const startCY = 400
-      const driftX  = rnd(-30, 60)   // simulate angle 0–90 (rightward drift)
       const dur     = rnd(8, 10)
 
       gsap.set(p, {
-        attr:   { cx: startCX, cy: startCY, r: 0 },
+        attr:   { cx: rnd(200, 300), cy: 400, r: 0 },
         filter: 'url(#avGlow)',
         fill:   pickColor(),
-        opacity: 1,
       })
 
-      // grow → drift down + shrink (matches original tl structure)
       const tl = gsap.timeline({ repeat: 3 })
       tl.to(p, { attr: { r: startR }, duration: dur / 2 })
         .to(p, {
-            attr: { cy: 700, cx: startCX + driftX, r: 0 },
-            opacity: 0.8,
-            duration: dur,
-            ease: 'power1.inOut',
-          }, `-=${dur / 2}`)
+          attr: { cy: 700 },
+          transformOrigin: '30% 50%',
+          rotation: -180,
+          duration: dur,
+          physics2D: {
+            velocity: 0,
+            angle: rnd(0, 90),
+            acceleration: 0,
+            gravity: -2,
+            accelerationAngle: 0,
+          },
+        }, `-=${dur / 2}`)
+        .to(p, { attr: { r: 0 }, duration: dur / 2 }, `-=${dur / 2}`)
 
       mainTl.add(tl, i / 10)
     }
@@ -79,25 +83,28 @@ export default function Aaryaveera() {
       svg.appendChild(p)
 
       const startR  = rnd(1, 20)
-      const startCX = rnd(250, 350)
-      const startCY = rnd(350, 500)
-      const driftX  = rnd(-60, 0)   // angle 0 to -90 (leftward drift)
       const dur     = rnd(10, 12)
 
       gsap.set(p, {
-        attr:   { cx: startCX, cy: startCY, r: 0 },
+        attr:   { cx: rnd(250, 350), cy: rnd(350, 500), r: 0 },
         fill:   pickColor(),
-        opacity: 1,
       })
 
       const tl = gsap.timeline({ repeat: 3 })
       tl.to(p, { attr: { r: startR }, duration: dur / 2 })
         .to(p, {
-            attr: { cy: 650, cx: startCX + driftX, r: 0 },
-            opacity: 0.6,
-            duration: dur,
-            ease: 'power1.in',
-          }, `-=${dur / 2}`)
+          attr: { cy: 650 },
+          rotation: 280,
+          duration: dur,
+          physics2D: {
+            velocity: -20,
+            angle: rnd(0, -90),
+            acceleration: -2,
+            gravity: -10,
+            accelerationAngle: 0,
+          },
+        }, `-=${dur / 2}`)
+        .to(p, { attr: { r: 0 }, duration: dur / 2 }, `-=${dur / 2}`)
 
       mainTl.add(tl, i / 8)
     }
@@ -112,8 +119,7 @@ export default function Aaryaveera() {
       const startR   = rnd(2, 10)
       const startCX  = rnd(250, 350)
       const startCY  = rnd(190, 210)
-      const driftX   = rnd(0, 30)   // cx += 30 max, angle 0–90 rightward
-      const dur      = rnd(6, 10)
+      const dur       = rnd(6, 10)
 
       gsap.set(p, {
         attr:   { cx: startCX, cy: startCY, r: startR },
@@ -121,16 +127,22 @@ export default function Aaryaveera() {
         opacity: 1,
       })
 
-      // gravity: -20 → particles shoot UPWARD off the top of head
-      const t = gsap.fromTo(
-        p,
-        { attr: { r: startR }, opacity: 1 },
+      const t = gsap.fromTo(p,
+        { duration: dur, opacity: 1, attr: { r: startR } },
         {
-          attr:    { r: 0, cx: startCX + driftX, cy: startCY - rnd(80, 180) },
-          opacity: 0,
+          transformOrigin: '30% 650%',
+          rotation: 0,
+          repeat: 3,
+          opacity: 1,
+          attr: { r: 0, cx: '+=30' },
           duration: dur,
-          repeat:  3,
-          ease:    'power2.out',
+          physics2D: {
+            velocity: 0,
+            angle: rnd(0, 90),
+            acceleration: 0,
+            gravity: -20,
+            accelerationAngle: 90,
+          },
         }
       )
 
@@ -163,6 +175,7 @@ export default function Aaryaveera() {
         .from('[data-av="title"]',   { y: '110%', duration: 1, ease: 'power4.out' }, '-=0.2')
         .from('[data-av="sub"]',     { opacity: 0, y: 14, duration: 0.5 }, '-=0.4')
         .from('[data-av="motto"]',   { opacity: 0, duration: 0.5 }, '-=0.3')
+        .from('[data-av="identity"]', { opacity: 0, y: 14, duration: 0.5 }, '-=0.3')
         .from('[data-av="card"]',    { opacity: 0, y: 24, stagger: 0.1, duration: 0.5 }, '-=0.2')
         .from('[data-av="cta"]',     { opacity: 0, y: 12, duration: 0.4 }, '-=0.1')
         .from('[data-av="svgwrap"]', { opacity: 0, scale: 0.9, duration: 0.8, ease: 'power3.out' }, '-=0.8')
@@ -187,6 +200,19 @@ export default function Aaryaveera() {
           </div>
           <span data-av="sub"   className={s.sub}>आर्यवीरा · The Warrior Spirit</span>
           <span data-av="motto" className={s.motto}>"Shakti Se Shanti — From Strength, Peace"</span>
+          <div data-av="identity" className={s.identity}>
+            <p className={s.identityLead}>
+              Aaryaveera is the flagship identity of Shakti Sabha&apos;s revolutionary spirit —
+              representing the awakened warrior within every woman and the noble masculinity
+              (Paurush) that protects Dharma. It is the unifying symbol that bridges Mission
+              Mardini, Shakti Bhava, and Shakti Varta.
+            </p>
+            <ul className={s.identityList}>
+              <li><strong>Symbolism:</strong> The flame of revolution + the lotus of peace</li>
+              <li><strong>Motto:</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
+              <li><strong>Manifestation:</strong> Self-defense training, character building, cultural awakening</li>
+            </ul>
+          </div>
           <p className={s.poweredBy}>Powered by PrintingTask</p>
 
           <div className={s.grid}>
@@ -224,26 +250,10 @@ export default function Aaryaveera() {
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
-              {/* Gold gradient on the face */}
-              <linearGradient id="faceGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%"   stopColor="#E8C98A" />
-                <stop offset="55%"  stopColor="#C9A96E" />
-                <stop offset="100%" stopColor="#9A7340" />
-              </linearGradient>
-              {/* Crimson bg glow */}
-              <radialGradient id="bgGlow" cx="50%" cy="65%" r="42%">
-                <stop offset="0%"   stopColor="#DC143C" stopOpacity="0.28" />
-                <stop offset="100%" stopColor="#0C0C0D" stopOpacity="0" />
-              </radialGradient>
             </defs>
 
-            {/* bg radial glow */}
-            <ellipse cx="300" cy="390" rx="190" ry="210" fill="url(#bgGlow)" />
-
-            {/* Exact face path from reference — gold gradient instead of #000 */}
             <path
-              fill="url(#faceGrad)"
-              filter="url(#avGlow)"
+              fill="#000"
               d="M250.1,477.1c0,0,17.9-37.5,28.3-47.5c8.3-8,10.9-12.4,40.4,0
                 c29.5,12.4,38.1,8.5,45.1,3.1c7-5.4,8.2-19.8,6.9-23.8c-1.3-4.1,3.4-9.3,6.3-9
                 c2.9,0.3,7.7-3.1,8-6.6s0.4-3.2-0.9-8.6c2.8-1,16.2-3.4,9.3-15
@@ -253,7 +263,6 @@ export default function Aaryaveera() {
                 L250.1,477.1z"
             />
 
-            {/* Labels */}
             <text x="300" y="548" textAnchor="middle"
               fontFamily="Cinzel, serif" fontSize="18" fontWeight="700"
               letterSpacing="6" fill="#E8C98A" opacity="0.9">
