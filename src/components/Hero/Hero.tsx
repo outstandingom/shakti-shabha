@@ -1,8 +1,4 @@
- * ============================================================
-   Hero Section — mobile-first
-   ============================================================ */
-
-.heroSection import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import s from './Hero.module.css'
 
@@ -658,7 +654,8 @@ export default function Hero() {
 
       <div ref={contentRef} className={s.heroContent}>
         <h1 className={s.title}>
-          Discover the world <br /> through people
+          <span className={s.crimson}>Discover the</span> world <br /> through
+          people
         </h1>
         <button
           type="button"
