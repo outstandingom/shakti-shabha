@@ -1,0 +1,153 @@
+/* ==========================================================================
+   SHAKTI SABHA — CENTRAL DESIGN SYSTEM & THEME TOKENS
+   Edit this single file to change the entire website's UI, colors & styles!
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Outfit:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Nunito+Sans:wght@300;400;600;700&family=Mea+Culpa&display=swap');
+
+:root {
+  /* --------------------------------------------------------------------------
+     1. PRIMARY BRAND COLORS (Navbar, Hero Accents, Buttons, Profile Highlights)
+     -------------------------------------------------------------------------- */
+  --theme-primary: #DC143C;                      /* Primary Brand Crimson */
+  --theme-primary-dark: #B01030;                 /* Deep Crimson (Navbar scrolled) */
+  --theme-primary-light: rgba(220, 20, 60, 0.06);/* Translucent pill background */
+  --theme-primary-border: rgba(220, 20, 60, 0.45);/* Crimson outline border */
+  --theme-primary-shadow: rgba(220, 20, 60, 0.35);/* Button hover glow */
+  --theme-primary-subtle: rgba(220, 20, 60, 0.03);
+
+  /* --------------------------------------------------------------------------
+     2. BACKGROUNDS & SURFACES (Clean, Editorial Light Palette matching Hero/Profile)
+     -------------------------------------------------------------------------- */
+  --theme-bg: #FFFFFF;                           /* Clean white main surface */
+  --theme-bg-alt: #F8F8F9;                       /* Soft neutral section surface */
+  --theme-surface-card: #FFFFFF;                 /* Card surfaces */
+  --theme-surface-subtle: #EFE9E4;               /* Frame/photo background */
+  --theme-border-light: rgba(0, 0, 0, 0.08);     /* Clean subtle dividers */
+
+  /* --------------------------------------------------------------------------
+     3. TEXT COLOR HIERARCHY
+     -------------------------------------------------------------------------- */
+  --theme-text-heading: #111111;                 /* Primary Headings */
+  --theme-text-body: #333333;                    /* Body Copy */
+  --theme-text-muted: #555555;                   /* Subtitles & Descriptions */
+  --theme-text-subtle: #777777;                  /* Eyebrows, Meta & Tags */
+  --theme-text-on-primary: #FFFFFF;              /* Text on Crimson */
+
+  /* --------------------------------------------------------------------------
+     4. TYPOGRAPHY FONT FAMILIES
+     -------------------------------------------------------------------------- */
+  --font-primary: 'Poppins', sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-cursive: 'Mea Culpa', cursive;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-devanagari: 'Noto Sans Devanagari', sans-serif;
+
+  /* --------------------------------------------------------------------------
+     5. HERO & PROFILE BUTTON PRESETS (Identical pill style across the entire site)
+     -------------------------------------------------------------------------- */
+  --btn-font: 'Poppins', sans-serif;
+  --btn-font-size: 0.78rem;
+  --btn-font-weight: 500;
+  --btn-letter-spacing: 0.05em;
+  --btn-radius: 9999px;                          /* Pill rounded shape */
+  --btn-padding: 0.65rem 2.25rem;
+  --btn-transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease,
+                    color 0.25s ease;
+
+  /* --------------------------------------------------------------------------
+     6. UNIFIED HERITAGE & COMPATIBILITY TOKENS (Mapped to Hero/Profile Light Theme)
+     -------------------------------------------------------------------------- */
+  --night: #FFFFFF;                              /* Page Background */
+  --ash: #F8F8F9;                                /* Subtle Section Alternation */
+  --panel: #FFFFFF;                              /* Clean Card Surface */
+  --border: rgba(0, 0, 0, 0.08);                 /* Clean Editorial Border */
+  --border-gold: rgba(220, 20, 60, 0.28);        /* Brand Crimson Border */
+  --fire: #DC143C;
+  --ember: #B01030;
+  --flame: #EA580C;
+  --forest: #14532D;
+  --sage: #15803D;
+  --mist: #A7C4B5;
+  --gold: #DC143C;                               /* Brand Crimson as primary accent */
+  --gold-bright: #E6224B;
+  --gold-deep: #B01030;
+  --indigo: #4F46E5;
+  --indigo-pale: #818CF8;
+  --text: #111111;                               /* Dark Heading Text */
+  --text-dim: #444444;                           /* Readable Editorial Body */
+  --text-mute: #777777;                          /* Subtitles & Meta */
+  --ff-display: 'Cinzel', Georgia, serif;
+  --ff-body: 'Outfit', system-ui, sans-serif;
+  --ff-dev: 'Noto Sans Devanagari', sans-serif;
+}
+
+/* ==========================================================================
+   GLOBAL REUSABLE UTILITIES & BUTTON CLASSES
+   ========================================================================== */
+
+/* Universal Hero-Style Pill Button */
+.btn-hero,
+.btn-theme-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-padding);
+  font-family: var(--btn-font);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  text-transform: uppercase;
+  letter-spacing: var(--btn-letter-spacing);
+  color: var(--theme-primary);
+  background: var(--theme-primary-light);
+  border: 1px solid var(--theme-primary-border);
+  border-radius: var(--btn-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: var(--btn-transition);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.btn-hero:hover,
+.btn-theme-pill:hover {
+  background: var(--theme-primary);
+  border-color: var(--theme-primary);
+  color: var(--theme-text-on-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow);
+}
+
+/* Crimson Accent Text */
+.theme-crimson {
+  color: var(--theme-primary);
+}
+
+/* Sub-heading & Eyebrow */
+.theme-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--theme-text-subtle);
+}
+
+/* ── Global Fire Cursor — hide OS pointer sitewide (desktop only) ── */
+@media (hover: hover) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+/* ── Custom cursor ring expand on links/buttons ── */
+@media (hover: hover) {
+  .cursorRing.expand {
+    width: 52px !important;
+    height: 52px !important;
+    margin-left: -26px !important;
+    margin-top: -26px !important;
+    border-color: rgba(220, 20, 60, 0.85) !important;
+  }
+}

@@ -1,0 +1,345 @@
+/* ============================================================
+   Shared Page Layout — All inner detail pages
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  padding-top: 5.5rem;
+  background: var(--theme-bg, #FFFFFF);
+  color: var(--theme-text-heading, #111111);
+  font-family: var(--font-body, 'Outfit', sans-serif);
+}
+
+/* Banner */
+.banner {
+  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+  color: #FFFFFF;
+}
+
+.bannerInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  margin-bottom: 1.75rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.back:hover {
+  color: #FFFFFF;
+}
+
+.bannerEyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.bannerTitle {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+
+.bannerHindi {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1rem;
+}
+
+.bannerDesc {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+/* Stats Grid */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+
+.statBox {
+  padding: 2.25rem 2rem;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.statBox:last-child {
+  border-right: none;
+}
+
+.statCount {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 900;
+  color: var(--theme-primary, #DC143C);
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--theme-text-subtle, #777777);
+  font-weight: 500;
+}
+
+/* Section */
+.section {
+  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: var(--theme-text-heading, #111111);
+  margin-bottom: 2.5rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: var(--theme-primary, #DC143C);
+  border-radius: 9999px;
+}
+
+/* Case Cards Grid */
+.caseGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.caseCard {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.caseCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+}
+
+.caseImg {
+  height: 200px;
+  overflow: hidden;
+}
+
+.caseImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.caseCard:hover .caseImg img {
+  transform: scale(1.05);
+}
+
+.caseBody {
+  padding: 1.5rem 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex-grow: 1;
+}
+
+.caseYear {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--theme-primary, #DC143C);
+}
+
+.caseTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--theme-text-heading, #111111);
+  line-height: 1.25;
+}
+
+.caseLoc {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--theme-text-subtle, #777777);
+  letter-spacing: 0.04em;
+}
+
+.caseDesc {
+  font-size: 0.88rem;
+  color: var(--theme-text-muted, #555555);
+  line-height: 1.7;
+  margin-top: 0.5rem;
+}
+
+/* Dark cards (Aaryaveera page) */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.darkCard {
+  background: #1A1A1E;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 10px;
+  padding: 2.5rem 2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.darkCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #9A7340, #E8C98A, #9A7340);
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.darkCard:hover {
+  border-color: #C9A96E;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+}
+
+.darkCard:hover::before {
+  opacity: 1;
+}
+
+.darkCardIcon {
+  font-size: 2.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.darkCardTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.darkCardText {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.75;
+}
+
+/* Gold Buttons for dark pages */
+.goldBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2.5rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #0A0A0A;
+  background: #C9A96E;
+  border: 1px solid #C9A96E;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(201, 169, 110, 0.3);
+}
+
+.goldBtn:hover {
+  background: #E8C98A;
+  border-color: #E8C98A;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(232, 201, 138, 0.4);
+}
+
+.goldOutlineBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 2.5rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #E8C98A;
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.45);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.goldOutlineBtn:hover {
+  background: #C9A96E;
+  color: #0A0A0A;
+  border-color: #C9A96E;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(201, 169, 110, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .statBox:nth-child(2) { border-right: none; }
+  .statBox:nth-child(3),
+  .statBox:nth-child(4) { border-top: 1px solid var(--border); }
+  .statBox:nth-child(4) { border-right: none; }
+
+  .caseGrid {
+    grid-template-columns: 1fr;
+  }
+}

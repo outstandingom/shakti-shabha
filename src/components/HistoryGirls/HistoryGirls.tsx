@@ -4,69 +4,120 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './HistoryGirls.module.css'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const HISTORICAL = [
-  { icon:'👑', name:'Rani Lakshmibai', meta:'Warrior Queen · 1857' },
-  { icon:'⚔️', name:'Kittur Chennamma', meta:'Freedom Fighter · 1824' },
-  { icon:'🔬', name:'Anandibai Joshi', meta:"India's First Woman Doctor" },
-  { icon:'📜', name:'Vijaya Lakshmi Pandit', meta:'Diplomat · UN President' },
+  { icon:'👑', name:'Rani Lakshmibai',       meta:'Warrior Queen · 1857' },
+  { icon:'⚔️', name:'Kittur Chennamma',       meta:'Freedom Fighter · 1824' },
+  { icon:'🔬', name:'Anandibai Joshi',        meta:"India's First Woman Doctor" },
+  { icon:'📜', name:'Vijaya Lakshmi Pandit',  meta:'Diplomat · UN President' },
 ]
 
 const SUCCESS = [
-  { icon:'🚀', name:'Ritu, IAS 2023', meta:'Shakti Sabha Camp Alumna' },
+  { icon:'🚀', name:'Ritu, IAS 2023',         meta:'Shakti Sabha Camp Alumna' },
   { icon:'🏅', name:'Meera, National Athlete', meta:'Lathi-Kaushal Programme' },
-  { icon:'💻', name:'Anjali, Tech Lead', meta:'Aaryaveera Graduate' },
-  { icon:'🎨', name:'Kavya, Working Artist', meta:'Mardini Camp, 2019' },
+  { icon:'💻', name:'Anjali, Tech Lead',       meta:'Aaryaveera Graduate' },
+  { icon:'🎨', name:'Kavya, Working Artist',   meta:'Mardini Camp, 2019' },
 ]
 
 const TIMELINE = [
-  { year:'2012', text:'First self-defense camp, Wardha. 12 girls. One mat. One instructor.' },
-  { year:'2015', text:'Expanded to 50 schools across Vidarbha. Media archive begins.' },
-  { year:'2018', text:'Shakti Varta launches — podcast, white papers, legal collage.' },
-  { year:'2022', text:'Aaryaveera brand established. First Warrior Certification class.' },
-  { year:'2026', text:'400+ schools. Platform launch. Digital chapter begins.' },
+  { year:'2012', text:'First self-defense camp, Wardha. 12 girls. One mat. One instructor.', big: false },
+  { year:'2015', text:'Expanded to 50 schools across Vidarbha. Media archive begins.',       big: false },
+  { year:'2018', text:'Shakti Varta launches — podcast, white papers, legal collage.',        big: true  },
+  { year:'2022', text:'Aaryaveera brand established. First Warrior Certification class.',     big: false },
+  { year:'2026', text:'400+ schools. Platform launch. Digital chapter begins.',               big: true  },
 ]
 
 export default function HistoryGirls() {
-  const secRef      = useRef<HTMLElement>(null)
-  const tlRef       = useRef<HTMLDivElement>(null)
+  const secRef  = useRef<HTMLElement>(null)
+  const tlRef   = useRef<HTMLDivElement>(null)
+  const lineRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+
+      // Panels fade in
       gsap.from('[data-hg="panel"]', {
-        opacity: 0, y: 30, stagger: 0.15, duration: 0.7, ease: 'power3.out',
+        opacity: 0, y: 28, stagger: 0.14, duration: 0.65, ease: 'power3.out',
         scrollTrigger: { trigger: secRef.current, start: 'top 72%' }
       })
+
+      // Figure cards
       gsap.from('[data-hg="card"]', {
-        opacity: 0, scale: 0.94, stagger: 0.06, duration: 0.5, ease: 'back.out(1.4)',
+        opacity: 0, scale: 0.93, stagger: 0.06, duration: 0.45, ease: 'back.out(1.4)',
         scrollTrigger: { trigger: '[data-hg="panel"]', start: 'top 80%' }
       })
-      // Timeline draw
-      if (tlRef.current) {
-        gsap.fromTo(tlRef.current,
-          { '--line-height': '0%' },
-          { '--line-height': '100%', duration: 1.5, ease: 'power2.out',
-            scrollTrigger: { trigger: tlRef.current, start: 'top 80%' }
+
+      // Spine line grows down
+      if (lineRef.current) {
+        gsap.fromTo(lineRef.current,
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            transformOrigin: 'top center',
+            duration: 1.6,
+            ease: 'power2.inOut',
+            scrollTrigger: { trigger: tlRef.current, start: 'top 75%' }
           }
         )
       }
-      gsap.from('[data-hg="tl"]', {
-        opacity: 0, x: -16, stagger: 0.12, duration: 0.5, ease: 'power3.out',
-        scrollTrigger: { trigger: tlRef.current, start: 'top 80%' }
+
+      // Each entry slides in alternately
+      const entries = tlRef.current?.querySelectorAll('[data-hg="tl-entry"]')
+      entries?.forEach((el, i) => {
+        const fromLeft = i % 2 === 0
+        gsap.fromTo(el,
+          { opacity: 0, x: fromLeft ? -40 : 40 },
+          {
+            opacity: 1, x: 0,
+            duration: 0.65,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        )
       })
+
+      // Dots pulse in
+      const dots = tlRef.current?.querySelectorAll('[data-hg="tl-dot"]')
+      dots?.forEach((dot, i) => {
+        gsap.fromTo(dot,
+          { scale: 0, opacity: 0 },
+          {
+            scale: 1, opacity: 1,
+            duration: 0.4,
+            ease: 'back.out(2)',
+            delay: i * 0.15,
+            scrollTrigger: {
+              trigger: dot,
+              start: 'top 88%',
+              toggleActions: 'play none none reverse'
+            }
+          }
+        )
+      })
+
     }, secRef)
     return () => ctx.revert()
   }, [])
 
   return (
     <section ref={secRef} className={s.section}>
+
+      {/* Header */}
       <div className={s.header}>
         <h2>History &amp; Today's Success Girls</h2>
-        <p>The women who came before us made this possible. The women we walk with today are making it inevitable. Two timelines, one Shakti.</p>
+        <p>The women who came before us made this possible. The women we walk with today are making it inevitable.</p>
       </div>
+
+      {/* Dual panels */}
       <div className={s.dual}>
         <div data-hg="panel" className={s.panel}>
-          <span className={s.panelBar} style={{ background:'linear-gradient(to right, var(--fire), var(--gold))' }} />
-          <span className={s.panelLabel} style={{ color:'var(--gold-deep)' }}>Historical Women Warriors</span>
+          <span className={s.panelBar} style={{ background:'linear-gradient(to right,#DC143C,#9A3520)' }} />
+          <span className={s.panelLabel}>Historical Women Warriors</span>
           <div className={s.panelTitle}>They Led the Way</div>
           <div className={s.cards}>
             {HISTORICAL.map(h => (
@@ -79,9 +130,10 @@ export default function HistoryGirls() {
           </div>
           <p className={s.note}>Click any figure on the full page for their complete story, footnoted sources, and verified archives.</p>
         </div>
+
         <div data-hg="panel" className={s.panel}>
-          <span className={s.panelBar} style={{ background:'linear-gradient(to right, var(--sage), var(--mist))' }} />
-          <span className={s.panelLabel} style={{ color:'var(--sage)' }}>Today's Success Girls</span>
+          <span className={s.panelBar} style={{ background:'linear-gradient(to right,#15803D,#86EFAC)' }} />
+          <span className={s.panelLabel} style={{ color:'#15803D' }}>Today's Success Girls</span>
           <div className={s.panelTitle}>They Are Writing It Now</div>
           <div className={s.cards}>
             {SUCCESS.map(g => (
@@ -95,18 +147,45 @@ export default function HistoryGirls() {
           <p className={s.note}>Video testimonials and before/after journeys available on the full History page.</p>
         </div>
       </div>
-      <div ref={tlRef} className={s.timeline}>
-        {TIMELINE.map(t => (
-          <div key={t.year} data-hg="tl" className={s.tlItem}>
-            <span className={s.tlDot} />
-            <div className={s.tlYear}>{t.year}</div>
-            <div className={s.tlText}>{t.text}</div>
-          </div>
-        ))}
+
+      {/* ── Alternating Centre-Spine Timeline ── */}
+      <div className={s.tlWrap}>
+        <div className={s.tlLabel}>Shakti Sabha Journey</div>
+
+        {/* growing spine line */}
+        <div className={s.tlSpine}>
+          <div ref={lineRef} className={s.tlLine} />
+        </div>
+
+        <div ref={tlRef} className={s.tlEntries}>
+          {TIMELINE.map((t, i) => (
+            <div
+              key={t.year}
+              data-hg="tl-entry"
+              className={`${s.tlEntry} ${i % 2 === 0 ? s.tlLeft : s.tlRight}`}
+            >
+              {/* dot on spine */}
+              <span
+                data-hg="tl-dot"
+                className={`${s.tlDot} ${t.big ? s.tlDotBig : ''}`}
+              />
+
+              {/* card */}
+              <div className={s.tlCard}>
+                <div className={`${s.tlYear} ${t.big ? s.tlYearBig : ''}`}>
+                  {t.year}
+                </div>
+                <p className={s.tlText}>{t.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div style={{ marginTop:'2.5rem' }}>
+
+      <div style={{ marginTop:'2rem' }}>
         <Link to="/history" className="btn-magnetic btn-gold">Full History &amp; Success Stories →</Link>
       </div>
+
     </section>
   )
 }
