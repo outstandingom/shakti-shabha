@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import s from './Profile.module.css' // Keep your existing CSS file name
+import s from './Profile.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function CourseSection() {
+export default function Profile() {
   const secRef   = useRef<HTMLElement>(null)
   const photoRef = useRef<HTMLDivElement>(null)
 
@@ -15,16 +15,20 @@ export default function CourseSection() {
       const tl = gsap.timeline({
         scrollTrigger: { 
           trigger: secRef.current, 
-          start: 'top 90%', 
+          start: 'top 90%', // Triggers earlier so elements don't stay hidden
           toggleActions: 'play none none none' 
         }
       })
       
+      // Animate main photo revealing
       tl.to(photoRef.current, { clipPath: 'inset(0% 0 0 0)', duration: 1.1, ease: 'power4.inOut' })
+        // Animate right side heading and button
         .from('[data-p="eyebrow"]', { opacity: 0, y: 10, duration: 0.4 }, '-=0.6')
         .from('[data-p="heading"]', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
         .from('[data-p="btn"]',     { opacity: 0, y: 10, duration: 0.4 }, '-=0.3')
+        // Animate sub images
         .from('[data-p="subimg"]',  { opacity: 0, y: 30, stagger: 0.2, duration: 0.6 }, '-=0.2')
+        // Animate left bottom text
         .from('[data-p="subtitle"]',{ opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
         .from('[data-p="bio"]',     { opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
     }, secRef)
@@ -39,21 +43,22 @@ export default function CourseSection() {
             LEFT COLUMN
             ======================================== */}
         <div className={s.left}>
+          {/* Main Hero Image */}
           <div ref={photoRef} className={s.photoFrame}>
-            {/* Replace with a Course or Training Image */}
             <img 
               src="/harshitama'am.jpg" 
-              alt="Course Training" 
+              alt="Smt. Harshita Mankar" 
               className={s.heroImg}
             />
           </div>
 
+          {/* Bottom Left: Text & Paragraph */}
           <div className={s.leftBottom}>
             <h3 data-p="subtitle" className={s.subTitle}>
-              Learn &<br/>Grow
+              Empowering<br/>the Future
             </h3>
             <p data-p="bio" className={s.bio}>
-              This comprehensive program is designed to build confidence, physical strength, and mental resilience. Join our expert-led sessions to master the art of self-defense and community leadership.
+              A social warrior who chose the village over the boardroom. For twelve unbroken years, Lalita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them.
             </p>
           </div>
         </div>
@@ -62,34 +67,35 @@ export default function CourseSection() {
             RIGHT COLUMN
             ======================================== */}
         <div className={s.right}>
+          {/* Top Right: Heading & Button */}
           <div className={s.rightTop}>
-            {/* Changed Eyebrow to Course */}
-            <span data-p="eyebrow" className={s.eyebrow}>Course Overview</span>
+            <span data-p="eyebrow" className={s.eyebrow}>Founder & Visionary</span>
             
-            {/* CHANGED THE HEADING TO A COURSE */}
             <h2 data-p="heading" className={s.heading}>
-              Self Defense <em>Mastery</em><br/>
+              Smt. Harshita <em>Mankar</em><br/>
               <span className={s.title} style={{fontFamily:'var(--ff-dev)'}}>
-                आत्मरक्षा प्रशिक्षण
+                श्रीमती हर्षिता मानकरी
               </span>
             </h2>
 
-            <Link to="/courses" data-p="btn" className={s.ctaBtn}>
-              Enroll Now
+            {/* THE BUTTON IS HERE */}
+            <Link to="/social-work" data-p="btn" className={s.ctaBtn}>
+              View Impact Archive
             </Link>
           </div>
 
+          {/* Bottom Right: Two Sub Images */}
           <div className={s.rightBottom}>
             <div data-p="subimg" className={s.subImg}>
               <img 
                 src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop" 
-                alt="Course Work 1" 
+                alt="NGO Work 1" 
               />
             </div>
             <div data-p="subimg" className={s.subImg}>
               <img 
                 src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop" 
-                alt="Course Work 2" 
+                alt="NGO Work 2" 
               />
             </div>
           </div>
