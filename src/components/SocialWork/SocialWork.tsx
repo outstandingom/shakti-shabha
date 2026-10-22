@@ -1,8 +1,12 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
+import { flushSync } from 'react-dom'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './SocialWork.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const CASES = [
   {
@@ -49,66 +53,116 @@ const STATS = [
   { count: '3', label: 'Active Programmes' },
 ]
 
+type Pos = 'current' | 'prev' | 'next' | 'hiddenLeft' | 'hiddenRight'
+
 function mod(n: number, m: number) {
   return ((n % m) + m) % m
 }
 
+/** Where a card sits relative to the current one. Drives CSS via data-pos. */
+function getPos(index: number, current: number, total: number): Pos {
+  const d = mod(index - current, total)
+  if (d === 0) return 'current'
+  if (d === 1) return 'next'
+  if (d === total - 1) return 'prev'
+  return d <= total / 2 ? 'hiddenRight' : 'hiddenLeft'
+}
+
 export default function SocialWork() {
-  const secRef   = useRef<HTMLElement>(null)
-  const [current, setCurrent] = useState(0)
+  const secRef = useRef<HTMLElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const btnLeft = useRef<HTMLButtonElement>(null)
+  const btnRight = useRef<HTMLButtonElement>(null)
+  const infoRefs = useRef<(HTMLDivElement | null)[]>([])
+  const tlRef = useRef<gsap.core.Timeline | null>(null)
   const animating = useRef(false)
-  const titleRefs = useRef<(HTMLDivElement | null)[]>([])
-  const locRefs   = useRef<(HTMLDivElement | null)[]>([])
-  const descRefs  = useRef<(HTMLDivElement | null)[]>([])
-  const btnLeft   = useRef<HTMLButtonElement>(null)
-  const btnRight  = useRef<HTMLButtonElement>(null)
 
-  const prev = mod(current - 1, CASES.length)
-  const next = mod(current + 1, CASES.length)
+  // `current` drives cards + background (CSS transitions, instant).
+  // `infoIndex` drives the text block, which swaps midway through a GSAP timeline.
+  const [current, setCurrent] = useState(0)
+  const [infoIndex, setInfoIndex] = useState(0)
 
-  const swap = useCallback((dir: 'left' | 'right') => {
-    if (animating.current) return
-    animating.current = true
+  const resetTilt = useCallback(() => {
+    stageRef.current?.style.setProperty('--tilt', '0deg')
+  }, [])
 
-    const targetIdx = dir === 'right'
-      ? mod(current + 1, CASES.length)
-      : mod(current - 1, CASES.length)
+  const goTo = useCallback(
+    (target: number) => {
+      if (animating.current || target === current) return
+      animating.current = true
+      resetTilt()
 
-    const currentTitle = titleRefs.current[current]
-    const currentLoc   = locRefs.current[current]
-    const currentDesc  = descRefs.current[current]
+      const buttons = [btnLeft.current, btnRight.current].filter(Boolean)
+      const outTexts = infoRefs.current[infoIndex]?.querySelectorAll('[data-sw-text]') ?? []
+      const inTexts = infoRefs.current[target]?.querySelectorAll('[data-sw-text]') ?? []
 
-    const nextTitle = titleRefs.current[targetIdx]
-    const nextLoc   = locRefs.current[targetIdx]
-    const nextDesc  = descRefs.current[targetIdx]
+      // Cards and background animate through CSS transitions as soon as state changes
+      setCurrent(target)
 
-    gsap.timeline({
-      onComplete: () => {
-        animating.current = false
-        setCurrent(targetIdx)
-      }
-    })
-      .to([btnLeft.current, btnRight.current], { opacity: 0.4, pointerEvents: 'none', duration: 0.15 })
-      .to([currentTitle, currentLoc, currentDesc], { y: -60, opacity: 0, stagger: 0.06, duration: 0.3 }, '-=0.1')
-      .fromTo([nextTitle, nextLoc, nextDesc],
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.08, duration: 0.35 }
-      )
-      .to([btnLeft.current, btnRight.current], { opacity: 1, pointerEvents: 'all', duration: 0.2 })
-  }, [current])
+      tlRef.current = gsap
+        .timeline({
+          onComplete: () => {
+            animating.current = false
+          },
+        })
+        .to(buttons, { opacity: 0.5, pointerEvents: 'none', duration: 0.2 })
+        .to(outTexts, { y: -120, opacity: 0, stagger: 0.1, duration: 0.4 }, '<')
+        // Swap which info block is displayed, synchronously, so the next tween can see it
+        .call(() => {
+          flushSync(() => setInfoIndex(target))
+        })
+        .fromTo(
+          inTexts,
+          { y: 40, opacity: 0 },
+          { y: 0, opacity: 1, stagger: 0.1, duration: 0.4 }
+        )
+        .to(buttons, { opacity: 1, pointerEvents: 'all', duration: 0.2 })
+    },
+    [current, infoIndex, resetTilt]
+  )
 
+  const next = () => goTo(mod(current + 1, CASES.length))
+  const prev = () => goTo(mod(current - 1, CASES.length))
+
+  /* Mouse-follow tilt on the current card (the info text tilts with it via --tilt) */
+  const handleTilt = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const box = e.currentTarget.getBoundingClientRect()
+    const nx = (e.clientX - (box.left + box.width / 2)) / (box.width / 2)
+    const clamped = Math.max(-1, Math.min(1, nx))
+    stageRef.current?.style.setProperty('--tilt', `${clamped * 15}deg`)
+  }
+
+  /* Intro animations */
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sw="header"]', {
-        opacity: 0, y: 24, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: secRef.current, start: 'top 75%' }
+        opacity: 0,
+        y: 24,
+        duration: 0.7,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: secRef.current, start: 'top 75%' },
       })
       gsap.from('[data-sw="stat"]', {
-        opacity: 0, y: 20, stagger: 0.1, duration: 0.6, ease: 'power3.out',
-        scrollTrigger: { trigger: '[data-sw="stats"]', start: 'top 80%' }
+        opacity: 0,
+        y: 20,
+        stagger: 0.1,
+        duration: 0.6,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '[data-sw="stats"]', start: 'top 80%' },
+      })
+      gsap.from('[data-sw="stage"]', {
+        opacity: 0,
+        y: 80,
+        duration: 0.9,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '[data-sw="stage"]', start: 'top 90%' },
       })
     }, secRef)
-    return () => ctx.revert()
+
+    return () => {
+      ctx.revert()
+      tlRef.current?.kill()
+    }
   }, [])
 
   return (
@@ -125,12 +179,13 @@ export default function SocialWork() {
 
       {/* Carousel area */}
       <div className={s.carouselWrap}>
-        {/* Blurred BG */}
-        <div className={s.bgLayer}>
+        {/* Blurred background — every image stays mounted so it can transition */}
+        <div className={s.bgLayer} aria-hidden="true">
           {CASES.map((c, i) => (
             <div
               key={i}
-              className={`${s.bgImg} ${i === current ? s.bgActive : ''}`}
+              className={s.bgImg}
+              data-pos={getPos(i, current, CASES.length)}
             >
               <img src={c.bg} alt="" />
             </div>
@@ -144,57 +199,78 @@ export default function SocialWork() {
           <p className={s.carouselSub}>जहाँ हम खड़े हैं</p>
         </div>
 
-        {/* Cards */}
-        <div className={s.cardArea}>
-          <button ref={btnLeft} className={s.arrowBtn} onClick={() => swap('left')} aria-label="Previous">
+        {/* Stage: cards, info text and arrows */}
+        <div data-sw="stage" ref={stageRef} className={s.stage}>
+          <div className={s.cardList}>
+            <div className={s.cardsWrapper}>
+              {CASES.map((c, i) => {
+                const pos = getPos(i, current, CASES.length)
+                const isCurrent = pos === 'current'
+                return (
+                  <div
+                    key={i} /* stable key: the same element persists, so CSS can animate it */
+                    className={s.card}
+                    data-pos={pos}
+                    onPointerMove={isCurrent ? handleTilt : undefined}
+                    onPointerLeave={isCurrent ? resetTilt : undefined}
+                    onClick={pos === 'prev' || pos === 'next' ? () => goTo(i) : undefined}
+                  >
+                    <img src={c.image} alt={c.title} draggable={false} />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className={s.infoList} aria-live="polite">
+            <div className={s.infoWrapper}>
+              {CASES.map((c, i) => (
+                <div
+                  key={i}
+                  ref={(el) => {
+                    infoRefs.current[i] = el
+                  }}
+                  className={`${s.info} ${i === infoIndex ? s.infoActive : ''}`}
+                  aria-hidden={i !== infoIndex}
+                >
+                  <div data-sw-text className={`${s.text} ${s.infoTitle}`}>{c.title}</div>
+                  <div data-sw-text className={`${s.text} ${s.infoLoc}`}>{c.location}</div>
+                  <div data-sw-text className={`${s.text} ${s.infoDesc}`}>{c.description}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            ref={btnLeft}
+            className={`${s.arrowBtn} ${s.btnLeft}`}
+            onClick={prev}
+            aria-label="Previous"
+          >
             <svg viewBox="0 0 512 512" fill="none">
               <polyline points="328 112 184 256 328 400" stroke="#fff" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
-          <div className={s.cardsWrapper}>
-            {[prev, current, next].map((idx, pos) => {
-              const c = CASES[idx]
-              const cls = pos === 0 ? s.cardPrev : pos === 1 ? s.cardCurrent : s.cardNext
-              return (
-                <div key={`${idx}-${pos}`} className={`${s.card} ${cls}`}>
-                  <img src={c.image} alt={c.title} draggable={false} />
-                </div>
-              )
-            })}
-          </div>
-
-          <button ref={btnRight} className={s.arrowBtn} onClick={() => swap('right')} aria-label="Next">
+          <button
+            ref={btnRight}
+            className={`${s.arrowBtn} ${s.btnRight}`}
+            onClick={next}
+            aria-label="Next"
+          >
             <svg viewBox="0 0 512 512" fill="none">
               <polyline points="184 112 328 256 184 400" stroke="#fff" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>
 
-        {/* Info */}
-        <div className={s.infoArea}>
-          {CASES.map((c, i) => (
-            <div key={i} className={`${s.info} ${i === current ? s.infoActive : s.infoHidden}`}>
-              <div ref={el => { titleRefs.current[i] = el }} className={s.infoTitle}>{c.title}</div>
-              <div ref={el => { locRefs.current[i] = el }} className={s.infoLoc}>{c.location}</div>
-              <div ref={el => { descRefs.current[i] = el }} className={s.infoDesc}>{c.description}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Dots indicator */}
+        {/* Dots */}
         <div className={s.dots}>
           {CASES.map((_, i) => (
             <button
               key={i}
               className={`${s.dot} ${i === current ? s.dotActive : ''}`}
-              onClick={() => {
-                if (!animating.current && i !== current) {
-                  const dir = i > current ? 'right' : 'left'
-                  // jump directly
-                  setCurrent(i)
-                }
-              }}
+              onClick={() => goTo(i)}
               aria-label={`Go to case ${i + 1}`}
             />
           ))}
