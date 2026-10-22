@@ -140,3 +140,14 @@
     cursor: none !important;
   }
 }
+
+/* ── Custom cursor ring expand on links/buttons ── */
+@media (hover: hover) {
+  .cursorRing.expand {
+    width: 52px !important;
+    height: 52px !important;
+    margin-left: -26px !important;
+    margin-top: -26px !important;
+    border-color: rgba(220, 20, 60, 0.85) !important;
+  }
+}
