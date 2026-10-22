@@ -93,7 +93,7 @@
   font-weight: 800; 
   color: #111; 
   line-height: 1.05; 
-  margin: 0 0 2rem 0; /* Kept the margin to separate from images */
+  margin: 0 0 1.5rem 0; /* Reduced bottom margin to fit button */
   letter-spacing: -0.02em;
 }
 
@@ -110,6 +110,30 @@
   display: block;
   margin-top: 0.5rem;
   font-weight: 400;
+}
+
+/* ========================================
+   BUTTON (WITH WHITE/CRIMSON HOVER)
+   ======================================== */
+.ctaBtn {
+  display: inline-block;
+  background: #ffffff;                /* Default white background */
+  color: #DC143C;                     /* Default crimson text */
+  border: 1px solid #DC143C;          /* Crimson border */
+  padding: 0.8rem 1.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;                 /* Rounded corners */
+  text-decoration: none;
+  
+  transition: all 0.3s ease;          
+}
+
+.ctaBtn:hover {
+  background: #DC143C;                /* Crimson background on hover */
+  color: #ffffff;                     /* White text on hover */
+  border-color: #DC143C;
 }
 
 /* ========================================
