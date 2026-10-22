@@ -213,7 +213,7 @@ export default function Aaryaveera() {
               <li><strong>Manifestation:</strong> Self-defense training, character building, cultural awakening</li>
             </ul>
           </div>
-          <p className={s.poweredBy}>Powered by PrintingTask</p>
+          <p className={s.poweredBy}>Powered by Shakti Shabha</p>
 
           <div className={s.grid}>
             {CARDS.map(c => (
