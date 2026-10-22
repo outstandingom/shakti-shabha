@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import s from './Navigation.module.css'
 
 const LINKS = [
+  { label: 'About', to: '/about' },
   { label: 'Social Work', to: '/social-work' },
   { label: 'Aaryaveera', to: '/aaryaveera' },
   { label: 'Events', to: '/events' },

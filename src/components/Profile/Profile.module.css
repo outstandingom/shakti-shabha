@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400&family=Inter:wght@400;500;700;800&display=swap');
-
 /* --- Main Layout --- */
 .section { 
-  padding: 5rem 2rem; 
-  background-color: #f4f4f4; 
-  color: #111;
-  font-family: 'Inter', sans-serif;
+  padding: clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2.5rem); 
+  background-color: var(--theme-bg, #FFFFFF); 
+  color: var(--theme-text-heading, #111111);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  overflow: hidden;
+  border-bottom: 1px solid var(--theme-border-light, rgba(0, 0, 0, 0.08));
 }
 
 .inner { 
   display: grid; 
   grid-template-columns: 1fr 1.3fr; 
-  gap: 2rem; 
+  gap: clamp(1.5rem, 3vw, 2.5rem); 
   align-items: stretch; 
   max-width: 1300px;
   margin: 0 auto;
@@ -23,7 +23,7 @@
 .left {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: clamp(1.25rem, 2.5vw, 2rem);
 }
 
 .photoFrame { 
@@ -31,7 +31,8 @@
   position: relative; 
   overflow: hidden; 
   clip-path: inset(100% 0 0 0); 
-  background: #e6dcd5;
+  background: var(--theme-surface-subtle, #EFE9E4);
+  border-radius: 6px;
 }
 
 .heroImg {
@@ -45,23 +46,25 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 2rem;
+  gap: clamp(1rem, 2vw, 2rem);
 }
 
 .subTitle {
-  font-size: 1.75rem;
-  font-weight: 800;
-  line-height: 1.1;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-weight: 700;
+  line-height: 1.15;
   margin: 0;
-  color: #111;
+  color: var(--theme-text-heading, #111111);
+  flex-shrink: 0;
 }
 
 .bio { 
-  font-size: 0.75rem; 
-  line-height: 1.6; 
-  color: #555; 
+  font-size: clamp(0.78rem, 1.1vw, 0.85rem); 
+  line-height: 1.65; 
+  color: var(--theme-text-muted, #555555); 
   margin: 0;
-  max-width: 260px;
+  max-width: 320px;
 }
 
 /* ========================================
@@ -71,74 +74,99 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 3rem;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
 }
 
 .rightTop {
-  padding-top: 0.5rem;
+  padding-top: 0.25rem;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Prevents button from stretching */
+  align-items: flex-start;
 }
 
+/* Decreased gap between Eyebrow, Name, and Devanagari */
 .eyebrow { 
-  font-size: 0.65rem; 
+  font-size: clamp(0.65rem, 1.1vw, 0.75rem); 
   font-weight: 700; 
   letter-spacing: 0.15em; 
   text-transform: uppercase; 
-  color: #888; 
-  margin-bottom: 0.4rem; 
+  color: var(--theme-text-subtle, #888888); 
+  margin-bottom: 0.2rem;
   display: block; 
 }
 
 .heading { 
-  font-size: clamp(2.5rem, 4.5vw, 4rem); 
-  font-weight: 800; 
-  color: #111; 
-  line-height: 1.05; 
-  margin: 0 0 2rem 0; 
-  letter-spacing: -0.02em;
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: clamp(1.85rem, 4.2vw, 3.8rem); 
+  color: var(--theme-text-heading, #111111); 
+  line-height: 1.1; 
+  margin: 0 0 1.25rem 0; 
+  letter-spacing: -0.01em;
 }
 
-.heading em {
-  font-family: 'Playfair Display', Georgia, serif;
+.nameBold {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-weight: 700;
+  color: var(--theme-text-heading, #111111);
+}
+
+.nameLight {
+  font-family: var(--font-cursive, 'Mea Culpa', cursive) !important;
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
+  color: var(--theme-text-heading, #222222);
+  font-size: 1.35em;
+  line-height: 1;
+  display: inline-block;
+  vertical-align: baseline;
+  letter-spacing: 0.02em;
 }
 
 .title { 
-  font-family: 'Noto Sans Devanagari', sans-serif; 
-  font-size: 1.1rem; 
-  color: #666; 
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif); 
+  font-size: clamp(0.95rem, 1.6vw, 1.2rem); 
+  color: var(--theme-text-muted, #666666); 
   display: block;
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   font-weight: 400;
+  line-height: 1.25;
 }
 
 /* ========================================
-   BUTTON (FORCED VISIBILITY)
+   BUTTON — EXACT HERO PILL STYLE & THEME
    ======================================== */
 .ctaBtn {
-  display: inline-block;
-  background-color: #ffffff;                
-  color: #DC143C;                           
-  border: 2px solid #DC143C;                
-  padding: 0.8rem 2rem;
-  font-size: 0.85rem;
-  font-weight: 700;
+  margin-top: 0.4rem;
+  padding: var(--btn-padding, 0.65rem 2.25rem);
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: var(--btn-font-size, 0.78rem);
+  font-weight: var(--btn-font-weight, 500);
+  text-transform: uppercase;
+  letter-spacing: var(--btn-letter-spacing, 0.05em);
+
+  color: var(--theme-primary, #DC143C);
+  background: var(--theme-primary-light, rgba(220, 20, 60, 0.06));
+  border: 1px solid var(--theme-primary-border, rgba(220, 20, 60, 0.45));
+  border-radius: var(--btn-radius, 9999px);
   cursor: pointer;
-  border-radius: 8px;                       
+
+  transition: var(--btn-transition, all 0.25s cubic-bezier(0.16, 1, 0.3, 1), background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, color 0.25s ease);
+
   text-decoration: none;
-  transition: all 0.3s ease;                
-  
-  /* Forces the button to show even if GSAP fails */
-  opacity: 1 !important; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  opacity: 1 !important;
 }
 
 .ctaBtn:hover {
-  background-color: #DC143C;                
-  color: #ffffff;                           
-  border-color: #DC143C;
+  background: var(--theme-primary, #DC143C);
+  border-color: var(--theme-primary, #DC143C);
+  color: var(--theme-text-on-primary, #FFFFFF);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35));
 }
 
 /* ========================================
@@ -147,15 +175,15 @@
 .rightBottom {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   flex-grow: 1;
-  min-height: 300px;
+  min-height: 240px;
 }
 
 .subImg {
-  background: #e6dcd5;
+  background: var(--theme-surface-subtle, #EFE9E4);
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 .subImg img {
@@ -173,32 +201,43 @@
 /* ========================================
    RESPONSIVE DESIGN
    ======================================== */
-@media (max-width: 1024px) {
+@media (max-width: 960px) {
   .inner { 
     grid-template-columns: 1fr; 
-    gap: 3rem; 
+    gap: 2.5rem; 
   }
   
   .right {
-    flex-direction: column; 
+    gap: 2rem;
   }
 
   .rightBottom {
-    min-height: 250px;
+    min-height: 200px;
   }
 }
 
 @media (max-width: 600px) {
   .leftBottom {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.75rem;
   }
-  
+
+  .bio {
+    max-width: 100%;
+  }
+
   .rightBottom {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
   }
   
   .subImg {
-    aspect-ratio: 4/3;
+    aspect-ratio: 4 / 3;
+  }
+}
+
+@media (max-width: 420px) {
+  .rightBottom {
+    grid-template-columns: 1fr;
   }
 }

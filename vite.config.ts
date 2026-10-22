@@ -5,6 +5,13 @@ import path from 'path'
 export default defineConfig({
   base: './',
   plugins: [react()],
+  server: {
+    port: 3000,
+    strictPort: true,
+    watch: {
+      ignored: ['**/dist/**', '**/.git/**']
+    }
+  },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') }
   }

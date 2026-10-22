@@ -22,12 +22,12 @@ export default function HomePage() {
       <Sahyog />
       <Courses />
       <HistoryGirls />
-      <footer style={{ padding:'3rem', borderTop:'1px solid var(--border)', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'1rem' }}>
-        <div style={{ fontFamily:'Cinzel, serif', fontWeight:700, fontSize:'1rem', color:'var(--gold)' }}>
-          Shakti Sabha <span style={{ fontFamily:'Noto Sans Devanagari, sans-serif', fontSize:'0.8rem', color:'var(--text-mute)', marginLeft:'0.4rem' }}>शक्ति सभा</span>
+      <footer style={{ padding:'3.5rem 3rem', borderTop:'1px solid var(--border)', background:'var(--theme-bg, #FFFFFF)', display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:'1.5rem' }}>
+        <div style={{ fontFamily:'Cinzel, serif', fontWeight:700, fontSize:'1.1rem', color:'var(--theme-primary, #DC143C)' }}>
+          Shakti Sabha <span style={{ fontFamily:'Noto Sans Devanagari, sans-serif', fontSize:'0.85rem', color:'var(--theme-text-subtle, #777777)', marginLeft:'0.4rem' }}>शक्ति सभा</span>
         </div>
-        <div style={{ fontSize:'0.75rem', color:'var(--text-mute)' }}>FCRA Compliant · Domestic Payments Only · SRS v1.2</div>
-        <div style={{ fontSize:'0.75rem', color:'var(--text-mute)' }}>Built by PrintingTask</div>
+        <div style={{ fontSize:'0.78rem', color:'var(--theme-text-muted, #555555)' }}>FCRA Compliant · Domestic Payments Only · SRS v1.2</div>
+        <div style={{ fontSize:'0.78rem', color:'var(--theme-text-subtle, #777777)' }}>Built by PrintingTask</div>
       </footer>
     </main>
   )

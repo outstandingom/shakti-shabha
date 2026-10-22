@@ -12,6 +12,7 @@ import SahyogPage from './pages/SahyogPage'
 import CoursesPage from './pages/CoursesPage'
 import HistoryPage from './pages/HistoryPage'
 import BrandPage from './pages/BrandPage'
+import AboutPage from './pages/AboutPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -57,6 +58,8 @@ export default function App() {
         <Route path="/courses" element={<CoursesPage />} />
         <Route path="/history" element={<HistoryPage />} />
         <Route path="/brand" element={<BrandPage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/peace-and-revolution" element={<AboutPage />} />
       </Routes>
     </BrowserRouter>
   )

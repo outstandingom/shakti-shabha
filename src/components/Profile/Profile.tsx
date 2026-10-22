@@ -58,7 +58,7 @@ export default function Profile() {
               Empowering<br/>the Future
             </h3>
             <p data-p="bio" className={s.bio}>
-              A social warrior who chose the village over the boardroom. For twelve unbroken years, Lalita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them.
+              A social warrior who chose the village over the boardroom. For twelve unbroken years, Harshita-ji has taken self-defense, healing, and intellectual discourse to women and girls who had no one to stand beside them.
             </p>
           </div>
         </div>
@@ -69,16 +69,17 @@ export default function Profile() {
         <div className={s.right}>
           {/* Top Right: Heading & Button */}
           <div className={s.rightTop}>
-            <span data-p="eyebrow" className={s.eyebrow}>Founder & Visionary</span>
+            <span data-p="eyebrow" className={s.eyebrow}>Founder &amp; Visionary</span>
             
             <h2 data-p="heading" className={s.heading}>
-              Smt. Harshita <em>Mankar</em><br/>
-              <span className={s.title} style={{fontFamily:'var(--ff-dev)'}}>
+              <span className={s.nameBold}>Smt. Harshita</span>{' '}
+              <span className={s.nameLight}>Mankar</span>
+              <span className={s.title}>
                 श्रीमती हर्षिता मानकरी
               </span>
             </h2>
 
-            {/* THE BUTTON IS HERE */}
+            {/* THE BUTTON */}
             <Link to="/social-work" data-p="btn" className={s.ctaBtn}>
               View Impact Archive
             </Link>

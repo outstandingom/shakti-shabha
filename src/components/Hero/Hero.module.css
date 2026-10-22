@@ -52,7 +52,7 @@
 }
 
 .crimson {
-  color: #DC143C;              /* "Discover the" = crimson red */
+  color: var(--theme-primary, #DC143C);              /* "Discover the" = crimson red */
 }
 
 .ctaBtn {
@@ -64,9 +64,9 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
 
-  color: #DC143C;                           /* button text crimson */
-  background: rgba(220, 20, 60, 0.06);
-  border: 1px solid rgba(220, 20, 60, 0.45);
+  color: var(--theme-primary, #DC143C);                           /* button text crimson */
+  background: var(--theme-primary-light, rgba(220, 20, 60, 0.06));
+  border: 1px solid var(--theme-primary-border, rgba(220, 20, 60, 0.45));
   border-radius: 9999px;
   cursor: pointer;
 
@@ -82,11 +82,11 @@
 }
 
 .ctaBtn:hover {
-  background: #DC143C;                      /* crimson pill on hover */
-  border-color: #DC143C;
+  background: var(--theme-primary, #DC143C);                      /* crimson pill on hover */
+  border-color: var(--theme-primary, #DC143C);
   color: #FFFFFF;                           /* readable text on crimson */
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.35);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35));
 }
 
 /* ---------- images wrapper (mobile) ---------- */

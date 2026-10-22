@@ -1,47 +1,127 @@
-:root {
-  --night: #060606; --ash: #111111; --panel: #0D0D0D;
-  --border: rgba(255,255,255,0.07); --border-gold: rgba(201,169,110,0.18);
-  --fire: #C2410C; --ember: #EA580C; --flame: #F97316;
-  --forest: #14532D; --sage: #4D7C61; --mist: #A7C4B5;
-  --gold: #C9A96E; --gold-bright: #E8C98A; --gold-deep: #9A7340;
-  --indigo: #4F46E5; --indigo-pale: #818CF8;
-  --text: #F0EBE3; --text-dim: #A89880; --text-mute: #5C5248;
-  --ff-display: 'Cinzel', Georgia, serif;
-  --ff-body: 'Outfit', system-ui, sans-serif;
-  --ff-dev: 'Noto Sans Devanagari', sans-serif;
-}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 img, video { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }
 ul, ol { list-style: none; }
+
 body {
-  font-family: var(--ff-body); background: var(--night); color: var(--text);
-  line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased;
+  font-family: var(--ff-body, 'Outfit', sans-serif);
+  background: var(--theme-bg, #FFFFFF);
+  color: var(--theme-text-body, #333333);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
+
 html.lenis { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
-.container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 3rem; }
-@media (max-width: 768px) { .container { padding: 0 1.25rem; } }
-.btn-magnetic {
-  position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
-  font-family: var(--ff-body); font-weight: 600; font-size: 0.875rem;
-  letter-spacing: 0.03em; padding: 0.85rem 2.25rem; border-radius: 2px;
-  will-change: transform; transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+.container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 3rem;
 }
-.btn-gold { background: var(--gold); color: var(--night); }
-.btn-gold:hover { background: var(--gold-bright); }
-.btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
-.btn-outline:hover { border-color: rgba(255,255,255,0.3); }
-.btn-ghost { background: transparent; color: var(--gold); border: 1px solid var(--border-gold); }
-.btn-ghost:hover { background: rgba(201,169,110,0.06); }
-.section-rule { border-top: 1px solid var(--border); }
-.clip-hidden { overflow: hidden; }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--night); }
-::-webkit-scrollbar-thumb { background: var(--text-mute); border-radius: 2px; }
+
+@media (max-width: 768px) {
+  .container { padding: 0 1.25rem; }
+}
+
+/* --------------------------------------------------------------------------
+   THEME BUTTONS — Matching Hero / Profile Pill Style
+   -------------------------------------------------------------------------- */
+.btn-magnetic {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-weight: 500;
+  font-size: var(--btn-font-size, 0.78rem);
+  letter-spacing: var(--btn-letter-spacing, 0.05em);
+  text-transform: uppercase;
+  padding: var(--btn-padding, 0.65rem 2.25rem);
+  border-radius: var(--btn-radius, 9999px);
+  will-change: transform;
+  transition: var(--btn-transition);
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Solid Crimson Pill */
+.btn-gold {
+  background: var(--theme-primary, #DC143C);
+  color: #FFFFFF !important;
+  border: 1px solid var(--theme-primary, #DC143C);
+  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.2);
+}
+
+.btn-gold:hover {
+  background: var(--theme-primary-dark, #B01030);
+  border-color: var(--theme-primary-dark, #B01030);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35));
+}
+
+/* Crimson Outline Hero Pill */
+.btn-outline {
+  background: var(--theme-primary-light, rgba(220, 20, 60, 0.06));
+  color: var(--theme-primary, #DC143C) !important;
+  border: 1px solid var(--theme-primary-border, rgba(220, 20, 60, 0.45));
+}
+
+.btn-outline:hover {
+  background: var(--theme-primary, #DC143C);
+  color: #FFFFFF !important;
+  border-color: var(--theme-primary, #DC143C);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35));
+}
+
+/* Translucent Ghost Hero Pill */
+.btn-ghost {
+  background: transparent;
+  color: var(--theme-primary, #DC143C) !important;
+  border: 1px solid var(--theme-primary-border, rgba(220, 20, 60, 0.45));
+}
+
+.btn-ghost:hover {
+  background: var(--theme-primary, #DC143C);
+  color: #FFFFFF !important;
+  border-color: var(--theme-primary, #DC143C);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35));
+}
+
+.section-rule {
+  border-top: 1px solid var(--border);
+}
+
+.clip-hidden {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--theme-bg-alt, #F8F8F9);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(220, 20, 60, 0.3);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary, #DC143C);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
