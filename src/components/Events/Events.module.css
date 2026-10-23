@@ -35,7 +35,7 @@
 
 .item { 
   display: grid; 
-  grid-template-columns: 80px 1fr auto; 
+  grid-template-columns: 80px minmax(0, 1fr) auto;
   gap: 1.5rem; 
   align-items: center; 
   padding: 1.25rem 0; 

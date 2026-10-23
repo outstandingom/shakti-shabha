@@ -1,4 +1,6 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* Let grid and flex children shrink to the space their parent actually has. */
+:where(*) { min-width: 0; }
 html { scroll-behavior: smooth; }
 img, video { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
@@ -6,6 +8,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 ul, ol { list-style: none; }
 
 body {
+  width: 100%;
+  min-width: 0;
   font-family: var(--ff-body, 'Outfit', sans-serif);
   background: var(--theme-bg, #FFFFFF);
   color: var(--theme-text-body, #333333);
@@ -19,10 +23,10 @@ html.lenis { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 .container {
-  width: 100%;
+  width: auto;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 3rem;
+  padding: 0 clamp(1rem, 4vw, 3rem);
 }
 
 @media (max-width: 768px) {
