@@ -1,27 +1,30 @@
-﻿/* ============================================================
-   Courses Section — Desktop Horizontal Scroll + Mobile Friendly
+/* ============================================================
+   Courses Section — Unified GSAP Horizontal Scroll (All Breakpoints)
    ============================================================ */
 
-.section { 
-  padding: clamp(2.5rem, 5vh, 4rem) 0; 
-  border-top: 1px solid var(--border); 
+.section {
+  padding: clamp(2.5rem, 5vh, 4rem) 0;
+  border-top: 1px solid var(--border);
   background: var(--theme-bg, #FFFFFF);
+  /* min-height 100vh on every breakpoint so the pinned section
+     fills the viewport and GSAP has a clean canvas to work with */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
+  /* Clips cards that are currently off-screen to the right */
   overflow: hidden;
 }
 
-.header { 
-  padding: 0 clamp(1.5rem, 4vw, 3.5rem); 
-  display: flex; 
-  align-items: flex-end; 
-  justify-content: space-between; 
-  margin-bottom: 2rem; 
-  flex-wrap: wrap; 
-  gap: 1.25rem; 
+.header {
+  padding: 0 clamp(1.5rem, 4vw, 3.5rem);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
 }
 
 .headerLeft {
@@ -38,11 +41,11 @@
   color: var(--theme-primary, #DC143C);
 }
 
-.title { 
-  font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: clamp(1.85rem, 3.5vw, 2.75rem); 
-  font-weight: 700; 
-  color: var(--theme-text-heading, #111111); 
+.title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.85rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  color: var(--theme-text-heading, #111111);
   line-height: 1.1;
   margin: 0;
 }
@@ -85,184 +88,152 @@
   cursor: not-allowed;
 }
 
-/* Track container */
-.track { 
-  display: flex; 
-  gap: 1.5rem; 
-  padding: 0.5rem clamp(1.5rem, 4vw, 3.5rem) 1.5rem; 
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+/* ── Track ────────────────────────────────────────────────────
+   GSAP owns the x-position; strip out every native-scroll
+   property so the browser never fights the animation.       */
+.track {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.5rem clamp(1.5rem, 4vw, 3.5rem) 1.5rem;
+  /* No overflow — section's overflow:hidden clips off-screen cards */
+  will-change: transform;
 }
 
-.track::-webkit-scrollbar { 
-  display: none; 
-}
-
-/* Course card */
-.card { 
-  flex: 0 0 320px; 
-  max-width: 85vw;
-  padding: 2.25rem 2rem; 
-  border: 1px solid var(--border); 
-  background: #FFFFFF; 
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; 
-  position: relative; 
-  overflow: hidden; 
-  border-radius: 8px; 
+/* ── Card ─────────────────────────────────────────────────── */
+.card {
+  flex: 0 0 320px;
+  padding: 2.25rem 2rem;
+  border: 1px solid var(--border);
+  background: #FFFFFF;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
 }
 
-.card::before { 
-  content: ''; 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  right: 0; 
-  height: 3px; 
-  background: var(--theme-primary, #DC143C); 
-  transform: scaleX(0); 
-  transform-origin: left; 
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--theme-primary, #DC143C);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card:hover { 
-  border-color: rgba(220, 20, 60, 0.35); 
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08); 
+.card:hover {
+  border-color: rgba(220, 20, 60, 0.35);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
   transform: translateY(-3px);
 }
 
-.card:hover::before { 
-  transform: scaleX(1); 
-}
+.card:hover::before { transform: scaleX(1); }
 
-.featured { 
-  border-color: rgba(220, 20, 60, 0.4); 
+.featured {
+  border-color: rgba(220, 20, 60, 0.4);
   background: linear-gradient(180deg, rgba(220, 20, 60, 0.02) 0%, #FFFFFF 100%);
 }
 
-.featured::before { 
-  transform: scaleX(1); 
+.featured::before { transform: scaleX(1); }
+
+.cardBadge {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--theme-primary, #DC143C);
+  margin-bottom: 1.1rem;
+  font-weight: 700;
 }
 
-.cardBadge { 
-  font-size: 0.62rem; 
-  letter-spacing: 0.14em; 
-  text-transform: uppercase; 
-  color: var(--theme-primary, #DC143C); 
-  margin-bottom: 1.1rem; 
-  font-weight: 700; 
+.cardTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--theme-text-heading, #111111);
+  margin-bottom: 0.6rem;
+  line-height: 1.25;
 }
 
-.cardTitle { 
-  font-family: var(--font-display, 'Cinzel', serif); 
-  font-size: 1.15rem; 
-  font-weight: 700; 
-  color: var(--theme-text-heading, #111111); 
-  margin-bottom: 0.6rem; 
-  line-height: 1.25; 
-}
-
-.cardDetail { 
-  font-size: 0.82rem; 
-  color: var(--theme-text-muted, #555555); 
-  line-height: 1.65; 
-  margin-bottom: 1.5rem; 
+.cardDetail {
+  font-size: 0.82rem;
+  color: var(--theme-text-muted, #555555);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
   flex-grow: 1;
 }
 
-.cardMeta { 
-  display: flex; 
-  gap: 1.25rem; 
-  flex-wrap: wrap; 
-  margin-bottom: 1.6rem; 
+.cardMeta {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.6rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.cardMetaItem { 
-  font-size: 0.72rem; 
-  color: var(--theme-text-subtle, #777777); 
+.cardMetaItem {
+  font-size: 0.72rem;
+  color: var(--theme-text-subtle, #777777);
 }
 
-.cardMetaItem strong { 
-  color: var(--theme-text-heading, #111111); 
-  display: block; 
+.cardMetaItem strong {
+  color: var(--theme-text-heading, #111111);
+  display: block;
   font-size: 0.82rem;
   margin-bottom: 0.1rem;
 }
 
-.enroll { 
-  font-size: 0.75rem; 
-  color: var(--theme-primary, #DC143C); 
-  letter-spacing: 0.05em; 
-  text-decoration: none; 
+.enroll {
+  font-size: 0.75rem;
+  color: var(--theme-primary, #DC143C);
+  letter-spacing: 0.05em;
+  text-decoration: none;
   text-transform: uppercase;
-  font-weight: 700; 
-  transition: opacity 0.2s, transform 0.2s; 
+  font-weight: 700;
+  transition: opacity 0.2s, transform 0.2s;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
 }
 
-.enroll:hover { 
-  opacity: 0.85; 
+.enroll:hover {
+  opacity: 0.85;
   transform: translateX(3px);
 }
 
-/* Mobile hint */
-.mobileHint {
-  display: none;
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--theme-text-subtle, #777777);
-  margin-top: 0.5rem;
-}
-
 /* ============================================================
-   RESPONSIVE DESIGN (Tablets & Mobile)
+   RESPONSIVE — layout tweaks only, GSAP behaviour unchanged
    ============================================================ */
 
-@media (max-width: 960px) { 
-  .section { 
-    min-height: auto;
-    height: auto;
-    padding: 3.5rem 0; 
-  } 
+@media (max-width: 960px) {
+  /* Keep min-height: 100vh so the pinned section fills the viewport */
+  .section {
+    padding: 3.5rem 0;
+  }
 
-  .header { 
-    padding: 0 1.5rem; 
+  .header {
+    padding: 0 1.5rem;
     margin-bottom: 1.5rem;
-  } 
+  }
 
-  .track { 
-    padding: 0.5rem 1.5rem 1.25rem; 
+  .track {
+    padding: 0.5rem 1.5rem 1.25rem;
     gap: 1rem;
-    scroll-snap-type: x mandatory;
-  } 
+  }
 
-  .card { 
-    flex: 0 0 280px; 
-    padding: 1.75rem 1.5rem; 
-    scroll-snap-align: start;
-  } 
-
-  .mobileHint {
-    display: block;
+  .card {
+    flex: 0 0 280px;
+    padding: 1.75rem 1.5rem;
   }
 }
 
 @media (max-width: 480px) {
   .card {
+    /* Roughly one card + a peek of the next */
     flex: 0 0 82vw;
   }
-
-  .navArrows {
-    display: none;
-  }
+  /* Keep arrows visible — they drive window.scrollBy on mobile */
 }
