@@ -15,72 +15,62 @@ const COURSES = [
 ]
 
 export default function Courses() {
-  const secRef = useRef<HTMLElement>(null)
+  const secRef  = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(true)
+  const [progress, setProgress] = useState(0)
 
-  const checkScroll = () => {
-    const el = trackRef.current
-    if (!el) return
-    setCanScrollLeft(el.scrollLeft > 10)
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10)
-  }
-
-  const scrollBy = (offset: number) => {
-    const el = trackRef.current
-    if (!el) return
-    el.scrollBy({ left: offset, behavior: 'smooth' })
-  }
-
-  useEffect(() => {
+  // GSAP maps horizontal px 1:1 to vertical scroll px (end = `+=${totalScroll}`),
+  // so scrolling one card-width vertically moves one card-width horizontally.
+  const scrollByCards = (dir: 1 | -1) => {
     const track = trackRef.current
-    if (track) {
-      track.addEventListener('scroll', checkScroll, { passive: true })
-      checkScroll()
-    }
-    return () => track?.removeEventListener('scroll', checkScroll)
-  }, [])
+    if (!track) return
+    const cardW = (track.querySelector('[data-c="card"]') as HTMLElement | null)
+      ?.offsetWidth ?? 300
+    window.scrollBy({ top: dir * cardW, behavior: 'smooth' })
+  }
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Desktop horizontal scroll pin (screens > 960px)
-      const mm = gsap.matchMedia()
+      const track   = trackRef.current
+      const section = secRef.current
+      if (!track || !section) return
 
-      mm.add('(min-width: 961px)', () => {
-        const track = trackRef.current
-        if (!track) return
-        const totalScroll = track.scrollWidth - window.innerWidth + 96
-        if (totalScroll > 0) {
-          gsap.to(track, {
-            x: -totalScroll,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: secRef.current,
-              start: 'top top',
-              end: () => `+=${totalScroll}`,
-              pin: true,
-              scrub: 1,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            }
-          })
-        }
-      })
+      // ── Horizontal scroll — ALL breakpoints (no matchMedia gate) ──────────
+      const totalScroll = track.scrollWidth - section.offsetWidth
 
-      // Cards appearance animation
+      if (totalScroll > 0) {
+        gsap.to(track, {
+          x: -totalScroll,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: section,
+            start: 'top top',
+            end: () => `+=${totalScroll}`,
+            pin: true,
+            scrub: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => setProgress(self.progress),
+          },
+        })
+      }
+
+      // ── Cards entrance ─────────────────────────────────────────────────────
       gsap.from('[data-c="card"]', {
         opacity: 0,
         y: 24,
         stagger: 0.08,
         duration: 0.55,
         ease: 'power3.out',
-        scrollTrigger: { trigger: secRef.current, start: 'top 80%' }
+        scrollTrigger: { trigger: section, start: 'top 80%' },
       })
     }, secRef)
 
     return () => ctx.revert()
   }, [])
+
+  const canScrollLeft  = progress > 0.02
+  const canScrollRight = progress < 0.98
 
   return (
     <section ref={secRef} className={s.section} data-courses-section>
@@ -91,32 +81,27 @@ export default function Courses() {
         </div>
 
         <div className={s.headerRight}>
-          {/* Scroll navigation arrows for touch & mobile */}
           <div className={s.navArrows}>
             <button
               type="button"
               className={`${s.arrowBtn} ${!canScrollLeft ? s.arrowDisabled : ''}`}
-              onClick={() => scrollBy(-280)}
+              onClick={() => scrollByCards(-1)}
               aria-label="Previous courses"
               disabled={!canScrollLeft}
-            >
-              ←
-            </button>
+            >←</button>
             <button
               type="button"
               className={`${s.arrowBtn} ${!canScrollRight ? s.arrowDisabled : ''}`}
-              onClick={() => scrollBy(280)}
+              onClick={() => scrollByCards(1)}
               aria-label="Next courses"
               disabled={!canScrollRight}
-            >
-              →
-            </button>
+            >→</button>
           </div>
-
           <Link to="/courses" className="btn-magnetic btn-ghost">All Courses →</Link>
         </div>
       </div>
 
+      {/* GSAP translates this element — no native overflow scroll */}
       <div ref={trackRef} className={s.track}>
         {COURSES.map(c => (
           <div key={c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
@@ -131,11 +116,6 @@ export default function Courses() {
             <Link to="/courses" className={s.enroll}>Enroll Now →</Link>
           </div>
         ))}
-      </div>
-
-      {/* Swipe indicator for mobile */}
-      <div className={s.mobileHint}>
-        <span>← Swipe to explore all courses ({COURSES.length}) →</span>
       </div>
     </section>
   )
