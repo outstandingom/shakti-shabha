@@ -1,23 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { Maximize2, Minimize2 } from 'lucide-react'
 import s from './PageLayout.module.css'
 import cp from './CounsellingPage.module.css'
 
-interface ServiceItem {
+interface ServiceWheelItem {
   icon: string
   title: string
   desc: string
   actionText: string
   actionLink: string
+  tags: string[]
+  image: string
 }
 
-const SERVICES: ServiceItem[] = [
+const WHEEL_SERVICES: ServiceWheelItem[] = [
   {
     icon: '🧠',
     title: 'Psychological Empowerment',
     desc: 'Mental wellbeing aur emotional growth ke liye expert guidance. Apne aap ko samjho, apni strength pehchano.',
     actionText: 'Jaanein Aur →',
     actionLink: '#book-session',
+    tags: ['Mental Health', 'Empowerment', 'Shakti Bhawah'],
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800',
   },
   {
     icon: '💬',
@@ -25,6 +30,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Professional counsellors ke saath apni journey mein support paao. Ek safe space — sirf tumhare liye.',
     actionText: 'Jaanein Aur →',
     actionLink: '#book-session',
+    tags: ['Safe Space', 'Confidential', 'Therapy'],
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800',
   },
   {
     icon: '🎓',
@@ -32,6 +39,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Live interactive sessions — women empowerment, mental health, career growth par expert speakers ke saath.',
     actionText: 'Jaanein Aur →',
     actionLink: '/events',
+    tags: ['Live Sessions', 'Workshops', 'Growth'],
+    image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800',
   },
   {
     icon: '👥',
@@ -39,6 +48,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Like-minded Indian women ka ek judgment-free space. Share karo, suno, aur ek doosre se seekho.',
     actionText: 'Jaanein Aur →',
     actionLink: '/sahyog',
+    tags: ['Sisterhood', 'Solidarity', 'Sahyog'],
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800',
   },
   {
     icon: '📚',
@@ -46,6 +57,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Women empowerment, Indian history, aur psychological wellness par comprehensive self-paced courses.',
     actionText: 'Jaanein Aur →',
     actionLink: '/courses',
+    tags: ['LMS', 'History', 'Self-Paced'],
+    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800',
   },
   {
     icon: '🌿',
@@ -53,6 +66,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Holistic wellness — physical, mental, aur spiritual. Balanced life ke liye practical guidance.',
     actionText: 'Jaanein Aur →',
     actionLink: '#book-session',
+    tags: ['Holistic', 'Mindfulness', 'Wellness'],
+    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800',
   },
   {
     icon: '⚔️',
@@ -60,6 +75,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Social change ke liye ek platform. Campaigns, petitions, aur collective action — milke awaaz uthao.',
     actionText: 'Jaanein Aur →',
     actionLink: '/aaryaveera',
+    tags: ['Mardini', 'Aaryaveera', 'Action'],
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=800',
   },
   {
     icon: '🎙️',
@@ -67,6 +84,8 @@ const SERVICES: ServiceItem[] = [
     desc: 'Inspiring conversations, historical investigations, aur motivational content — on-the-go sunte rehno.',
     actionText: 'Jaanein Aur →',
     actionLink: '/aaryaveera',
+    tags: ['Shakti Varta', 'Podcasts', 'Audio'],
+    image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800',
   },
   {
     icon: '⭐',
@@ -74,15 +93,126 @@ const SERVICES: ServiceItem[] = [
     desc: 'Unki kahaniyaan jo Shakti Sabha ke saath badli hain. Real stories, real transformation.',
     actionText: 'Padhein →',
     actionLink: '/about',
+    tags: ['Real Stories', 'Transformation', 'About'],
+    image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=800',
   },
 ]
 
 export default function CounsellingPage() {
   const [formDone, setFormDone] = useState(false)
+  const [activeCardIndex, setActiveCardIndex] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  const totalCards = WHEEL_SERVICES.length
+  const SPREAD_X = 0.16
+  const SPREAD_Y = 0.28
+  const ROTATE = 4
+  const SKEW = -2
+  const SCALE_MIN = 0.7
+
+  const updateScroll = useCallback(() => {
+    const container = scrollContainerRef.current
+    if (!container || totalCards === 0) return
+
+    const rect = container.getBoundingClientRect()
+    const totalScrollable = container.offsetHeight - window.innerHeight
+    if (totalScrollable <= 0) return
+
+    const scrolled = Math.max(0, -rect.top)
+    const progress = Math.min(1, scrolled / totalScrollable)
+    const current = progress * (totalCards - 1)
+
+    cardRefs.current.forEach((card, index) => {
+      if (!card) return
+      const offset = index - current
+      const absOffset = Math.abs(offset)
+      const spreadX = -offset * window.innerWidth * SPREAD_X
+      const spreadY = offset * window.innerHeight * SPREAD_Y
+      const rotateZ = offset * ROTATE
+      const skewY = offset * SKEW
+      const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
+
+      if (absOffset > 2.2) {
+        card.style.opacity = '0'
+        card.style.pointerEvents = 'none'
+        return
+      }
+
+      const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
+      card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
+      card.style.transform = `
+        translate3d(${spreadX}px, ${spreadY}px, 0)
+        rotate(${rotateZ}deg)
+        skewY(${skewY}deg)
+        scale(${scale})
+      `
+      card.style.opacity = String(opacity)
+      card.style.zIndex = String(Math.round(100 - absOffset * 20))
+
+      if (absOffset < 0.5) {
+        setActiveCardIndex(index)
+      }
+    })
+  }, [totalCards])
+
+  useEffect(() => {
+    let ticking = false
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', updateScroll)
+    updateScroll()
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', updateScroll)
+    }
+  }, [updateScroll])
+
+  // Scroll directly to a specific card when dot indicator is clicked
+  const scrollToCard = (index: number) => {
+    const container = scrollContainerRef.current
+    if (!container) return
+    const rect = container.getBoundingClientRect()
+    const containerTop = window.scrollY + rect.top
+    const totalScrollable = container.offsetHeight - window.innerHeight
+    const targetScroll = containerTop + (index / (totalCards - 1)) * totalScrollable
+
+    window.scrollTo({
+      top: targetScroll,
+      behavior: 'smooth',
+    })
+  }
+
+  // Fullscreen toggle handler
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {})
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {})
+    }
+  }
+
+  useEffect(() => {
+    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener('fullscreenchange', onFsChange)
+    return () => document.removeEventListener('fullscreenchange', onFsChange)
+  }, [])
 
   return (
-    <main className={s.page}>
-      {/* Hero Banner */}
+    <main className={cp.page}>
+      {/* ── Hero Banner ── */}
       <div className={cp.hero}>
         <div className={cp.heroInner}>
           <Link to="/" className={cp.backLink}>← Back to Home</Link>
@@ -96,45 +226,92 @@ export default function CounsellingPage() {
         </div>
       </div>
 
-      {/* Main Section */}
-      <div className={s.section}>
+      {/* ── Section Title ── */}
+      <div className={cp.introBar}>
+        <span className={cp.introEyebrow}>Comprehensive Support Architecture</span>
+        <h2 className={cp.introHeading}>Shakti Sabha Mein Kya Milega</h2>
+        <p className={cp.introSubtext}>
+          Scroll through our 3D interactive support wheel below to explore each dedicated service.
+        </p>
+      </div>
 
-        <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto' }}>
-          <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#3D5A45', fontWeight: 700, textTransform: 'uppercase' }}>
-            Comprehensive Support Architecture
-          </span>
-          <h2 className={s.sectionTitle} style={{ marginTop: '0.35rem', display: 'inline-block' }}>
-            Shakti Sabha Mein Kya Milega
-          </h2>
-          <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.6, marginTop: '0.5rem' }}>
-            Mental health aur emotional growth se lekar community connection aur legal literacy tak — har kadam par hum tumhare saath hain.
-          </p>
-        </div>
+      {/* ── Fixed Right-Side Indicator Dots ── */}
+      <div className={cp.indicator} aria-label="Timeline navigation">
+        {WHEEL_SERVICES.map((_, idx) => (
+          <div
+            key={idx}
+            className={`${cp.dot} ${activeCardIndex === idx ? cp.dotActive : ''}`}
+            onClick={() => scrollToCard(idx)}
+            title={WHEEL_SERVICES[idx].title}
+          />
+        ))}
+      </div>
 
-        {/* 9 Services Grid */}
-        <div className={cp.servicesGrid}>
-          {SERVICES.map((srv, idx) => (
-            <div key={idx} className={cp.serviceCard}>
-              <div>
-                <div className={cp.serviceIcon}>{srv.icon}</div>
-                <h3 className={cp.serviceTitle}>{srv.title}</h3>
-                <p className={cp.serviceDesc}>{srv.desc}</p>
+      {/* ── 3D Card Wheel Section (#2 Accordéon asymétrique) ── */}
+      <section className={cp.scrollContainer} ref={scrollContainerRef}>
+        <div className={cp.wheelWrapper}>
+          {WHEEL_SERVICES.map((item, idx) => (
+            <div
+              key={idx}
+              className={cp.card}
+              data-index={idx}
+              ref={(el) => {
+                cardRefs.current[idx] = el
+              }}
+            >
+              <div className={cp.cardInner}>
+                {/* Left: Phone Mockup Frame */}
+                <div className={cp.cardImage}>
+                  <div className={cp.phoneMockup}>
+                    <div className={cp.phoneScreen}>
+                      <img src={item.image} alt={item.title} loading="lazy" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right: Card Content */}
+                <div className={cp.cardContent}>
+                  <div className={cp.cardIcon}>{item.icon}</div>
+                  <h2>{item.title}</h2>
+                  <p>{item.desc}</p>
+
+                  {item.actionLink.startsWith('#') ? (
+                    <a href={item.actionLink} className={cp.cardActionBtn}>
+                      <span>{item.actionText}</span>
+                    </a>
+                  ) : (
+                    <Link to={item.actionLink} className={cp.cardActionBtn}>
+                      <span>{item.actionText}</span>
+                    </Link>
+                  )}
+
+                  <div className={cp.tags}>
+                    {item.tags.map((tag, tIdx) => (
+                      <span key={tIdx} className={cp.tag}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </div>
-
-              {srv.actionLink.startsWith('#') ? (
-                <a href={srv.actionLink} className={cp.serviceLink}>
-                  {srv.actionText}
-                </a>
-              ) : (
-                <Link to={srv.actionLink} className={cp.serviceLink}>
-                  {srv.actionText}
-                </Link>
-              )}
             </div>
           ))}
         </div>
+      </section>
 
-        {/* Confidential Intake Form */}
+      {/* ── Fullscreen Toggle Button ── */}
+      <button
+        type="button"
+        className={cp.fullscreenBtn}
+        onClick={toggleFullscreen}
+        aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+        title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+      >
+        {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+      </button>
+
+      {/* ── Confidential Intake Booking Box (Preserved) ── */}
+      <div className={s.section}>
         <div id="book-session" className={cp.bookingBox}>
           <div className={cp.bookingGrid}>
             <div>
@@ -204,7 +381,6 @@ export default function CounsellingPage() {
             </div>
           </div>
         </div>
-
       </div>
     </main>
   )
