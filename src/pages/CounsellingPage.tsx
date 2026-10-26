@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Maximize2, Minimize2 } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './PageLayout.module.css'
 import cp from './CounsellingPage.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 interface ServiceWheelItem {
   icon: string
@@ -102,9 +106,12 @@ export default function CounsellingPage() {
   const [formDone, setFormDone] = useState(false)
   const [activeCardIndex, setActiveCardIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isWheelActive, setIsWheelActive] = useState(false)
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+  const wheelWrapperRef = useRef<HTMLDivElement>(null)
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const triggerRef = useRef<ScrollTrigger | null>(null)
 
   const totalCards = WHEEL_SERVICES.length
   const SPREAD_X = 0.16
@@ -113,81 +120,86 @@ export default function CounsellingPage() {
   const SKEW = -2
   const SCALE_MIN = 0.7
 
-  const updateScroll = useCallback(() => {
-    const container = scrollContainerRef.current
-    if (!container || totalCards === 0) return
-
-    const rect = container.getBoundingClientRect()
-    const totalScrollable = container.offsetHeight - window.innerHeight
-    if (totalScrollable <= 0) return
-
-    const scrolled = Math.max(0, -rect.top)
-    const progress = Math.min(1, scrolled / totalScrollable)
-    const current = progress * (totalCards - 1)
-
-    cardRefs.current.forEach((card, index) => {
-      if (!card) return
-      const offset = index - current
-      const absOffset = Math.abs(offset)
-      const spreadX = -offset * window.innerWidth * SPREAD_X
-      const spreadY = offset * window.innerHeight * SPREAD_Y
-      const rotateZ = offset * ROTATE
-      const skewY = offset * SKEW
-      const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
-
-      if (absOffset > 2.2) {
-        card.style.opacity = '0'
-        card.style.pointerEvents = 'none'
-        return
-      }
-
-      const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
-      card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
-      card.style.transform = `
-        translate3d(${spreadX}px, ${spreadY}px, 0)
-        rotate(${rotateZ}deg)
-        skewY(${skewY}deg)
-        scale(${scale})
-      `
-      card.style.opacity = String(opacity)
-      card.style.zIndex = String(Math.round(100 - absOffset * 20))
-
-      if (absOffset < 0.5) {
-        setActiveCardIndex(index)
-      }
-    })
-  }, [totalCards])
-
   useEffect(() => {
-    let ticking = false
-    const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          updateScroll()
-          ticking = false
-        })
-        ticking = true
-      }
+    const section = sectionRef.current
+    const wrapper = wheelWrapperRef.current
+    if (!section || !wrapper || totalCards === 0) return
+
+    const updateCards = (progress: number) => {
+      const current = progress * (totalCards - 1)
+      const activeIdx = Math.min(totalCards - 1, Math.max(0, Math.round(current)))
+      setActiveCardIndex(activeIdx)
+
+      cardRefs.current.forEach((card, index) => {
+        if (!card) return
+        const offset = index - current
+        const absOffset = Math.abs(offset)
+        const spreadX = -offset * window.innerWidth * SPREAD_X
+        const spreadY = offset * window.innerHeight * SPREAD_Y
+        const rotateZ = offset * ROTATE
+        const skewY = offset * SKEW
+        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
+
+        if (absOffset > 2.2) {
+          card.style.opacity = '0'
+          card.style.pointerEvents = 'none'
+          return
+        }
+
+        const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
+        card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
+        card.style.transform = `
+          translate3d(${spreadX}px, ${spreadY}px, 0)
+          rotate(${rotateZ}deg)
+          skewY(${skewY}deg)
+          scale(${scale})
+        `
+        card.style.opacity = String(opacity)
+        card.style.zIndex = String(Math.round(100 - absOffset * 20))
+      })
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', updateScroll)
-    updateScroll()
+    // Initialize cards on load
+    updateCards(0)
+
+    // Calculate total pinning scroll distance
+    const pinDistance = window.innerHeight * (totalCards - 1) * 0.85
+
+    const ctx = gsap.context(() => {
+      const st = ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: () => `+=${pinDistance}`,
+        pin: wrapper,
+        pinSpacing: true,
+        anticipatePin: 1,
+        scrub: 0.2,
+        onToggle: (self) => {
+          setIsWheelActive(self.isActive)
+        },
+        onUpdate: (self) => {
+          updateCards(self.progress)
+        },
+      })
+      triggerRef.current = st
+    }, section)
+
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 150)
 
     return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', updateScroll)
+      clearTimeout(timer)
+      ctx.revert()
+      triggerRef.current = null
     }
-  }, [updateScroll])
+  }, [totalCards])
 
   // Scroll directly to a specific card when dot indicator is clicked
   const scrollToCard = (index: number) => {
-    const container = scrollContainerRef.current
-    if (!container) return
-    const rect = container.getBoundingClientRect()
-    const containerTop = window.scrollY + rect.top
-    const totalScrollable = container.offsetHeight - window.innerHeight
-    const targetScroll = containerTop + (index / (totalCards - 1)) * totalScrollable
+    const st = triggerRef.current
+    if (!st) return
+    const targetScroll = st.start + (index / (totalCards - 1)) * (st.end - st.start)
 
     window.scrollTo({
       top: targetScroll,
@@ -236,7 +248,10 @@ export default function CounsellingPage() {
       </div>
 
       {/* ── Fixed Right-Side Indicator Dots ── */}
-      <div className={cp.indicator} aria-label="Timeline navigation">
+      <div
+        className={`${cp.indicator} ${isWheelActive ? '' : cp.indicatorHidden}`}
+        aria-label="Timeline navigation"
+      >
         {WHEEL_SERVICES.map((_, idx) => (
           <div
             key={idx}
@@ -248,8 +263,8 @@ export default function CounsellingPage() {
       </div>
 
       {/* ── 3D Card Wheel Section (#2 Accordéon asymétrique) ── */}
-      <section className={cp.scrollContainer} ref={scrollContainerRef}>
-        <div className={cp.wheelWrapper}>
+      <section className={cp.scrollContainer} ref={sectionRef}>
+        <div className={cp.wheelWrapper} ref={wheelWrapperRef}>
           {WHEEL_SERVICES.map((item, idx) => (
             <div
               key={idx}
