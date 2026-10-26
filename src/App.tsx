@@ -14,6 +14,8 @@ import CoursesPage from './pages/CoursesPage'
 import HistoryPage from './pages/HistoryPage'
 import BrandPage from './pages/BrandPage'
 import AboutPage from './pages/AboutPage'
+import CaseStudyPage from './pages/CaseStudyPage'
+import ResearchPage from './pages/ResearchPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -72,6 +74,8 @@ function LenisProvider() {
         <Route path="/sahyog"              element={<SahyogPage />} />
         <Route path="/courses"             element={<CoursesPage />} />
         <Route path="/history"             element={<HistoryPage />} />
+        <Route path="/case-study"          element={<CaseStudyPage />} />
+        <Route path="/research"            element={<ResearchPage />} />
         <Route path="/brand"               element={<BrandPage />} />
         <Route path="/about"               element={<AboutPage />} />
         <Route path="/peace-and-revolution" element={<AboutPage />} />

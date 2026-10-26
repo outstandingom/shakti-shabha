@@ -12,6 +12,8 @@ const LINKS = [
   { label: 'Courses', to: '/courses' },
   { label: 'Sahyog', to: '/sahyog' },
   { label: 'History', to: '/history' },
+  { label: 'Case Studies', to: '/case-study' },
+  { label: 'Thought-Lab', to: '/research' },
 ]
 
 export default function Navigation() {

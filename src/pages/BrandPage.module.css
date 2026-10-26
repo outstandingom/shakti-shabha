@@ -1,0 +1,868 @@
+/* ============================================================
+   BrandPage — Light/Minimal Theme, Dark Hero
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  background: #FFFFFF;
+  color: #111111;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  padding-top: 5.5rem;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(145deg, #0A0A0B 0%, #1A1006 55%, #0F0F12 100%);
+  padding: clamp(4rem, 7vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.2);
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 70% at 90% 50%, rgba(201,169,110,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.heroHindi {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.1rem;
+  color: rgba(201, 169, 110, 0.75);
+  margin-bottom: 1rem;
+}
+
+.heroDesc {
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 58ch;
+  line-height: 1.8;
+}
+
+/* ── SHARED SECTION ───────────────────────────────────────── */
+.section {
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  background: #FFFFFF;
+}
+
+.sectionAlt {
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  background: #F8F8F8;
+}
+
+.sectionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.sectionEyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #DC143C;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: #DC143C;
+  border-radius: 9999px;
+}
+
+.sectionDesc {
+  font-size: 0.92rem;
+  color: #666666;
+  max-width: 60ch;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+/* ── COLOUR PALETTE ───────────────────────────────────────── */
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
+  align-items: end;
+}
+
+.swatch {
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: default;
+}
+
+.swatch:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.swatchTop {
+  height: clamp(80px, 12vw, 140px);
+}
+
+.swatchBody {
+  padding: 1rem 1.1rem;
+  background: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.swatchHex {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.swatchAlt {
+  font-size: 0.72rem;
+  opacity: 0.65;
+  font-family: monospace;
+}
+
+.swatchName {
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  opacity: 0.9;
+}
+
+.swatchRole {
+  font-size: 0.68rem;
+  opacity: 0.6;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── TYPOGRAPHY ───────────────────────────────────────────── */
+.typeGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.typeBlock {
+  background: #FFFFFF;
+  border: 1px solid #EEEEEE;
+  border-radius: 14px;
+  padding: 2.25rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.typeBlock:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.07);
+}
+
+.typeLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #DC143C;
+  margin-bottom: 0.25rem;
+}
+
+.typeUsage {
+  font-size: 0.8rem;
+  color: #888888;
+  margin-bottom: 1.25rem;
+}
+
+.typeSample {
+  margin-bottom: 1.25rem;
+}
+
+.typeMeta {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.75rem;
+  color: #999999;
+  border-top: 1px solid #F0F0F0;
+  padding-top: 0.75rem;
+}
+
+/* ── DESIGN TOKENS ────────────────────────────────────────── */
+.tokensRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.tokenCard {
+  background: #FAFAFA;
+  border: 1px solid #EEEEEE;
+  border-radius: 14px;
+  padding: 1.75rem;
+}
+
+.tokenCardTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 1.25rem;
+}
+
+/* Radii */
+.radiiRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.radiusItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.radiusBox {
+  width: 44px;
+  height: 44px;
+  background: #DC143C;
+  opacity: 0.8;
+}
+
+.radiusLabel {
+  font-size: 0.7rem;
+  font-family: monospace;
+  color: #333333;
+  font-weight: 600;
+}
+
+.radiusDesc {
+  font-size: 0.65rem;
+  color: #999999;
+  text-align: center;
+}
+
+/* Spacing */
+.spacingRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.spacingItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.spacingBar {
+  height: 12px;
+  background: linear-gradient(90deg, #DC143C, rgba(220,20,60,0.4));
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.spacingLabel {
+  font-size: 0.68rem;
+  font-family: monospace;
+  color: #555555;
+  white-space: nowrap;
+}
+
+/* Button showcase */
+.btnShowcase {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btnSolid {
+  padding: 0.65rem 1.5rem;
+  background: #DC143C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btnSolid:hover {
+  transform: scale(1.02);
+  background: #B01030;
+  box-shadow: 0 8px 20px rgba(220,20,60,0.3);
+}
+
+.btnOutline {
+  padding: 0.65rem 1.5rem;
+  background: transparent;
+  color: #DC143C;
+  border: 1.5px solid #DC143C;
+  border-radius: 9999px;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btnOutline:hover {
+  background: rgba(220, 20, 60, 0.06);
+  transform: scale(1.02);
+}
+
+.btnGhost {
+  padding: 0.65rem 1.5rem;
+  background: transparent;
+  color: #555555;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.25s;
+}
+
+.btnGhost:hover {
+  color: #111111;
+}
+
+.btnGold {
+  padding: 0.65rem 1.5rem;
+  background: #C9A96E;
+  color: #0A0A0B;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.btnGold:hover {
+  transform: scale(1.02);
+  background: #E8C98A;
+  box-shadow: 0 8px 20px rgba(201,169,110,0.4);
+}
+
+/* ── LOGO REQUIREMENTS ────────────────────────────────────── */
+.logoLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+}
+
+.logoSubHead {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111111;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.25rem;
+}
+
+.logoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #EEEEEE;
+  margin-bottom: 0.75rem;
+  background: #FFFFFF;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.logoRow:hover {
+  border-color: #DC143C;
+  transform: translateX(4px);
+}
+
+.logoCheck {
+  color: #3D5A45;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.logoItem {
+  display: block;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.2rem;
+}
+
+.logoSpec {
+  display: block;
+  font-size: 0.75rem;
+  color: #777777;
+  line-height: 1.55;
+}
+
+.formatsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.formatBadge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.3rem 0.85rem;
+  background: rgba(220,20,60,0.06);
+  color: #DC143C;
+  border: 1px solid rgba(220,20,60,0.2);
+  border-radius: 9999px;
+}
+
+.logoPlaceholder {
+  border: 2px dashed #E0E0E0;
+  border-radius: 14px;
+  padding: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FAFAFA;
+}
+
+.logoPlaceholderInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.placeholderFlame {
+  font-size: 3rem;
+}
+
+.placeholderText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* ── AARYAVEERA SUB-BRAND ─────────────────────────────────── */
+.aaryaveeraSection {
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  background: #0A0A0B;
+}
+
+.aaryaveeraCard {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 4rem;
+  align-items: center;
+  background: #1A1A1E;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 20px;
+  padding: 3rem;
+}
+
+.aaryaveeraLeft {}
+
+.aaryaveeraEyebrow {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.aaryaveeraTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 900;
+  color: #E8C98A;
+  margin-bottom: 0.25rem;
+}
+
+.aaryaveeraHindi {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1rem;
+  color: rgba(201, 169, 110, 0.6);
+  margin-bottom: 1.25rem;
+}
+
+.aaryaveeraDesc {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+  margin-bottom: 1.75rem;
+  max-width: 55ch;
+}
+
+.aaryaveeraColors {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.aColorChip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.65rem 1rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.72rem;
+  font-weight: 600;
+  min-width: 90px;
+}
+
+.aColorChip span:first-child {
+  font-family: monospace;
+  font-size: 0.68rem;
+  opacity: 0.8;
+}
+
+.aColorChip span:last-child {
+  font-weight: 700;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.aaryaveeraRight {
+  display: flex;
+  justify-content: center;
+}
+
+.warriorEmblemFrame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(201, 169, 110, 0.06);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 16px;
+  padding: 2.5rem;
+  transition: box-shadow 0.4s;
+}
+
+.warriorEmblemFrame:hover {
+  box-shadow: 0 0 40px rgba(201, 169, 110, 0.25);
+}
+
+.emblemCaption {
+  font-size: 0.72rem;
+  color: rgba(201, 169, 110, 0.6);
+  text-align: center;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── INTERACTION GUIDELINES ───────────────────────────────── */
+.interactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.interactCard {
+  background: #FAFAFA;
+  border: 1px solid #EEEEEE;
+  border-radius: 14px;
+  padding: 1.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  transition: box-shadow 0.3s;
+}
+
+.interactCard:hover {
+  box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+}
+
+.interactDemo {
+  width: 110px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Demo elements */
+.demoCard {
+  width: 88px;
+  height: 60px;
+  background: #FFFFFF;
+  border: 1px solid #DDDDDD;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: #777777;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.demoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+}
+
+.demoCardLabel {
+  font-size: 0.62rem;
+}
+
+.demoBtn {
+  padding: 0.55rem 1rem;
+  background: #DC143C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.demoBtn:hover {
+  transform: scale(1.02);
+  background: #B01030;
+  box-shadow: 0 6px 16px rgba(220,20,60,0.35);
+}
+
+.demoImg {
+  width: 88px;
+  height: 60px;
+  background: linear-gradient(135deg, #DC143C, #111111);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.demoImgOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(201, 169, 110, 0.3);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.demoImg:hover .demoImgOverlay {
+  opacity: 1;
+}
+
+.demoImgLabel {
+  position: relative;
+  z-index: 1;
+  font-size: 0.6rem;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.demoBadge {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #C9A96E;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: box-shadow 0.3s;
+}
+
+.demoBadge:hover {
+  box-shadow: 0 0 20px rgba(201, 169, 110, 0.5), 0 0 40px rgba(201, 169, 110, 0.2);
+}
+
+.interactContent {
+  flex-grow: 1;
+}
+
+.interactTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.4rem;
+}
+
+.interactRule {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-family: monospace;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.06);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+}
+
+.interactDesc {
+  font-size: 0.82rem;
+  color: #555555;
+  line-height: 1.7;
+}
+
+/* ── FOOTER CTA ───────────────────────────────────────────── */
+.footerCta {
+  background: linear-gradient(135deg, #0A0A0B 0%, #1A1006 100%);
+  border-top: 1px solid rgba(201, 169, 110, 0.2);
+  padding: clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.footerCtaInner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.footerCtaTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #E8C98A;
+  margin-bottom: 0.75rem;
+}
+
+.footerCtaDesc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.footerCtaBtns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .paletteGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tokensRow {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .aaryaveeraCard {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .aaryaveeraRight {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .paletteGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tokensRow {
+    grid-template-columns: 1fr;
+  }
+
+  .logoLayout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .interactGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .paletteGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,560 @@
+/* ============================================================
+   AboutPage — Light Theme, Crimson Hero
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  background: #FFFFFF;
+  color: #111111;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  padding-top: 5.5rem;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(145deg, #A80E2D 0%, #DC143C 55%, #B01030 100%);
+  padding: clamp(4rem, 7vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(255,255,255,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.15;
+  margin-bottom: 0.6rem;
+  max-width: 22ch;
+}
+
+.heroHindi {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 1rem;
+}
+
+.heroDesc {
+  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.88);
+  max-width: 58ch;
+  line-height: 1.8;
+}
+
+/* ── SHARED SECTION ───────────────────────────────────────── */
+.sectionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+}
+
+.sectionEyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #DC143C;
+  margin-bottom: 0.4rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 2.5rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: #DC143C;
+  border-radius: 9999px;
+}
+
+/* ── THREE PILLARS ────────────────────────────────────────── */
+.pillarsSection {
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  background: #FAFAFA;
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.pillarCard {
+  background: #FFFFFF;
+  border: 1px solid var(--pl-border, rgba(0,0,0,0.1));
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pillarCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.09);
+}
+
+.pillarAccentBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.pillarHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+}
+
+.pillarIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.pillarBadge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  text-align: right;
+  line-height: 1.4;
+}
+
+.pillarName {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.2rem;
+}
+
+.pillarDev {
+  display: block;
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.9rem;
+  color: #888888;
+  margin-bottom: 1rem;
+}
+
+.pillarDesc {
+  font-size: 0.88rem;
+  color: #444444;
+  line-height: 1.78;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.pillarList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pillarItem {
+  font-size: 0.8rem;
+  color: #555555;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pillarDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── MISSION QUOTE ────────────────────────────────────────── */
+.quoteSection {
+  background: linear-gradient(135deg, #0A0A0B 0%, #1A0808 100%);
+  padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.quoteInner {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.quoteDecor {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(4rem, 8vw, 7rem);
+  color: rgba(220, 20, 60, 0.25);
+  line-height: 0.7;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.quoteText {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.5;
+  font-style: normal;
+  margin-bottom: 1.25rem;
+}
+
+.quoteAttrib {
+  font-size: 0.85rem;
+  color: #DC143C;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── TIMELINE ─────────────────────────────────────────────── */
+.timelineSection {
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  background: #FFFFFF;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timelineItem {
+  display: grid;
+  grid-template-columns: 90px 40px 1fr;
+  gap: 0 0.75rem;
+  align-items: flex-start;
+}
+
+.timelineLeft {
+  text-align: right;
+  padding-top: 0.1rem;
+}
+
+.timelineYear {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #DC143C;
+}
+
+.timelineConnector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 0.2rem;
+}
+
+.timelineDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #DC143C;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 0 2px #DC143C;
+  flex-shrink: 0;
+}
+
+.timelineLine {
+  width: 2px;
+  flex-grow: 1;
+  background: linear-gradient(to bottom, #DC143C, rgba(220,20,60,0.2));
+  min-height: 3rem;
+  margin: 4px 0;
+}
+
+.timelineRight {
+  padding-bottom: 2.5rem;
+}
+
+.timelineTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.3rem;
+}
+
+.timelineDesc {
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.7;
+}
+
+/* ── VALUES ───────────────────────────────────────────────── */
+.valuesSection {
+  background: #F8F8F8;
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.valueCard {
+  background: #FFFFFF;
+  border: 1px solid #EEEEEE;
+  border-radius: 12px;
+  padding: 2rem;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.valueCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.07);
+}
+
+.valueIcon {
+  display: block;
+  font-size: 1.75rem;
+  margin-bottom: 0.9rem;
+}
+
+.valueName {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.2rem;
+}
+
+.valueDev {
+  display: block;
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.85rem;
+  color: #DC143C;
+  margin-bottom: 0.75rem;
+}
+
+.valueDesc {
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.72;
+}
+
+/* ── TEAM ─────────────────────────────────────────────────── */
+.teamSection {
+  background: #FFFFFF;
+  padding: clamp(3.5rem, 6vw, 6rem) 0;
+  border-top: 1px solid #F0F0F0;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.teamCard {
+  background: #FAFAFA;
+  border: 1px solid #EEEEEE;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.teamCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.07);
+}
+
+.teamAvatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DC143C, #9A0F28);
+  color: #FFFFFF;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.teamName {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.3rem;
+}
+
+.teamTitle {
+  font-size: 0.78rem;
+  color: #777777;
+  line-height: 1.5;
+}
+
+/* ── CTA ──────────────────────────────────────────────────── */
+.ctaSection {
+  background: linear-gradient(135deg, #A80E2D 0%, #DC143C 100%);
+  padding: clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+  text-align: center;
+}
+
+.ctaInner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.75rem;
+}
+
+.ctaDesc {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2rem;
+  line-height: 1.7;
+}
+
+.ctaBtns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaPrimary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 2.5rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #DC143C;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.ctaPrimary:hover {
+  background: transparent;
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+}
+
+.ctaOutline {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.85rem 2.5rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.ctaOutline:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-2px);
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .teamGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .teamGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .timelineItem {
+    grid-template-columns: 70px 32px 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .teamGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .timelineItem {
+    grid-template-columns: 55px 28px 1fr;
+  }
+}

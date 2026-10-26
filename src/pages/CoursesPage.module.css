@@ -1,0 +1,423 @@
+.hero {
+  background: linear-gradient(150deg, #0A0A0B 0%, #17120C 50%, #0F0E0B 100%);
+  padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+  color: #FFFFFF;
+  position: relative;
+  border-bottom: 1px solid rgba(201, 169, 110, 0.25);
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  font-family: var(--ff-body, 'Outfit', sans-serif);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #E8C98A;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-weight: 700;
+  color: #E8C98A;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.hindiSubtitle {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.2rem;
+  color: #C9A96E;
+  margin-bottom: 1rem;
+}
+
+.desc {
+  font-size: clamp(0.95rem, 1.25vw, 1.12rem);
+  color: rgba(255, 255, 255, 0.75);
+  max-width: 65ch;
+  line-height: 1.75;
+}
+
+/* Featured Certification Banner */
+.certBox {
+  margin-top: 3.5rem;
+  background: linear-gradient(135deg, #141316 0%, #1F1A12 50%, #161512 100%);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  border-radius: 18px;
+  padding: clamp(2rem, 4vw, 3.5rem);
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.45);
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.certHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.certTag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  background: rgba(201, 169, 110, 0.15);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(201, 169, 110, 0.3);
+}
+
+.certTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.certDesc {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.syllabusList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.syllabusItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.checkIcon {
+  color: #C9A96E;
+  font-weight: bold;
+}
+
+.certCardRight {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 14px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.certBadgeImg {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, #D4AF37 0%, #8A6822 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.75rem;
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+}
+
+.certPrice {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  font-family: var(--font-display, 'Cinzel', serif);
+}
+
+.certPeriod {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1.5rem;
+}
+
+/* Course Grid */
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.courseCard {
+  border: 1px solid var(--border, #E5E7EB);
+  border-radius: 14px;
+  overflow: hidden;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.courseCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.courseImg {
+  height: 180px;
+  background: #F3F4F6;
+  position: relative;
+  overflow: hidden;
+}
+
+.courseImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.courseCard:hover .courseImg img {
+  transform: scale(1.05);
+}
+
+.drmBadge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.courseBody {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+.courseCategory {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #DC143C;
+}
+
+.courseTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.courseMeta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.82rem;
+  color: #6B7280;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.courseDesc {
+  font-size: 0.88rem;
+  color: #4B5563;
+  line-height: 1.6;
+}
+
+.courseFooter {
+  padding: 1.25rem 1.75rem;
+  background: #F9FAFB;
+  border-top: 1px solid var(--border, #F3F4F6);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.coursePrice {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.enrollBtn {
+  background: #111827;
+  color: #FFFFFF;
+  border: none;
+  padding: 0.6rem 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.enrollBtn:hover {
+  background: #DC143C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.3);
+}
+
+/* LMS Tech Specs */
+.techSpecsSection {
+  margin-top: 5rem;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: clamp(2rem, 4vw, 3.5rem);
+}
+
+.specsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.specCard {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.specIcon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.specTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.35rem;
+}
+
+.specText {
+  font-size: 0.8rem;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* Merchandise Line */
+.storeSection {
+  margin-top: 5rem;
+}
+
+.storeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: 1.75rem;
+  margin-top: 2rem;
+}
+
+.storeCard {
+  border: 1px solid var(--border, #E5E7EB);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #FFFFFF;
+  transition: transform 0.3s ease;
+}
+
+.storeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.storeImg {
+  height: 220px;
+  background: #F3F4F6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem;
+}
+
+.storeInfo {
+  padding: 1.25rem;
+}
+
+.storeTitle {
+  font-weight: 700;
+  font-size: 1rem;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.storePrice {
+  color: #DC143C;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 960px) {
+  .certBox {
+    grid-template-columns: 1fr;
+  }
+  .specsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .specsGrid {
+    grid-template-columns: 1fr;
+  }
+}

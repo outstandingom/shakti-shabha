@@ -1,0 +1,562 @@
+/* ============================================================
+   AaryaveeraPage — Dark Theme, Gold Accents
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  background: #0A0A0B;
+  color: #FFFFFF;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  padding-top: 5.5rem;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  background: linear-gradient(160deg, #0A0A0B 0%, #170E04 50%, #0C0B0D 100%);
+  border-bottom: 1px solid rgba(201, 169, 110, 0.22);
+  padding: clamp(4rem, 8vw, 7rem) clamp(1.5rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 80% 50%, rgba(201,169,110,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.heroInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  background: rgba(201, 169, 110, 0.1);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.5rem;
+}
+
+.heroTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.heroEn {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #E8C98A;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+}
+
+.heroDev {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: rgba(201, 169, 110, 0.7);
+  line-height: 1.3;
+}
+
+.heroSub {
+  font-size: clamp(1rem, 1.5vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+
+.heroMotto {
+  font-size: 1rem;
+  color: #C9A96E;
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Flame */
+.flameCont {
+  position: absolute;
+  right: clamp(1rem, 5vw, 6rem);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.55;
+}
+
+.flame {
+  width: clamp(60px, 8vw, 110px);
+  height: auto;
+  animation: flicker 2.8s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  0%   { transform: scaleX(1) scaleY(1); filter: drop-shadow(0 0 8px #C9A96E88); }
+  33%  { transform: scaleX(0.97) scaleY(1.02); filter: drop-shadow(0 0 14px #DC143C88); }
+  66%  { transform: scaleX(1.02) scaleY(0.98); filter: drop-shadow(0 0 10px #FFD70088); }
+  100% { transform: scaleX(0.98) scaleY(1.01); filter: drop-shadow(0 0 16px #C9A96E88); }
+}
+
+/* ── SECTION HELPERS ──────────────────────────────────────── */
+.sectionEyebrow {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 0.5rem;
+}
+
+.sectionH2 {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionH2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: #DC143C;
+  border-radius: 9999px;
+}
+
+.sectionH2Dark {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 2.5vw, 2.1rem);
+  font-weight: 700;
+  color: #E8C98A;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.sectionH2Dark::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 3px;
+  background: #C9A96E;
+  border-radius: 9999px;
+}
+
+.bodyText {
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  color: #444444;
+  line-height: 1.8;
+}
+
+/* ── WHAT IS AARYAVEERA ───────────────────────────────────── */
+.whatSection {
+  background: #FFFFFF;
+  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.whatInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.whatLeft {}
+.whatRight {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.featureBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: #FAFAFA;
+  border: 1px solid #EEEEEE;
+  border-radius: 10px;
+  padding: 1.5rem;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.featureBox:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.07);
+}
+
+.featureIcon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.featureTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #111111;
+  margin-bottom: 0.4rem;
+}
+
+.featureText {
+  font-size: 0.85rem;
+  color: #555555;
+  line-height: 1.7;
+}
+
+/* ── PLATFORM INTEGRATION ─────────────────────────────────── */
+.platformSection {
+  background: #111113;
+  border-top: 1px solid rgba(201,169,110,0.15);
+  border-bottom: 1px solid rgba(201,169,110,0.15);
+  padding: clamp(3rem, 5vw, 5rem) 0;
+}
+
+.platformInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: 2rem;
+}
+
+.platformDesc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 55ch;
+  line-height: 1.7;
+}
+
+.platformScroll {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding: 1rem clamp(1.5rem, 4vw, 3rem) 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,169,110,0.3) transparent;
+}
+
+.platformScroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.platformScroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.platformScroll::-webkit-scrollbar-thumb {
+  background: rgba(201,169,110,0.35);
+  border-radius: 9999px;
+}
+
+.platformCard {
+  min-width: 240px;
+  flex-shrink: 0;
+  background: #1A1A1E;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.platformCard:hover {
+  border-color: #C9A96E;
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.5);
+}
+
+.platformNum {
+  display: block;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #C9A96E;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.9rem;
+}
+
+.platformCardTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.6rem;
+}
+
+.platformCardDesc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.7;
+}
+
+/* ── THREE PILLARS ────────────────────────────────────────── */
+.pillarsSection {
+  background: #0C0C0E;
+  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.pillarsInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.pillarCard {
+  background: #1A1A1E;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 2.5rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.pillarCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--pillar-accent, #DC143C);
+  transition: height 0.3s ease;
+}
+
+.pillarCard:hover {
+  border-color: var(--pillar-accent, #DC143C);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+}
+
+.pillarCard:hover::before {
+  height: 4px;
+}
+
+.pillarTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.pillarIcon {
+  font-size: 2rem;
+}
+
+.pillarTag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 9999px;
+}
+
+.pillarName {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+}
+
+.pillarDev {
+  display: block;
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-bottom: 1.25rem;
+}
+
+.pillarDesc {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.78;
+  margin-bottom: 1.5rem;
+}
+
+.pillarList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pillarItem {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.pillarBullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── BRAND ASSETS ─────────────────────────────────────────── */
+.assetsSection {
+  background: #111113;
+  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+  border-top: 1px solid rgba(201,169,110,0.12);
+}
+
+.assetsInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.assetsDesc {
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 60ch;
+  line-height: 1.7;
+  margin-bottom: 2.5rem;
+}
+
+.assetsList {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.assetRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: #1A1A1E;
+  border: 1px solid rgba(201, 169, 110, 0.15);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  transition: border-color 0.25s, transform 0.25s;
+}
+
+.assetRow:hover {
+  border-color: rgba(201, 169, 110, 0.4);
+  transform: translateX(4px);
+}
+
+.assetCheck {
+  font-size: 1rem;
+  color: #C9A96E;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.assetItem {
+  display: block;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.25rem;
+}
+
+.assetSpec {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+}
+
+/* ── CTA STRIP ────────────────────────────────────────────── */
+.ctaStrip {
+  background: linear-gradient(135deg, #0F0B02 0%, #1A1006 50%, #0A0A0B 100%);
+  border-top: 1px solid rgba(201, 169, 110, 0.25);
+  padding: clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.ctaInner {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.ctaTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+  font-weight: 700;
+  color: #E8C98A;
+  margin-bottom: 0.4rem;
+}
+
+.ctaSub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ctaBtns {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .pillarsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .flameCont {
+    display: none;
+  }
+
+  .heroTitle {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .whatInner {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .pillarsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .assetsList {
+    grid-template-columns: 1fr;
+  }
+
+  .ctaInner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,279 +1,242 @@
-// The Union of Peace & Revolution — Dedicated Page
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import s from './PageLayout.module.css'
+import p from './AboutPage.module.css'
 
-const STREAMS = [
+gsap.registerPlugin(ScrollTrigger)
+
+const PILLARS = [
   {
-    num: '01',
-    stream: 'Revolution',
-    name: 'Mardini',
+    icon: '⚔',
+    name: 'MARDINI',
     dev: 'मर्दिनी',
-    themeColor: '#DC143C',
-    themeBg: 'rgba(220, 20, 60, 0.05)',
-    borderColor: 'rgba(220, 20, 60, 0.25)',
-    summary: 'Self-defense. Lathi-Kaushal. Sword training. Village camps across Maharashtra and beyond. The revolution that begins in the body and spreads to the spirit.',
-    details: [
-      'Comprehensive on-ground training camps conducted across rural districts and peri-urban centers.',
-      'Training in traditional Bharatiya martial arts, modern situational defense, and physical courage.',
-      'Over 50,000+ women trained to recognize vulnerability as a myth and claim their innate strength.',
-    ],
-    link: '/social-work',
-    linkLabel: 'Explore Social Work →',
+    sub: 'Revolution & Self-Defense',
+    accent: '#DC143C',
+    accentBg: 'rgba(220,20,60,0.06)',
+    border: 'rgba(220,20,60,0.22)',
+    desc: 'The fire of Shakti Sabha\'s revolution. Mardini conducts on-ground self-defense camps, lathi-kaushal workshops, and sword training across rural Maharashtra and beyond. Over 12 years, the revolution has reached 400+ schools, 50,000+ women, and dozens of village communities — transforming vulnerability into sovereignty.',
+    reach: ['400+ schools across Maharashtra', '50,000+ women trained', 'Quarterly warrior camps in 20+ districts'],
   },
   {
-    num: '02',
-    stream: 'Healing',
-    name: 'Shakti Bhava',
+    icon: '🌸',
+    name: 'SHAKTI BHAVA',
     dev: 'शक्ति भव',
-    themeColor: '#166534',
-    themeBg: 'rgba(22, 101, 52, 0.05)',
-    borderColor: 'rgba(22, 101, 52, 0.25)',
-    summary: 'Counseling. Anonymized case studies. Breaking silence on trafficking, PTSD, puberty, and depression. The space where survivors become warriors.',
-    details: [
-      'Confidential psychological aid and trauma recovery led by empathetic trained professionals.',
-      'Safe listening circles that address gender-based violence, domestic distress, and stigma.',
-      'Holistic healing programs that restore self-worth, community standing, and mental resilience.',
-    ],
-    link: '/history',
-    linkLabel: 'Read Survivor Stories →',
+    sub: 'Healing Space & Survivor Support',
+    accent: '#3D5A45',
+    accentBg: 'rgba(61,90,69,0.06)',
+    border: 'rgba(61,90,69,0.22)',
+    desc: 'The sacred space of healing. Shakti Bhava holds the pain of survivors without flinching — offering confidential counseling, trauma recovery, and peer support circles. It breaks silence on trafficking, PTSD, puberty, and depression, creating a community where pain becomes power and secrecy becomes solidarity.',
+    reach: ['Confidential survivor counseling sessions', 'Anonymous case study documentation', 'Holistic trauma recovery programs'],
   },
   {
-    num: '03',
-    stream: 'Discourse',
-    name: 'Shakti Varta',
+    icon: '📚',
+    name: 'SHAKTI VARTA',
     dev: 'शक्ति वार्ता',
-    themeColor: '#4338CA',
-    themeBg: 'rgba(67, 56, 202, 0.05)',
-    borderColor: 'rgba(67, 56, 202, 0.25)',
-    summary: 'White papers. Research. Podcasts. Seminars. The intellectual engine that backs the revolution with verified knowledge and historical truth.',
-    details: [
-      'Evidence-based policy white papers examining ground realities of female security and rights.',
-      'The Aaryaveera Dialogues podcast exploring civilizational perspectives on Dharma and equality.',
-      'Academic alliances, seminars, and publication of verified historical narratives of women warriors.',
-    ],
-    link: '/aaryaveera',
-    linkLabel: 'Discover Aaryaveera →',
+    sub: 'Intellectual Discourse & Research',
+    accent: '#C9A96E',
+    accentBg: 'rgba(201,169,110,0.06)',
+    border: 'rgba(201,169,110,0.3)',
+    desc: 'The intellectual backbone of the movement. Shakti Varta produces white papers, hosts the Aaryaveera Dialogues podcast, and convenes seminars examining Dharma, Paurush, and the civilizational role of women. Academic alliances and verified historical research back every claim with evidence and depth.',
+    reach: ['Aaryaveera Dialogues podcast series', 'Policy white papers on women\'s security', 'Historical narratives of women warriors'],
   },
 ]
 
+const TIMELINE = [
+  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born in Pune, Maharashtra — with a vision to unite the strength of women across India.' },
+  { year: '2014', title: 'First Warrior Camp', desc: 'The inaugural self-defense camp reached 200 women across rural Pune district.' },
+  { year: '2016', title: '100 Schools Reached', desc: 'Mardini expanded to 100 schools — bringing self-defense and character education to young girls.' },
+  { year: '2018', title: 'Shakti Bhava Launched', desc: 'Survivor support and counseling programs formalized — breaking the silence on gender-based trauma.' },
+  { year: '2022', title: 'Aaryaveera Launched', desc: 'The flagship warrior brand — Aaryaveera — born as a unified identity for the whole movement.' },
+  { year: '2024', title: '400+ Schools & National Stage', desc: 'From village camps to national recognition — Shakti Sabha stands at the heart of India\'s women\'s movement.' },
+]
+
+const VALUES = [
+  { icon: '🪷', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the birthright of every daughter of this land.' },
+  { icon: '🔥', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and spiritual courage — the trinity that separates the awakened from the fearful.' },
+  { icon: '🌿', name: 'Truth', dev: 'सत्य', desc: 'Shakti Sabha speaks plainly — about trauma, about society, about what needs to change.' },
+  { icon: '⚖', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in civilizational wisdom, not ideology. Justice through duty, not anger.' },
+]
+
+const TEAM = [
+  { name: 'Founder & Director', title: 'Shakti Sabha Leadership', initials: 'SS' },
+  { name: 'Head of Mardini', title: 'Training & Field Operations', initials: 'MD' },
+  { name: 'Head of Shakti Bhava', title: 'Counseling & Survivor Support', initials: 'SB' },
+  { name: 'Head of Shakti Varta', title: 'Research & Publications', initials: 'SV' },
+]
+
 export default function AboutPage() {
+  const pillarsRef = useRef<HTMLDivElement>(null)
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const valuesRef = useRef<HTMLDivElement>(null)
+  const teamRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     window.scrollTo(0, 0)
+    const ctx = gsap.context(() => {
+      // Pillars
+      gsap.from(`.${p.pillarCard}`, {
+        opacity: 0, y: 50, duration: 0.7, stagger: 0.15, ease: 'power2.out',
+        scrollTrigger: { trigger: pillarsRef.current, start: 'top 80%' },
+      })
+
+      // Quote
+      gsap.from(`.${p.quoteSection}`, {
+        opacity: 0, scale: 0.97, duration: 0.8, ease: 'power2.out',
+        scrollTrigger: { trigger: `.${p.quoteSection}`, start: 'top 85%' },
+      })
+
+      // Timeline items
+      gsap.from(`.${p.timelineItem}`, {
+        opacity: 0, x: -30, duration: 0.6, stagger: 0.12, ease: 'power2.out',
+        scrollTrigger: { trigger: timelineRef.current, start: 'top 78%' },
+      })
+
+      // Values
+      gsap.from(`.${p.valueCard}`, {
+        opacity: 0, y: 30, duration: 0.6, stagger: 0.12, ease: 'power2.out',
+        scrollTrigger: { trigger: valuesRef.current, start: 'top 80%' },
+      })
+
+      // Team
+      gsap.from(`.${p.teamCard}`, {
+        opacity: 0, y: 20, duration: 0.5, stagger: 0.1, ease: 'power2.out',
+        scrollTrigger: { trigger: teamRef.current, start: 'top 82%' },
+      })
+    })
+    return () => ctx.revert()
   }, [])
 
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--theme-bg, #FFFFFF)', paddingTop: '6.5rem', paddingBottom: '7rem' }}>
-      
-      {/* Top Banner with Crimson Theme */}
-      <section style={{ 
-        background: 'linear-gradient(145deg, #A80E2D 0%, #DC143C 55%, #B01030 100%)', 
-        color: '#FFFFFF', 
-        padding: ' clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem)',
-        position: 'relative',
-        overflow: 'hidden',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
-      }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          
-          <Link 
-            to="/" 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '0.5rem', 
-              fontSize: '0.82rem', 
-              color: 'rgba(255, 255, 255, 0.85)', 
-              textDecoration: 'none', 
-              marginBottom: '2rem', 
-              fontFamily: 'var(--btn-font, Poppins, sans-serif)',
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em'
-            }}
-          >
-            ← Back to Home
-          </Link>
-
-          <span style={{ 
-            display: 'inline-block',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
-            color: 'rgba(255, 255, 255, 0.85)',
-            marginBottom: '1rem',
-            background: 'rgba(255, 255, 255, 0.15)',
-            padding: '0.35rem 1rem',
-            borderRadius: '9999px',
-            border: '1px solid rgba(255, 255, 255, 0.25)'
-          }}>
-            Our Founding Architecture
-          </span>
-
-          <h1 style={{ 
-            fontFamily: 'var(--font-serif, "Playfair Display", Georgia, serif)', 
-            fontWeight: 700, 
-            fontSize: 'clamp(2.4rem, 5.5vw, 4rem)', 
-            lineHeight: 1.15,
-            color: '#FFFFFF', 
-            marginBottom: '1.25rem',
-            maxWidth: '22ch'
-          }}>
-            The Union of Peace &amp; Revolution
-          </h1>
-
-          <p style={{ 
-            fontFamily: 'var(--font-body, "Outfit", sans-serif)', 
-            fontSize: 'clamp(1rem, 1.4vw, 1.2rem)', 
-            color: 'rgba(255, 255, 255, 0.92)', 
-            maxWidth: '65ch', 
-            lineHeight: '1.8' 
-          }}>
-            Everything Shakti Sabha builds lives within one of three streams — each distinct in method, unified in purpose: dignity, safety, and awakening for every woman who stands with us.
+    <main className={p.page}>
+      {/* ── HERO BANNER ─────────────────────────────── */}
+      <div className={p.hero}>
+        <div className={p.heroInner}>
+          <Link to="/" className={s.back}>← Back to Home</Link>
+          <span className={p.eyebrow}>12 Years of On-Ground Impact</span>
+          <h1 className={p.heroTitle}>Union of Peace &amp; Revolution</h1>
+          <p className={p.heroHindi}>शांति और क्रांति का संगम</p>
+          <p className={p.heroDesc}>
+            12 years of on-ground impact — from the villages of Maharashtra to the national stage. Shakti Sabha is where the fearless become free.
           </p>
         </div>
-      </section>
+      </div>
 
-      {/* The 3 Streams Deep-Dive Section */}
-      <section style={{ maxWidth: '1280px', margin: '0 auto', padding: 'clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem)' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2.5rem' }}>
-          {STREAMS.map(item => (
-            <div 
-              key={item.name}
-              style={{
-                background: '#FFFFFF',
-                borderRadius: '12px',
-                border: `1px solid ${item.borderColor}`,
-                padding: '2.75rem 2.25rem',
-                display: 'flex',
-                flexDirection: 'column',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
-                position: 'relative',
-                overflow: 'hidden'
-              }}
-            >
-              {/* Colored top bar */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: item.themeColor }} />
-
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                <span style={{ 
-                  fontFamily: 'var(--font-display, "Cinzel", serif)', 
-                  fontSize: '2.5rem', 
-                  fontWeight: 900, 
-                  color: item.themeColor, 
-                  lineHeight: 1 
-                }}>
-                  {item.num}
-                </span>
-
-                <span style={{
-                  fontSize: '0.72rem',
-                  fontWeight: 700,
-                  letterSpacing: '0.15em',
-                  textTransform: 'uppercase',
-                  color: item.themeColor,
-                  background: item.themeBg,
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '9999px',
-                  border: `1px solid ${item.borderColor}`
-                }}>
-                  {item.stream}
-                </span>
+      {/* ── THREE PILLARS ───────────────────────────── */}
+      <section className={p.pillarsSection} ref={pillarsRef}>
+        <div className={p.sectionInner}>
+          <span className={p.sectionEyebrow}>Our Foundation</span>
+          <h2 className={p.sectionTitle}>The Three Pillars</h2>
+          <div className={p.pillarsGrid}>
+            {PILLARS.map((pl) => (
+              <div key={pl.name} className={p.pillarCard} style={{ '--pl-accent': pl.accent, '--pl-bg': pl.accentBg, '--pl-border': pl.border } as React.CSSProperties}>
+                <div className={p.pillarAccentBar} style={{ background: pl.accent }} />
+                <div className={p.pillarHead}>
+                  <span className={p.pillarIcon}>{pl.icon}</span>
+                  <span className={p.pillarBadge} style={{ color: pl.accent, background: pl.accentBg, border: `1px solid ${pl.border}` }}>
+                    {pl.sub}
+                  </span>
+                </div>
+                <h3 className={p.pillarName}>{pl.name}</h3>
+                <span className={p.pillarDev}>{pl.dev}</span>
+                <p className={p.pillarDesc}>{pl.desc}</p>
+                <ul className={p.pillarList}>
+                  {pl.reach.map((r, i) => (
+                    <li key={i} className={p.pillarItem}>
+                      <span className={p.pillarDot} style={{ background: pl.accent }} />
+                      {r}
+                    </li>
+                  ))}
+                </ul>
               </div>
-
-              <h2 style={{ 
-                fontFamily: 'var(--font-serif, "Playfair Display", Georgia, serif)', 
-                fontSize: '1.85rem', 
-                fontWeight: 700, 
-                color: '#111111', 
-                marginBottom: '0.2rem',
-                lineHeight: 1.2
-              }}>
-                {item.name}
-              </h2>
-
-              <span style={{ 
-                fontFamily: 'var(--font-devanagari, "Noto Sans Devanagari", sans-serif)', 
-                fontSize: '1rem', 
-                color: '#666666', 
-                marginBottom: '1.25rem',
-                display: 'block' 
-              }}>
-                {item.dev}
-              </span>
-
-              <p style={{ 
-                fontSize: '0.92rem', 
-                color: '#333333', 
-                lineHeight: '1.75', 
-                marginBottom: '1.75rem' 
-              }}>
-                {item.summary}
-              </p>
-
-              {/* Action bullet points */}
-              <ul style={{ 
-                listStyle: 'none', 
-                display: 'flex', 
-                flexDirection: 'column', 
-                gap: '0.75rem', 
-                marginBottom: '2.5rem', 
-                flexGrow: 1 
-              }}>
-                {item.details.map((detail, idx) => (
-                  <li key={idx} style={{ 
-                    fontSize: '0.85rem', 
-                    color: '#555555', 
-                    lineHeight: '1.6', 
-                    paddingLeft: '1.25rem', 
-                    position: 'relative' 
-                  }}>
-                    <span style={{ position: 'absolute', left: 0, color: item.themeColor, fontWeight: 700 }}>•</span>
-                    {detail}
-                  </li>
-                ))}
-              </ul>
-
-              <Link 
-                to={item.link} 
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0.7rem 2rem',
-                  fontFamily: 'var(--btn-font, Poppins, sans-serif)',
-                  fontSize: '0.78rem',
-                  fontWeight: 600,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  color: item.themeColor,
-                  background: item.themeBg,
-                  border: `1px solid ${item.borderColor}`,
-                  borderRadius: '9999px',
-                  textDecoration: 'none',
-                  alignSelf: 'flex-start',
-                  transition: 'all 0.25s ease'
-                }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.background = item.themeColor
-                  e.currentTarget.style.color = '#FFFFFF'
-                  e.currentTarget.style.transform = 'translateY(-2px)'
-                  e.currentTarget.style.boxShadow = `0 8px 22px rgba(0, 0, 0, 0.15)`
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.background = item.themeBg
-                  e.currentTarget.style.color = item.themeColor
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = 'none'
-                }}
-              >
-                {item.linkLabel}
-              </Link>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* ── MISSION QUOTE ───────────────────────────── */}
+      <div className={p.quoteSection}>
+        <div className={p.quoteInner}>
+          <span className={p.quoteDecor}>"</span>
+          <blockquote className={p.quoteText}>
+            We don't just train bodies. We awaken souls.
+          </blockquote>
+          <p className={p.quoteAttrib}>— Shakti Sabha, 12 Years</p>
+        </div>
+      </div>
+
+      {/* ── TIMELINE ────────────────────────────────── */}
+      <section className={p.timelineSection} ref={timelineRef}>
+        <div className={p.sectionInner}>
+          <span className={p.sectionEyebrow}>Our Journey</span>
+          <h2 className={p.sectionTitle}>12 Years of Impact</h2>
+          <div className={p.timeline}>
+            {TIMELINE.map((t, i) => (
+              <div key={i} className={p.timelineItem}>
+                <div className={p.timelineLeft}>
+                  <span className={p.timelineYear}>{t.year}</span>
+                </div>
+                <div className={p.timelineConnector}>
+                  <div className={p.timelineDot} />
+                  {i < TIMELINE.length - 1 && <div className={p.timelineLine} />}
+                </div>
+                <div className={p.timelineRight}>
+                  <h4 className={p.timelineTitle}>{t.title}</h4>
+                  <p className={p.timelineDesc}>{t.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── VALUES GRID ─────────────────────────────── */}
+      <section className={p.valuesSection} ref={valuesRef}>
+        <div className={p.sectionInner}>
+          <span className={p.sectionEyebrow}>What We Stand For</span>
+          <h2 className={p.sectionTitle}>Our Values</h2>
+          <div className={p.valuesGrid}>
+            {VALUES.map((v) => (
+              <div key={v.name} className={p.valueCard}>
+                <span className={p.valueIcon}>{v.icon}</span>
+                <h3 className={p.valueName}>{v.name}</h3>
+                <span className={p.valueDev}>{v.dev}</span>
+                <p className={p.valueDesc}>{v.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TEAM ────────────────────────────────────── */}
+      <section className={p.teamSection} ref={teamRef}>
+        <div className={p.sectionInner}>
+          <span className={p.sectionEyebrow}>The People</span>
+          <h2 className={p.sectionTitle}>Leadership Team</h2>
+          <div className={p.teamGrid}>
+            {TEAM.map((t) => (
+              <div key={t.name} className={p.teamCard}>
+                <div className={p.teamAvatar}>{t.initials}</div>
+                <h4 className={p.teamName}>{t.name}</h4>
+                <p className={p.teamTitle}>{t.title}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ─────────────────────────────────────── */}
+      <div className={p.ctaSection}>
+        <div className={p.ctaInner}>
+          <h3 className={p.ctaTitle}>Join the Movement</h3>
+          <p className={p.ctaDesc}>Whether you volunteer, donate, or train — your role in this story matters.</p>
+          <div className={p.ctaBtns}>
+            <Link to="/sahyog" className={p.ctaPrimary}>Join as Volunteer →</Link>
+            <Link to="/sahyog" className={p.ctaOutline}>Donate to Shakti Sabha</Link>
+          </div>
+        </div>
+      </div>
     </main>
   )
 }
