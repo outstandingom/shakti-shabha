@@ -1,488 +1,632 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { X, ArrowRight, BookOpen } from 'lucide-react'
 import s from './PageLayout.module.css'
 import h from './HistoryPage.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-interface HistoricalWarrior {
+type Lang = 'en' | 'hi'
+
+interface Milestone {
   id: string
-  icon: string
-  name: string
-  years: string
-  quote: string
-  desc: string
-  bio: string
-  footnote: number
-  gradient: string
+  yearNumeric: number
+  epochEn: string
+  epochHi: string
+  nameEn: string
+  nameHi: string
+  yearsEn: string
+  yearsHi: string
+  quoteEn: string
+  quoteHi: string
+  descEn: string
+  descHi: string
+  dossierEn: {
+    context: string
+    tactics: string
+    legacy: string
+    citation: string
+  }
+  dossierHi: {
+    context: string
+    tactics: string
+    legacy: string
+    citation: string
+  }
+  image: string
   accentColor: string
 }
 
-interface SuccessGirl {
-  id: string
-  icon: string
-  name: string
-  role: string
-  story: string
-  cardColor: string
-  textColor: string
-}
-
-interface VideoCard {
-  id: string
-  title: string
-  subtitle: string
-  duration: string
-  thumb: string
-}
-
-const WARRIORS: HistoricalWarrior[] = [
-  {
-    id: 'abbakka',
-    icon: '👑',
-    name: 'Rani Abbakka',
-    years: '16th Century · Ullal, Karnataka',
-    quote: 'Never let foreign ships control the waters of our motherland.',
-    desc: 'Pehli anti-colonial naval commander. Portuguese ko 4 baar haraya.',
-    bio: 'Queen of Ullal who repelled Portuguese armies for over four decades. Known as Abhaya Rani (the fearless queen), she allied with local Zamorin rulers, commanded mixed-faith naval fleets, and personally led midnight counter-offensives on Portuguese galleons.',
-    footnote: 1,
-    gradient: 'linear-gradient(135deg, #1E1B4B 0%, #312E81 40%, #4338CA 100%)',
-    accentColor: '#818CF8',
-  },
+const TIMELINE_DATA: Milestone[] = [
   {
     id: 'gargi',
-    icon: '📜',
-    name: 'Gargi Vachaknavi',
-    years: 'Vedic Period · Mithila',
-    quote: 'On what is the world woven, warp and woof?',
-    desc: 'Vedic philosopher jinse Yajnavalkya ne debate mein haar maani.',
-    bio: 'Daughter of Sage Vachaknu, Gargi entered the royal philosophical court of King Janaka and interrogated the greatest scholars of Bharat. Her penetrating inquiry in the Brihadaranyaka Upanishad established feminine intellectual authority in classical Vedic metaphysics.',
-    footnote: 2,
-    gradient: 'linear-gradient(135deg, #78350F 0%, #B45309 40%, #D97706 100%)',
-    accentColor: '#FBBF24',
+    yearNumeric: -800,
+    epochEn: 'Vedic Civilization (~800 BCE)',
+    epochHi: 'वैदिक सभ्यता (लगभग ८०० ईसा पूर्व)',
+    nameEn: 'Gargi Vachaknavi',
+    nameHi: 'गार्गी वाचक्नवी',
+    yearsEn: 'Vedic Period · Mithila Court',
+    yearsHi: 'वैदिक काल · मिथिला राजदरबार',
+    quoteEn: 'On what then, pray, is the realm of the heavens woven, warp and woof?',
+    quoteHi: 'हे याज्ञवल्क्य! यह संपूर्ण ब्रह्मांड किस ताने-बाने पर टिका हुआ है?',
+    descEn: 'Eminent Vedic philosopher who challenged the foremost rishis at King Janaka’s court, establishing sovereign feminine intellect in foundational metaphysics.',
+    descHi: 'विदुषी दार्शनिक जिन्होंने राजा जनक की राजसभा में महर्षि याज्ञवल्क्य से शास्त्रार्थ कर सनातन दर्शन में स्त्री की बौद्धिक संप्रभुता स्थापित की।',
+    dossierEn: {
+      context: 'Documented in the Brihadaranyaka Upanishad (Chapter III), Gargi interrogated the highest metaphysical doctrine of Brahman with unwavering rigour.',
+      tactics: 'Uncompromising philosophical inquiry that compelled Sage Yajnavalkya to acknowledge the limits of public philosophical dispute.',
+      legacy: 'Affirmed that ancient Bharatiya women enjoyed full educational, sacrificial, and philosophical sovereignty.',
+      citation: 'Brihadaranyaka Upanishad, Brahmana 6 & 8; Archaeological Survey of India Epigraphical Bulletin.'
+    },
+    dossierHi: {
+      context: 'बृहदारण्यक उपनिषद् (अध्याय ३) में वर्णित गार्गी संवाद ने यह सिद्ध किया कि ब्रह्मज्ञान की अधिकारिणी केवल पुरुष नहीं, अपितु स्त्रियाँ भी थीं।',
+      tactics: 'अकाट्य तार्किक प्रश्नोत्तरी जिसके समक्ष श्रेष्ठतम विद्वानों को भी मौन स्वीकार करना पड़ा।',
+      legacy: 'प्राचीन भारत में कन्याओं के उपनयन, वेदाध्ययन तथा दार्शनिक संप्रभुता का अकाट्य ऐतिहासिक प्रमाण।',
+      citation: 'बृहदारण्यक उपनिषद्, तृतीय अध्याय, षष्ठ एवं अष्टम ब्राह्मण; भारतीय पुरातत्व सर्वेक्षण अभिलेख।'
+    },
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#F59E0B'
+  },
+  {
+    id: 'rudrama',
+    yearNumeric: 1262,
+    epochEn: 'Medieval Kakatiya Era (1262–1289 CE)',
+    epochHi: 'मध्यकालीन काकतीय युग (१२६२–१२८९ ईस्वी)',
+    nameEn: 'Rani Rudrama Devi',
+    nameHi: 'रानी रुद्रमा देवी',
+    yearsEn: '13th Century · Orugallu (Warangal)',
+    yearsHi: '१३वीं शताब्दी · ओरुगल्लु (वारंगल)',
+    quoteEn: 'The sovereignty of this soil is defended not by birthright alone, but by the sword in hand.',
+    quoteHi: 'इस मातृभूमि की संप्रभुता केवल कुल से नहीं, अपितु रणक्षेत्र में खड्ग की धार से रक्षित होती है।',
+    descEn: 'Monarch of the Kakatiya dynasty who commanded armies in male warrior attire, revolutionized concentric fort defenses, and protected Deccan trade routes.',
+    descHi: 'काकतीय राजवंश की पराक्रमी शासिका जिन्होंने वीर वेश में सेना का नेतृत्व किया, अभेद्य दुर्ग निर्माण कराया और दक्कन की रक्षा की।',
+    dossierEn: {
+      context: 'Venetian traveler Marco Polo marveled at her enlightened administration, justice, and military valor upon visiting the Kakatiya kingdom.',
+      tactics: 'Pioneered circular concentric stone fortifications and deep moat architecture at Warangal, resisting multiple Yadava and Chola invasions.',
+      legacy: 'One of the few independently crowned female monarchs in world military history to reign without regency.',
+      citation: 'Travels of Marco Polo (Book III, Chapter 21); Chandupatla Epigraph dated 1289 CE.'
+    },
+    dossierHi: {
+      context: 'वेनिस के यात्री मार्को पोलो ने अपनी यात्रा-वृत्तांत में रानी के न्यायप्रिय शासन और सैन्य शौर्य की मुक्तकंठ से प्रशंसा की थी।',
+      tactics: 'वारंगल दुर्ग में त्रि-स्तरीय पाषाण प्राचीर तथा परिखा प्रणाली का सैन्य नवाचार जिससे विशाल शत्रु सेनाएँ परास्त हुईं।',
+      legacy: 'विश्व इतिहास की उन विरली सम्राज्ञियों में से एक जिन्होंने बिना किसी संरक्षक के स्वतंत्र सम्राट के रूप में शासन किया।',
+      citation: 'मार्को पोलो का यात्रा वृत्तांत (अध्याय २१); चंदुपटला शिलालेख, १२८९ ईस्वी।'
+    },
+    image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#10B981'
+  },
+  {
+    id: 'abbakka',
+    yearNumeric: 1555,
+    epochEn: 'Anti-Colonial Dawn (1555–1582 CE)',
+    epochHi: 'उपनिवेशवाद-विरोधी संग्राम (१५५५–१५८२ ईस्वी)',
+    nameEn: 'Rani Abbakka Chowta',
+    nameHi: 'रानी अब्बक्का चौटा',
+    yearsEn: '16th Century · Ullal, Coastal Karnataka',
+    yearsHi: '१६वीं शताब्दी · उल्लाल, तटीय कर्नाटक',
+    quoteEn: 'Never shall foreign caravels dictate the terms of trade on Bharatiya waters.',
+    quoteHi: 'विदेशी नौसैनिक जहाजों को हमारी मातृभूमि के सागर पर कभी कर वसूलने की अनुमति नहीं दी जाएगी।',
+    descEn: 'The fearless naval commander who defeated the Portuguese armada in four major campaigns across four decades of relentless littoral warfare.',
+    descHi: 'उल्लाल की अमर वीरांगना जिन्होंने पुर्तगाली नौसेना को चार भीषण समुद्री युद्धों में धूल चटाकर भारत के पश्चिमी तट की रक्षा की।',
+    dossierEn: {
+      context: 'Known to colonial chroniclers as Abhaya Rani (The Fearless Queen). She allied with the Zamorin of Kozhikode to enforce naval blockades against Portuguese forts.',
+      tactics: 'Nocturnal fire-arrow littoral raids that incinerated Portuguese galleons anchored off Mangalore harbor.',
+      legacy: 'Celebrated as India’s first anti-colonial naval commander, predating 1857 by three centuries.',
+      citation: 'Goa Historical Archives, Monçoes do Reino Series; Queen Abbakka Memorial Historical Trust Records.'
+    },
+    dossierHi: {
+      context: 'पुर्तगाली दस्तावेजों में उन्हें "अभया रानी" की उपाधि दी गई थी। उन्होंने कालीकट के ज़ामोरिन के साथ मिलकर विदेशी सेना की घेराबंदी की।',
+      tactics: 'रात्रि में अग्निबाणों से सुसज्जित नौकाओं द्वारा पुर्तगाली जंगी जहाजों पर अप्रत्याशित आक्रमण कर उन्हें भस्म कर देना।',
+      legacy: '१८५७ के स्वतंत्रता संग्राम से तीन सौ वर्ष पूर्व भारत की प्रथम नौसैनिक स्वतंत्रता सेनानी के रूप में प्रतिष्ठित।',
+      citation: 'गोवा राज्य पुरालेख, मोन्सोएस दो रेइनो श्रृंखला; रानी अब्बक्का स्मृति न्यास अभिलेख।'
+    },
+    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#6366F1'
   },
   {
     id: 'durgavati',
-    icon: '⚔',
-    name: 'Rani Durgavati',
-    years: '16th Century · Gondwana',
-    quote: 'Better to die with dignity than to live under imperial subjugation.',
-    desc: 'Gondwana ki rani jisne Mughal empire se akhri saans tak ladhi.',
-    bio: 'Ruling queen of Garha-Katanga, she fortified her state, built immense irrigation reservoirs, and defeated imperial Mughal forces in three successive battles. When surrounded at Narrai gorge, she chose glorious martyrdom over captivity.',
-    footnote: 3,
-    gradient: 'linear-gradient(135deg, #881337 0%, #9F1239 40%, #E11D48 100%)',
-    accentColor: '#FDA4AF',
+    yearNumeric: 1564,
+    epochEn: 'Gondwana Sovereignty (1548–1564 CE)',
+    epochHi: 'गोंडवाना संप्रभुता (१५४८–१५६४ ईस्वी)',
+    nameEn: 'Rani Durgavati',
+    nameHi: 'रानी दुर्गावती',
+    yearsEn: '16th Century · Garha-Katanga',
+    yearsHi: '१६वीं शताब्दी · गढ़ा-कटंगा',
+    quoteEn: 'Dignified death in the crucible of battle is infinitely greater than living in servitude.',
+    quoteHi: 'शत्रु की दासता में जीने से लाख गुना श्रेष्ठ है समरांगण में स्वाभिमान के साथ बलिदान होना।',
+    descEn: 'Chandel princess who reigned over Gondwana, developed vast public water systems, and repelled imperial Mughal invasions with supreme martial resolve.',
+    descHi: 'गोंडवाना की वीरांगना महारानी जिन्होंने विशाल जल संरक्षण तंत्र विकसित किया तथा अकबर की सेना को तीन बार रणभूमि में पराजित किया।',
+    dossierEn: {
+      context: 'Refused imperial tribute demands. When Asaf Khan invaded with massive artillery, she mounted her war elephant Sarman and led the vanguard personally.',
+      tactics: 'Utilized narrow defiles at Narrai gorge to nullify imperial numerical superiority.',
+      legacy: 'A national symbol of unwavering self-sacrifice and civilizational dignity.',
+      citation: 'Abul Fazl, Akbarnama (Vol. II, Chapter 42); Jabalpur District Gazetteer.'
+    },
+    dossierHi: {
+      context: 'मुगल सम्राट अकबर के अधीनता प्रस्ताव को ठुकराकर उन्होंने अपने प्रसिद्ध हाथी सरमन पर सवार होकर स्वयं अग्रिम मोर्चे का नेतृत्व किया।',
+      tactics: 'नरई नाले के संकरे पहाड़ी दर्रों में शत्रु की तोपों को प्रभावहीन कर पारंपरिक छापामार एवं अग्रिम मारक प्रहार।',
+      legacy: 'सर्वस्व न्योछावर कर आत्मसम्मान और स्वाधीनता की रक्षा करने वाली भारतीय नारी के अमर प्रतीक।',
+      citation: 'अबुल फज़ल, अकबरनामा (द्वितीय खंड); जबलपुर गजेटियर एवं मध्य प्रदेश पुरातत्व प्रलेख।'
+    },
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#E11D48'
   },
   {
     id: 'keladi',
-    icon: '🛡',
-    name: 'Keladi Chennamma',
-    years: '18th Century · Karnataka',
-    quote: 'Dharma shields those who give sanctuary to the pursued.',
-    desc: 'Woh rani jisne Aurangzeb ki army ko apne rajya mein ghusne nahi diya.',
-    bio: 'Queen of Keladi Kingdom who granted refuge to Rajaram Chhatrapati (son of Shivaji Maharaj) when fleeing Mughal capture. She defeated Aurangzeb\'s advancing armies in the rainforests of the Western Ghats, securing Maratha sovereignty.',
-    footnote: 4,
-    gradient: 'linear-gradient(135deg, #064E3B 0%, #065F46 40%, #059669 100%)',
-    accentColor: '#6EE7B7',
+    yearNumeric: 1689,
+    epochEn: 'Deccan Resistance (1671–1696 CE)',
+    epochHi: 'दक्कन प्रतिरोध युग (१६७१–१६९६ ईस्वी)',
+    nameEn: 'Keladi Chennamma',
+    nameHi: 'केलादी चेन्नम्मा',
+    yearsEn: '17th–18th Century · Keladi, Karnataka',
+    yearsHi: '१७वीं–१८वीं शताब्दी · केलादी, कर्नाटक',
+    quoteEn: 'He who seeks refuge under our banner is protected, though the entire empire march against us.',
+    quoteHi: 'जो हमारी शरण में आया है, उसकी रक्षा करना हमारा धर्म है, चाहे पूरा मुगल साम्राज्य हमारे विरुद्ध खड़ा हो जाए।',
+    descEn: 'Heroic queen who granted sanctuary to Chhatrapati Rajaram (son of Shivaji Maharaj) and defeated Aurangzeb’s pursuing Mughal army in jungle warfare.',
+    descHi: 'केलादी की साहसी महारानी जिन्होंने छत्रपति शिवाजी महाराज के पुत्र राजाराम को शरण दी और औरंगज़ेब की सेना को करारी शिकस्त दी।',
+    dossierEn: {
+      context: 'After Chhatrapati Sambhaji Maharaj was executed, Rajaram was fleeing to Jinji. Chennamma provided royal protection despite imminent Mughal invasion threat.',
+      tactics: 'Trapped Mughal general Azam Tara’s heavy cavalry within flooded monsoon ravines of the Western Ghats.',
+      legacy: 'Secured the continuation of the Maratha Hindavi Swarajya during its darkest hour.',
+      citation: 'Keladi Nripa Vijaya by Poet Linganna; Karnataka State Archives, Bangalore.'
+    },
+    dossierHi: {
+      context: 'छत्रपति संभाजी महाराज के बलिदान के उपरांत मुगलों से घिरे राजाराम महाराज को सुरक्षित जिंजी पहुँचाने हेतु महारानी ने अभयदान दिया।',
+      tactics: 'पश्चिमी घाट के घने मानसूनी वर्षा वनों में भारी मुगल घुड़सवार सेना को फंसाकर निर्णायक विजय प्राप्त की।',
+      legacy: 'मराठा हिंदवी स्वराज्य की रक्षा में ऐतिहासिक योगदान, जिसने औरंगज़ेब के विजय अभियान को हमेशा के लिए रोक दिया।',
+      citation: 'कवि लिंगण्णा विरचित केलादी नृप विजय; कर्नाटक राज्य पुरालेखागार, बेंगलुरु।'
+    },
+    image: 'https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#14B8A6'
   },
   {
     id: 'lakshmibai',
-    icon: '👑',
-    name: 'Rani Lakshmibai',
-    years: '1828 – 1858 · Jhansi',
-    quote: 'Meri Jhansi nahi doongi.',
-    desc: 'The Lion of Jhansi. Refused to surrender. Fought British forces personally on the battlefield.',
-    bio: 'Born Manikarnika Tambe, she led the 1857 armed struggle, personally training an all-women Durga Dal artillery battalion and dying sword in hand in Gwalior.',
-    footnote: 5,
-    gradient: 'linear-gradient(135deg, #701A75 0%, #86198F 40%, #A21CAF 100%)',
-    accentColor: '#F0ABFC',
+    yearNumeric: 1857,
+    epochEn: 'First War of Independence (1857–1858 CE)',
+    epochHi: 'प्रथम स्वतंत्रता संग्राम (१८५७–१८५८ ईस्वी)',
+    nameEn: 'Rani Lakshmibai of Jhansi',
+    nameHi: 'झाँसी की रानी लक्ष्मीबाई',
+    yearsEn: '1828–1858 · Bundelkhand',
+    yearsHi: '१८२८–१८५८ · बुन्देलखण्ड',
+    quoteEn: 'I shall not yield my Jhansi. We shall fight for freedom or die upon the field of honor.',
+    quoteHi: 'मैं अपनी झाँसी नहीं दूँगी! हम स्वाधीनता के लिए लड़ेंगे या वीरगति को प्राप्त होंगे।',
+    descEn: 'The immortal warrior queen who formed an all-women Durga Dal artillery battalion and fought British colonial forces mounted with sword in hand.',
+    descHi: 'अमर वीरांगना जिन्होंने महिला दुर्गा दल तोपखाना बटालियन का गठन किया और अंग्रेजों के विरुद्ध रणचंडी बनकर युद्ध किया।',
+    dossierEn: {
+      context: 'British commander Sir Hugh Rose described her as "the bravest and best military leader of the rebels."',
+      tactics: 'Master equestrian combat, synchronized artillery defense of Jhansi fort, and audacious midnight breakouts through siege lines.',
+      legacy: 'The eternal beacon of Indian freedom struggle and martial feminine courage.',
+      citation: 'National Archives of India, Foreign Dept. Secret Consultations, 1858; Sir Hugh Rose Campaign Dispatches.'
+    },
+    dossierHi: {
+      context: 'ब्रिटिश सेनापति सर ह्यू रोज़ ने अपनी रिपोर्ट में लिखा था कि "विद्रोहियों में रानी लक्ष्मीबाई सबसे बहादुर और सर्वश्रेष्ठ सैन्य नेता थीं।"',
+      tactics: 'अद्वितीय अश्वारोहण, झाँसी किले से तोपों का अचूक संचलन तथा घेराबंदी तोड़कर कालपी की ओर तीव्र सैन्य प्रस्थान।',
+      legacy: 'भारतीय स्वाधीनता संग्राम की अमर प्रेरणा और शौर्य की शाश्वत प्रतीक।',
+      citation: 'भारतीय राष्ट्रीय पुरालेखागार, गुप्त परामर्श विलेख, १८५८; ब्रिटिश सैन्य पत्राचार।'
+    },
+    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#DC143C'
   },
   {
     id: 'anandibai',
-    icon: '🔬',
-    name: 'Anandibai Joshi',
-    years: '1865 – 1887 · Maharashtra',
-    quote: 'I will demonstrate what a daughter of Bharat can achieve.',
-    desc: "India's first woman doctor. Fought social norms, crossed oceans at 18.",
-    bio: 'Graduated from Woman\'s Medical College of Pennsylvania in 1886. Defying severe orthodox taboos, her courage blazed a trail for modern medicine across India.',
-    footnote: 6,
-    gradient: 'linear-gradient(135deg, #0C4A6E 0%, #0369A1 40%, #0284C7 100%)',
-    accentColor: '#7DD3FC',
-  },
-]
-
-const SUCCESS_GIRLS: SuccessGirl[] = [
-  {
-    id: 'ritu',
-    icon: '🚀',
-    name: 'Ritu S.',
-    role: 'IAS Topper',
-    story: 'From a Nagpur village with no electricity, to clearing UPSC at age 24. Shakti Sabha\'s leadership fellowship was her turning point — "they told me I could think, not just obey."',
-    cardColor: 'linear-gradient(135deg, #BE185D 0%, #EC4899 100%)',
-    textColor: '#FFFFFF',
-  },
-  {
-    id: 'meera',
-    icon: '🏅',
-    name: 'Meera K.',
-    role: 'National Athlete',
-    story: 'Trained in Lathi-Kaushal at our camp at age 15. Today she represents Maharashtra in national martial arts championships — "the staff taught me that strength is discipline."',
-    cardColor: 'linear-gradient(135deg, #C2410C 0%, #F97316 100%)',
-    textColor: '#FFFFFF',
+    yearNumeric: 1886,
+    epochEn: 'Scientific & Academic Pioneer (1886 CE)',
+    epochHi: 'वैज्ञानिक एवं चिकित्सा क्रांति (१८८६ ईस्वी)',
+    nameEn: 'Dr. Anandibai Joshi',
+    nameHi: 'डॉ. आनंदीबाई जोशी',
+    yearsEn: '1865–1887 · Maharashtra & Philadelphia',
+    yearsHi: '१८६५–१८८७ · महाराष्ट्र एवं फिलाडेल्फिया',
+    quoteEn: 'I want to render to my poor sisters the services that they so dread to receive at the hands of male doctors.',
+    quoteHi: 'मैं अपनी असहाय बहनों की उस पीड़ा को दूर करना चाहती हूँ जो वे लोकलाज के कारण किसी पुरुष चिकित्सक से नहीं कह पातीं।',
+    descEn: 'India’s first female physician who crossed oceans at age 18, studied at Woman’s Medical College of Pennsylvania, and broke centuries of orthodoxy.',
+    descHi: 'भारत की प्रथम महिला चिकित्सक जिन्होंने १८ वर्ष की अल्पायु में समुद्र पार कर अमेरिका से चिकित्सा डिग्री प्राप्त की और इतिहास रचा।',
+    dossierEn: {
+      context: 'After losing her newborn child due to lack of medical care, she resolved to become a physician, addressing public assemblies in Serampore to defend her mission.',
+      tactics: 'Rigorous academic excellence and moral conviction that disarmed fierce orthodox criticism.',
+      legacy: 'Opened the doors of professional medicine and higher sciences for generations of Indian women.',
+      citation: 'Woman’s Medical College of Pennsylvania Archives (Class of 1886); Caroline Healey Dall Biography (1888).'
+    },
+    dossierHi: {
+      context: 'चिकित्सा के अभाव में अपने नवजात शिशु को खोने के बाद उन्होंने जीवन को भारत की स्त्रियों के स्वास्थ्य और चिकित्सा सेवा हेतु समर्पित किया।',
+      tactics: 'रूढ़िवादिता और तीव्र सामाजिक विरोध का उत्तर अपने ज्ञान, तपोबल और अमेरिका में सर्वोच्च शैक्षणिक प्रदर्शन से दिया।',
+      legacy: 'भारत में आधुनिक चिकित्सा और उच्च विज्ञान के द्वार लाखों बेटियों के लिए हमेशा के लिए खोल दिए।',
+      citation: 'विमेन्स मेडिकल कॉलेज ऑफ पेंसिलवेनिया पुरालेख (१८८६); कैरोलीन हीली डॉल कृत जीवन चरित।'
+    },
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#38BDF8'
   },
   {
-    id: 'anjali',
-    icon: '💻',
-    name: 'Anjali P.',
-    role: 'Tech Entrepreneur',
-    story: 'Joined Shakti Sabha\'s digital literacy workshops at 19. Now runs a 12-person tech startup. Revenue: ₹40L in Year 1 — "they gave me permission to be ambitious."',
-    cardColor: 'linear-gradient(135deg, #6B21A8 0%, #9333EA 100%)',
-    textColor: '#FFFFFF',
-  },
-  {
-    id: 'kavya',
-    icon: '🎨',
-    name: 'Kavya R.',
-    role: 'Artist & Activist',
-    story: 'Used art therapy from Shakti Bhava healing circle to process trauma. Now exhibits nationally and funds girls\' education across Vidarbha — "pain became my canvas."',
-    cardColor: 'linear-gradient(135deg, #0F766E 0%, #14B8A6 100%)',
-    textColor: '#FFFFFF',
-  },
-]
-
-const VIDEOS: VideoCard[] = [
-  {
-    id: 'v1',
-    title: 'Ritu\'s Journey: From Village to Collectorate',
-    subtitle: 'Overcoming silence, building conviction (8 min)',
-    duration: '8:24',
-    thumb: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'v2',
-    title: 'The Staff in Her Hand: Meera\'s Story',
-    subtitle: 'From defensive fear to national podium (6 min)',
-    duration: '6:12',
-    thumb: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
-  },
-  {
-    id: 'v3',
-    title: 'Code & Courage: Anjali Speaks',
-    subtitle: 'Building a tech enterprise from rural roots (5 min)',
-    duration: '5:45',
-    thumb: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80',
-  },
-]
-
-const FOOTNOTES = [
-  { id: 1, text: 'Source: Portuguese Colonial Records (Goa Archives) & Queen Abbakka Memorial Trust Archives, Ullal.' },
-  { id: 2, text: 'Source: Brihadaranyaka Upanishad, Chapter III, Brahmana 6 & 8 (Dialogues with Sage Yajnavalkya).' },
-  { id: 3, text: 'Source: Akbarnama by Abul Fazl, Volume II, Account of the Conquest of Garha-Katanga.' },
-  { id: 4, text: 'Source: Keladi Nripa Vijaya by Linganna Kavi & Karnataka State Archives (Keladi Dynasty Series).' },
-  { id: 5, text: 'Source: National Archives of India, Foreign & Political Department Proceedings, 1858.' },
-  { id: 6, text: 'Source: Woman\'s Medical College of Pennsylvania Archives, Philadelphia, 1886.' },
+    id: 'modern',
+    yearNumeric: 2026,
+    epochEn: '21st Century Sovereign Awakening',
+    epochHi: '२१वीं सदी — आधुनिक वीरांगना जागरण',
+    nameEn: 'Today’s Success Daughters',
+    nameHi: 'आज की सफल बेटियाँ',
+    yearsEn: 'Present Era · Pan-India Impact',
+    yearsHi: 'वर्तमान युग · अखिल भारतीय प्रभाव',
+    quoteEn: 'From village farms to civil services and technology startups, our strength is unstoppable.',
+    quoteHi: 'गाँवों के खेतों से लेकर प्रशासनिक सेवा और प्रौद्योगिकी उद्यमों तक — हमारी शक्ति अब अडिग है।',
+    descEn: 'Shakti Sabha alumni clearing civil services, winning national martial arts medals, and leading rural economic enterprises.',
+    descHi: 'शक्ति सभा की वे प्रशिक्षित बेटियाँ जिन्होंने यूपीएससी उत्तीर्ण किया, राष्ट्रीय खेल जीते और आत्मनिर्भरता की मिसाल बनीं।',
+    dossierEn: {
+      context: 'Demonstrating that the warrior spirit of Gargi, Abbakka, and Lakshmibai thrives in modern India’s youth.',
+      tactics: 'Combining physical martial fitness (Lathi-Kaushal), deep psychological resilience, and digital literacy.',
+      legacy: 'Creating a self-sustaining ecosystem of 50,000+ fearless women leaders across 400+ schools.',
+      citation: 'Shakti Sabha On-Ground Impact Audit 2024–2026; Zilla Parishad Educational Field Reports.'
+    },
+    dossierHi: {
+      context: 'यह सिद्ध करती हैं कि गार्गी, अब्बक्का और लक्ष्मीबाई की तेजस्विता आज भी भारत की प्रत्येक बेटी के रक्त में प्रवाहित है।',
+      tactics: 'लाठी-कौशल आत्मरक्षा, मानसिक सुदृढ़ता तथा डिजिटल व प्रशासनिक नेतृत्व का अनुपम समन्वय।',
+      legacy: '४०० से अधिक विद्यालयों में ५०,००० से अधिक बेटियों का एक सशक्त, स्वाभिमानी और सुरक्षित समाज।',
+      citation: 'शक्ति सभा धरातलीय प्रभाव अंकेक्षण रिपोर्ट २०२४–२०२६; जिला परिषद शिक्षा प्रतिवेदन।'
+    },
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
+    accentColor: '#E8C98A'
+  }
 ]
 
 export default function HistoryPage() {
-  const [expandedId, setExpandedId] = useState<string | null>(null)
-  const [activeFootnote, setActiveFootnote] = useState<number | null>(null)
-  const [formSubmitted, setFormSubmitted] = useState(false)
+  const [lang, setLang] = useState<Lang>('en')
+  const [activeDossier, setActiveDossier] = useState<Milestone | null>(null)
+  const [activeEpochIndex, setActiveEpochIndex] = useState(0)
+  const [scrollProgress, setScrollProgress] = useState(0)
 
-  const heroRef = useRef<HTMLDivElement>(null)
-  const warriorsRef = useRef<HTMLDivElement>(null)
-  const successRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const graphPathRef = useRef<SVGPathElement>(null)
+
+  // Ascending curve points normalized to 0-100 coordinates
+  // (x from 10 to 90, y ascends from bottom 88 up to top 15)
+  const pathD = 'M 15 85 C 30 80, 45 70, 55 52 C 65 38, 75 24, 88 15'
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      if (heroRef.current) {
-        gsap.from(heroRef.current.querySelectorAll('[data-hero-child]'), {
-          opacity: 0,
-          y: 25,
-          stagger: 0.12,
-          duration: 0.7,
-          ease: 'power3.out',
-        })
-      }
-    })
+    const handleScroll = () => {
+      const el = sectionRef.current
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const totalH = rect.height - window.innerHeight
+      if (totalH <= 0) return
 
-    return () => ctx.revert()
+      const currentScroll = -rect.top
+      const progress = Math.max(0, Math.min(1, currentScroll / totalH))
+      setScrollProgress(progress)
+
+      const activeIdx = Math.min(
+        TIMELINE_DATA.length - 1,
+        Math.floor(progress * TIMELINE_DATA.length)
+      )
+      setActiveEpochIndex(activeIdx)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Calculate current indicator position on SVG curve
+  const currentCoord = useMemo(() => {
+    const p = scrollProgress
+    // Approximate curve position based on cubic bezier
+    const x = 15 + p * 73
+    const y = 85 - Math.pow(p, 0.85) * 70
+    return { x, y }
+  }, [scrollProgress])
+
+  const scrollToMilestone = (id: string) => {
+    const el = document.getElementById(`milestone-${id}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }
+
+  const currentMilestone = TIMELINE_DATA[activeEpochIndex]
 
   return (
     <main className={h.page}>
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
-      <div
-        className={h.banner}
-        style={{
-          background: 'linear-gradient(135deg, #8B0057 0%, #C2185B 40%, #E91E8C 70%, #FF4081 100%)',
-        }}
-        ref={heroRef}
-      >
+      {/* ── Top Header Banner with Translator Switcher ── */}
+      <div className={h.banner}>
         <div className={h.bannerInner}>
-          <Link to="/" className={s.back} data-hero-child>← Back to Home</Link>
-          <span className={h.bannerEyebrow} data-hero-child>
-            Bharat Ki Shaan · Forgotten Veeranganas
-          </span>
-          <h1 className={h.bannerTitle} data-hero-child>Her Story Is History</h1>
-          <p className={h.bannerHindi} data-hero-child>
-            इतिहास की वीरांगनाएँ और आज की सफल बेटियाँ
-          </p>
-          <p className={h.bannerDesc} data-hero-child>
-            From ancient Vedic debates to modern boardrooms — the unbroken lineage of Bharat's sovereign women.
-          </p>
-        </div>
-      </div>
+          <div className={h.bannerTopBar}>
+            <Link to="/" className={s.back} style={{ margin: 0 }}>
+              {lang === 'en' ? '← Back to Home' : '← मुख्य पृष्ठ पर लौटें'}
+            </Link>
 
-      {/* ── SHAKTI SUTRA DAILY WISDOM BANNER ─────────────────────── */}
-      <div style={{ background: '#0D090B', borderBottom: '1px solid rgba(201, 169, 110, 0.3)', padding: '2.5rem clamp(1.5rem, 4vw, 3rem)' }}>
-        <div style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(201, 169, 110, 0.12)', border: '1px solid rgba(201, 169, 110, 0.3)', padding: '0.3rem 1rem', borderRadius: '9999px', color: '#E8C98A', fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '1rem' }}>
-            <span>✦</span> Aaj Ka Shakti Sutra <span>✦</span>
-          </div>
-          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.15rem, 2vw, 1.55rem)', color: '#FFFFFF', lineHeight: 1.6, fontStyle: 'italic', marginBottom: '0.75rem' }}>
-            "Stri hi srishti ka aadhaar hai, woh shakti hai jis par sansaar tika hai. Usse kamzor samajhna — apni neenv ko kamzor samajhna hai."
-          </blockquote>
-          <p style={{ color: '#C9A96E', fontSize: '0.85rem', fontWeight: 600 }}>
-            — Shakta Mahimna Stotra
-          </p>
-        </div>
-      </div>
-
-      {/* ── Historical Women Warriors ────────────────────────────── */}
-      <section className={h.section}>
-        <div className={h.sectionInner}>
-          <div className={h.sectionHeader}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#C2185B', fontWeight: 700, textTransform: 'uppercase' }}>
-              Bharat Ki Shaan
-            </span>
-            <h2 className={h.sectionTitle}>Forgotten Veeranganas</h2>
-            <p className={h.sectionSubtitle}>
-              Their courage wrote history. Click any warrior card to inspect their verified biographical archives.
-            </p>
-          </div>
-
-          <div className={h.warriorsGrid} ref={warriorsRef}>
-            {WARRIORS.map((w) => (
-              <div
-                key={w.id}
-                className={h.warriorCard}
-                data-warrior
-                style={{ background: w.gradient }}
-                onClick={() => setExpandedId(expandedId === w.id ? null : w.id)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && setExpandedId(expandedId === w.id ? null : w.id)}
+            {/* Language Translator Toggle — Strictly Unmixed */}
+            <div className={h.langSwitcher}>
+              <button
+                type="button"
+                onClick={() => setLang('en')}
+                className={`${h.langBtn} ${lang === 'en' ? h.langBtnActive : ''}`}
+                aria-label="Switch to English"
               >
-                <div className={h.cardTop}>
-                  <span className={h.warriorIcon}>{w.icon}</span>
-                  <span className={h.warriorYears}>{w.years}</span>
-                </div>
-
-                <h3 className={h.warriorName}>{w.name}</h3>
-                <p className={h.warriorQuote}>"{w.quote}"</p>
-                <p className={h.warriorDesc}>{w.desc}</p>
-
-                <div className={h.cardAction}>
-                  <span
-                    className={h.fnRef}
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      setActiveFootnote(activeFootnote === w.footnote ? null : w.footnote)
-                    }}
-                    title={`View Citation [${w.footnote}]`}
-                  >
-                    [{w.footnote}]
-                  </span>
-                  <span className={h.expandHint}>
-                    {expandedId === w.id ? 'Close Story ↑' : 'Read Full Story ↓'}
-                  </span>
-                </div>
-
-                {expandedId === w.id && (
-                  <div className={h.bioExpanded} style={{ borderColor: w.accentColor }}>
-                    <p className={h.bioText}>{w.bio}</p>
-                  </div>
-                )}
-              </div>
-            ))}
+                <span>🇬🇧</span> English
+              </button>
+              <button
+                type="button"
+                onClick={() => setLang('hi')}
+                className={`${h.langBtn} ${lang === 'hi' ? h.langBtnActive : ''}`}
+                aria-label="हिन्दी में बदलें"
+              >
+                <span>🇮🇳</span> हिन्दी
+              </button>
+            </div>
           </div>
 
-          {/* Active Footnote Popup */}
-          {activeFootnote !== null && (
-            <div className={h.fnPopup}>
-              <div className={h.fnPopupInner}>
-                <strong>Footnote [{activeFootnote}]:</strong>{' '}
-                {FOOTNOTES.find((f) => f.id === activeFootnote)?.text}
-                <button
-                  className={h.fnClose}
-                  onClick={() => setActiveFootnote(null)}
-                >
-                  ✕
-                </button>
+          <span className={h.bannerEyebrow}>
+            {lang === 'en'
+              ? 'Chronological Archival Trajectory · 800 BCE – 2026 CE'
+              : 'कालक्रमानुसार ऐतिहासिक संप्रभुता · ८०० ईसा पूर्व – २०२६'}
+          </span>
+
+          <h1 className={h.bannerTitle}>
+            {lang === 'en' ? 'The Ascending Arc of Itihaas' : 'इतिहास की वीरांगनाएँ एवं उत्कर्ष'}
+          </h1>
+
+          <p className={h.bannerDesc}>
+            {lang === 'en'
+              ? 'Witness the continuous, unbroken ascent of India’s sovereign warrior women. As you scroll, trace centuries of martial valor, philosophical brilliance, and sovereign dignity.'
+              : 'देखिए भारतीय नारी के शौर्य, स्वाभिमान और बौद्धिक नेतृत्व की अनवरत यात्रा। जैसे-जैसे आप आगे बढ़ेंगे, कालचक्र का यह वक्र ऊपर उठता जाएगा।'}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Wisdom Banner ─────────────────────────────── */}
+      <div className={h.wisdomBox}>
+        <div className={h.wisdomInner}>
+          <div className={h.wisdomTag}>
+            <span>✦</span> {lang === 'en' ? 'Shakti Sutra of the Day' : 'आज का शक्ति सूत्र'} <span>✦</span>
+          </div>
+          <blockquote className={h.wisdomQuote}>
+            {lang === 'en'
+              ? '“Woman is the primal foundation of creation; she is the sovereign power upon which the entire cosmos rests. To deem her weak is to deem one’s own civilizational foundation weak.”'
+              : '“स्त्री ही सृष्टि का आधार है, वह शक्ति है जिस पर संपूर्ण संसार टिका है। उसे दुर्बल समझना अपनी ही नींव को दुर्बल समझना है।”'}
+          </blockquote>
+          <p className={h.wisdomSource}>
+            {lang === 'en' ? '— Shakta Mahimna Stotra' : '— शाक्त महिम्न स्तोत्र'}
+          </p>
+        </div>
+      </div>
+
+      {/* ── Main Section with Sticky Ascending Graph ───── */}
+      <section className={h.timelineSection} ref={sectionRef}>
+        <div className={h.layoutGrid}>
+
+          {/* Sticky Left Graph Panel */}
+          <div className={h.stickySide}>
+            <div className={h.sideHeader}>
+              <span className={h.sideTitle}>
+                {lang === 'en' ? 'Ascending Graph' : 'उत्कर्ष वक्र आलेख'}
+              </span>
+              <div className={h.sideLive}>
+                <span className={h.liveDot} />
+                <span>{lang === 'en' ? 'Live Track' : 'सक्रिय ट्रैकिंग'}</span>
               </div>
             </div>
-          )}
 
-          {/* Footnotes List */}
-          <div className={h.footnotesList}>
-            <h4 className={h.fnHeading}>Historical References & Primary Sources:</h4>
-            <div className={h.fnGrid}>
-              {FOOTNOTES.map((f) => (
-                <div key={f.id} className={h.fnItem}>
-                  <span className={h.fnNumber}>[{f.id}]</span>
-                  <span className={h.fnText}>{f.text}</span>
+            {/* Dynamic SVG Ascending Graph */}
+            <div className={h.svgChartBox}>
+              <svg viewBox="0 0 100 100" className={h.chartSvg}>
+                <defs>
+                  <linearGradient id="chartGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#DC143C" stopOpacity="0.4" />
+                    <stop offset="60%" stopColor="#DC143C" stopOpacity="1" />
+                    <stop offset="100%" stopColor="#F59E0B" stopOpacity="1" />
+                  </linearGradient>
+                  <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+                    <feMerge>
+                      <feMergeNode />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                {/* Grid Lines */}
+                <line x1="10" y1="20" x2="90" y2="20" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
+                <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
+                <line x1="10" y1="80" x2="90" y2="80" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
+                <line x1="10" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.1)" />
+                <line x1="10" y1="90" x2="90" y2="90" stroke="rgba(255,255,255,0.1)" />
+
+                {/* Axis Labels */}
+                <text x="12" y="16" fill="#9CA3AF" fontSize="3.8" fontFamily="sans-serif">
+                  {lang === 'en' ? '▲ Sovereign Impact' : '▲ संप्रभुता प्रभाव'}
+                </text>
+                <text x="64" y="96" fill="#9CA3AF" fontSize="3.8" fontFamily="sans-serif">
+                  {lang === 'en' ? 'Time (Centuries) ►' : 'कालक्रम (शताब्दी) ►'}
+                </text>
+
+                {/* Base Path Ghost */}
+                <path
+                  d={pathD}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.12)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+
+                {/* Ascending Luminous Active Line */}
+                <path
+                  ref={graphPathRef}
+                  d={pathD}
+                  fill="none"
+                  stroke="url(#chartGlow)"
+                  strokeWidth="3.2"
+                  strokeLinecap="round"
+                  strokeDasharray="150"
+                  strokeDashoffset={150 * (1 - scrollProgress)}
+                />
+
+                {/* Dynamic Travelling Node Point */}
+                <circle
+                  cx={currentCoord.x}
+                  cy={currentCoord.y}
+                  r="4.5"
+                  fill="#FFFFFF"
+                  stroke="#DC143C"
+                  strokeWidth="2"
+                  filter="url(#nodeGlow)"
+                />
+              </svg>
+            </div>
+
+            {/* Current Metrics Box */}
+            <div className={h.metricsRow}>
+              <div className={h.metricTile}>
+                <div className={h.metricVal}>
+                  {currentMilestone.yearNumeric < 0
+                    ? `${Math.abs(currentMilestone.yearNumeric)} BCE`
+                    : `${currentMilestone.yearNumeric} CE`}
                 </div>
+                <div className={h.metricLbl}>
+                  {lang === 'en' ? 'Active Era' : 'वर्तमान काल'}
+                </div>
+              </div>
+              <div className={h.metricTile}>
+                <div className={h.metricVal} style={{ color: '#F59E0B' }}>
+                  {Math.round(scrollProgress * 100)}%
+                </div>
+                <div className={h.metricLbl}>
+                  {lang === 'en' ? 'Timeline Ascent' : 'उत्कर्ष प्रगति'}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '0.85rem', fontSize: '0.78rem', color: '#E8C98A', fontWeight: 600 }}>
+              {lang === 'en' ? currentMilestone.epochEn : currentMilestone.epochHi}
+            </div>
+
+            {/* Quick Epoch Navigation List */}
+            <div className={h.epochNav}>
+              {TIMELINE_DATA.map((item, idx) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToMilestone(item.id)}
+                  className={`${h.epochNavBtn} ${activeEpochIndex === idx ? h.epochNavBtnActive : ''}`}
+                >
+                  <span>{lang === 'en' ? item.nameEn : item.nameHi}</span>
+                  <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>
+                    {item.yearNumeric < 0 ? `${Math.abs(item.yearNumeric)} BCE` : item.yearNumeric}
+                  </span>
+                </button>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ── Today's Success Girls ─────────────────────────────────── */}
-      <section className={h.successSection}>
-        <div className={h.sectionInner}>
-          <div className={h.sectionHeader}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#EC4899', fontWeight: 700, textTransform: 'uppercase' }}>
-              Modern Awakening
-            </span>
-            <h2 className={h.sectionTitle}>🌟 Today's Success Girls</h2>
-            <p className={h.sectionSubtitle}>
-              Shakti Sabha's own — daughters who rose from challenge to triumph.
-            </p>
-          </div>
-
-          <div className={h.successGrid} ref={successRef}>
-            {SUCCESS_GIRLS.map((g) => (
-              <div
-                key={g.id}
-                className={h.successCard}
-                style={{ background: g.cardColor, color: g.textColor }}
-              >
-                <div className={h.successTop}>
-                  <span className={h.successIcon}>{g.icon}</span>
-                  <span className={h.successBadge}>{g.role}</span>
-                </div>
-                <h3 className={h.successName}>{g.name}</h3>
-                <p className={h.successStory}>{g.story}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Video Testimonials ────────────────────────────────────── */}
-      <section className={h.videoSection}>
-        <div className={h.sectionInner}>
-          <div className={h.sectionHeader}>
-            <h2 className={h.sectionTitle}>🎬 Her Voice · Her Journey</h2>
-            <p className={h.sectionSubtitle}>
-              Video testimonials from the women who lead our village circles.
-            </p>
-          </div>
-
-          <div className={h.videoGrid}>
-            {VIDEOS.map((v) => (
-              <div
-                key={v.id}
-                className={h.videoCard}
-                onClick={() => alert(`Playing video documentary: "${v.title}"`)}
-              >
-                <div className={h.thumbBox}>
-                  <img src={v.thumb} alt={v.title} className={h.thumbImg} />
-                  <div className={h.playOverlay}>
-                    <div className={h.playBtn}>▶</div>
+          {/* Right Timeline Stream */}
+          <div className={h.timelineStream}>
+            {TIMELINE_DATA.map((item) => (
+              <div key={item.id} id={`milestone-${item.id}`} className={h.timelineCard}>
+                <div className={h.cardImgWrap}>
+                  <img src={item.image} alt={lang === 'en' ? item.nameEn : item.nameHi} loading="lazy" />
+                  <div className={h.cardEraBadge}>
+                    {lang === 'en' ? item.epochEn : item.epochHi}
                   </div>
-                  <span className={h.durationBadge}>{v.duration}</span>
                 </div>
-                <div className={h.videoInfo}>
-                  <h4 className={h.videoTitle}>{v.title}</h4>
-                  <p className={h.videoSubtitle}>{v.subtitle}</p>
+
+                <div className={h.cardBody}>
+                  <div>
+                    <div className={h.cardYear}>
+                      {lang === 'en' ? item.yearsEn : item.yearsHi}
+                    </div>
+                    <h3 className={h.cardName}>
+                      {lang === 'en' ? item.nameEn : item.nameHi}
+                    </h3>
+                    <p className={h.cardMotto}>
+                      "{lang === 'en' ? item.quoteEn : item.quoteHi}"
+                    </p>
+                    <p className={h.cardDesc}>
+                      {lang === 'en' ? item.descEn : item.descHi}
+                    </p>
+                  </div>
+
+                  <div className={h.cardActions}>
+                    <button
+                      className={h.inspectBtn}
+                      onClick={() => setActiveDossier(item)}
+                    >
+                      <BookOpen size={14} />
+                      {lang === 'en' ? 'Inspect Historical Record' : 'ऐतिहासिक दस्तावेज देखें'}
+                    </button>
+                    <button
+                      className={h.citationLink}
+                      onClick={() => setActiveDossier(item)}
+                    >
+                      {lang === 'en' ? 'View Primary Citations →' : 'मूल पुरातात्विक संदर्भ →'}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* ── Share a Story Form ────────────────────────────────────── */}
-      <section className={h.shareSection}>
-        <div className={h.shareInner}>
-          <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#C2185B', fontWeight: 700, textTransform: 'uppercase' }}>
-            Inspire Others
-          </span>
-          <h2 className={h.shareTitle}>Know a Success Story? Share it with us</h2>
-          <p className={h.shareDesc}>
-            Every woman who fights for her dignity is writing history. Tell us her story — we feature verified grassroots triumphs.
-          </p>
-
-          {formSubmitted ? (
-            <div className={h.shareSuccess}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🌺</div>
-              <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', color: '#831843', marginBottom: '0.5rem' }}>
-                Story Received!
-              </h3>
-              <p style={{ fontSize: '0.9rem', color: '#9D174D' }}>
-                Thank you for honoring her courage. Our editorial collective will review and reach out for verification.
-              </p>
-            </div>
-          ) : (
-            <form
-              className={h.shareForm}
-              onSubmit={(e) => {
-                e.preventDefault()
-                setFormSubmitted(true)
-              }}
+      {/* ── Archival Dossier Modal Lightbox ──────────── */}
+      {activeDossier && (
+        <div className={h.modalOverlay} onClick={() => setActiveDossier(null)}>
+          <div className={h.modalContent} onClick={e => e.stopPropagation()}>
+            <button
+              className={h.modalClose}
+              onClick={() => setActiveDossier(null)}
+              aria-label="Close"
             >
-              <div className={h.formRow}>
-                <div className={h.formField}>
-                  <label className={h.label}>Her Name</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Savita Patil"
-                    className={h.input}
-                  />
-                </div>
-                <div className={h.formField}>
-                  <label className={h.label}>Her Field / Achievement</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Village Sarpanch / Sports Champion"
-                    className={h.input}
-                  />
-                </div>
+              <X size={18} />
+            </button>
+
+            <div style={{ fontSize: '0.72rem', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.25rem' }}>
+              {lang === 'en' ? 'Verified Archival Dossier' : 'प्रमाणित पुरातात्विक अभिलेख'}
+            </div>
+
+            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.65rem', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+              {lang === 'en' ? activeDossier.nameEn : activeDossier.nameHi}
+            </h2>
+
+            <div style={{ fontSize: '0.82rem', color: '#C9A96E', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
+              {lang === 'en' ? activeDossier.yearsEn : activeDossier.yearsHi}
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontSize: '0.9rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.75 }}>
+              <div>
+                <strong style={{ color: '#E8C98A', display: 'block', marginBottom: '0.25rem' }}>
+                  {lang === 'en' ? '1. Historical Context & Epoch:' : '१. ऐतिहासिक संदर्भ एवं कालखंड:'}
+                </strong>
+                <p>
+                  {lang === 'en' ? activeDossier.dossierEn.context : activeDossier.dossierHi.context}
+                </p>
               </div>
 
-              <div className={h.formField}>
-                <label className={h.label}>Brief Story (2–3 sentences)</label>
-                <textarea
-                  rows={3}
-                  required
-                  placeholder="What challenge did she face, and how did she overcome it?"
-                  className={h.textarea}
-                />
+              <div>
+                <strong style={{ color: '#E8C98A', display: 'block', marginBottom: '0.25rem' }}>
+                  {lang === 'en' ? '2. Martial & Strategic Innovation:' : '२. सामरिक नवाचार एवं नेतृत्व:'}
+                </strong>
+                <p>
+                  {lang === 'en' ? activeDossier.dossierEn.tactics : activeDossier.dossierHi.tactics}
+                </p>
               </div>
 
-              <div className={h.formField}>
-                <label className={h.label}>Your Email or Phone (for verification)</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="contact@email.com / +91..."
-                  className={h.input}
-                />
+              <div>
+                <strong style={{ color: '#E8C98A', display: 'block', marginBottom: '0.25rem' }}>
+                  {lang === 'en' ? '3. Civilizational Legacy:' : '३. सभ्यतागत धरोहर:'}
+                </strong>
+                <p>
+                  {lang === 'en' ? activeDossier.dossierEn.legacy : activeDossier.dossierHi.legacy}
+                </p>
               </div>
 
-              <button type="submit" className={h.submitBtn}>
-                Submit Her Story →
-              </button>
-            </form>
-          )}
+              <div style={{ background: 'rgba(220, 20, 60, 0.1)', border: '1px solid rgba(220, 20, 60, 0.3)', borderRadius: '10px', padding: '1rem', marginTop: '0.5rem' }}>
+                <strong style={{ color: '#FFB3BA', fontSize: '0.8rem', display: 'block', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>
+                  {lang === 'en' ? 'Verified Epigraphical Citation:' : 'प्रमाणित पुरालेखीय संदर्भ:'}
+                </strong>
+                <span style={{ fontSize: '0.82rem', color: '#E5E7EB' }}>
+                  {lang === 'en' ? activeDossier.dossierEn.citation : activeDossier.dossierHi.citation}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-      </section>
+      )}
     </main>
   )
 }
