@@ -1,8 +1,10 @@
 /* ============================================================
    HistoryPage.module.css
-   Vertical Spine Timeline with Alternating Flags & Expanding Active Milestones
-   Based on classic spine timeline architecture
-   Theme: Pure White (#FFFFFF), Deep Charcoal (#111827), Crimson (#DC143C)
+   Vertical Spine Timeline: 2014 to Current (2026)
+   - Zero Dot Collision: Dedicated Spine Dot at left: 50%
+   - Round Radius Photo for Active Milestone
+   - Colorful Falling Leaves
+   - Responsive Mobile Layout
    ============================================================ */
 
 .pageContainer {
@@ -39,7 +41,7 @@
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.96);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid #E5E7EB;
   padding: 0.85rem clamp(1.25rem, 4vw, 3rem);
@@ -183,12 +185,12 @@
 }
 
 /* ============================================================
-   The Classic Vertical Spine Timeline
+   The Classic Vertical Spine Timeline (Zero Dot Collision)
    ============================================================ */
 
 .timelineWrapper {
   position: relative;
-  max-width: 840px;
+  max-width: 860px;
   margin: 3rem auto 4rem;
   padding: 2rem 1.5rem;
   z-index: 15;
@@ -243,26 +245,61 @@
   visibility: hidden;
 }
 
+/* ── Central Spine Dot (Separated from Flag, Guaranteed Zero Overlap) ── */
+.spineDot {
+  position: absolute;
+  left: 50%;
+  top: 36px;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: #FFFFFF;
+  border-radius: 50% !important;
+  border: 3px solid #9CA3AF;
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.itemActive .spineDot {
+  border-color: #DC143C !important;
+  background: #DC143C !important;
+  transform: translate(-50%, -50%) scale(1.4);
+  box-shadow: 0 0 0 5px rgba(220, 20, 60, 0.2);
+}
+
 /* ── Alternating Directions ── */
 .directionL {
   position: relative;
-  width: calc(50% - 35px);
+  width: calc(50% - 38px);
   float: left;
   text-align: right;
+  padding-right: 10px;
+  box-sizing: border-box;
 }
 
 .directionR {
   position: relative;
-  width: calc(50% - 35px);
+  width: calc(50% - 38px);
   float: right;
   text-align: left;
+  padding-left: 10px;
+  box-sizing: border-box;
 }
 
 /* Flag Wrapper */
 .flagWrapper {
   position: relative;
-  display: inline-block;
-  text-align: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.directionL .flagWrapper {
+  flex-direction: row-reverse;
+}
+
+.directionR .flagWrapper {
+  flex-direction: row;
 }
 
 .flag {
@@ -284,41 +321,7 @@
   color: #DC143C !important;
 }
 
-/* Spine Dots on the Center Line */
-.directionL .flag:before,
-.directionR .flag:before {
-  position: absolute;
-  top: 50%;
-  content: ' ';
-  display: block;
-  width: 12px;
-  height: 12px;
-  margin-top: -8px;
-  background: #FFFFFF;
-  border-radius: 50%;
-  border: 4px solid #9CA3AF;
-  z-index: 10;
-  transition: all 0.25s ease;
-}
-
-.directionL .flag:before {
-  right: -42px;
-}
-
-.directionR .flag:before {
-  left: -42px;
-}
-
-/* Active Node Dot Highlight */
-.itemActive .directionL .flag:before,
-.itemActive .directionR .flag:before {
-  border-color: #DC143C !important;
-  background: #DC143C !important;
-  transform: scale(1.3);
-  box-shadow: 0 0 0 4px rgba(220, 20, 60, 0.2);
-}
-
-/* Speech Bubble Triangles Pointing to Center Spine */
+/* Speech Bubble Triangles Pointing towards the Spine */
 .directionL .flag:after {
   content: "";
   position: absolute;
@@ -326,10 +329,10 @@
   top: 50%;
   height: 0;
   width: 0;
-  margin-top: -7px;
+  margin-top: -6px;
   border: solid transparent;
   border-left-color: #FFFFFF;
-  border-width: 7px;
+  border-width: 6px;
   pointer-events: none;
 }
 
@@ -340,36 +343,28 @@
   top: 50%;
   height: 0;
   width: 0;
-  margin-top: -7px;
+  margin-top: -6px;
   border: solid transparent;
   border-right-color: #FFFFFF;
-  border-width: 7px;
+  border-width: 6px;
   pointer-events: none;
 }
 
-/* Time Badge */
+/* Time Badge (Clean, inside the card area, never touching spine dot) */
 .timeWrapper {
   display: inline-block;
   line-height: 1em;
-  font-size: 0.72rem;
-  color: #DC143C;
-  font-weight: 700;
-  vertical-align: middle;
-}
-
-.directionL .timeWrapper {
-  margin-right: 0.5rem;
-}
-
-.directionR .timeWrapper {
-  margin-left: 0.5rem;
 }
 
 .time {
   display: inline-block;
-  padding: 4px 8px;
+  padding: 5px 9px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #DC143C;
   background: #FFF1F2;
   border: 1px solid #FECDD3;
+  white-space: nowrap;
 }
 
 /* ── Current Milestone Active Expanded Box ───────────────────── */
@@ -770,13 +765,17 @@
   }
 
   .timeline:before {
-    left: 24px;
+    left: 20px;
     margin-left: 0;
   }
 
   .timelineActiveSpine {
-    left: 24px;
+    left: 20px;
     margin-left: 0;
+  }
+
+  .spineDot {
+    left: 20px !important;
   }
 
   .timelineItem {
@@ -789,25 +788,18 @@
     width: 100%;
     text-align: left;
     padding-left: 48px;
+    padding-right: 0;
     box-sizing: border-box;
   }
 
-  .directionL .flag:before,
-  .directionR .flag:before {
-    left: 18px;
-    right: auto;
-    margin-left: 0;
+  .directionL .flagWrapper,
+  .directionR .flagWrapper {
+    flex-direction: row;
   }
 
   .directionL .flag:after,
   .directionR .flag:after {
     display: none;
-  }
-
-  .directionL .timeWrapper,
-  .directionR .timeWrapper {
-    display: block;
-    margin: 4px 0 0 0;
   }
 
   .activeRoundPhotoWrapper {
