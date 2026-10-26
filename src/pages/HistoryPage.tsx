@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { X, BookOpen, ChevronRight, Compass } from 'lucide-react'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import h from './HistoryPage.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 type Lang = 'en' | 'hi'
 
@@ -619,35 +623,32 @@ export default function HistoryPage() {
 
     const engine = createLeavesEngine(canvas, wrap)
 
-    const toLocal = (e: PointerEvent) => {
+    const onMove = (e: MouseEvent) => {
       const rect = wrap.getBoundingClientRect()
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top }
-    }
-    const onMove = (e: PointerEvent) => {
-      const { x, y } = toLocal(e)
-      engine.setPointer(x, y, true)
+      engine.setPointer(e.clientX - rect.left, e.clientY - rect.top, true)
     }
     const onLeave = () => engine.setPointer(-9999, -9999, false)
 
-    window.addEventListener('pointermove', onMove, { passive: true })
-    window.addEventListener('pointerleave', onLeave, { passive: true })
+    window.addEventListener('mousemove', onMove, { passive: true })
+    document.addEventListener('mouseleave', onLeave)
 
     return () => {
       engine.destroy()
-      window.removeEventListener('pointermove', onMove)
-      window.removeEventListener('pointerleave', onLeave)
+      window.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseleave', onLeave)
     }
   }, [])
 
   // Scroll detection to highlight current date & photo along the spine
   useEffect(() => {
-    const handleScroll = () => {
-      const timelineEl = timelineRef.current
-      if (!timelineEl) return
+    const timelineEl = timelineRef.current
+    if (!timelineEl) return
 
+    const updateSpine = () => {
       const rect = timelineEl.getBoundingClientRect()
       const totalH = rect.height
-      const topOffset = -rect.top + window.innerHeight * 0.4
+      if (totalH <= 0) return
+      const topOffset = -rect.top + window.innerHeight * 0.45
       const progress = Math.max(0, Math.min(1, topOffset / totalH))
       setScrollProgress(progress)
 
@@ -669,9 +670,20 @@ export default function HistoryPage() {
       setActiveMilestoneId(closestId)
     }
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    return () => window.removeEventListener('scroll', handleScroll)
+    const st = ScrollTrigger.create({
+      trigger: timelineEl,
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: updateSpine,
+    })
+
+    window.addEventListener('scroll', updateSpine, { passive: true })
+    updateSpine()
+
+    return () => {
+      st.kill()
+      window.removeEventListener('scroll', updateSpine)
+    }
   }, [])
 
   const handleImageLoad = (src: string) => {
