@@ -1,11 +1,11 @@
 /* ============================================================
    HistoryPage.module.css
-   Pinned Scroll Stage with Ascending Trajectory Graph & Floating Images
+   Pinned Scroll Stage with Ascending White Living Line & Floating Leaves
    Strict Bilingual Design · Pure English | शुद्ध हिन्दी
-   Theme: Obsidian (#070609), Crimson (#DC143C), Matte Gold (#C9A96E)
+   Theme: Obsidian (#070609), Radiant White (#FFFFFF), Crimson (#DC143C), Matte Gold (#C9A96E)
    ============================================================ */
 
-/* ── Outer Tall Scroll Track (Provides 400vh scroll travel distance) ── */
+/* ── Outer Tall Scroll Track (Provides scroll travel distance) ── */
 .pinnedTrack {
   position: relative;
   width: 100%;
@@ -30,6 +30,33 @@
   z-index: 10;
   padding: 1rem 1.5rem;
   box-sizing: border-box;
+}
+
+/* ── Falling Leaves Background Canvas Layer (From Home Hero Section) ── */
+.leavesWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.leavesCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+}
+
+.revealCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 /* Background Atmospheric Noise & Constellation Dust */
@@ -60,15 +87,15 @@
 /* ── Top Header Navigation Bar ───────────────────────────────── */
 .topNav {
   position: relative;
-  z-index: 20;
+  z-index: 25;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
   padding: 0.5rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 10, 15, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 10, 15, 0.8);
   backdrop-filter: blur(16px);
   border-radius: 14px;
 }
@@ -84,7 +111,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -92,7 +119,7 @@
 }
 
 .backHomeLink:hover {
-  color: #E8C98A;
+  color: #FFFFFF;
 }
 
 .brandPill {
@@ -100,9 +127,9 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #DC143C;
-  background: rgba(220, 20, 60, 0.15);
-  border: 1px solid rgba(220, 20, 60, 0.35);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
 }
@@ -125,14 +152,15 @@
 }
 
 .pageHeaderHighlight {
-  color: #DC143C;
+  color: #FFFFFF;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
 }
 
 .scrollGuideHint {
   font-size: 0.75rem;
-  color: #E8C98A;
-  background: rgba(201, 169, 110, 0.12);
-  border: 1px solid rgba(201, 169, 110, 0.3);
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 0.2rem 0.65rem;
   border-radius: 9999px;
   display: inline-flex;
@@ -151,7 +179,7 @@
   display: inline-flex;
   align-items: center;
   background: rgba(18, 14, 22, 0.95);
-  border: 1px solid rgba(201, 169, 110, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 0.25rem;
   border-radius: 9999px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
@@ -178,21 +206,21 @@
 }
 
 .langBtnActive {
-  background: #DC143C;
-  color: #FFFFFF;
-  box-shadow: 0 2px 12px rgba(220, 20, 60, 0.6);
+  background: #FFFFFF;
+  color: #000000;
+  box-shadow: 0 2px 14px rgba(255, 255, 255, 0.6);
 }
 
 /* ── Central Main Ascending Graph Arena ───────────────────────── */
 .graphArena {
   position: relative;
-  z-index: 10;
+  z-index: 15;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0.5rem 0;
-  min-height: 0; /* allows flexbox child shrinkage */
+  min-height: 0;
 }
 
 .graphStage {
@@ -201,10 +229,10 @@
   height: 100%;
   max-height: 58vh;
   min-height: 340px;
-  background: linear-gradient(175deg, rgba(22, 17, 26, 0.85) 0%, rgba(10, 8, 13, 0.95) 100%);
-  border: 1px solid rgba(201, 169, 110, 0.3);
+  background: linear-gradient(175deg, rgba(20, 16, 24, 0.75) 0%, rgba(10, 8, 13, 0.88) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(220, 20, 60, 0.05);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 50px rgba(255, 255, 255, 0.03);
   overflow: visible;
 }
 
@@ -219,26 +247,34 @@
 /* ── Floating Milestone Images on Graph ───────────────────────── */
 .imageCardNode {
   position: absolute;
-  transform: translate(-50%, -50%);
   cursor: pointer;
   z-index: 30;
   display: flex;
   flex-direction: column;
   align-items: center;
   will-change: transform, opacity;
-  transition: opacity 0.4s ease, filter 0.4s ease;
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.5s;
 }
 
-.imageCardNodeDim {
-  opacity: 0.28;
-  filter: grayscale(80%) brightness(0.6);
+/* Strict requirement: ONLY visible when scrolled up to, NO semitransparent images! */
+.imageCardHidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translate(-50%, -50%) scale(0.4) !important;
+}
+
+.imageCardVisible {
+  opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  z-index: 35;
 }
 
 .imageCardNodeActive {
-  opacity: 1;
-  filter: none;
-  z-index: 45;
+  z-index: 50 !important;
 }
 
 /* Card Avatar Circle */
@@ -247,11 +283,11 @@
   height: clamp(52px, 5.5vw, 76px);
   border-radius: 50%;
   overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.4);
+  border: 3px solid rgba(255, 255, 255, 0.7);
   background: #110E15;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3);
   position: relative;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .avatarWrap img {
@@ -263,58 +299,60 @@
 }
 
 .imageCardNode:hover .avatarWrap {
-  transform: scale(1.15);
-  border-color: #E8C98A !important;
-  box-shadow: 0 0 25px rgba(232, 201, 138, 0.8);
+  transform: scale(1.18);
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.95), 0 0 15px rgba(220, 20, 60, 0.5);
 }
 
 .avatarWrapActive {
-  transform: scale(1.12);
-  box-shadow: 0 0 30px rgba(220, 20, 60, 0.8), 0 0 15px rgba(201, 169, 110, 0.5);
-  border-color: #DC143C !important;
-  animation: auraPulse 2.4s infinite alternate ease-in-out;
+  transform: scale(1.15);
+  border-color: #FFFFFF !important;
+  box-shadow: 0 0 35px rgba(255, 255, 255, 0.9), 0 0 20px rgba(220, 20, 60, 0.7);
+  animation: whitePulse 2.2s infinite alternate ease-in-out;
 }
 
-@keyframes auraPulse {
-  0% { box-shadow: 0 0 20px rgba(220, 20, 60, 0.6), 0 0 10px rgba(201, 169, 110, 0.4); }
-  100% { box-shadow: 0 0 35px rgba(220, 20, 60, 0.95), 0 0 20px rgba(232, 201, 138, 0.8); }
+@keyframes whitePulse {
+  0% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.7), 0 0 10px rgba(220, 20, 60, 0.5); }
+  100% { box-shadow: 0 0 45px rgba(255, 255, 255, 1), 0 0 25px rgba(220, 20, 60, 0.9); }
 }
 
 /* Label Pill Under Avatar */
 .cardLabelPill {
-  margin-top: 0.4rem;
-  background: rgba(14, 11, 17, 0.94);
-  border: 1px solid rgba(201, 169, 110, 0.45);
-  padding: 0.2rem 0.6rem;
+  margin-top: 0.45rem;
+  background: rgba(14, 11, 17, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.2rem 0.65rem;
   border-radius: 9999px;
   font-size: 0.7rem;
   font-weight: 700;
   color: #FFFFFF;
   white-space: nowrap;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   gap: 0.35rem;
   pointer-events: none;
-  transition: all 0.25s ease;
 }
 
 .cardYearText {
-  color: #DC143C;
+  color: #FFFFFF;
   font-weight: 800;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
 }
 
 .clickToInspectPill {
   margin-top: 0.25rem;
-  background: #DC143C;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
   font-size: 0.62rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 9999px;
-  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.6);
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
   animation: bounceHint 1.8s infinite ease-in-out;
 }
 
@@ -326,16 +364,16 @@
 /* ── Bottom Dock HUD & Spotlight Bar ─────────────────────────── */
 .bottomHUD {
   position: relative;
-  z-index: 20;
+  z-index: 25;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  background: rgba(14, 11, 18, 0.92);
-  border: 1px solid rgba(201, 169, 110, 0.35);
+  background: rgba(14, 11, 18, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 16px;
   padding: 0.75rem 1.25rem;
   backdrop-filter: blur(20px);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
 }
 
 /* Quick Epoch Jump Pills Row */
@@ -354,8 +392,8 @@
 
 .epochJumpBtn {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.8);
   padding: 0.25rem 0.7rem;
   border-radius: 9999px;
   font-size: 0.72rem;
@@ -369,16 +407,16 @@
 }
 
 .epochJumpBtn:hover {
-  background: rgba(220, 20, 60, 0.25);
-  border-color: #DC143C;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #FFFFFF;
   color: #FFFFFF;
 }
 
 .epochJumpBtnActive {
-  background: #DC143C !important;
-  border-color: #DC143C !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 2px 10px rgba(220, 20, 60, 0.5);
+  background: #FFFFFF !important;
+  border-color: #FFFFFF !important;
+  color: #000000 !important;
+  box-shadow: 0 2px 12px rgba(255, 255, 255, 0.5);
 }
 
 /* Active Milestone Showcase Strip */
@@ -403,7 +441,7 @@
   height: 44px;
   border-radius: 10px;
   overflow: hidden;
-  border: 1px solid rgba(201, 169, 110, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.4);
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -439,7 +477,7 @@
 .spotlightQuoteText {
   font-size: 0.78rem;
   font-style: italic;
-  color: #E8C98A;
+  color: rgba(255, 255, 255, 0.85);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -457,36 +495,37 @@
   flex-direction: column;
   align-items: flex-end;
   font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .ascentMetricValue {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.1rem;
   font-weight: 800;
-  color: #DC143C;
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
 }
 
 .openDossierBtn {
-  background: #DC143C;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
   border: none;
   border-radius: 9999px;
   padding: 0.5rem 1.2rem;
   font-size: 0.78rem;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   transition: all 0.2s ease;
-  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
 }
 
 .openDossierBtn:hover {
-  background: #B01030;
+  background: #E5E7EB;
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(220, 20, 60, 0.6);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
 }
 
 /* ── Lightbox Modal for Full Historical Archival Dossier ──────── */
@@ -494,7 +533,7 @@
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(5, 4, 7, 0.88);
+  background: rgba(5, 4, 7, 0.9);
   backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
@@ -504,7 +543,7 @@
 
 .modalSheet {
   background: linear-gradient(165deg, #18141D 0%, #0E0C12 100%);
-  border: 1px solid rgba(201, 169, 110, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   max-width: 760px;
   width: 100%;
@@ -512,7 +551,7 @@
   overflow-y: auto;
   padding: clamp(1.5rem, 3.5vw, 2.5rem);
   position: relative;
-  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 45px rgba(220, 20, 60, 0.2);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 45px rgba(255, 255, 255, 0.2);
 }
 
 .modalCloseBtn {
@@ -522,8 +561,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   color: #FFFFFF;
   cursor: pointer;
   display: flex;
@@ -533,8 +572,9 @@
 }
 
 .modalCloseBtn:hover {
-  background: #DC143C;
-  border-color: #DC143C;
+  background: #FFFFFF;
+  color: #000000;
+  border-color: #FFFFFF;
   transform: rotate(90deg);
 }
 
@@ -544,7 +584,7 @@
   border-radius: 14px;
   overflow: hidden;
   margin-bottom: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .modalHeroBanner img {
@@ -555,7 +595,7 @@
 
 .modalBadgeRow {
   font-size: 0.72rem;
-  color: #DC143C;
+  color: #FFFFFF;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -581,9 +621,9 @@
 .modalQuoteCallout {
   font-style: italic;
   font-size: 0.95rem;
-  color: #E8C98A;
-  background: rgba(201, 169, 110, 0.08);
-  border-left: 3px solid #DC143C;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+  border-left: 3px solid #FFFFFF;
   padding: 0.85rem 1rem;
   border-radius: 0 8px 8px 0;
   margin-bottom: 1.5rem;
@@ -608,15 +648,15 @@
 }
 
 .modalCitationBox {
-  background: rgba(220, 20, 60, 0.1);
-  border: 1px solid rgba(220, 20, 60, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 10px;
   padding: 0.9rem 1.1rem;
   margin-top: 0.5rem;
 }
 
 .modalCitationLabel {
-  color: #FFB3BA;
+  color: #FFFFFF;
   font-size: 0.75rem;
   display: block;
   text-transform: uppercase;
