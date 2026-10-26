@@ -1,18 +1,16 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { X, ArrowRight, BookOpen } from 'lucide-react'
+import { X, BookOpen, ChevronRight } from 'lucide-react'
 import s from './PageLayout.module.css'
 import h from './HistoryPage.module.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 type Lang = 'en' | 'hi'
 
 interface Milestone {
   id: string
   yearNumeric: number
+  posX: number // Percentage 0 - 100
+  posY: number // Percentage 0 - 100 (ascending: high % = bottom, low % = top)
   epochEn: string
   epochHi: string
   nameEn: string
@@ -39,10 +37,12 @@ interface Milestone {
   accentColor: string
 }
 
-const TIMELINE_DATA: Milestone[] = [
+const TIMELINE_MILESTONES: Milestone[] = [
   {
     id: 'gargi',
     yearNumeric: -800,
+    posX: 8,
+    posY: 84,
     epochEn: 'Vedic Civilization (~800 BCE)',
     epochHi: 'वैदिक सभ्यता (लगभग ८०० ईसा पूर्व)',
     nameEn: 'Gargi Vachaknavi',
@@ -71,6 +71,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'rudrama',
     yearNumeric: 1262,
+    posX: 21,
+    posY: 74,
     epochEn: 'Medieval Kakatiya Era (1262–1289 CE)',
     epochHi: 'मध्यकालीन काकतीय युग (१२६२–१२८९ ईस्वी)',
     nameEn: 'Rani Rudrama Devi',
@@ -79,11 +81,11 @@ const TIMELINE_DATA: Milestone[] = [
     yearsHi: '१३वीं शताब्दी · ओरुगल्लु (वारंगल)',
     quoteEn: 'The sovereignty of this soil is defended not by birthright alone, but by the sword in hand.',
     quoteHi: 'इस मातृभूमि की संप्रभुता केवल कुल से नहीं, अपितु रणक्षेत्र में खड्ग की धार से रक्षित होती है।',
-    descEn: 'Monarch of the Kakatiya dynasty who commanded armies in male warrior attire, revolutionized concentric fort defenses, and protected Deccan trade routes.',
+    descEn: 'Monarch of the Kakatiya dynasty who commanded armies in warrior attire, revolutionized concentric fort defenses, and protected Deccan trade routes.',
     descHi: 'काकतीय राजवंश की पराक्रमी शासिका जिन्होंने वीर वेश में सेना का नेतृत्व किया, अभेद्य दुर्ग निर्माण कराया और दक्कन की रक्षा की।',
     dossierEn: {
       context: 'Venetian traveler Marco Polo marveled at her enlightened administration, justice, and military valor upon visiting the Kakatiya kingdom.',
-      tactics: 'Pioneered circular concentric stone fortifications and deep moat architecture at Warangal, resisting multiple Yadava and Chola invasions.',
+      tactics: 'Pioneered circular concentric stone fortifications and deep moat architecture at Warangal, resisting multiple invasions.',
       legacy: 'One of the few independently crowned female monarchs in world military history to reign without regency.',
       citation: 'Travels of Marco Polo (Book III, Chapter 21); Chandupatla Epigraph dated 1289 CE.'
     },
@@ -99,6 +101,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'abbakka',
     yearNumeric: 1555,
+    posX: 34,
+    posY: 62,
     epochEn: 'Anti-Colonial Dawn (1555–1582 CE)',
     epochHi: 'उपनिवेशवाद-विरोधी संग्राम (१५५५–१५८२ ईस्वी)',
     nameEn: 'Rani Abbakka Chowta',
@@ -110,13 +114,13 @@ const TIMELINE_DATA: Milestone[] = [
     descEn: 'The fearless naval commander who defeated the Portuguese armada in four major campaigns across four decades of relentless littoral warfare.',
     descHi: 'उल्लाल की अमर वीरांगना जिन्होंने पुर्तगाली नौसेना को चार भीषण समुद्री युद्धों में धूल चटाकर भारत के पश्चिमी तट की रक्षा की।',
     dossierEn: {
-      context: 'Known to colonial chroniclers as Abhaya Rani (The Fearless Queen). She allied with the Zamorin of Kozhikode to enforce naval blockades against Portuguese forts.',
+      context: 'Known to colonial chroniclers as Abhaya Rani (The Fearless Queen). She enforced naval blockades against Portuguese forts.',
       tactics: 'Nocturnal fire-arrow littoral raids that incinerated Portuguese galleons anchored off Mangalore harbor.',
       legacy: 'Celebrated as India’s first anti-colonial naval commander, predating 1857 by three centuries.',
       citation: 'Goa Historical Archives, Monçoes do Reino Series; Queen Abbakka Memorial Historical Trust Records.'
     },
     dossierHi: {
-      context: 'पुर्तगाली दस्तावेजों में उन्हें "अभया रानी" की उपाधि दी गई थी। उन्होंने कालीकट के ज़ामोरिन के साथ मिलकर विदेशी सेना की घेराबंदी की।',
+      context: 'पुर्तगाली दस्तावेजों में उन्हें "अभया रानी" की उपाधि दी गई थी। उन्होंने विदेशी सेना की घेराबंदी कर पश्चिमी तट को मुक्त रखा।',
       tactics: 'रात्रि में अग्निबाणों से सुसज्जित नौकाओं द्वारा पुर्तगाली जंगी जहाजों पर अप्रत्याशित आक्रमण कर उन्हें भस्म कर देना।',
       legacy: '१८५७ के स्वतंत्रता संग्राम से तीन सौ वर्ष पूर्व भारत की प्रथम नौसैनिक स्वतंत्रता सेनानी के रूप में प्रतिष्ठित।',
       citation: 'गोवा राज्य पुरालेख, मोन्सोएस दो रेइनो श्रृंखला; रानी अब्बक्का स्मृति न्यास अभिलेख।'
@@ -127,6 +131,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'durgavati',
     yearNumeric: 1564,
+    posX: 47,
+    posY: 51,
     epochEn: 'Gondwana Sovereignty (1548–1564 CE)',
     epochHi: 'गोंडवाना संप्रभुता (१५४८–१५६४ ईस्वी)',
     nameEn: 'Rani Durgavati',
@@ -138,7 +144,7 @@ const TIMELINE_DATA: Milestone[] = [
     descEn: 'Chandel princess who reigned over Gondwana, developed vast public water systems, and repelled imperial Mughal invasions with supreme martial resolve.',
     descHi: 'गोंडवाना की वीरांगना महारानी जिन्होंने विशाल जल संरक्षण तंत्र विकसित किया तथा अकबर की सेना को तीन बार रणभूमि में पराजित किया।',
     dossierEn: {
-      context: 'Refused imperial tribute demands. When Asaf Khan invaded with massive artillery, she mounted her war elephant Sarman and led the vanguard personally.',
+      context: 'Refused imperial tribute demands. When invaded with massive artillery, she mounted her war elephant Sarman and led the vanguard personally.',
       tactics: 'Utilized narrow defiles at Narrai gorge to nullify imperial numerical superiority.',
       legacy: 'A national symbol of unwavering self-sacrifice and civilizational dignity.',
       citation: 'Abul Fazl, Akbarnama (Vol. II, Chapter 42); Jabalpur District Gazetteer.'
@@ -155,6 +161,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'keladi',
     yearNumeric: 1689,
+    posX: 60,
+    posY: 40,
     epochEn: 'Deccan Resistance (1671–1696 CE)',
     epochHi: 'दक्कन प्रतिरोध युग (१६७१–१६९६ ईस्वी)',
     nameEn: 'Keladi Chennamma',
@@ -166,7 +174,7 @@ const TIMELINE_DATA: Milestone[] = [
     descEn: 'Heroic queen who granted sanctuary to Chhatrapati Rajaram (son of Shivaji Maharaj) and defeated Aurangzeb’s pursuing Mughal army in jungle warfare.',
     descHi: 'केलादी की साहसी महारानी जिन्होंने छत्रपति शिवाजी महाराज के पुत्र राजाराम को शरण दी और औरंगज़ेब की सेना को करारी शिकस्त दी।',
     dossierEn: {
-      context: 'After Chhatrapati Sambhaji Maharaj was executed, Rajaram was fleeing to Jinji. Chennamma provided royal protection despite imminent Mughal invasion threat.',
+      context: 'Provided royal protection to Rajaram fleeing to Jinji, defying Aurangzeb’s ultimatum.',
       tactics: 'Trapped Mughal general Azam Tara’s heavy cavalry within flooded monsoon ravines of the Western Ghats.',
       legacy: 'Secured the continuation of the Maratha Hindavi Swarajya during its darkest hour.',
       citation: 'Keladi Nripa Vijaya by Poet Linganna; Karnataka State Archives, Bangalore.'
@@ -183,6 +191,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'lakshmibai',
     yearNumeric: 1857,
+    posX: 73,
+    posY: 28,
     epochEn: 'First War of Independence (1857–1858 CE)',
     epochHi: 'प्रथम स्वतंत्रता संग्राम (१८५७–१८५८ ईस्वी)',
     nameEn: 'Rani Lakshmibai of Jhansi',
@@ -211,6 +221,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'anandibai',
     yearNumeric: 1886,
+    posX: 85,
+    posY: 19,
     epochEn: 'Scientific & Academic Pioneer (1886 CE)',
     epochHi: 'वैज्ञानिक एवं चिकित्सा क्रांति (१८८६ ईस्वी)',
     nameEn: 'Dr. Anandibai Joshi',
@@ -222,7 +234,7 @@ const TIMELINE_DATA: Milestone[] = [
     descEn: 'India’s first female physician who crossed oceans at age 18, studied at Woman’s Medical College of Pennsylvania, and broke centuries of orthodoxy.',
     descHi: 'भारत की प्रथम महिला चिकित्सक जिन्होंने १८ वर्ष की अल्पायु में समुद्र पार कर अमेरिका से चिकित्सा डिग्री प्राप्त की और इतिहास रचा।',
     dossierEn: {
-      context: 'After losing her newborn child due to lack of medical care, she resolved to become a physician, addressing public assemblies in Serampore to defend her mission.',
+      context: 'After losing her newborn child due to lack of medical care, she resolved to become a physician, addressing public assemblies in Serampore.',
       tactics: 'Rigorous academic excellence and moral conviction that disarmed fierce orthodox criticism.',
       legacy: 'Opened the doors of professional medicine and higher sciences for generations of Indian women.',
       citation: 'Woman’s Medical College of Pennsylvania Archives (Class of 1886); Caroline Healey Dall Biography (1888).'
@@ -239,6 +251,8 @@ const TIMELINE_DATA: Milestone[] = [
   {
     id: 'modern',
     yearNumeric: 2026,
+    posX: 95,
+    posY: 10,
     epochEn: '21st Century Sovereign Awakening',
     epochHi: '२१वीं सदी — आधुनिक वीरांगना जागरण',
     nameEn: 'Today’s Success Daughters',
@@ -269,15 +283,14 @@ const TIMELINE_DATA: Milestone[] = [
 export default function HistoryPage() {
   const [lang, setLang] = useState<Lang>('en')
   const [activeDossier, setActiveDossier] = useState<Milestone | null>(null)
-  const [activeEpochIndex, setActiveEpochIndex] = useState(0)
+  const [activeMilestoneId, setActiveMilestoneId] = useState<string>('gargi')
   const [scrollProgress, setScrollProgress] = useState(0)
 
   const sectionRef = useRef<HTMLDivElement>(null)
-  const graphPathRef = useRef<SVGPathElement>(null)
 
-  // Ascending curve points normalized to 0-100 coordinates
-  // (x from 10 to 90, y ascends from bottom 88 up to top 15)
-  const pathD = 'M 15 85 C 30 80, 45 70, 55 52 C 65 38, 75 24, 88 15'
+  // Ascending curve coordinates for SVG (1000 width, 600 height)
+  // Starts at bottom-left (80, 504) and curves up to top-right (950, 60)
+  const pathD = 'M 80 504 C 200 450, 320 375, 470 306 C 600 240, 750 160, 950 60'
 
   useEffect(() => {
     const handleScroll = () => {
@@ -291,11 +304,12 @@ export default function HistoryPage() {
       const progress = Math.max(0, Math.min(1, currentScroll / totalH))
       setScrollProgress(progress)
 
-      const activeIdx = Math.min(
-        TIMELINE_DATA.length - 1,
-        Math.floor(progress * TIMELINE_DATA.length)
+      // Find closest milestone based on progress
+      const targetIndex = Math.min(
+        TIMELINE_MILESTONES.length - 1,
+        Math.floor(progress * TIMELINE_MILESTONES.length)
       )
-      setActiveEpochIndex(activeIdx)
+      setActiveMilestoneId(TIMELINE_MILESTONES[targetIndex].id)
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
@@ -303,265 +317,239 @@ export default function HistoryPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Calculate current indicator position on SVG curve
-  const currentCoord = useMemo(() => {
-    const p = scrollProgress
-    // Approximate curve position based on cubic bezier
-    const x = 15 + p * 73
-    const y = 85 - Math.pow(p, 0.85) * 70
-    return { x, y }
-  }, [scrollProgress])
-
-  const scrollToMilestone = (id: string) => {
-    const el = document.getElementById(`milestone-${id}`)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }
-  }
-
-  const currentMilestone = TIMELINE_DATA[activeEpochIndex]
+  const currentMilestone = useMemo(() => {
+    return TIMELINE_MILESTONES.find(m => m.id === activeMilestoneId) || TIMELINE_MILESTONES[0]
+  }, [activeMilestoneId])
 
   return (
-    <main className={h.page}>
-      {/* ── Top Header Banner with Translator Switcher ── */}
-      <div className={h.banner}>
-        <div className={h.bannerInner}>
-          <div className={h.bannerTopBar}>
-            <Link to="/" className={s.back} style={{ margin: 0 }}>
-              {lang === 'en' ? '← Back to Home' : '← मुख्य पृष्ठ पर लौटें'}
-            </Link>
+    <main className={h.page} ref={sectionRef}>
+      {/* ── Top Header Bar ─────────────────────────────────────────── */}
+      <div className={h.headerBar}>
+        <Link to="/" className={h.backLink}>
+          {lang === 'en' ? '← Back to Home' : '← मुख्य पृष्ठ पर लौटें'}
+        </Link>
 
-            {/* Language Translator Toggle — Strictly Unmixed */}
-            <div className={h.langSwitcher}>
-              <button
-                type="button"
-                onClick={() => setLang('en')}
-                className={`${h.langBtn} ${lang === 'en' ? h.langBtnActive : ''}`}
-                aria-label="Switch to English"
-              >
-                <span>🇬🇧</span> English
-              </button>
-              <button
-                type="button"
-                onClick={() => setLang('hi')}
-                className={`${h.langBtn} ${lang === 'hi' ? h.langBtnActive : ''}`}
-                aria-label="हिन्दी में बदलें"
-              >
-                <span>🇮🇳</span> हिन्दी
-              </button>
-            </div>
-          </div>
+        {/* Strict Bilingual Translator — Zero Hinglish Mixing */}
+        <div className={h.langSwitcher}>
+          <button
+            type="button"
+            onClick={() => setLang('en')}
+            className={`${h.langBtn} ${lang === 'en' ? h.langBtnActive : ''}`}
+            aria-label="Switch to English"
+          >
+            <span>🇬🇧</span> English
+          </button>
+          <button
+            type="button"
+            onClick={() => setLang('hi')}
+            className={`${h.langBtn} ${lang === 'hi' ? h.langBtnActive : ''}`}
+            aria-label="हिन्दी में बदलें"
+          >
+            <span>🇮🇳</span> हिन्दी
+          </button>
+        </div>
+      </div>
 
-          <span className={h.bannerEyebrow}>
-            {lang === 'en'
-              ? 'Chronological Archival Trajectory · 800 BCE – 2026 CE'
-              : 'कालक्रमानुसार ऐतिहासिक संप्रभुता · ८०० ईसा पूर्व – २०२६'}
+      {/* ── Title & Intro ───────────────────────────────────────────── */}
+      <div className={h.titleSection}>
+        <span className={h.badge}>
+          {lang === 'en'
+            ? 'Chronological Archival Trajectory · 800 BCE – 2026 CE'
+            : 'कालक्रमानुसार ऐतिहासिक उत्कर्ष · ८०० ईसा पूर्व – २०२६'}
+        </span>
+
+        <h1 className={h.title}>
+          {lang === 'en' ? 'The Ascending Arc of ' : 'भारतीय नारी का '}
+          <span className={h.titleHighlight}>
+            {lang === 'en' ? 'Itihaas' : 'ऐतिहासिक उत्कर्ष'}
           </span>
+        </h1>
 
-          <h1 className={h.bannerTitle}>
-            {lang === 'en' ? 'The Ascending Arc of Itihaas' : 'इतिहास की वीरांगनाएँ एवं उत्कर्ष'}
-          </h1>
+        <p className={h.desc}>
+          {lang === 'en'
+            ? 'As you scroll down, the civilizational graph climbs upward. Each historical milestone is plotted directly along the ascending trajectory. Click any image to inspect the verified primary archival dossier.'
+            : 'जैसे-जैसे आप नीचे स्क्रॉल करेंगे, यह ऐतिहासिक ग्राफ ऊपर उठता जाएगा। प्रत्येक युग के चित्र ग्राफ पर ही अंकित हैं। किसी भी चित्र पर क्लिक करके उसका संपूर्ण ऐतिहासिक दस्तावेज देखें।'}
+        </p>
 
-          <p className={h.bannerDesc}>
+        <div className={h.hintBar}>
+          <span>✦</span>
+          <span>
             {lang === 'en'
-              ? 'Witness the continuous, unbroken ascent of India’s sovereign warrior women. As you scroll, trace centuries of martial valor, philosophical brilliance, and sovereign dignity.'
-              : 'देखिए भारतीय नारी के शौर्य, स्वाभिमान और बौद्धिक नेतृत्व की अनवरत यात्रा। जैसे-जैसे आप आगे बढ़ेंगे, कालचक्र का यह वक्र ऊपर उठता जाएगा।'}
-          </p>
+              ? 'Scroll to ascend the graph · Click any image node on the curve for details'
+              : 'स्क्रॉल करने पर ग्राफ ऊपर चढ़ेगा · विस्तृत जानकारी के लिए किसी भी चित्र पर क्लिक करें'}
+          </span>
         </div>
       </div>
 
-      {/* ── Wisdom Banner ─────────────────────────────── */}
-      <div className={h.wisdomBox}>
-        <div className={h.wisdomInner}>
-          <div className={h.wisdomTag}>
-            <span>✦</span> {lang === 'en' ? 'Shakti Sutra of the Day' : 'आज का शक्ति सूत्र'} <span>✦</span>
-          </div>
-          <blockquote className={h.wisdomQuote}>
-            {lang === 'en'
-              ? '“Woman is the primal foundation of creation; she is the sovereign power upon which the entire cosmos rests. To deem her weak is to deem one’s own civilizational foundation weak.”'
-              : '“स्त्री ही सृष्टि का आधार है, वह शक्ति है जिस पर संपूर्ण संसार टिका है। उसे दुर्बल समझना अपनी ही नींव को दुर्बल समझना है।”'}
-          </blockquote>
-          <p className={h.wisdomSource}>
-            {lang === 'en' ? '— Shakta Mahimna Stotra' : '— शाक्त महिम्न स्तोत्र'}
-          </p>
-        </div>
-      </div>
+      {/* ── Main Ascending Graph Arena ────────────────────────────── */}
+      <section className={h.graphSection}>
+        <div className={h.graphWrapper}>
 
-      {/* ── Main Section with Sticky Ascending Graph ───── */}
-      <section className={h.timelineSection} ref={sectionRef}>
-        <div className={h.layoutGrid}>
-
-          {/* Sticky Left Graph Panel */}
-          <div className={h.stickySide}>
-            <div className={h.sideHeader}>
-              <span className={h.sideTitle}>
-                {lang === 'en' ? 'Ascending Graph' : 'उत्कर्ष वक्र आलेख'}
+          {/* Graph Header Status */}
+          <div className={h.graphHeader}>
+            <div className={h.graphTitle}>
+              {lang === 'en' ? 'Sovereign Timeline Ascent' : 'ऐतिहासिक संप्रभुता उत्कर्ष आलेख'}
+            </div>
+            <div className={h.readoutPill}>
+              <span>{lang === 'en' ? 'Ascent Progress:' : 'उत्कर्ष प्रगति:'}</span>
+              <span className={h.ascentProgress}>
+                {Math.round(scrollProgress * 100)}%
               </span>
-              <div className={h.sideLive}>
-                <span className={h.liveDot} />
-                <span>{lang === 'en' ? 'Live Track' : 'सक्रिय ट्रैकिंग'}</span>
-              </div>
-            </div>
-
-            {/* Dynamic SVG Ascending Graph */}
-            <div className={h.svgChartBox}>
-              <svg viewBox="0 0 100 100" className={h.chartSvg}>
-                <defs>
-                  <linearGradient id="chartGlow" x1="0%" y1="100%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#DC143C" stopOpacity="0.4" />
-                    <stop offset="60%" stopColor="#DC143C" stopOpacity="1" />
-                    <stop offset="100%" stopColor="#F59E0B" stopOpacity="1" />
-                  </linearGradient>
-                  <filter id="nodeGlow" x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
-                    <feMerge>
-                      <feMergeNode />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                {/* Grid Lines */}
-                <line x1="10" y1="20" x2="90" y2="20" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
-                <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
-                <line x1="10" y1="80" x2="90" y2="80" stroke="rgba(255,255,255,0.06)" strokeDasharray="2" />
-                <line x1="10" y1="10" x2="10" y2="90" stroke="rgba(255,255,255,0.1)" />
-                <line x1="10" y1="90" x2="90" y2="90" stroke="rgba(255,255,255,0.1)" />
-
-                {/* Axis Labels */}
-                <text x="12" y="16" fill="#9CA3AF" fontSize="3.8" fontFamily="sans-serif">
-                  {lang === 'en' ? '▲ Sovereign Impact' : '▲ संप्रभुता प्रभाव'}
-                </text>
-                <text x="64" y="96" fill="#9CA3AF" fontSize="3.8" fontFamily="sans-serif">
-                  {lang === 'en' ? 'Time (Centuries) ►' : 'कालक्रम (शताब्दी) ►'}
-                </text>
-
-                {/* Base Path Ghost */}
-                <path
-                  d={pathD}
-                  fill="none"
-                  stroke="rgba(255,255,255,0.12)"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                />
-
-                {/* Ascending Luminous Active Line */}
-                <path
-                  ref={graphPathRef}
-                  d={pathD}
-                  fill="none"
-                  stroke="url(#chartGlow)"
-                  strokeWidth="3.2"
-                  strokeLinecap="round"
-                  strokeDasharray="150"
-                  strokeDashoffset={150 * (1 - scrollProgress)}
-                />
-
-                {/* Dynamic Travelling Node Point */}
-                <circle
-                  cx={currentCoord.x}
-                  cy={currentCoord.y}
-                  r="4.5"
-                  fill="#FFFFFF"
-                  stroke="#DC143C"
-                  strokeWidth="2"
-                  filter="url(#nodeGlow)"
-                />
-              </svg>
-            </div>
-
-            {/* Current Metrics Box */}
-            <div className={h.metricsRow}>
-              <div className={h.metricTile}>
-                <div className={h.metricVal}>
-                  {currentMilestone.yearNumeric < 0
-                    ? `${Math.abs(currentMilestone.yearNumeric)} BCE`
-                    : `${currentMilestone.yearNumeric} CE`}
-                </div>
-                <div className={h.metricLbl}>
-                  {lang === 'en' ? 'Active Era' : 'वर्तमान काल'}
-                </div>
-              </div>
-              <div className={h.metricTile}>
-                <div className={h.metricVal} style={{ color: '#F59E0B' }}>
-                  {Math.round(scrollProgress * 100)}%
-                </div>
-                <div className={h.metricLbl}>
-                  {lang === 'en' ? 'Timeline Ascent' : 'उत्कर्ष प्रगति'}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ marginTop: '0.85rem', fontSize: '0.78rem', color: '#E8C98A', fontWeight: 600 }}>
-              {lang === 'en' ? currentMilestone.epochEn : currentMilestone.epochHi}
-            </div>
-
-            {/* Quick Epoch Navigation List */}
-            <div className={h.epochNav}>
-              {TIMELINE_DATA.map((item, idx) => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToMilestone(item.id)}
-                  className={`${h.epochNavBtn} ${activeEpochIndex === idx ? h.epochNavBtnActive : ''}`}
-                >
-                  <span>{lang === 'en' ? item.nameEn : item.nameHi}</span>
-                  <span style={{ fontSize: '0.7rem', opacity: 0.6 }}>
-                    {item.yearNumeric < 0 ? `${Math.abs(item.yearNumeric)} BCE` : item.yearNumeric}
-                  </span>
-                </button>
-              ))}
+              <span style={{ color: '#9CA3AF', fontSize: '0.75rem' }}>|</span>
+              <span style={{ color: '#E8C98A', fontWeight: 600 }}>
+                {lang === 'en' ? currentMilestone.epochEn : currentMilestone.epochHi}
+              </span>
             </div>
           </div>
 
-          {/* Right Timeline Stream */}
-          <div className={h.timelineStream}>
-            {TIMELINE_DATA.map((item) => (
-              <div key={item.id} id={`milestone-${item.id}`} className={h.timelineCard}>
-                <div className={h.cardImgWrap}>
-                  <img src={item.image} alt={lang === 'en' ? item.nameEn : item.nameHi} loading="lazy" />
-                  <div className={h.cardEraBadge}>
-                    {lang === 'en' ? item.epochEn : item.epochHi}
+          {/* Canvas Chart Stage */}
+          <div className={h.chartStage}>
+            <svg viewBox="0 0 1000 600" className={h.svgGraphic} preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="curveGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#DC143C" stopOpacity="0.4" />
+                  <stop offset="45%" stopColor="#DC143C" stopOpacity="0.95" />
+                  <stop offset="85%" stopColor="#F59E0B" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#FFFFFF" stopOpacity="1" />
+                </linearGradient>
+
+                <filter id="glowEffect" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Grid Lines */}
+              <line x1="60" y1="120" x2="960" y2="120" stroke="rgba(255,255,255,0.06)" strokeDasharray="4" />
+              <line x1="60" y1="240" x2="960" y2="240" stroke="rgba(255,255,255,0.06)" strokeDasharray="4" />
+              <line x1="60" y1="360" x2="960" y2="360" stroke="rgba(255,255,255,0.06)" strokeDasharray="4" />
+              <line x1="60" y1="480" x2="960" y2="480" stroke="rgba(255,255,255,0.06)" strokeDasharray="4" />
+
+              {/* Axis Labels */}
+              <text x="70" y="80" fill="#9CA3AF" fontSize="13" fontFamily="Cinzel, serif" fontWeight="bold">
+                {lang === 'en' ? '▲ Sovereign Impact & Leadership' : '▲ संप्रभुता एवं नेतृत्व प्रभाव'}
+              </text>
+              <text x="820" y="565" fill="#9CA3AF" fontSize="13" fontFamily="Outfit, sans-serif">
+                {lang === 'en' ? 'Timeline (Centuries) ►' : 'कालक्रम (शताब्दी) ►'}
+              </text>
+
+              {/* Background Ghost Path */}
+              <path
+                d={pathD}
+                fill="none"
+                stroke="rgba(255, 255, 255, 0.12)"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+
+              {/* Ascending Luminous Active Curve */}
+              <path
+                d={pathD}
+                fill="none"
+                stroke="url(#curveGradient)"
+                strokeWidth="5"
+                strokeLinecap="round"
+                filter="url(#glowEffect)"
+                strokeDasharray="1400"
+                strokeDashoffset={1400 * (1 - scrollProgress)}
+              />
+            </svg>
+
+            {/* Plotted Interactive Image Nodes Directly on the Graph */}
+            {TIMELINE_MILESTONES.map((item) => {
+              const isActive = activeMilestoneId === item.id
+
+              return (
+                <div
+                  key={item.id}
+                  className={h.imageNode}
+                  style={{
+                    left: `${item.posX}%`,
+                    top: `${item.posY}%`,
+                  }}
+                  onClick={() => {
+                    setActiveMilestoneId(item.id)
+                    setActiveDossier(item)
+                  }}
+                  title={lang === 'en' ? `Click to view ${item.nameEn}` : `${item.nameHi} का विवरण देखें`}
+                >
+                  <div
+                    className={`${h.nodeThumbWrap} ${isActive ? h.nodeThumbWrapActive : ''}`}
+                    style={{
+                      borderColor: isActive ? '#DC143C' : item.accentColor,
+                    }}
+                  >
+                    <img src={item.image} alt={lang === 'en' ? item.nameEn : item.nameHi} />
+                  </div>
+
+                  <div className={h.nodeLabelBox}>
+                    <span className={h.nodeYearTag}>
+                      {item.yearNumeric < 0
+                        ? `${Math.abs(item.yearNumeric)} BCE`
+                        : `${item.yearNumeric} CE`}
+                    </span>
+                    <span>{lang === 'en' ? item.nameEn : item.nameHi}</span>
                   </div>
                 </div>
+              )
+            })}
+          </div>
 
-                <div className={h.cardBody}>
-                  <div>
-                    <div className={h.cardYear}>
-                      {lang === 'en' ? item.yearsEn : item.yearsHi}
-                    </div>
-                    <h3 className={h.cardName}>
-                      {lang === 'en' ? item.nameEn : item.nameHi}
-                    </h3>
-                    <p className={h.cardMotto}>
-                      "{lang === 'en' ? item.quoteEn : item.quoteHi}"
-                    </p>
-                    <p className={h.cardDesc}>
-                      {lang === 'en' ? item.descEn : item.descHi}
-                    </p>
-                  </div>
-
-                  <div className={h.cardActions}>
-                    <button
-                      className={h.inspectBtn}
-                      onClick={() => setActiveDossier(item)}
-                    >
-                      <BookOpen size={14} />
-                      {lang === 'en' ? 'Inspect Historical Record' : 'ऐतिहासिक दस्तावेज देखें'}
-                    </button>
-                    <button
-                      className={h.citationLink}
-                      onClick={() => setActiveDossier(item)}
-                    >
-                      {lang === 'en' ? 'View Primary Citations →' : 'मूल पुरातात्विक संदर्भ →'}
-                    </button>
-                  </div>
-                </div>
+          {/* Active Milestone Spotlight Panel */}
+          <div className={h.spotlightCard}>
+            <div
+              className={h.spotlightImgBox}
+              onClick={() => setActiveDossier(currentMilestone)}
+            >
+              <img
+                src={currentMilestone.image}
+                alt={lang === 'en' ? currentMilestone.nameEn : currentMilestone.nameHi}
+              />
+              <div className={h.spotlightClickBadge}>
+                {lang === 'en' ? 'Click to inspect archive 🔍' : 'दस्तावेज देखने हेतु क्लिक करें 🔍'}
               </div>
-            ))}
+            </div>
+
+            <div className={h.spotlightInfo}>
+              <div className={h.spotlightEra}>
+                {lang === 'en' ? currentMilestone.epochEn : currentMilestone.epochHi}
+              </div>
+
+              <h3 className={h.spotlightName}>
+                {lang === 'en' ? currentMilestone.nameEn : currentMilestone.nameHi}
+              </h3>
+
+              <div className={h.spotlightQuote}>
+                "{lang === 'en' ? currentMilestone.quoteEn : currentMilestone.quoteHi}"
+              </div>
+
+              <p className={h.spotlightDesc}>
+                {lang === 'en' ? currentMilestone.descEn : currentMilestone.descHi}
+              </p>
+
+              <button
+                className={h.spotlightBtn}
+                onClick={() => setActiveDossier(currentMilestone)}
+              >
+                <BookOpen size={16} />
+                <span>
+                  {lang === 'en'
+                    ? 'Inspect Verified Primary Dossier'
+                    : 'प्रमाणित पुरातात्विक दस्तावेज देखें'}
+                </span>
+                <ChevronRight size={16} />
+              </button>
+            </div>
           </div>
 
         </div>
       </section>
+
+      {/* Extra Scroll Height Buffer so user can comfortably scroll through 0% - 100% ascent */}
+      <div style={{ height: '70vh' }} />
 
       {/* ── Archival Dossier Modal Lightbox ──────────── */}
       {activeDossier && (
@@ -575,15 +563,23 @@ export default function HistoryPage() {
               <X size={18} />
             </button>
 
+            {/* Modal Image */}
+            <div className={h.modalHeroImg}>
+              <img
+                src={activeDossier.image}
+                alt={lang === 'en' ? activeDossier.nameEn : activeDossier.nameHi}
+              />
+            </div>
+
             <div style={{ fontSize: '0.72rem', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.25rem' }}>
               {lang === 'en' ? 'Verified Archival Dossier' : 'प्रमाणित पुरातात्विक अभिलेख'}
             </div>
 
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.65rem', color: '#FFFFFF', marginBottom: '0.5rem' }}>
+            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.75rem', color: '#FFFFFF', marginBottom: '0.25rem' }}>
               {lang === 'en' ? activeDossier.nameEn : activeDossier.nameHi}
             </h2>
 
-            <div style={{ fontSize: '0.82rem', color: '#C9A96E', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.85rem', color: '#C9A96E', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '0.75rem', marginBottom: '1.25rem' }}>
               {lang === 'en' ? activeDossier.yearsEn : activeDossier.yearsHi}
             </div>
 

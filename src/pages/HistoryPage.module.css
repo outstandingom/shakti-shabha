@@ -1,46 +1,52 @@
 /* ============================================================
    HistoryPage.module.css
-   Vibrant, story-driven — Ascending Timeline Graph & Bilingual System
+   Ascending Historical Graph Experience with Interactive Image Nodes
+   Theme: Deep Obsidian (#0A090D), Crimson (#DC143C), Matte Gold (#C9A96E)
    ============================================================ */
 
 .page {
   min-height: 100vh;
-  padding-top: 5.5rem;
-  background: #0B0A0D;
+  padding-top: 5rem;
+  background: radial-gradient(circle at 50% 20%, #170A10 0%, #0D090D 50%, #060507 100%);
   color: #FFFFFF;
   font-family: var(--font-body, 'Outfit', sans-serif);
+  overflow-x: hidden;
 }
 
-/* ── Hero Banner ────────────────────────────────────────────── */
-.banner {
-  position: relative;
-  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem) clamp(2.5rem, 5vw, 4.5rem);
-  overflow: hidden;
-  background: linear-gradient(135deg, #1A0710 0%, #3D091F 45%, #7D0C3C 100%);
-  border-bottom: 1px solid rgba(220, 20, 60, 0.35);
-}
-
-.bannerInner {
+/* ── Top Header Bar ─────────────────────────────────────────── */
+.headerBar {
   max-width: 1280px;
   margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
-.bannerTopBar {
+  padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.25rem;
 }
 
-/* Language Switcher Pill */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #E8C98A;
+}
+
+/* Strict Language Switcher */
 .langSwitcher {
   display: inline-flex;
   align-items: center;
-  background: rgba(15, 12, 18, 0.85);
+  background: rgba(18, 14, 22, 0.85);
   border: 1px solid rgba(201, 169, 110, 0.4);
   padding: 0.3rem;
   border-radius: 9999px;
@@ -71,313 +77,278 @@
 .langBtnActive {
   background: #DC143C;
   color: #FFFFFF;
-  box-shadow: 0 2px 12px rgba(220, 20, 60, 0.5);
+  box-shadow: 0 2px 14px rgba(220, 20, 60, 0.5);
 }
 
-.bannerEyebrow {
+/* Intro Title Section */
+.titleSection {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem clamp(1.5rem, 4vw, 3rem) 2rem;
+  text-align: center;
+}
+
+.badge {
   display: inline-block;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #FFB3BA;
-  background: rgba(220, 20, 60, 0.2);
+  background: rgba(220, 20, 60, 0.15);
   border: 1px solid rgba(220, 20, 60, 0.35);
-  padding: 0.35rem 1rem;
+  padding: 0.35rem 1.1rem;
   border-radius: 9999px;
-  margin-bottom: 1rem;
-}
-
-.bannerTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(2.5rem, 6vw, 4.8rem);
-  font-weight: 900;
-  color: #FFFFFF;
-  line-height: 1.1;
-  margin-bottom: 0.5rem;
-  text-shadow: 0 4px 30px rgba(220, 20, 60, 0.3);
-}
-
-.bannerDesc {
-  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 65ch;
-  line-height: 1.7;
-}
-
-/* Wisdom Banner */
-.wisdomBox {
-  background: #0F0E13;
-  border-bottom: 1px solid rgba(201, 169, 110, 0.25);
-  padding: 2.25rem clamp(1.5rem, 4vw, 3rem);
-}
-
-.wisdomInner {
-  max-width: 850px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.wisdomTag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(201, 169, 110, 0.12);
-  border: 1px solid rgba(201, 169, 110, 0.3);
-  padding: 0.3rem 1rem;
-  border-radius: 9999px;
-  color: #E8C98A;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
   margin-bottom: 0.85rem;
 }
 
-.wisdomQuote {
+.title {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 900;
   color: #FFFFFF;
-  line-height: 1.6;
-  font-style: italic;
+  line-height: 1.15;
   margin-bottom: 0.5rem;
 }
 
-.wisdomSource {
-  color: #C9A96E;
-  font-size: 0.85rem;
-  font-weight: 600;
+.titleHighlight {
+  color: #DC143C;
+  text-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
 }
 
-/* Main Timeline Section Layout */
-.timelineSection {
-  padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
-  max-width: 1340px;
-  margin: 0 auto;
+.desc {
+  font-size: clamp(0.92rem, 1.15vw, 1.05rem);
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 68ch;
+  margin: 0.5rem auto 1.5rem;
+  line-height: 1.7;
 }
 
-.layoutGrid {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 3.5rem;
-  align-items: flex-start;
-  position: relative;
-}
-
-/* Sticky Graph Side Card */
-.stickySide {
-  position: sticky;
-  top: 6.5rem;
-  background: linear-gradient(160deg, #15131A 0%, #0F0E13 100%);
+.hintBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(201, 169, 110, 0.1);
   border: 1px solid rgba(201, 169, 110, 0.3);
-  border-radius: 20px;
-  padding: 1.75rem;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5);
+  padding: 0.4rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  color: #E8C98A;
+}
+
+/* ── Interactive Ascending Graph Arena ────────────────────────── */
+.graphSection {
+  max-width: 1320px;
+  margin: 2rem auto 0;
+  padding: 0 clamp(1rem, 3vw, 2.5rem);
+}
+
+.graphWrapper {
+  background: linear-gradient(160deg, #130F17 0%, #0C0A0F 100%);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 24px;
+  padding: clamp(1.5rem, 3vw, 3rem);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(220, 20, 60, 0.1);
+  position: relative;
   overflow: hidden;
 }
 
-.sideHeader {
+/* Graph Header Bar */
+.graphHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 0.75rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
-.sideTitle {
+.graphTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #E8C98A;
 }
 
-.sideLive {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #34D399;
-  display: flex;
+.readoutPill {
+  display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.75rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  color: #FFFFFF;
 }
 
-.liveDot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #34D399;
-  box-shadow: 0 0 8px #34D399;
+.ascentProgress {
+  color: #DC143C;
+  font-weight: 700;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
-/* SVG Chart Box */
-.svgChartBox {
-  width: 100%;
-  height: 220px;
+/* SVG Chart Stage */
+.chartStage {
   position: relative;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 12px;
+  width: 100%;
+  height: clamp(480px, 58vh, 680px);
+  background: radial-gradient(circle at 60% 40%, rgba(220, 20, 60, 0.08) 0%, transparent 60%);
+  border-radius: 18px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  padding: 0.5rem;
+  overflow: hidden;
 }
 
-.chartSvg {
+.svgGraphic {
   width: 100%;
   height: 100%;
   overflow: visible;
 }
 
-.metricsRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-}
-
-.metricTile {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  padding: 0.75rem;
-}
-
-.metricVal {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #FFFFFF;
-}
-
-.metricLbl {
-  font-size: 0.68rem;
-  color: #9CA3AF;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* Quick Jump Epoch Navigation */
-.epochNav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 1.25rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1rem;
-}
-
-.epochNavBtn {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.45rem 0.75rem;
-  border-radius: 8px;
-  background: transparent;
-  border: 1px solid transparent;
-  color: #9CA3AF;
-  font-size: 0.75rem;
+/* Plotted Image Nodes directly on the Graph */
+.imageNode {
+  position: absolute;
+  transform: translate(-50%, -50%);
   cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.epochNavBtn:hover {
-  background: rgba(220, 20, 60, 0.1);
-  color: #FFFFFF;
-  border-color: rgba(220, 20, 60, 0.3);
-}
-
-.epochNavBtnActive {
-  background: rgba(220, 20, 60, 0.2);
-  color: #E8C98A;
-  border-color: #DC143C;
-  font-weight: 600;
-}
-
-/* Timeline Cards Container */
-.timelineStream {
+  z-index: 20;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  gap: 3.5rem;
+  align-items: center;
 }
 
-.timelineCard {
-  background: #141218;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+.imageNode:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 35;
+}
+
+.nodeThumbWrap {
+  width: clamp(56px, 6vw, 76px);
+  height: clamp(56px, 6vw, 76px);
+  border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  background: #111113;
+  transition: all 0.3s ease;
   position: relative;
 }
 
-.timelineCard:hover {
-  transform: translateY(-4px);
-  border-color: #DC143C;
-  box-shadow: 0 20px 50px rgba(220, 20, 60, 0.15);
-}
-
-.cardImgWrap {
-  position: relative;
-  overflow: hidden;
-  background: #09080A;
-  min-height: 280px;
-}
-
-.cardImgWrap img {
+.nodeThumbWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.4s ease;
 }
 
-.timelineCard:hover .cardImgWrap img {
-  transform: scale(1.06);
+.imageNode:hover .nodeThumbWrap img {
+  transform: scale(1.1);
 }
 
-.cardEraBadge {
+.nodeThumbWrapActive {
+  border-color: #DC143C;
+  box-shadow: 0 0 25px rgba(220, 20, 60, 0.7), 0 0 40px rgba(201, 169, 110, 0.4);
+  transform: scale(1.1);
+}
+
+.nodeLabelBox {
+  margin-top: 0.45rem;
+  background: rgba(14, 11, 17, 0.92);
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.nodeYearTag {
+  color: #DC143C;
+  font-weight: 800;
+}
+
+/* Active Milestone Spotlight Panel */
+.spotlightCard {
+  margin-top: 2.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 20px;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.spotlightImgBox {
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  position: relative;
+}
+
+.spotlightImgBox img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.spotlightImgBox:hover img {
+  transform: scale(1.05);
+}
+
+.spotlightClickBadge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: rgba(15, 12, 18, 0.85);
-  backdrop-filter: blur(6px);
+  bottom: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 12, 18, 0.88);
   border: 1px solid rgba(201, 169, 110, 0.4);
   color: #E8C98A;
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.75rem;
+  padding: 0.25rem 0.75rem;
   border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
-.cardBody {
-  padding: clamp(1.75rem, 3vw, 2.5rem);
+.spotlightInfo {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
-.cardYear {
+.spotlightEra {
   font-size: 0.75rem;
   font-weight: 700;
-  color: #DC143C;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: #DC143C;
 }
 
-.cardName {
+.spotlightName {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
   font-weight: 700;
   color: #FFFFFF;
   line-height: 1.25;
 }
 
-.cardMotto {
+.spotlightQuote {
   font-style: italic;
   font-size: 0.95rem;
   color: #E8C98A;
@@ -385,58 +356,42 @@
   padding-left: 0.75rem;
 }
 
-.cardDesc {
+.spotlightDesc {
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.75);
   line-height: 1.7;
 }
 
-.cardActions {
-  display: flex;
+.spotlightBtn {
+  align-self: flex-start;
+  padding: 0.65rem 1.6rem;
+  background: #DC143C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 1rem;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
   margin-top: 0.5rem;
 }
 
-.inspectBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5rem 1.25rem;
-  background: #DC143C;
-  color: #FFFFFF;
-  border-radius: 9999px;
-  border: none;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.inspectBtn:hover {
+.spotlightBtn:hover {
   background: #B01030;
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.4);
 }
 
-.citationLink {
-  font-size: 0.75rem;
-  color: #C9A96E;
-  cursor: pointer;
-  text-decoration: underline;
-  background: none;
-  border: none;
-}
-
-/* Archival Modal Lightbox */
+/* ── Lightbox Modal for Detailed Archival Dossier ─────────────── */
 .modalOverlay {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(8, 7, 10, 0.85);
-  backdrop-filter: blur(10px);
+  background: rgba(8, 7, 10, 0.88);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -445,26 +400,26 @@
 
 .modalContent {
   background: linear-gradient(160deg, #18151D 0%, #100E14 100%);
-  border: 1px solid rgba(201, 169, 110, 0.35);
+  border: 1px solid rgba(201, 169, 110, 0.4);
   border-radius: 20px;
-  max-width: 720px;
+  max-width: 740px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  padding: clamp(1.75rem, 3vw, 2.75rem);
+  padding: clamp(1.75rem, 3.5vw, 2.75rem);
   position: relative;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 30px rgba(220, 20, 60, 0.15);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 20, 60, 0.2);
 }
 
 .modalClose {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #FFFFFF;
   cursor: pointer;
   display: flex;
@@ -476,49 +431,43 @@
 .modalClose:hover {
   background: #DC143C;
   border-color: #DC143C;
+  transform: rotate(90deg);
 }
 
-/* Success Girls Modern Showcase */
-.successGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-  gap: 1.75rem;
-  margin-top: 3rem;
+.modalHeroImg {
+  width: 100%;
+  height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.successCard {
-  background: #141218;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.3s ease;
+.modalHeroImg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.successCard:hover {
-  transform: translateY(-4px);
-  border-color: rgba(201, 169, 110, 0.4);
-}
-
-@media (max-width: 1024px) {
-  .layoutGrid {
+@media (max-width: 900px) {
+  .spotlightCard {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 1.5rem;
   }
-  .stickySide {
-    position: relative;
-    top: 0;
+  .spotlightImgBox {
+    height: 180px;
   }
 }
 
-@media (max-width: 768px) {
-  .timelineCard {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .chartStage {
+    height: 440px;
   }
-  .cardImgWrap {
-    height: 220px;
-    min-height: auto;
+  .nodeThumbWrap {
+    width: 48px;
+    height: 48px;
+  }
+  .nodeLabelBox {
+    display: none;
   }
 }
