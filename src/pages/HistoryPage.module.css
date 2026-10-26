@@ -1,65 +1,168 @@
 /* ============================================================
    HistoryPage.module.css
-   Ascending Historical Graph Experience with Interactive Image Nodes
-   Theme: Deep Obsidian (#0A090D), Crimson (#DC143C), Matte Gold (#C9A96E)
+   Pinned Scroll Stage with Ascending Trajectory Graph & Floating Images
+   Strict Bilingual Design · Pure English | शुद्ध हिन्दी
+   Theme: Obsidian (#070609), Crimson (#DC143C), Matte Gold (#C9A96E)
    ============================================================ */
 
-.page {
-  min-height: 100vh;
-  padding-top: 5rem;
-  background: radial-gradient(circle at 50% 20%, #170A10 0%, #0D090D 50%, #060507 100%);
-  color: #FFFFFF;
-  font-family: var(--font-body, 'Outfit', sans-serif);
-  overflow-x: hidden;
+/* ── Outer Tall Scroll Track (Provides 400vh scroll travel distance) ── */
+.pinnedTrack {
+  position: relative;
+  width: 100%;
+  height: 420vh;
+  background: #070609;
 }
 
-/* ── Top Header Bar ─────────────────────────────────────────── */
-.headerBar {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem clamp(1.5rem, 4vw, 3rem) 1rem;
+/* ── The Fixed / Still Viewport (Pins the page while scrolling) ── */
+.viewportPinned {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: radial-gradient(circle at 50% 15%, #180B13 0%, #0A080C 55%, #050406 100%);
+  color: #FFFFFF;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  z-index: 10;
+  padding: 1rem 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Background Atmospheric Noise & Constellation Dust */
+.bgGlowAura {
+  position: absolute;
+  top: -15%;
+  right: 10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bgGlowGold {
+  position: absolute;
+  bottom: 0;
+  left: 5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(201, 169, 110, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── Top Header Navigation Bar ───────────────────────────────── */
+.topNav {
+  position: relative;
+  z-index: 20;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 10, 15, 0.7);
+  backdrop-filter: blur(16px);
+  border-radius: 14px;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
   gap: 1.25rem;
 }
 
-.backLink {
+.backHomeLink {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   text-decoration: none;
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: color 0.2s;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
 }
 
-.backLink:hover {
+.backHomeLink:hover {
   color: #E8C98A;
 }
 
-/* Strict Language Switcher */
+.brandPill {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.15);
+  border: 1px solid rgba(220, 20, 60, 0.35);
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.pageHeaderTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pageHeaderHighlight {
+  color: #DC143C;
+}
+
+.scrollGuideHint {
+  font-size: 0.75rem;
+  color: #E8C98A;
+  background: rgba(201, 169, 110, 0.12);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  animation: pulseHint 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseHint {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+/* Strict Bilingual Language Switcher */
 .langSwitcher {
   display: inline-flex;
   align-items: center;
-  background: rgba(18, 14, 22, 0.85);
+  background: rgba(18, 14, 22, 0.95);
   border: 1px solid rgba(201, 169, 110, 0.4);
-  padding: 0.3rem;
+  padding: 0.25rem;
   border-radius: 9999px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
 }
 
 .langBtn {
-  padding: 0.45rem 1.25rem;
+  padding: 0.35rem 1rem;
   border-radius: 9999px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: rgba(255, 255, 255, 0.7);
   background: transparent;
   border: none;
@@ -67,7 +170,7 @@
   transition: all 0.25s ease;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .langBtn:hover {
@@ -77,341 +180,342 @@
 .langBtnActive {
   background: #DC143C;
   color: #FFFFFF;
-  box-shadow: 0 2px 14px rgba(220, 20, 60, 0.5);
+  box-shadow: 0 2px 12px rgba(220, 20, 60, 0.6);
 }
 
-/* Intro Title Section */
-.titleSection {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 1rem clamp(1.5rem, 4vw, 3rem) 2rem;
-  text-align: center;
-}
-
-.badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #FFB3BA;
-  background: rgba(220, 20, 60, 0.15);
-  border: 1px solid rgba(220, 20, 60, 0.35);
-  padding: 0.35rem 1.1rem;
-  border-radius: 9999px;
-  margin-bottom: 0.85rem;
-}
-
-.title {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  font-weight: 900;
-  color: #FFFFFF;
-  line-height: 1.15;
-  margin-bottom: 0.5rem;
-}
-
-.titleHighlight {
-  color: #DC143C;
-  text-shadow: 0 0 30px rgba(220, 20, 60, 0.5);
-}
-
-.desc {
-  font-size: clamp(0.92rem, 1.15vw, 1.05rem);
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 68ch;
-  margin: 0.5rem auto 1.5rem;
-  line-height: 1.7;
-}
-
-.hintBar {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(201, 169, 110, 0.1);
-  border: 1px solid rgba(201, 169, 110, 0.3);
-  padding: 0.4rem 1.25rem;
-  border-radius: 9999px;
-  font-size: 0.78rem;
-  color: #E8C98A;
-}
-
-/* ── Interactive Ascending Graph Arena ────────────────────────── */
-.graphSection {
-  max-width: 1320px;
-  margin: 2rem auto 0;
-  padding: 0 clamp(1rem, 3vw, 2.5rem);
-}
-
-.graphWrapper {
-  background: linear-gradient(160deg, #130F17 0%, #0C0A0F 100%);
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 24px;
-  padding: clamp(1.5rem, 3vw, 3rem);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 40px rgba(220, 20, 60, 0.1);
+/* ── Central Main Ascending Graph Arena ───────────────────────── */
+.graphArena {
   position: relative;
-  overflow: hidden;
-}
-
-/* Graph Header Bar */
-.graphHeader {
+  z-index: 10;
+  flex: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  padding-bottom: 1.25rem;
-  margin-bottom: 1.5rem;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0.5rem 0;
+  min-height: 0; /* allows flexbox child shrinkage */
 }
 
-.graphTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #E8C98A;
-}
-
-.readoutPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 0.4rem 1rem;
-  border-radius: 9999px;
-  font-size: 0.8rem;
-  color: #FFFFFF;
-}
-
-.ascentProgress {
-  color: #DC143C;
-  font-weight: 700;
-  font-family: var(--font-display, 'Cinzel', serif);
-}
-
-/* SVG Chart Stage */
-.chartStage {
+.graphStage {
   position: relative;
-  width: 100%;
-  height: clamp(480px, 58vh, 680px);
-  background: radial-gradient(circle at 60% 40%, rgba(220, 20, 60, 0.08) 0%, transparent 60%);
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  overflow: hidden;
-}
-
-.svgGraphic {
   width: 100%;
   height: 100%;
+  max-height: 58vh;
+  min-height: 340px;
+  background: linear-gradient(175deg, rgba(22, 17, 26, 0.85) 0%, rgba(10, 8, 13, 0.95) 100%);
+  border: 1px solid rgba(201, 169, 110, 0.3);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 40px rgba(220, 20, 60, 0.05);
   overflow: visible;
 }
 
-/* Plotted Image Nodes directly on the Graph */
-.imageNode {
+/* SVG Chart Graphic */
+.svgChart {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+/* ── Floating Milestone Images on Graph ───────────────────────── */
+.imageCardNode {
   position: absolute;
   transform: translate(-50%, -50%);
   cursor: pointer;
-  z-index: 20;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 30;
   display: flex;
   flex-direction: column;
   align-items: center;
+  will-change: transform, opacity;
+  transition: opacity 0.4s ease, filter 0.4s ease;
 }
 
-.imageNode:hover {
-  transform: translate(-50%, -50%) scale(1.15);
-  z-index: 35;
+.imageCardNodeDim {
+  opacity: 0.28;
+  filter: grayscale(80%) brightness(0.6);
+  pointer-events: auto;
 }
 
-.nodeThumbWrap {
-  width: clamp(56px, 6vw, 76px);
-  height: clamp(56px, 6vw, 76px);
+.imageCardNodeActive {
+  opacity: 1;
+  filter: none;
+  z-index: 45;
+}
+
+/* Card Avatar Circle */
+.avatarWrap {
+  width: clamp(52px, 5.5vw, 76px);
+  height: clamp(52px, 5.5vw, 76px);
   border-radius: 50%;
   overflow: hidden;
   border: 3px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
-  background: #111113;
-  transition: all 0.3s ease;
+  background: #110E15;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
   position: relative;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.nodeThumbWrap img {
+.avatarWrap img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.4s ease;
 }
 
-.imageNode:hover .nodeThumbWrap img {
-  transform: scale(1.1);
+.imageCardNode:hover .avatarWrap {
+  transform: scale(1.15);
+  border-color: #E8C98A !important;
+  box-shadow: 0 0 25px rgba(232, 201, 138, 0.8);
 }
 
-.nodeThumbWrapActive {
-  border-color: #DC143C;
-  box-shadow: 0 0 25px rgba(220, 20, 60, 0.7), 0 0 40px rgba(201, 169, 110, 0.4);
-  transform: scale(1.1);
+.avatarWrapActive {
+  transform: scale(1.12);
+  box-shadow: 0 0 30px rgba(220, 20, 60, 0.8), 0 0 15px rgba(201, 169, 110, 0.5);
+  border-color: #DC143C !important;
+  animation: auraPulse 2.4s infinite alternate ease-in-out;
 }
 
-.nodeLabelBox {
-  margin-top: 0.45rem;
-  background: rgba(14, 11, 17, 0.92);
-  border: 1px solid rgba(201, 169, 110, 0.4);
-  padding: 0.25rem 0.65rem;
+@keyframes auraPulse {
+  0% { box-shadow: 0 0 20px rgba(220, 20, 60, 0.6), 0 0 10px rgba(201, 169, 110, 0.4); }
+  100% { box-shadow: 0 0 35px rgba(220, 20, 60, 0.95), 0 0 20px rgba(232, 201, 138, 0.8); }
+}
+
+/* Label Pill Under Avatar */
+.cardLabelPill {
+  margin-top: 0.4rem;
+  background: rgba(14, 11, 17, 0.94);
+  border: 1px solid rgba(201, 169, 110, 0.45);
+  padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #FFFFFF;
   white-space: nowrap;
-  pointer-events: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  pointer-events: none;
+  transition: all 0.25s ease;
 }
 
-.nodeYearTag {
+.cardYearText {
   color: #DC143C;
   font-weight: 800;
 }
 
-/* Active Milestone Spotlight Panel */
-.spotlightCard {
-  margin-top: 2.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(201, 169, 110, 0.3);
-  border-radius: 20px;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 2.5rem;
-  align-items: center;
+.clickToInspectPill {
+  margin-top: 0.25rem;
+  background: #DC143C;
+  color: #FFFFFF;
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.6);
+  animation: bounceHint 1.8s infinite ease-in-out;
 }
 
-.spotlightImgBox {
-  height: 220px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
-  cursor: pointer;
+@keyframes bounceHint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* ── Bottom Dock HUD & Spotlight Bar ─────────────────────────── */
+.bottomHUD {
   position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: rgba(14, 11, 18, 0.92);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 16px;
+  padding: 0.75rem 1.25rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
 }
 
-.spotlightImgBox img {
+/* Quick Epoch Jump Pills Row */
+.epochJumpsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+}
+
+.epochJumpsRow::-webkit-scrollbar {
+  display: none;
+}
+
+.epochJumpBtn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.25rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.epochJumpBtn:hover {
+  background: rgba(220, 20, 60, 0.25);
+  border-color: #DC143C;
+  color: #FFFFFF;
+}
+
+.epochJumpBtnActive {
+  background: #DC143C !important;
+  border-color: #DC143C !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 10px rgba(220, 20, 60, 0.5);
+}
+
+/* Active Milestone Showcase Strip */
+.spotlightBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.spotlightIdentity {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex: 1;
+  min-width: 260px;
+}
+
+.spotlightSmallThumb {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(201, 169, 110, 0.5);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.spotlightSmallThumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
 }
 
-.spotlightImgBox:hover img {
-  transform: scale(1.05);
-}
-
-.spotlightClickBadge {
-  position: absolute;
-  bottom: 0.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15, 12, 18, 0.88);
-  border: 1px solid rgba(201, 169, 110, 0.4);
-  color: #E8C98A;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  white-space: nowrap;
-}
-
-.spotlightInfo {
+.spotlightDetails {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.15rem;
 }
 
-.spotlightEra {
-  font-size: 0.75rem;
+.spotlightEpochTag {
+  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  color: #DC143C;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.spotlightNameText {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+}
+
+.spotlightQuoteText {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #E8C98A;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50ch;
+}
+
+.spotlightActions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ascentMetric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ascentMetricValue {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.1rem;
+  font-weight: 800;
   color: #DC143C;
 }
 
-.spotlightName {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.4rem, 2.5vw, 2rem);
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.25;
-}
-
-.spotlightQuote {
-  font-style: italic;
-  font-size: 0.95rem;
-  color: #E8C98A;
-  border-left: 2px solid #DC143C;
-  padding-left: 0.75rem;
-}
-
-.spotlightDesc {
-  font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.7;
-}
-
-.spotlightBtn {
-  align-self: flex-start;
-  padding: 0.65rem 1.6rem;
+.openDossierBtn {
   background: #DC143C;
   color: #FFFFFF;
   border: none;
   border-radius: 9999px;
-  font-size: 0.82rem;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.78rem;
   font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   transition: all 0.2s ease;
-  margin-top: 0.5rem;
+  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.4);
 }
 
-.spotlightBtn:hover {
+.openDossierBtn:hover {
   background: #B01030;
   transform: translateY(-2px);
-  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 6px 18px rgba(220, 20, 60, 0.6);
 }
 
-/* ── Lightbox Modal for Detailed Archival Dossier ─────────────── */
-.modalOverlay {
+/* ── Lightbox Modal for Full Historical Archival Dossier ──────── */
+.modalBackdrop {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(8, 7, 10, 0.88);
-  backdrop-filter: blur(12px);
+  background: rgba(5, 4, 7, 0.88);
+  backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
 }
 
-.modalContent {
-  background: linear-gradient(160deg, #18151D 0%, #100E14 100%);
+.modalSheet {
+  background: linear-gradient(165deg, #18141D 0%, #0E0C12 100%);
   border: 1px solid rgba(201, 169, 110, 0.4);
   border-radius: 20px;
-  max-width: 740px;
+  max-width: 760px;
   width: 100%;
-  max-height: 90vh;
+  max-height: 88vh;
   overflow-y: auto;
-  padding: clamp(1.75rem, 3.5vw, 2.75rem);
+  padding: clamp(1.5rem, 3.5vw, 2.5rem);
   position: relative;
-  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 20, 60, 0.2);
+  box-shadow: 0 35px 80px rgba(0, 0, 0, 0.85), 0 0 45px rgba(220, 20, 60, 0.2);
 }
 
-.modalClose {
+.modalCloseBtn {
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
@@ -425,49 +529,136 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
-.modalClose:hover {
+.modalCloseBtn:hover {
   background: #DC143C;
   border-color: #DC143C;
   transform: rotate(90deg);
 }
 
-.modalHeroImg {
+.modalHeroBanner {
   width: 100%;
-  height: 240px;
-  border-radius: 12px;
+  height: 220px;
+  border-radius: 14px;
   overflow: hidden;
-  margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.modalHeroImg img {
+.modalHeroBanner img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-@media (max-width: 900px) {
-  .spotlightCard {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  .spotlightImgBox {
-    height: 180px;
-  }
+.modalBadgeRow {
+  font-size: 0.72rem;
+  color: #DC143C;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.35rem;
 }
 
-@media (max-width: 640px) {
-  .chartStage {
-    height: 440px;
+.modalPersonTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  color: #FFFFFF;
+  margin: 0 0 0.35rem;
+  line-height: 1.2;
+}
+
+.modalEraYears {
+  font-size: 0.85rem;
+  color: #C9A96E;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.modalQuoteCallout {
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #E8C98A;
+  background: rgba(201, 169, 110, 0.08);
+  border-left: 3px solid #DC143C;
+  padding: 0.85rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.modalBodyStack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.75;
+}
+
+.modalSectionHeading {
+  color: #E8C98A;
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.modalCitationBox {
+  background: rgba(220, 20, 60, 0.1);
+  border: 1px solid rgba(220, 20, 60, 0.35);
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  margin-top: 0.5rem;
+}
+
+.modalCitationLabel {
+  color: #FFB3BA;
+  font-size: 0.75rem;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.modalCitationText {
+  font-size: 0.82rem;
+  color: #F3F4F6;
+  font-family: monospace;
+}
+
+/* ── Mobile Responsive Adjustments ───────────────────────────── */
+@media (max-width: 768px) {
+  .viewportPinned {
+    padding: 0.75rem;
   }
-  .nodeThumbWrap {
-    width: 48px;
-    height: 48px;
-  }
-  .nodeLabelBox {
+
+  .navCenter {
     display: none;
+  }
+
+  .cardLabelPill {
+    display: none;
+  }
+
+  .clickToInspectPill {
+    display: none;
+  }
+
+  .spotlightQuoteText {
+    display: none;
+  }
+
+  .avatarWrap {
+    width: 46px;
+    height: 46px;
+  }
+
+  .bottomHUD {
+    padding: 0.5rem 0.85rem;
   }
 }
