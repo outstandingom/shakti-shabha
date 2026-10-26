@@ -5,16 +5,16 @@ import gsap from 'gsap'
 import s from './Navigation.module.css'
 
 const LINKS = [
-  { label: 'About', to: '/about' },
-  { label: 'Social Work', to: '/social-work' },
+  { label: 'Articles', to: '/articles' },
+  { label: 'Counselling', to: '/counselling' },
+  { label: 'Itihaas', to: '/history' },
+  { label: 'Gallery', to: '/gallery' },
   { label: 'Aaryaveera', to: '/aaryaveera' },
+  { label: 'Social Work', to: '/social-work' },
   { label: 'Events', to: '/events' },
   { label: 'Courses', to: '/courses' },
   { label: 'Sahyog', to: '/sahyog' },
-  { label: 'History', to: '/history' },
-  { label: 'Gallery', to: '/gallery' },
-  { label: 'Case Studies', to: '/case-study' },
-  { label: 'Thought-Lab', to: '/research' },
+  { label: 'About', to: '/about' },
 ]
 
 export default function Navigation() {
@@ -118,13 +118,13 @@ export default function Navigation() {
       </div>
 
       <Link
-        to="/brand"
+        to="/sahyog"
         ref={ctaRef}
         className={s.cta}
         onMouseMove={onMove}
         onMouseLeave={onLeave}
       >
-        Brand Identity
+        Join Sabha →
       </Link>
 
       <button

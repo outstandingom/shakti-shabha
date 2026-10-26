@@ -17,6 +17,8 @@ import AboutPage from './pages/AboutPage'
 import CaseStudyPage from './pages/CaseStudyPage'
 import ResearchPage from './pages/ResearchPage'
 import GalleryPage from './pages/GalleryPage'
+import ArticlesPage from './pages/ArticlesPage'
+import CounsellingPage from './pages/CounsellingPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -76,6 +78,8 @@ function LenisProvider() {
         <Route path="/courses"             element={<CoursesPage />} />
         <Route path="/history"             element={<HistoryPage />} />
         <Route path="/gallery"             element={<GalleryPage />} />
+        <Route path="/articles"            element={<ArticlesPage />} />
+        <Route path="/counselling"         element={<CounsellingPage />} />
         <Route path="/case-study"          element={<CaseStudyPage />} />
         <Route path="/research"            element={<ResearchPage />} />
         <Route path="/brand"               element={<BrandPage />} />

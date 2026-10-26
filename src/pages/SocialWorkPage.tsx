@@ -283,6 +283,11 @@ export default function SocialWorkPage() {
               </div>
             ))}
           </div>
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <Link to="/gallery" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.8rem 2.25rem', background: '#DC143C', color: '#FFFFFF', borderRadius: '9999px', fontWeight: 600, fontSize: '0.85rem', textDecoration: 'none', boxShadow: '0 4px 15px rgba(220, 20, 60, 0.3)' }}>
+              Open Full 3D Interactive Media Vault &rarr;
+            </Link>
+          </div>
         </div>
       </section>
 
