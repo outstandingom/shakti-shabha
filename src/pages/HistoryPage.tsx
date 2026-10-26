@@ -6,7 +6,7 @@ import h from './HistoryPage.module.css'
 type Lang = 'en' | 'hi'
 
 /* ============================================================
-   Falling Leaves Engine (Preserved from Home Hero Section)
+   Falling Leaves Engine (From Home Hero Section)
    ============================================================ */
 
 const LEAF_PALETTE = [
@@ -34,7 +34,7 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   g.fillStyle = fill
   g.fill()
 
-  g.strokeStyle = 'rgba(0,0,0,0.12)'
+  g.strokeStyle = 'rgba(0,0,0,0.1)'
   g.lineWidth = 1.5
   g.stroke()
 
@@ -265,14 +265,14 @@ function createLeavesEngine(
     width: 0,
     height: 0,
     minWind: 1.2,
-    maxWind: 7,
-    minSize: 20,
-    maxSize: 44,
+    maxWind: 6.5,
+    minSize: 18,
+    maxSize: 40,
     emitterY: 0.1,
     emitterSpread: 0.9,
-    gravity: 0.5,
-    turbulence: 0.75,
-    tumbleStrength: 0.35,
+    gravity: 0.45,
+    turbulence: 0.7,
+    tumbleStrength: 0.3,
     direction: -1,
   }
 
@@ -284,7 +284,7 @@ function createLeavesEngine(
 
   const initParticles = () => {
     particles.length = 0
-    const count = width < 720 ? 45 : 75
+    const count = width < 720 ? 35 : 65
     for (let i = 0; i < count; i++) {
       const idx = (Math.random() * colorSprites.length) | 0
       const leaf = new Leaf(colorSprites[idx], graySprites[idx], cfg)
@@ -317,7 +317,7 @@ function createLeavesEngine(
   let pointerX = -9999
   let pointerY = -9999
   let pointerActive = false
-  const pointerRadius = 140
+  const pointerRadius = 130
 
   const setPointer = (x: number, y: number, active: boolean) => {
     pointerX = x
@@ -419,7 +419,6 @@ interface Milestone {
     citation: string
   }
   image: string
-  accentColor: string
 }
 
 const TIMELINE_MILESTONES: Milestone[] = [
@@ -451,8 +450,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'प्राचीन भारत में कन्याओं के उपनयन, वेदाध्ययन तथा दार्शनिक संप्रभुता का अकाट्य ऐतिहासिक प्रमाण।',
       citation: 'बृहदारण्यक उपनिषद्, तृतीय अध्याय, षष्ठ एवं अष्टम ब्राह्मण; भारतीय पुरातत्व सर्वेक्षण अभिलेख।'
     },
-    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'rudrama',
@@ -482,8 +480,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'विश्व इतिहास की उन विरली सम्राज्ञियों में से एक जिन्होंने बिना किसी संरक्षक के स्वतंत्र सम्राट के रूप में शासन किया।',
       citation: 'मार्को पोलो का यात्रा वृत्तांत (अध्याय २१); चंदुपटला शिलालेख, १२८९ ईस्वी।'
     },
-    image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'abbakka',
@@ -513,8 +510,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: '१८५७ के स्वतंत्रता संग्राम से तीन सौ वर्ष पूर्व भारत की प्रथम नौसैनिक स्वतंत्रता सेनानी के रूप में प्रतिष्ठित।',
       citation: 'गोवा राज्य पुरालेख, मोन्सोएस दो रेइनो श्रृंखला; रानी अब्बक्का स्मृति न्यास अभिलेख।'
     },
-    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'durgavati',
@@ -544,8 +540,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'सर्वस्व न्योछावर कर आत्मसम्मान और स्वाधीनता की रक्षा करने वाली भारतीय नारी के अमर प्रतीक।',
       citation: 'अबुल फज़ल, अकबरनामा (द्वितीय खंड); जबलपुर गजेटियर एवं मध्य प्रदेश पुरातत्व प्रलेख।'
     },
-    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'keladi',
@@ -575,8 +570,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'मराठा हिंदवी स्वराज्य की रक्षा में ऐतिहासिक योगदान, जिसने औरंगज़ेब के विजय अभियान को हमेशा के लिए रोक दिया।',
       citation: 'कवि लिंगण्णा विरचित केलादी नृप विजय; कर्नाटक राज्य पुरालेखागार, बेंगलुरु।'
     },
-    image: 'https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'lakshmibai',
@@ -606,8 +600,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'भारतीय स्वाधीनता संग्राम की अमर प्रेरणा और शौर्य की शाश्वत प्रतीक।',
       citation: 'भारतीय राष्ट्रीय पुरालेखागार, गुप्त परामर्श विलेख, १८५८; ब्रिटिश सैन्य पत्राचार।'
     },
-    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'anandibai',
@@ -637,8 +630,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: 'भारत में आधुनिक चिकित्सा और उच्च विज्ञान के द्वार लाखों बेटियों के लिए हमेशा के लिए खोल दिए।',
       citation: 'विमेन्स मेडिकल कॉलेज ऑफ पेंसिलवेनिया पुरालेख (१८८६); कैरोलीन हीली डॉल कृत जीवन चरित।'
     },
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80'
   },
   {
     id: 'modern',
@@ -668,8 +660,7 @@ const TIMELINE_MILESTONES: Milestone[] = [
       legacy: '४०० से अधिक विद्यालयों में ५०,००० से अधिक बेटियों का एक सशक्त, स्वाभिमानी और सुरक्षित समाज।',
       citation: 'शक्ति सभा धरातलीय प्रभाव अंकेक्षण रिपोर्ट २०२४–२०२६; जिला परिषद शिक्षा प्रतिवेदन।'
     },
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
-    accentColor: '#FFFFFF'
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80'
   }
 ]
 
@@ -690,7 +681,7 @@ export default function HistoryPage() {
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const leavesEngineRef = useRef<LeavesEngine | null>(null)
 
-  // Initialize Falling Leaves Engine in History Section
+  // Initialize Falling Leaves Engine (Home Hero matching)
   useEffect(() => {
     const gray = grayCanvasRef.current
     const reveal = revealCanvasRef.current
@@ -721,7 +712,7 @@ export default function HistoryPage() {
     }
   }, [])
 
-  // Animation frame loop for dynamic living wave on the ascending line
+  // Smooth animation frame loop for subtle natural undulation of the curve
   useEffect(() => {
     let raf = 0
     let start = performance.now()
@@ -733,20 +724,19 @@ export default function HistoryPage() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  // Dynamic Living Line Calculation: The line moves up and down!
+  // Dynamic Living Line Calculation: The line moves up and down smoothly
   const { pathD, fillAreaD } = useMemo(() => {
-    // Dynamic up-and-down undulation using scroll progress and time
-    const w1 = Math.sin(scrollProgress * Math.PI * 4 + animTime * 2) * 16
-    const w2 = Math.cos(scrollProgress * Math.PI * 3 + animTime * 1.6) * 14
-    const w3 = Math.sin(scrollProgress * Math.PI * 5 + animTime * 2.2) * 12
+    const w1 = Math.sin(scrollProgress * Math.PI * 4 + animTime * 1.5) * 14
+    const w2 = Math.cos(scrollProgress * Math.PI * 3 + animTime * 1.3) * 12
+    const w3 = Math.sin(scrollProgress * Math.PI * 5 + animTime * 1.7) * 10
 
-    const yStart = 520 + w1 * 0.4
+    const yStart = 520 + w1 * 0.3
     const cp1y = 480 + w1
     const cp2y = 410 - w2
     const cpMidY = 320 + w2
     const cp3y = 230 - w3
     const cp4y = 140 + w3
-    const yEnd = 60 + w1 * 0.3
+    const yEnd = 60 + w1 * 0.25
 
     const d = `M 80 ${yStart} C 220 ${cp1y}, 360 ${cp2y}, 500 ${cpMidY} C 640 ${cp3y}, 780 ${cp4y}, 940 ${yEnd}`
     const fill = `${d} L 940 560 L 80 560 Z`
@@ -767,7 +757,7 @@ export default function HistoryPage() {
       const progress = Math.max(0, Math.min(1, currentScroll / scrollableDistance))
       setScrollProgress(progress)
 
-      // Calculate exact (x, y) coordinates of the ascending apex point
+      // Calculate exact coordinates of the ascending apex point
       const pathEl = pathRef.current
       if (pathEl) {
         try {
@@ -776,11 +766,11 @@ export default function HistoryPage() {
           const pt = pathEl.getPointAtLength(currentLen)
           setTracerPos({ x: pt.x, y: pt.y })
         } catch {
-          // Fallback if SVG not yet rendered
+          // Fallback
         }
       }
 
-      // Determine the currently active milestone
+      // Determine active milestone
       let currentActive = TIMELINE_MILESTONES[0]
       for (const m of TIMELINE_MILESTONES) {
         if (progress >= m.threshold - 0.04) {
@@ -795,7 +785,7 @@ export default function HistoryPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [pathD])
 
-  // Jump to a specific epoch along the pinned scroll track
+  // Jump to specific epoch along pinned track
   const jumpToEpoch = useCallback((milestone: Milestone) => {
     const track = trackRef.current
     if (!track) return
@@ -817,7 +807,7 @@ export default function HistoryPage() {
 
   return (
     <div className={h.pinnedTrack} ref={trackRef}>
-      {/* ── THE PINNED / FIXED VIEWPORT (SCREEN REMAINS STILL WHILE SCROLLING) ── */}
+      {/* ── THE PINNED / FIXED VIEWPORT (CLEAN WHITE BACKGROUND, SCREEN REMAINS STILL) ── */}
       <div className={h.viewportPinned}>
 
         {/* ── Falling Leaves Background Canvas Layer (From Home Hero Section) ── */}
@@ -825,10 +815,6 @@ export default function HistoryPage() {
           <canvas ref={grayCanvasRef} className={h.leavesCanvas} />
           <canvas ref={revealCanvasRef} className={h.revealCanvas} />
         </div>
-
-        {/* Background Radial Ambiance */}
-        <div className={h.bgGlowAura} />
-        <div className={h.bgGlowGold} />
 
         {/* ── Top Header Navigation Bar ───────────────────────────────── */}
         <header className={h.topNav}>
@@ -853,8 +839,8 @@ export default function HistoryPage() {
               <Compass size={13} />
               <span>
                 {lang === 'en'
-                  ? 'Scroll to ascend line · Milestones reveal as you scroll up'
-                  : 'स्क्रॉल करें: रेखा ऊपर उठेगी व युग क्रमशः प्रकट होंगे'}
+                  ? 'Scroll down to ascend · Milestones reveal as you scroll'
+                  : 'नीचे स्क्रॉल करें: ग्राफ ऊपर चढ़ेगा व युग क्रमशः प्रकट होंगे'}
               </span>
             </div>
           </div>
@@ -890,101 +876,83 @@ export default function HistoryPage() {
               preserveAspectRatio="none"
             >
               <defs>
-                {/* Pure White Laser Glow Filter as requested */}
-                <filter id="pureWhiteGlow" x="-40%" y="-40%" width="180%" height="180%">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur1" />
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur2" />
-                  <feMerge>
-                    <feMergeNode in="blur2" />
-                    <feMergeNode in="blur1" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
+                {/* Clean Crimson Gradient for Light Theme */}
+                <linearGradient id="curveGradientLight" x1="0%" y1="100%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#DC143C" />
+                  <stop offset="70%" stopColor="#B91C1C" />
+                  <stop offset="100%" stopColor="#991B1B" />
+                </linearGradient>
 
-                {/* Shimmer Fill Under Curve */}
-                <linearGradient id="areaGradientWhite" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(255, 255, 255, 0.28)" />
-                  <stop offset="60%" stopColor="rgba(220, 20, 60, 0.08)" />
-                  <stop offset="100%" stopColor="rgba(0, 0, 0, 0)" />
+                {/* Soft Area Wash */}
+                <linearGradient id="areaGradientLight" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(220, 20, 60, 0.12)" />
+                  <stop offset="100%" stopColor="rgba(220, 20, 60, 0.0)" />
                 </linearGradient>
               </defs>
 
-              {/* Coordinate Grid Lines */}
-              <line x1="70" y1="120" x2="950" y2="120" stroke="rgba(255,255,255,0.06)" strokeDasharray="5" />
-              <line x1="70" y1="230" x2="950" y2="230" stroke="rgba(255,255,255,0.06)" strokeDasharray="5" />
-              <line x1="70" y1="340" x2="950" y2="340" stroke="rgba(255,255,255,0.06)" strokeDasharray="5" />
-              <line x1="70" y1="450" x2="950" y2="450" stroke="rgba(255,255,255,0.06)" strokeDasharray="5" />
+              {/* Clean Subtle Grid Lines */}
+              <line x1="70" y1="120" x2="950" y2="120" stroke="#E5E7EB" strokeDasharray="4" />
+              <line x1="70" y1="230" x2="950" y2="230" stroke="#E5E7EB" strokeDasharray="4" />
+              <line x1="70" y1="340" x2="950" y2="340" stroke="#E5E7EB" strokeDasharray="4" />
+              <line x1="70" y1="450" x2="950" y2="450" stroke="#E5E7EB" strokeDasharray="4" />
 
               {/* Vertical Time Markers */}
-              <line x1="100" y1="80" x2="100" y2="540" stroke="rgba(255,255,255,0.04)" />
-              <line x1="340" y1="80" x2="340" y2="540" stroke="rgba(255,255,255,0.04)" />
-              <line x1="600" y1="80" x2="600" y2="540" stroke="rgba(255,255,255,0.04)" />
-              <line x1="850" y1="80" x2="850" y2="540" stroke="rgba(255,255,255,0.04)" />
+              <line x1="100" y1="80" x2="100" y2="540" stroke="#F3F4F6" />
+              <line x1="340" y1="80" x2="340" y2="540" stroke="#F3F4F6" />
+              <line x1="600" y1="80" x2="600" y2="540" stroke="#F3F4F6" />
+              <line x1="850" y1="80" x2="850" y2="540" stroke="#F3F4F6" />
 
               {/* Axis Headings */}
-              <text x="80" y="60" fill="#FFFFFF" fontSize="13" fontFamily="Cinzel, serif" fontWeight="700">
+              <text x="80" y="60" fill="#111827" fontSize="13" fontWeight="700">
                 {lang === 'en' ? '▲ Sovereign Impact & Awakening' : '▲ संप्रभुता एवं नेतृत्व प्रभाव'}
               </text>
-              <text x="760" y="580" fill="rgba(255,255,255,0.6)" fontSize="12" fontFamily="Outfit, sans-serif">
+              <text x="780" y="580" fill="#6B7280" fontSize="12">
                 {lang === 'en' ? 'Timeline (Centuries) ►' : 'कालक्रम (शताब्दी) ►'}
               </text>
 
-              {/* Ghost Silhouette Path */}
+              {/* Ghost Silhouette Base Path */}
               <path
                 d={pathD}
                 fill="none"
-                stroke="rgba(255, 255, 255, 0.12)"
-                strokeWidth="4"
+                stroke="#E5E7EB"
+                strokeWidth="3"
                 strokeLinecap="round"
               />
 
-              {/* Active Rising Fill Under Ascending Curve */}
+              {/* Active Soft Wash Under Ascending Curve */}
               <path
                 d={fillAreaD}
-                fill="url(#areaGradientWhite)"
-                opacity={Math.min(1, scrollProgress * 1.4)}
+                fill="url(#areaGradientLight)"
+                opacity={Math.min(1, scrollProgress * 1.2)}
               />
 
-              {/* THE ASCENDING LIVING LINE GRAPH (Undulates Up & Down and Shines Radiant Pure White) */}
+              {/* THE ASCENDING LIVING LINE GRAPH (Moves Up & Down With Scroll, Clean & Crisp) */}
               <path
                 ref={pathRef}
                 d={pathD}
                 fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="5"
-                strokeLinecap="round"
-                filter="url(#pureWhiteGlow)"
-                strokeDasharray="1400"
-                strokeDashoffset={Math.max(0, 1400 * (1 - scrollProgress))}
-              />
-
-              {/* Secondary White Core Glow */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="2"
+                stroke="url(#curveGradientLight)"
+                strokeWidth="4"
                 strokeLinecap="round"
                 strokeDasharray="1400"
                 strokeDashoffset={Math.max(0, 1400 * (1 - scrollProgress))}
               />
 
-              {/* Real-time Ascending Apex Tracer Flame Star (Moves along undulating curve) */}
+              {/* Real-time Ascending Apex Tracer Marker */}
               <circle
                 cx={tracerPos.x}
                 cy={tracerPos.y}
-                r="7"
-                fill="#FFFFFF"
-                filter="url(#pureWhiteGlow)"
+                r="6"
+                fill="#DC143C"
               />
               <circle
                 cx={tracerPos.x}
                 cy={tracerPos.y}
-                r="15"
+                r="13"
                 fill="none"
-                stroke="#FFFFFF"
+                stroke="#DC143C"
                 strokeWidth="2"
-                opacity="0.9"
+                opacity="0.75"
               />
             </svg>
 
@@ -997,7 +965,7 @@ export default function HistoryPage() {
 
               // Dynamic scroll-driven vertical bobbing wave:
               // As the user scrolls, revealed images oscillate smoothly UP and DOWN!
-              const floatWave = Math.sin(scrollProgress * Math.PI * 6 + idx * 1.6 + animTime * 2) * 20
+              const floatWave = Math.sin(scrollProgress * Math.PI * 6 + idx * 1.5 + animTime * 1.8) * 18
 
               return (
                 <div
@@ -1010,7 +978,7 @@ export default function HistoryPage() {
                     top: `${item.posY}%`,
                     transform: isVisible
                       ? `translate(-50%, -50%) translateY(${floatWave}px) scale(1)`
-                      : 'translate(-50%, -50%) scale(0.4)'
+                      : 'translate(-50%, -50%) scale(0.5)'
                   }}
                   onClick={() => {
                     if (!isVisible) return
@@ -1025,9 +993,6 @@ export default function HistoryPage() {
                 >
                   <div
                     className={`${h.avatarWrap} ${isActive ? h.avatarWrapActive : ''}`}
-                    style={{
-                      borderColor: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)'
-                    }}
                   >
                     <img
                       src={item.image}
@@ -1040,14 +1005,14 @@ export default function HistoryPage() {
                     <span className={h.cardYearText}>
                       {item.yearNumeric < 0
                         ? `${Math.abs(item.yearNumeric)} BCE`
-                        : `${item.yearNumeric} CE`}
+                        : `${item.yearNumeric}`}
                     </span>
                     <span>{lang === 'en' ? item.nameEn : item.nameHi}</span>
                   </div>
 
                   {isActive && (
                     <div className={h.clickToInspectPill}>
-                      {lang === 'en' ? 'Click to inspect archive 🔍' : 'अभिलेख देखें 🔍'}
+                      {lang === 'en' ? 'Click to inspect archive' : 'अभिलेख देखें'}
                     </div>
                   )}
                 </div>
