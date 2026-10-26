@@ -6,7 +6,7 @@ import h from './HistoryPage.module.css'
 type Lang = 'en' | 'hi'
 
 /* ============================================================
-   Falling Leaves Engine (From Home Hero Section)
+   Colorful Falling Leaves Engine (Direct from Home Hero Section)
    ============================================================ */
 
 const LEAF_PALETTE = [
@@ -68,25 +68,6 @@ function createLeafSprite(fill: string, vein: string): HTMLCanvasElement {
   return c
 }
 
-function grayscaleClone(src: HTMLCanvasElement): HTMLCanvasElement {
-  const c = document.createElement('canvas')
-  c.width = src.width
-  c.height = src.height
-  const g = c.getContext('2d')!
-  g.drawImage(src, 0, 0)
-  const data = g.getImageData(0, 0, c.width, c.height)
-  const d = data.data
-  for (let i = 0; i < d.length; i += 4) {
-    const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]
-    const v = Math.min(255, Math.round(lum * 0.9 + 60))
-    d[i] = v
-    d[i + 1] = v
-    d[i + 2] = v
-  }
-  g.putImageData(data, 0, 0)
-  return c
-}
-
 function rotateVector(
   x: number,
   y: number,
@@ -127,7 +108,6 @@ type LeafCfg = {
 
 class Leaf {
   colorSprite: HTMLCanvasElement
-  graySprite: HTMLCanvasElement
   width: number
   height: number
   x = 0
@@ -146,11 +126,9 @@ class Leaf {
 
   constructor(
     colorSprite: HTMLCanvasElement,
-    graySprite: HTMLCanvasElement,
     cfg: LeafCfg
   ) {
     this.colorSprite = colorSprite
-    this.graySprite = graySprite
     this.width = cfg.minSize + Math.random() * (cfg.maxSize - cfg.minSize)
     this.height = this.width
     const centerY = cfg.height * cfg.emitterY
@@ -220,7 +198,7 @@ class Leaf {
     }
   }
 
-  draw(ctx: CanvasRenderingContext2D, colorized: boolean) {
+  draw(ctx: CanvasRenderingContext2D) {
     const tilt = this.angleY
     const vecU = rotateVector(1, 0, 0, this.angleX, tilt, this.angleZ)
     const vecV = rotateVector(0, 1, 0, this.angleX, tilt, this.angleZ)
@@ -230,7 +208,7 @@ class Leaf {
     ctx.translate(this.x, this.y)
     ctx.transform(vecU.x, vecU.y, vecV.x, vecV.y, 0, 0)
     ctx.drawImage(
-      colorized ? this.colorSprite : this.graySprite,
+      this.colorSprite,
       -this.width / 2,
       -this.height / 2,
       this.width,
@@ -246,17 +224,10 @@ type LeavesEngine = {
 }
 
 function createLeavesEngine(
-  grayCanvas: HTMLCanvasElement,
-  revealCanvas: HTMLCanvasElement,
+  canvas: HTMLCanvasElement,
   wrap: HTMLElement
 ): LeavesEngine {
-  const grayCtx = grayCanvas.getContext('2d')!
-  const revealCtx = revealCanvas.getContext('2d')!
-  const sceneCanvas = document.createElement('canvas')
-  const sceneCtx = sceneCanvas.getContext('2d')!
-  const maskCanvas = document.createElement('canvas')
-  const maskCtx = maskCanvas.getContext('2d')!
-
+  const ctx = canvas.getContext('2d')!
   let width = 0
   let height = 0
   let dpr = 1
@@ -265,21 +236,21 @@ function createLeavesEngine(
     width: 0,
     height: 0,
     minWind: 1.2,
-    maxWind: 6.5,
+    maxWind: 7,
     minSize: 18,
-    maxSize: 40,
+    maxSize: 38,
     emitterY: 0.1,
     emitterSpread: 0.9,
     gravity: 0.45,
-    turbulence: 0.7,
-    tumbleStrength: 0.3,
+    turbulence: 0.75,
+    tumbleStrength: 0.35,
     direction: -1,
   }
 
+  // Colorful leaves using full LEAF_PALETTE directly
   const colorSprites = LEAF_PALETTE.map((p) =>
     createLeafSprite(p.fill, p.vein)
   )
-  const graySprites = colorSprites.map((c) => grayscaleClone(c))
   const particles: Leaf[] = []
 
   const initParticles = () => {
@@ -287,7 +258,7 @@ function createLeavesEngine(
     const count = width < 720 ? 35 : 65
     for (let i = 0; i < count; i++) {
       const idx = (Math.random() * colorSprites.length) | 0
-      const leaf = new Leaf(colorSprites[idx], graySprites[idx], cfg)
+      const leaf = new Leaf(colorSprites[idx], cfg)
       leaf.x = Math.random() * width * 1.5
       particles.push(leaf)
     }
@@ -297,18 +268,11 @@ function createLeavesEngine(
     dpr = Math.min(window.devicePixelRatio || 1, 2)
     width = wrap.clientWidth
     height = wrap.clientHeight
-    for (const c of [grayCanvas, revealCanvas, sceneCanvas, maskCanvas]) {
-      c.width = Math.round(width * dpr)
-      c.height = Math.round(height * dpr)
-    }
-    grayCanvas.style.width = width + 'px'
-    grayCanvas.style.height = height + 'px'
-    revealCanvas.style.width = width + 'px'
-    revealCanvas.style.height = height + 'px'
-    grayCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    revealCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    sceneCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    maskCtx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    canvas.width = Math.round(width * dpr)
+    canvas.height = Math.round(height * dpr)
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
     cfg.width = width
     cfg.height = height
     if (particles.length === 0) initParticles()
@@ -317,7 +281,6 @@ function createLeavesEngine(
   let pointerX = -9999
   let pointerY = -9999
   let pointerActive = false
-  const pointerRadius = 130
 
   const setPointer = (x: number, y: number, active: boolean) => {
     pointerX = x
@@ -336,39 +299,21 @@ function createLeavesEngine(
 
     for (let i = 0; i < particles.length; i++) {
       particles[i].update(dt, cfg)
+      // Gentle avoidance when pointer is active
+      if (pointerActive) {
+        const dx = particles[i].x - pointerX
+        const dy = particles[i].y - pointerY
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 120 && dist > 0) {
+          particles[i].vx += (dx / dist) * 2
+          particles[i].vy += (dy / dist) * 2
+        }
+      }
     }
 
-    sceneCtx.clearRect(0, 0, width, height)
+    ctx.clearRect(0, 0, width, height)
     for (let i = 0; i < particles.length; i++) {
-      particles[i].draw(sceneCtx, true)
-    }
-
-    grayCtx.clearRect(0, 0, width, height)
-    for (let i = 0; i < particles.length; i++) {
-      particles[i].draw(grayCtx, false)
-    }
-
-    revealCtx.clearRect(0, 0, width, height)
-    if (pointerActive) {
-      maskCtx.clearRect(0, 0, width, height)
-      const grad = maskCtx.createRadialGradient(
-        pointerX,
-        pointerY,
-        0,
-        pointerX,
-        pointerY,
-        pointerRadius
-      )
-      grad.addColorStop(0, 'rgba(255,255,255,1)')
-      grad.addColorStop(0.6, 'rgba(255,255,255,0.85)')
-      grad.addColorStop(1, 'rgba(255,255,255,0)')
-      maskCtx.fillStyle = grad
-      maskCtx.fillRect(0, 0, width, height)
-      revealCtx.drawImage(sceneCanvas, 0, 0, width, height)
-      revealCtx.save()
-      revealCtx.globalCompositeOperation = 'destination-in'
-      revealCtx.drawImage(maskCanvas, 0, 0, width, height)
-      revealCtx.restore()
+      particles[i].draw(ctx)
     }
 
     raf = requestAnimationFrame(tick)
@@ -668,27 +613,27 @@ export default function HistoryPage() {
   const [lang, setLang] = useState<Lang>('en')
   const [activeDossier, setActiveDossier] = useState<Milestone | null>(null)
   const [activeMilestoneId, setActiveMilestoneId] = useState<string>('gargi')
+  const [hoveredMilestone, setHoveredMilestone] = useState<Milestone | null>(null)
   const [scrollProgress, setScrollProgress] = useState(0)
   const [animTime, setAnimTime] = useState(0)
   const [tracerPos, setTracerPos] = useState<{ x: number; y: number }>({ x: 80, y: 520 })
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({})
 
   const trackRef = useRef<HTMLDivElement>(null)
   const pathRef = useRef<SVGPathElement>(null)
 
-  // Leaves engine canvas references
-  const grayCanvasRef = useRef<HTMLCanvasElement>(null)
-  const revealCanvasRef = useRef<HTMLCanvasElement>(null)
+  // Leaves canvas references
+  const leavesCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
   const leavesEngineRef = useRef<LeavesEngine | null>(null)
 
-  // Initialize Falling Leaves Engine (Home Hero matching)
+  // Initialize Colorful Falling Leaves (renders directly over the graph)
   useEffect(() => {
-    const gray = grayCanvasRef.current
-    const reveal = revealCanvasRef.current
+    const canvas = leavesCanvasRef.current
     const wrap = leavesWrapRef.current
-    if (!gray || !reveal || !wrap) return
+    if (!canvas || !wrap) return
 
-    const engine = createLeavesEngine(gray, reveal, wrap)
+    const engine = createLeavesEngine(canvas, wrap)
     leavesEngineRef.current = engine
 
     const toLocal = (e: PointerEvent) => {
@@ -712,7 +657,7 @@ export default function HistoryPage() {
     }
   }, [])
 
-  // Smooth animation frame loop for subtle natural undulation of the curve
+  // Smooth loop for gentle natural breathing of the curve
   useEffect(() => {
     let raf = 0
     let start = performance.now()
@@ -724,19 +669,19 @@ export default function HistoryPage() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
-  // Dynamic Living Line Calculation: The line moves up and down smoothly
+  // Delicate Living Line: Moves subtly up and down
   const { pathD, fillAreaD } = useMemo(() => {
-    const w1 = Math.sin(scrollProgress * Math.PI * 4 + animTime * 1.5) * 14
-    const w2 = Math.cos(scrollProgress * Math.PI * 3 + animTime * 1.3) * 12
-    const w3 = Math.sin(scrollProgress * Math.PI * 5 + animTime * 1.7) * 10
+    const w1 = Math.sin(scrollProgress * Math.PI * 4 + animTime * 1.5) * 12
+    const w2 = Math.cos(scrollProgress * Math.PI * 3 + animTime * 1.2) * 10
+    const w3 = Math.sin(scrollProgress * Math.PI * 5 + animTime * 1.6) * 8
 
-    const yStart = 520 + w1 * 0.3
+    const yStart = 520 + w1 * 0.25
     const cp1y = 480 + w1
     const cp2y = 410 - w2
     const cpMidY = 320 + w2
     const cp3y = 230 - w3
     const cp4y = 140 + w3
-    const yEnd = 60 + w1 * 0.25
+    const yEnd = 60 + w1 * 0.2
 
     const d = `M 80 ${yStart} C 220 ${cp1y}, 360 ${cp2y}, 500 ${cpMidY} C 640 ${cp3y}, 780 ${cp4y}, 940 ${yEnd}`
     const fill = `${d} L 940 560 L 80 560 Z`
@@ -757,7 +702,7 @@ export default function HistoryPage() {
       const progress = Math.max(0, Math.min(1, currentScroll / scrollableDistance))
       setScrollProgress(progress)
 
-      // Calculate exact coordinates of the ascending apex point
+      // Calculate apex coordinates along curve
       const pathEl = pathRef.current
       if (pathEl) {
         try {
@@ -770,7 +715,7 @@ export default function HistoryPage() {
         }
       }
 
-      // Determine active milestone
+      // Determine the CURRENT active milestone being scrolled to
       let currentActive = TIMELINE_MILESTONES[0]
       for (const m of TIMELINE_MILESTONES) {
         if (progress >= m.threshold - 0.04) {
@@ -785,7 +730,7 @@ export default function HistoryPage() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [pathD])
 
-  // Jump to specific epoch along pinned track
+  // Jump to specific epoch
   const jumpToEpoch = useCallback((milestone: Milestone) => {
     const track = trackRef.current
     if (!track) return
@@ -805,15 +750,18 @@ export default function HistoryPage() {
     return TIMELINE_MILESTONES.find(m => m.id === activeMilestoneId) || TIMELINE_MILESTONES[0]
   }, [activeMilestoneId])
 
+  const handleImageLoad = (src: string) => {
+    setLoadedImages(prev => ({ ...prev, [src]: true }))
+  }
+
   return (
     <div className={h.pinnedTrack} ref={trackRef}>
-      {/* ── THE PINNED / FIXED VIEWPORT (CLEAN WHITE BACKGROUND, SCREEN REMAINS STILL) ── */}
+      {/* ── THE PINNED / FIXED VIEWPORT (CLEAN WHITE, BORDER RADIUS 0) ── */}
       <div className={h.viewportPinned}>
 
-        {/* ── Falling Leaves Background Canvas Layer (From Home Hero Section) ── */}
+        {/* ── COLORFUL FALLING LEAVES (SHOWN DIRECTLY ON THE GRAPH AS REQUESTED) ── */}
         <div ref={leavesWrapRef} className={h.leavesWrap} aria-hidden="true">
-          <canvas ref={grayCanvasRef} className={h.leavesCanvas} />
-          <canvas ref={revealCanvasRef} className={h.revealCanvas} />
+          <canvas ref={leavesCanvasRef} className={h.leavesCanvas} />
         </div>
 
         {/* ── Top Header Navigation Bar ───────────────────────────────── */}
@@ -839,8 +787,8 @@ export default function HistoryPage() {
               <Compass size={13} />
               <span>
                 {lang === 'en'
-                  ? 'Scroll down to ascend · Milestones reveal as you scroll'
-                  : 'नीचे स्क्रॉल करें: ग्राफ ऊपर चढ़ेगा व युग क्रमशः प्रकट होंगे'}
+                  ? 'Scroll to ascend · Hover date points to view imagery'
+                  : 'स्क्रॉल करें: ग्राफ ऊपर चढ़ेगा · चित्र देखने हेतु वर्ष पर कर्सर ले जाएं'}
               </span>
             </div>
           </div>
@@ -866,153 +814,143 @@ export default function HistoryPage() {
           </div>
         </header>
 
-        {/* ── Central Main Ascending Graph Arena ─────────────────────── */}
+        {/* ── Central Main Ascending Graph Arena (Light, Delicate, Border radius 0) ── */}
         <main className={h.graphArena}>
           <div className={h.graphStage}>
-            {/* Vector Ascending Graph Canvas */}
+            {/* SVG Graph Canvas - Minimal, Delicate */}
             <svg
               viewBox="0 0 1000 600"
               className={h.svgChart}
               preserveAspectRatio="none"
             >
               <defs>
-                {/* Clean Crimson Gradient for Light Theme */}
-                <linearGradient id="curveGradientLight" x1="0%" y1="100%" x2="100%" y2="0%">
+                {/* Light crimson trajectory gradient */}
+                <linearGradient id="lightCurveGrad" x1="0%" y1="100%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#DC143C" />
-                  <stop offset="70%" stopColor="#B91C1C" />
                   <stop offset="100%" stopColor="#991B1B" />
                 </linearGradient>
 
-                {/* Soft Area Wash */}
-                <linearGradient id="areaGradientLight" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="rgba(220, 20, 60, 0.12)" />
+                {/* Subtle delicate wash under curve */}
+                <linearGradient id="lightAreaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="rgba(220, 20, 60, 0.05)" />
                   <stop offset="100%" stopColor="rgba(220, 20, 60, 0.0)" />
                 </linearGradient>
               </defs>
 
-              {/* Clean Subtle Grid Lines */}
-              <line x1="70" y1="120" x2="950" y2="120" stroke="#E5E7EB" strokeDasharray="4" />
-              <line x1="70" y1="230" x2="950" y2="230" stroke="#E5E7EB" strokeDasharray="4" />
-              <line x1="70" y1="340" x2="950" y2="340" stroke="#E5E7EB" strokeDasharray="4" />
-              <line x1="70" y1="450" x2="950" y2="450" stroke="#E5E7EB" strokeDasharray="4" />
+              {/* Delicate Horizontal Grid Lines */}
+              <line x1="60" y1="120" x2="950" y2="120" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="3" />
+              <line x1="60" y1="230" x2="950" y2="230" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="3" />
+              <line x1="60" y1="340" x2="950" y2="340" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="3" />
+              <line x1="60" y1="450" x2="950" y2="450" stroke="#F3F4F6" strokeWidth="1" strokeDasharray="3" />
 
               {/* Vertical Time Markers */}
-              <line x1="100" y1="80" x2="100" y2="540" stroke="#F3F4F6" />
-              <line x1="340" y1="80" x2="340" y2="540" stroke="#F3F4F6" />
-              <line x1="600" y1="80" x2="600" y2="540" stroke="#F3F4F6" />
-              <line x1="850" y1="80" x2="850" y2="540" stroke="#F3F4F6" />
+              <line x1="100" y1="80" x2="100" y2="540" stroke="#F9FAFB" strokeWidth="1" />
+              <line x1="340" y1="80" x2="340" y2="540" stroke="#F9FAFB" strokeWidth="1" />
+              <line x1="600" y1="80" x2="600" y2="540" stroke="#F9FAFB" strokeWidth="1" />
+              <line x1="850" y1="80" x2="850" y2="540" stroke="#F9FAFB" strokeWidth="1" />
 
-              {/* Axis Headings */}
-              <text x="80" y="60" fill="#111827" fontSize="13" fontWeight="700">
-                {lang === 'en' ? '▲ Sovereign Impact & Awakening' : '▲ संप्रभुता एवं नेतृत्व प्रभाव'}
+              {/* Minimal Axis Labels */}
+              <text x="70" y="60" fill="#6B7280" fontSize="12" fontWeight="600" letterSpacing="0.04em">
+                {lang === 'en' ? 'SOVEREIGN AWAKENING ▲' : 'संप्रभुता एवं शौर्य उत्कर्ष ▲'}
               </text>
-              <text x="780" y="580" fill="#6B7280" fontSize="12">
-                {lang === 'en' ? 'Timeline (Centuries) ►' : 'कालक्रम (शताब्दी) ►'}
+              <text x="800" y="580" fill="#9CA3AF" fontSize="11" letterSpacing="0.04em">
+                {lang === 'en' ? 'CHRONOLOGICAL TIMELINE ►' : 'ऐतिहासिक कालक्रम ►'}
               </text>
 
-              {/* Ghost Silhouette Base Path */}
+              {/* Subtle Base Path */}
               <path
                 d={pathD}
                 fill="none"
-                stroke="#E5E7EB"
-                strokeWidth="3"
-                strokeLinecap="round"
+                stroke="#F3F4F6"
+                strokeWidth="2"
+                strokeLinecap="square"
               />
 
-              {/* Active Soft Wash Under Ascending Curve */}
+              {/* Delicate Wash Under Ascending Curve */}
               <path
                 d={fillAreaD}
-                fill="url(#areaGradientLight)"
-                opacity={Math.min(1, scrollProgress * 1.2)}
+                fill="url(#lightAreaGrad)"
+                opacity={Math.min(1, scrollProgress * 1.5)}
               />
 
-              {/* THE ASCENDING LIVING LINE GRAPH (Moves Up & Down With Scroll, Clean & Crisp) */}
+              {/* THE ASCENDING LIVING LINE GRAPH (Light & Delicate, Moves Up & Down) */}
               <path
                 ref={pathRef}
                 d={pathD}
                 fill="none"
-                stroke="url(#curveGradientLight)"
-                strokeWidth="4"
-                strokeLinecap="round"
+                stroke="url(#lightCurveGrad)"
+                strokeWidth="2.5"
+                strokeLinecap="square"
                 strokeDasharray="1400"
                 strokeDashoffset={Math.max(0, 1400 * (1 - scrollProgress))}
               />
 
-              {/* Real-time Ascending Apex Tracer Marker */}
-              <circle
-                cx={tracerPos.x}
-                cy={tracerPos.y}
-                r="6"
+              {/* Real-time Ascending Apex Tracer Marker (Square, Border-radius 0) */}
+              <rect
+                x={tracerPos.x - 3.5}
+                y={tracerPos.y - 3.5}
+                width="7"
+                height="7"
                 fill="#DC143C"
               />
-              <circle
-                cx={tracerPos.x}
-                cy={tracerPos.y}
-                r="13"
+              <rect
+                x={tracerPos.x - 7.5}
+                y={tracerPos.y - 7.5}
+                width="15"
+                height="15"
                 fill="none"
                 stroke="#DC143C"
-                strokeWidth="2"
-                opacity="0.75"
+                strokeWidth="1.5"
+                opacity="0.8"
               />
             </svg>
 
-            {/* ── FLOATING MILESTONE IMAGES ALONG THE ASCENDING TRAJECTORY ── */}
-            {/* STRICT REQUIREMENT: NO SEMI-TRANSPARENT IMAGES. ONLY VISIBLE WHEN WE SCROLL UP! */}
-            {TIMELINE_MILESTONES.map((item, idx) => {
+            {/* ── MINIMAL DATE / EVENT NODES (Desktop: clean date dots with hover preview) ── */}
+            {TIMELINE_MILESTONES.map((item) => {
               const isActive = activeMilestoneId === item.id
-              // Visible strictly when user has scrolled up to or past this milestone's threshold
-              const isVisible = scrollProgress >= item.threshold - 0.02
-
-              // Dynamic scroll-driven vertical bobbing wave:
-              // As the user scrolls, revealed images oscillate smoothly UP and DOWN!
-              const floatWave = Math.sin(scrollProgress * Math.PI * 6 + idx * 1.5 + animTime * 1.8) * 18
+              const isHovered = hoveredMilestone?.id === item.id
 
               return (
                 <div
                   key={item.id}
-                  className={`${h.imageCardNode} ${
-                    isVisible ? h.imageCardVisible : h.imageCardHidden
-                  } ${isActive ? h.imageCardNodeActive : ''}`}
+                  className={h.dateNodePoint}
                   style={{
                     left: `${item.posX}%`,
                     top: `${item.posY}%`,
-                    transform: isVisible
-                      ? `translate(-50%, -50%) translateY(${floatWave}px) scale(1)`
-                      : 'translate(-50%, -50%) scale(0.5)'
                   }}
+                  onMouseEnter={() => setHoveredMilestone(item)}
+                  onMouseLeave={() => setHoveredMilestone(null)}
                   onClick={() => {
-                    if (!isVisible) return
                     setActiveMilestoneId(item.id)
                     setActiveDossier(item)
                   }}
-                  title={
-                    lang === 'en'
-                      ? `Click to inspect dossier: ${item.nameEn}`
-                      : `${item.nameHi} का ऐतिहासिक अभिलेख देखने के लिए क्लिक करें`
-                  }
+                  title={lang === 'en' ? item.nameEn : item.nameHi}
                 >
-                  <div
-                    className={`${h.avatarWrap} ${isActive ? h.avatarWrapActive : ''}`}
-                  >
-                    <img
-                      src={item.image}
-                      alt={lang === 'en' ? item.nameEn : item.nameHi}
-                      loading="lazy"
-                    />
+                  <div className={`${h.nodeDot} ${isActive ? h.nodeDotActive : ''}`} />
+                  <div className={`${h.nodeDateLabel} ${isActive ? h.nodeDateLabelActive : ''}`}>
+                    {item.yearNumeric < 0 ? `${Math.abs(item.yearNumeric)} BCE` : `${item.yearNumeric}`}
                   </div>
 
-                  <div className={h.cardLabelPill}>
-                    <span className={h.cardYearText}>
-                      {item.yearNumeric < 0
-                        ? `${Math.abs(item.yearNumeric)} BCE`
-                        : `${item.yearNumeric}`}
-                    </span>
-                    <span>{lang === 'en' ? item.nameEn : item.nameHi}</span>
-                  </div>
-
-                  {isActive && (
-                    <div className={h.clickToInspectPill}>
-                      {lang === 'en' ? 'Click to inspect archive' : 'अभिलेख देखें'}
+                  {/* HOVER IMAGE PREVIEW POPOVER (Only shows when hovered on that date/event) */}
+                  {isHovered && (
+                    <div className={h.hoverPreviewCard}>
+                      <div className={h.hoverPreviewImgBox}>
+                        <img
+                          src={item.image}
+                          alt={lang === 'en' ? item.nameEn : item.nameHi}
+                          onLoad={() => handleImageLoad(item.image)}
+                          style={{
+                            opacity: loadedImages[item.image] ? 1 : 0,
+                            transition: 'opacity 0.2s ease'
+                          }}
+                        />
+                      </div>
+                      <span className={h.hoverPreviewEpoch}>
+                        {lang === 'en' ? item.epochEn.split('(')[0] : item.epochHi.split('(')[0]}
+                      </span>
+                      <strong className={h.hoverPreviewTitle}>
+                        {lang === 'en' ? item.nameEn : item.nameHi}
+                      </strong>
                     </div>
                   )}
                 </div>
@@ -1021,9 +959,9 @@ export default function HistoryPage() {
           </div>
         </main>
 
-        {/* ── BOTTOM DOCK HUD & SPOTLIGHT BAR ───────────────────────── */}
+        {/* ── BOTTOM DOCK HUD & CURRENT MILESTONE SHOWCASE (Shows current while scrolling) ── */}
         <footer className={h.bottomHUD}>
-          {/* Quick Epoch Jump Pills Row */}
+          {/* Quick Epoch Jump Pills Row (Border-radius 0) */}
           <div className={h.epochJumpsRow}>
             {TIMELINE_MILESTONES.map((m) => (
               <button
@@ -1040,16 +978,21 @@ export default function HistoryPage() {
             ))}
           </div>
 
-          {/* Active Milestone Spotlight Strip */}
+          {/* Current Milestone Showcase (Shows the active one on desktop & mobile while scrolling) */}
           <div className={h.spotlightBar}>
             <div className={h.spotlightIdentity}>
               <div
-                className={h.spotlightSmallThumb}
+                className={h.spotlightThumb}
                 onClick={() => setActiveDossier(currentMilestone)}
+                title={lang === 'en' ? 'Click to inspect archive' : 'अभिलेख देखें'}
               >
                 <img
                   src={currentMilestone.image}
                   alt={lang === 'en' ? currentMilestone.nameEn : currentMilestone.nameHi}
+                  onLoad={() => handleImageLoad(currentMilestone.image)}
+                  style={{
+                    opacity: loadedImages[currentMilestone.image] ? 1 : 0
+                  }}
                 />
               </div>
 
@@ -1068,7 +1011,7 @@ export default function HistoryPage() {
 
             <div className={h.spotlightActions}>
               <div className={h.ascentMetric}>
-                <span>{lang === 'en' ? 'Ascent Progress' : 'उत्कर्ष प्रगति'}</span>
+                <span>{lang === 'en' ? 'Ascent' : 'प्रगति'}</span>
                 <span className={h.ascentMetricValue}>
                   {Math.round(scrollProgress * 100)}%
                 </span>
@@ -1079,20 +1022,20 @@ export default function HistoryPage() {
                 className={h.openDossierBtn}
                 onClick={() => setActiveDossier(currentMilestone)}
               >
-                <BookOpen size={15} />
+                <BookOpen size={14} />
                 <span>
                   {lang === 'en'
-                    ? 'Inspect Archival Dossier'
-                    : 'प्रामाणिक अभिलेख देखें'}
+                    ? 'Inspect Dossier'
+                    : 'अभिलेख देखें'}
                 </span>
-                <ChevronRight size={15} />
+                <ChevronRight size={14} />
               </button>
             </div>
           </div>
         </footer>
       </div>
 
-      {/* ── LIGHTBOX MODAL FOR FULL HISTORICAL ARCHIVAL DOSSIER ─────── */}
+      {/* ── LIGHTBOX MODAL FOR FULL HISTORICAL ARCHIVAL DOSSIER (Border-radius 0) ── */}
       {activeDossier && (
         <div
           className={h.modalBackdrop}
@@ -1107,13 +1050,17 @@ export default function HistoryPage() {
               onClick={() => setActiveDossier(null)}
               aria-label={lang === 'en' ? 'Close dossier' : 'अभिलेख बंद करें'}
             >
-              <X size={18} />
+              <X size={16} />
             </button>
 
             <div className={h.modalHeroBanner}>
               <img
                 src={activeDossier.image}
                 alt={lang === 'en' ? activeDossier.nameEn : activeDossier.nameHi}
+                onLoad={() => handleImageLoad(activeDossier.image)}
+                style={{
+                  opacity: loadedImages[activeDossier.image] ? 1 : 0
+                }}
               />
             </div>
 

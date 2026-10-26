@@ -1,15 +1,16 @@
 /* ============================================================
    HistoryPage.module.css
-   Clean, Minimal, Light Design (White Background)
-   Theme: Pure White (#FFFFFF), Charcoal (#111827), Crimson (#DC143C)
-   Clean, simple typography & layout — no overcomplicated neon/dark vibes
+   Minimalist Light Design (White Background, Border-Radius: 0)
+   Delicate graph, Colorful falling leaves on graph,
+   Desktop: Clean date nodes with hover image preview & current milestone HUD
+   Mobile: Single active current milestone view with image
    ============================================================ */
 
 /* ── Outer Tall Scroll Track (Provides scroll distance) ── */
 .pinnedTrack {
   position: relative;
   width: 100%;
-  height: 420vh;
+  height: 400vh;
   background: #FFFFFF;
 }
 
@@ -27,16 +28,16 @@
   background: #FFFFFF;
   color: #111827;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  z-index: 10;
-  padding: 1rem 1.75rem;
+  z-index: 5;
+  padding: 1.25rem 2rem;
   box-sizing: border-box;
 }
 
-/* ── Falling Leaves Background Canvas Layer (Direct from Home Hero) ── */
+/* ── Colorful Falling Leaves Canvas (Floats across the entire stage & graph) ── */
 .leavesWrap {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 10; /* Rendered over/on the graph as requested */
   pointer-events: none;
   overflow: hidden;
 }
@@ -47,7 +48,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .revealCanvas {
@@ -59,27 +60,26 @@
   pointer-events: none;
 }
 
-/* ── Top Header Navigation Bar ───────────────────────────────── */
+/* ── Top Header Navigation Bar (Border radius 0) ── */
 .topNav {
   position: relative;
-  z-index: 20;
+  z-index: 25;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 0.65rem 1.25rem;
+  padding: 0.75rem 1.25rem;
   border: 1px solid #E5E7EB;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-radius: 0 !important;
 }
 
 .navLeft {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .backHomeLink {
@@ -87,14 +87,15 @@
   align-items: center;
   gap: 0.45rem;
   font-size: 0.85rem;
-  color: #4B5563;
+  color: #374151;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s ease;
+  letter-spacing: 0.02em;
+  transition: color 0.15s ease;
 }
 
 .backHomeLink:hover {
-  color: #111827;
+  color: #DC143C;
 }
 
 .brandPill {
@@ -103,10 +104,10 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #DC143C;
-  background: #FEE2E2;
-  border: 1px solid #FECACA;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
   padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 0 !important;
 }
 
 .navCenter {
@@ -132,35 +133,35 @@
 .scrollGuideHint {
   font-size: 0.75rem;
   color: #6B7280;
-  background: #F3F4F6;
+  background: #F9FAFB;
   border: 1px solid #E5E7EB;
   padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 0 !important;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
 }
 
-/* Language Switcher */
+/* Strict Language Switcher (Border radius 0) */
 .langSwitcher {
   display: inline-flex;
   align-items: center;
-  background: #F3F4F6;
+  background: #F9FAFB;
   border: 1px solid #E5E7EB;
-  padding: 0.2rem;
-  border-radius: 9999px;
+  padding: 0.15rem;
+  border-radius: 0 !important;
 }
 
 .langBtn {
-  padding: 0.35rem 0.9rem;
-  border-radius: 9999px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 0 !important;
   font-size: 0.78rem;
   font-weight: 600;
   color: #6B7280;
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -171,12 +172,11 @@
 }
 
 .langBtnActive {
-  background: #FFFFFF;
-  color: #111827;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  background: #111827;
+  color: #FFFFFF;
 }
 
-/* ── Central Main Ascending Graph Arena ─────────────────────── */
+/* ── Central Main Ascending Graph Arena (Light, Minimal, Border radius 0) ── */
 .graphArena {
   position: relative;
   z-index: 15;
@@ -193,15 +193,14 @@
   width: 100%;
   height: 100%;
   max-height: 58vh;
-  min-height: 340px;
-  background: #F9FAFB;
+  min-height: 330px;
+  background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  border-radius: 0 !important;
   overflow: visible;
 }
 
-/* SVG Chart Graphic */
+/* SVG Chart Graphic - Delicate, Light */
 .svgChart {
   width: 100%;
   height: 100%;
@@ -209,128 +208,130 @@
   display: block;
 }
 
-/* ── Floating Milestone Images on Graph ───────────────────────── */
-.imageCardNode {
+/* ── Minimal Date / Event Nodes on Graph (Desktop) ── */
+.dateNodePoint {
   position: absolute;
+  transform: translate(-50%, -50%);
   cursor: pointer;
-  z-index: 30;
+  z-index: 25;
   display: flex;
   flex-direction: column;
   align-items: center;
-  will-change: transform, opacity;
-  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
 }
 
-/* Strictly NOT semi-transparent beforehand: only visible when scrolled up to */
-.imageCardHidden {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-  transform: translate(-50%, -50%) scale(0.5) !important;
-}
-
-.imageCardVisible {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  z-index: 35;
-}
-
-.imageCardNodeActive {
-  z-index: 50 !important;
-}
-
-/* Card Avatar Circle */
-.avatarWrap {
-  width: clamp(54px, 5.5vw, 74px);
-  height: clamp(54px, 5.5vw, 74px);
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid #FFFFFF;
+.nodeDot {
+  width: 10px;
+  height: 10px;
   background: #FFFFFF;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-  position: relative;
-  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  border: 2px solid #9CA3AF;
+  border-radius: 0 !important; /* Border radius 0 */
+  transition: all 0.2s ease;
 }
 
-.avatarWrap img {
+.dateNodePoint:hover .nodeDot,
+.nodeDotActive {
+  background: #DC143C !important;
+  border-color: #DC143C !important;
+  transform: scale(1.4);
+}
+
+.nodeDateLabel {
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4B5563;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  padding: 0.1rem 0.45rem;
+  border-radius: 0 !important;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.dateNodePoint:hover .nodeDateLabel,
+.nodeDateLabelActive {
+  color: #DC143C;
+  border-color: #DC143C;
+  font-weight: 800;
+}
+
+/* ── Hover Image Preview Popover (Only visible when hovering on that date/event) ── */
+.hoverPreviewCard {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #FFFFFF;
+  border: 1px solid #111827;
+  border-radius: 0 !important;
+  padding: 0.65rem;
+  width: 180px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  animation: fadeInPop 0.18s ease-out;
+}
+
+@keyframes fadeInPop {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.hoverPreviewImgBox {
+  width: 100%;
+  height: 110px;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 0 !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.hoverPreviewImgBox img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
 }
 
-.imageCardNode:hover .avatarWrap {
-  transform: scale(1.15);
-  border-color: #DC143C !important;
-  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.25);
+.hoverPreviewTitle {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.25;
 }
 
-.avatarWrapActive {
-  transform: scale(1.12);
-  border-color: #DC143C !important;
-  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.35);
-}
-
-/* Label Pill Under Avatar */
-.cardLabelPill {
-  margin-top: 0.4rem;
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  padding: 0.2rem 0.65rem;
-  border-radius: 9999px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #1F2937;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  pointer-events: none;
-}
-
-.cardYearText {
+.hoverPreviewEpoch {
+  font-size: 0.68rem;
   color: #DC143C;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-.clickToInspectPill {
-  margin-top: 0.25rem;
-  background: #DC143C;
-  color: #FFFFFF;
-  font-size: 0.62rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  padding: 0.15rem 0.55rem;
-  border-radius: 9999px;
-  box-shadow: 0 2px 6px rgba(220, 20, 60, 0.3);
-}
-
-/* ── Bottom Dock HUD & Spotlight Bar ─────────────────────────── */
+/* ── Bottom Dock HUD & Current Milestone Spotlight (Border radius 0) ── */
 .bottomHUD {
   position: relative;
-  z-index: 20;
+  z-index: 25;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
-  background: rgba(255, 255, 255, 0.95);
+  gap: 0.65rem;
+  background: #FFFFFF;
   border: 1px solid #E5E7EB;
-  border-radius: 14px;
-  padding: 0.75rem 1.25rem;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.04);
+  border-radius: 0 !important;
+  padding: 0.85rem 1.25rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
 }
 
-/* Quick Epoch Jump Pills Row */
+/* Epoch Jump Pills (Border radius 0) */
 .epochJumpsRow {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   overflow-x: auto;
-  padding-bottom: 0.2rem;
+  padding-bottom: 0.15rem;
   scrollbar-width: none;
 }
 
@@ -339,24 +340,23 @@
 }
 
 .epochJumpBtn {
-  background: #F3F4F6;
+  background: #F9FAFB;
   border: 1px solid #E5E7EB;
   color: #4B5563;
   padding: 0.22rem 0.65rem;
-  border-radius: 9999px;
+  border-radius: 0 !important;
   font-size: 0.72rem;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
 }
 
 .epochJumpBtn:hover {
-  background: #FEE2E2;
-  border-color: #FECACA;
+  border-color: #DC143C;
   color: #DC143C;
 }
 
@@ -366,7 +366,7 @@
   color: #FFFFFF !important;
 }
 
-/* Active Milestone Showcase Strip */
+/* Current Milestone Active Showcase (Shows the current one while scrolling) */
 .spotlightBar {
   display: flex;
   align-items: center;
@@ -378,25 +378,28 @@
 .spotlightIdentity {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
   flex: 1;
   min-width: 260px;
 }
 
-.spotlightSmallThumb {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+.spotlightThumb {
+  width: 58px;
+  height: 58px;
+  border-radius: 0 !important;
   overflow: hidden;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #111827;
   flex-shrink: 0;
   cursor: pointer;
+  background: #F3F4F6;
+  position: relative;
 }
 
-.spotlightSmallThumb img {
+.spotlightThumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: opacity 0.3s ease;
 }
 
 .spotlightDetails {
@@ -406,7 +409,7 @@
 }
 
 .spotlightEpochTag {
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #DC143C;
   text-transform: uppercase;
@@ -414,26 +417,26 @@
 }
 
 .spotlightNameText {
-  font-size: 1.05rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.2;
 }
 
 .spotlightQuoteText {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-style: italic;
   color: #4B5563;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 50ch;
+  max-width: 55ch;
 }
 
 .spotlightActions {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 1rem;
 }
 
 .ascentMetric {
@@ -445,39 +448,38 @@
 }
 
 .ascentMetricValue {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #111827;
 }
 
 .openDossierBtn {
-  background: #DC143C;
+  background: #111827;
   color: #FFFFFF;
-  border: none;
-  border-radius: 9999px;
-  padding: 0.5rem 1.2rem;
+  border: 1px solid #111827;
+  border-radius: 0 !important;
+  padding: 0.55rem 1.25rem;
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .openDossierBtn:hover {
-  background: #B91C1C;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.25);
+  background: #DC143C;
+  border-color: #DC143C;
 }
 
-/* ── Lightbox Modal for Full Historical Archival Dossier ──────── */
+/* ── Lightbox Modal for Full Historical Archival Dossier (Border radius 0) ── */
 .modalBackdrop {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background: rgba(17, 24, 39, 0.6);
-  backdrop-filter: blur(8px);
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -486,15 +488,15 @@
 
 .modalSheet {
   background: #FFFFFF;
-  border: 1px solid #E5E7EB;
-  border-radius: 16px;
+  border: 1px solid #111827;
+  border-radius: 0 !important;
   max-width: 720px;
   width: 100%;
   max-height: 88vh;
   overflow-y: auto;
   padding: clamp(1.5rem, 3vw, 2.25rem);
   position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
   color: #1F2937;
 }
 
@@ -502,9 +504,9 @@
   position: absolute;
   top: 1.25rem;
   right: 1.25rem;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border-radius: 0 !important;
   background: #F3F4F6;
   border: 1px solid #E5E7EB;
   color: #4B5563;
@@ -512,21 +514,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .modalCloseBtn:hover {
-  background: #E5E7EB;
-  color: #111827;
+  background: #111827;
+  color: #FFFFFF;
+  border-color: #111827;
 }
 
 .modalHeroBanner {
   width: 100%;
   height: 220px;
-  border-radius: 12px;
+  border-radius: 0 !important;
   overflow: hidden;
   margin-bottom: 1.25rem;
   border: 1px solid #E5E7EB;
+  background: #F3F4F6;
 }
 
 .modalHeroBanner img {
@@ -567,7 +571,7 @@
   background: #F9FAFB;
   border-left: 3px solid #DC143C;
   padding: 0.75rem 1rem;
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 !important;
   margin-bottom: 1.25rem;
   line-height: 1.6;
 }
@@ -592,7 +596,7 @@
 .modalCitationBox {
   background: #F9FAFB;
   border: 1px solid #E5E7EB;
-  border-radius: 8px;
+  border-radius: 0 !important;
   padding: 0.85rem 1rem;
   margin-top: 0.5rem;
 }
@@ -613,7 +617,7 @@
   font-family: monospace;
 }
 
-/* ── Mobile Responsive Adjustments ───────────────────────────── */
+/* ── Mobile Responsive (Clean Single Active Card) ── */
 @media (max-width: 768px) {
   .viewportPinned {
     padding: 0.75rem;
@@ -623,11 +627,7 @@
     display: none;
   }
 
-  .cardLabelPill {
-    display: none;
-  }
-
-  .clickToInspectPill {
+  .nodeDateLabel {
     display: none;
   }
 
@@ -635,12 +635,12 @@
     display: none;
   }
 
-  .avatarWrap {
+  .spotlightThumb {
     width: 48px;
     height: 48px;
   }
 
   .bottomHUD {
-    padding: 0.5rem 0.85rem;
+    padding: 0.65rem 0.85rem;
   }
 }
