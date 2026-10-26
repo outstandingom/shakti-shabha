@@ -12,6 +12,7 @@ const LINKS = [
   { label: 'Courses', to: '/courses' },
   { label: 'Sahyog', to: '/sahyog' },
   { label: 'History', to: '/history' },
+  { label: 'Gallery', to: '/gallery' },
   { label: 'Case Studies', to: '/case-study' },
   { label: 'Thought-Lab', to: '/research' },
 ]
