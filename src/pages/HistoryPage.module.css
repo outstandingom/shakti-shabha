@@ -567,15 +567,15 @@
   letter-spacing: 0.05em;
 }
 
-/* ── Description Box (Only revealed when active / scrolled to) ── */
+/* ── Description Box (Stays visible once revealed; highlighted when active) ── */
 .desc {
   position: relative;
   margin: 0.6em auto 0;
   padding: 0.9em 1.15em;
   background: #FFFFFF;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(255,80,80,0.18);
-  border: 1.5px solid rgb(255,80,80);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border: 1.5px solid #E5E7EB;
   z-index: 15;
   font-size: 0.82em;
   line-height: 1.55em;
@@ -583,7 +583,14 @@
   text-align: left;
   max-height: 34vh;
   overflow-y: auto;
+  transition: all 0.25s ease;
   animation: descFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.itemActive .desc,
+.descActive {
+  border-color: rgb(255, 80, 80) !important;
+  box-shadow: 0 8px 24px rgba(255, 80, 80, 0.22) !important;
 }
 
 @keyframes descFadeIn {

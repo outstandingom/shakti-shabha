@@ -548,7 +548,8 @@ const TIMELINE_MILESTONES: Milestone[] = [
 export default function HistoryPage() {
   const [lang, setLang] = useState<Lang>('en')
   const [activeDossier, setActiveDossier] = useState<Milestone | null>(null)
-  const [activeMilestoneId, setActiveMilestoneId] = useState<string>('m2014')
+  const [activeMilestoneId, setActiveMilestoneId] = useState<string>('m2012')
+  const [maxReachedIndex, setMaxReachedIndex] = useState<number>(0)
   const [hoveredChartItem, setHoveredChartItem] = useState<Milestone | null>(null)
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({})
   const [scrollProgress, setScrollProgress] = useState(0)
@@ -630,21 +631,17 @@ export default function HistoryPage() {
           onUpdate: (self) => {
             setScrollProgress(self.progress)
 
+            // Red line smoothly glides from dot 0 to active milestone dot and beyond
+            const currentLineWidth = totalDist * self.progress
+            setLineWidth(currentLineWidth)
+
             // Determine active milestone based on scroll progress
             const activeIdx = Math.min(
               totalMilestones - 1,
               Math.max(0, Math.floor(self.progress * totalMilestones * 0.999))
             )
             setActiveMilestoneId(TIMELINE_MILESTONES[activeIdx].id)
-
-            // Red line precisely advances from dot 0 to active milestone dot and beyond
-            const currentItem = itemRefs.current[activeIdx]
-            if (currentItem) {
-              const currentX = currentItem.offsetLeft + currentItem.offsetWidth / 2
-              setLineWidth(Math.max(0, currentX - startX))
-            } else {
-              setLineWidth(totalDist * self.progress)
-            }
+            setMaxReachedIndex((prev) => Math.max(prev, activeIdx))
           },
         },
       })
@@ -674,6 +671,7 @@ export default function HistoryPage() {
     if (!st) return
     const totalMilestones = TIMELINE_MILESTONES.length
     const targetScroll = st.start + (index / (totalMilestones - 1)) * (st.end - st.start)
+    setMaxReachedIndex((prev) => Math.max(prev, index))
     window.scrollTo({
       top: targetScroll,
       behavior: 'smooth',
@@ -841,7 +839,7 @@ export default function HistoryPage() {
               {TIMELINE_MILESTONES.map((item, idx) => {
                 const isTop = idx % 2 === 0
                 const isActive = activeMilestoneId === item.id
-                const isReached = activeMilestoneIndex >= idx
+                const isReached = idx <= Math.max(maxReachedIndex, activeMilestoneIndex)
 
                 return (
                   <li
@@ -852,6 +850,7 @@ export default function HistoryPage() {
                     className={`${h.timelineItem} ${isActive ? h.itemActive : ''} ${isReached ? h.itemPassed : ''}`}
                     onClick={() => {
                       setActiveMilestoneId(item.id)
+                      setMaxReachedIndex((prev) => Math.max(prev, idx))
                       scrollToMilestone(idx)
                     }}
                   >
@@ -861,7 +860,7 @@ export default function HistoryPage() {
                     {/* Vertical Stem: only visible once date is reached */}
                     {isReached && <div className={isTop ? h.stemTop : h.stemBottom} />}
 
-                    {/* Date and Flag: Only visible once the line reaches that date! */}
+                    {/* Date, Flag & Details: Once revealed upon reach, they STAY visible as you scroll! */}
                     {isReached && (
                       <div className={`${isTop ? h.directionL : h.directionR} ${h.milestoneBoxRevealed}`}>
                         <div className={h.flagWrapper}>
@@ -875,46 +874,44 @@ export default function HistoryPage() {
                           </span>
                         </div>
 
-                        {/* Detail only revealed for the current active milestone */}
-                        {isActive && (
-                          <div className={h.desc}>
-                            <div className={h.descTop}>
-                              <div className={h.roundThumbnail}>
-                                <img
-                                  src={item.image}
-                                  alt={lang === 'en' ? item.nameEn : item.nameHi}
-                                  onLoad={() => handleImageLoad(item.image)}
-                                  style={{
-                                    opacity: loadedImages[item.image] ? 1 : 0,
-                                    transition: 'opacity 0.25s ease',
-                                  }}
-                                />
-                              </div>
-                              <div className={h.descQuote}>
-                                "{lang === 'en' ? item.quoteEn : item.quoteHi}"
-                              </div>
+                        {/* Detail card stays visible for all reached milestones, highlighted when active */}
+                        <div className={`${h.desc} ${isActive ? h.descActive : ''}`}>
+                          <div className={h.descTop}>
+                            <div className={h.roundThumbnail}>
+                              <img
+                                src={item.image}
+                                alt={lang === 'en' ? item.nameEn : item.nameHi}
+                                onLoad={() => handleImageLoad(item.image)}
+                                style={{
+                                  opacity: loadedImages[item.image] ? 1 : 0,
+                                  transition: 'opacity 0.25s ease',
+                                }}
+                              />
                             </div>
-
-                            <p className={h.descText}>
-                              {lang === 'en' ? item.descEn : item.descHi}
-                            </p>
-
-                            <button
-                              type="button"
-                              className={h.dossierBtn}
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                setActiveDossier(item)
-                              }}
-                            >
-                              <BookOpen size={12} />
-                              <span>
-                                {lang === 'en' ? 'Inspect Dossier' : 'दस्तावेज देखें'}
-                              </span>
-                              <ChevronRight size={12} />
-                            </button>
+                            <div className={h.descQuote}>
+                              "{lang === 'en' ? item.quoteEn : item.quoteHi}"
+                            </div>
                           </div>
-                        )}
+
+                          <p className={h.descText}>
+                            {lang === 'en' ? item.descEn : item.descHi}
+                          </p>
+
+                          <button
+                            type="button"
+                            className={h.dossierBtn}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveDossier(item)
+                            }}
+                          >
+                            <BookOpen size={12} />
+                            <span>
+                              {lang === 'en' ? 'Inspect Dossier' : 'दस्तावेज देखें'}
+                            </span>
+                            <ChevronRight size={12} />
+                          </button>
+                        </div>
                       </div>
                     )}
                   </li>
