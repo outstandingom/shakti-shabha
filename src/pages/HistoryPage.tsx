@@ -798,7 +798,7 @@ export default function HistoryPage() {
       </section>
 
       {/* ============================================================
-          THE HORIZONTAL SCROLL TIMELINE (MOVES HORIZONTALLY ON SCROLL)
+          THE HORIZONTAL SPINE LINE TIMELINE (MOVES HORIZONTALLY ON SCROLL)
           ============================================================ */}
       <section className={h.horizontalTimelineSection} ref={sectionRef}>
         <div className={h.stickyViewport}>
@@ -845,85 +845,112 @@ export default function HistoryPage() {
             </div>
           </div>
 
-          {/* Real-time horizontal scroll progress line */}
-          <div className={h.scrollProgressBar}>
-            <div
-              className={h.scrollProgressIndicator}
-              style={{ width: `${Math.min(100, scrollProgress * 100)}%` }}
-            />
-          </div>
-
           {/* Horizontal Track Viewport */}
           <div className={h.horizontalTrackViewport}>
-            <div className={h.horizontalTrack} ref={trackRef}>
-              {/* Continuous Horizontal Connecting Line */}
-              <div className={h.horizontalBaseLine} />
+            <div className={h.timelineHorizontal} ref={trackRef}>
+              {/* Central Continuous Horizontal Spine Line */}
+              <div className={h.timelineBaseSpine} />
+
+              {/* Dynamic Animated Active Progress Spine Line */}
               <div
-                className={h.horizontalActiveLine}
-                style={{ width: `${Math.min(100, scrollProgress * 100)}%` }}
+                className={h.timelineActiveSpine}
+                style={{ width: `${Math.min(100, scrollProgress * 105)}%` }}
               />
 
+              {/* Milestones Alternating: Top (odd) and Bottom (even) */}
               {TIMELINE_MILESTONES.map((item, idx) => {
+                const isTop = idx % 2 === 0
                 const isActive = activeMilestoneId === item.id
+
                 return (
-                  <article
+                  <div
                     key={item.id}
-                    className={`${h.horizontalCard} ${isActive ? h.horizontalCardActive : ''}`}
+                    className={`${h.timelineItemHorizontal} ${isActive ? h.itemActive : ''}`}
                     onClick={() => {
                       setActiveMilestoneId(item.id)
                       scrollToMilestone(idx)
                     }}
                   >
-                    <div className={h.cardNodeBadge}>
-                      <span className={h.cardYearPill}>{item.yearNumeric}</span>
-                      <span className={h.cardEpochTag}>
-                        {lang === 'en' ? item.epochEn : item.epochHi}
-                      </span>
+                    {/* Dedicated Spine Dot right on the central horizontal line */}
+                    <div className={h.spineDot} />
+
+                    {/* Stem connecting dot to the content */}
+                    <div className={isTop ? h.stemTop : h.stemBottom} />
+
+                    <div className={isTop ? h.directionTop : h.directionBottom}>
+                      <div className={h.flagWrapper}>
+                        <span className={h.timeWrapper}>
+                          <span className={h.time}>
+                            {lang === 'en' ? item.dateDisplayEn : item.dateDisplayHi}
+                          </span>
+                        </span>
+                        <span className={`${h.flag} ${isActive ? h.flagActive : ''}`}>
+                          {lang === 'en' ? item.nameEn : item.nameHi}
+                        </span>
+                      </div>
+
+                      {/* ACTIVE STATE: Round photo, details & dossier CTA */}
+                      {isActive ? (
+                        <div className={h.activeMilestoneBox}>
+                          <div className={h.activeRoundPhotoWrapper}>
+                            <div className={h.activeRoundPhoto}>
+                              <img
+                                src={item.image}
+                                alt={lang === 'en' ? item.nameEn : item.nameHi}
+                                onLoad={() => handleImageLoad(item.image)}
+                                style={{
+                                  opacity: loadedImages[item.image] ? 1 : 0,
+                                  transition: 'opacity 0.25s ease',
+                                }}
+                              />
+                            </div>
+
+                            <div className={h.activeTitles}>
+                              <span className={h.activeEpoch}>
+                                {lang === 'en' ? item.epochEn : item.epochHi}
+                              </span>
+                              <strong className={h.activeName}>
+                                {lang === 'en' ? item.nameEn : item.nameHi}
+                              </strong>
+                            </div>
+                          </div>
+
+                          <div className={h.activeQuote}>
+                            "{lang === 'en' ? item.quoteEn : item.quoteHi}"
+                          </div>
+
+                          <p className={h.activeDesc}>
+                            {lang === 'en' ? item.descEn : item.descHi}
+                          </p>
+
+                          <button
+                            type="button"
+                            className={h.inspectDossierBtn}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveDossier(item)
+                            }}
+                          >
+                            <BookOpen size={13} />
+                            <span>
+                              {lang === 'en'
+                                ? 'Inspect Verified Archival Dossier'
+                                : 'प्रमाणित पुरातात्विक दस्तावेज देखें'}
+                            </span>
+                            <ChevronRight size={13} />
+                          </button>
+                        </div>
+                      ) : (
+                        /* INACTIVE STATE: Clean, compact summary */
+                        <div className={h.inactiveDescSnippet}>
+                          {lang === 'en' ? item.epochEn : item.epochHi} —{' '}
+                          {lang === 'en'
+                            ? item.descEn.split('.')[0] + '.'
+                            : item.descHi.split('।')[0] + '।'}
+                        </div>
+                      )}
                     </div>
-
-                    <div className={h.cardPhotoWrapper}>
-                      <img
-                        src={item.image}
-                        alt={lang === 'en' ? item.nameEn : item.nameHi}
-                        className={h.cardPhoto}
-                        loading="lazy"
-                        onLoad={() => handleImageLoad(item.image)}
-                        style={{
-                          opacity: loadedImages[item.image] ? 1 : 0,
-                          transition: 'opacity 0.25s ease',
-                        }}
-                      />
-                    </div>
-
-                    <h3 className={h.cardTitle}>
-                      {lang === 'en' ? item.nameEn : item.nameHi}
-                    </h3>
-
-                    <div className={h.cardQuote}>
-                      "{lang === 'en' ? item.quoteEn : item.quoteHi}"
-                    </div>
-
-                    <p className={h.cardDesc}>
-                      {lang === 'en' ? item.descEn : item.descHi}
-                    </p>
-
-                    <button
-                      type="button"
-                      className={h.cardDossierBtn}
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        setActiveDossier(item)
-                      }}
-                    >
-                      <BookOpen size={13} />
-                      <span>
-                        {lang === 'en'
-                          ? 'Inspect Archival Dossier'
-                          : 'प्रमाणित अभिलेख देखें'}
-                      </span>
-                      <ChevronRight size={13} />
-                    </button>
-                  </article>
+                  </div>
                 )
               })}
             </div>
