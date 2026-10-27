@@ -4,7 +4,7 @@
 
 .page {
   min-height: 100vh;
-  padding-top: 5.5rem;
+  padding-top: 0;
   background: var(--theme-bg, #FFFFFF);
   color: var(--theme-text-heading, #111111);
   font-family: var(--font-body, 'Outfit', sans-serif);
@@ -12,7 +12,7 @@
 
 /* Banner */
 .banner {
-  padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+  padding: calc(clamp(3rem, 6vw, 5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3rem, 6vw, 5rem);
   color: #FFFFFF;
 }
 

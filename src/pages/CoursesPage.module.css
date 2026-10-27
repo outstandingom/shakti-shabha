@@ -1,6 +1,6 @@
 .hero {
   background: linear-gradient(150deg, #0A0A0B 0%, #17120C 50%, #0F0E0B 100%);
-  padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+  padding: calc(clamp(3.5rem, 6vw, 5.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 6vw, 5.5rem);
   color: #FFFFFF;
   position: relative;
   border-bottom: 1px solid rgba(201, 169, 110, 0.25);

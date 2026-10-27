@@ -31,7 +31,7 @@
 
 .infoSection {
   min-height: 100vh;
-  padding: 3rem 2.5rem 4rem 4rem;
+  padding: calc(3rem + 4.5rem) 2.5rem 4rem 4rem;
   display: flex;
   align-items: center;
   justify-content: space-between;

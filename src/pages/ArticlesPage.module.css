@@ -5,7 +5,7 @@
 
 .hero {
   background: linear-gradient(145deg, #1A0A0E 0%, #2D0C15 50%, #4D0F20 100%);
-  padding: clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem);
+  padding: calc(clamp(3rem, 5vw, 4.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3rem, 5vw, 4.5rem);
   color: #FFFFFF;
   position: relative;
   overflow: hidden;
