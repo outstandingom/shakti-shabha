@@ -185,23 +185,24 @@
 }
 
 /* ============================================================
-   The Horizontal Spine Line Timeline (Alternating Top / Bottom)
+   The Parallel Horizontal Timeline (Exact CodePen faithfully adapted)
    ============================================================ */
 
 .horizontalTimelineSection {
   position: relative;
   width: 100%;
   z-index: 15;
+  background: rgb(240, 240, 242);
 }
 
 .stickyViewport {
   position: relative;
   width: 100%;
   height: 100vh;
+  min-height: 640px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: #FFFFFF;
 }
 
 /* ── Top Controls & Quick Year Bar ── */
@@ -235,25 +236,26 @@
   font-size: 0.8rem;
   font-weight: 700;
   border-radius: 9999px;
-  background: #F3F4F6;
-  border: 1px solid #E5E7EB;
-  color: #4B5563;
+  background: rgb(248, 248, 248);
+  border: 1px solid #D1D5DB;
+  color: rgb(50, 50, 50);
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .yearPill:hover {
-  background: #FFF1F2;
-  border-color: #FECDD3;
-  color: #DC143C;
+  background: rgb(255, 255, 255);
+  border-color: rgb(255, 80, 80);
+  color: rgb(250, 80, 80);
 }
 
 .yearPillActive {
-  background: #DC143C !important;
-  border-color: #DC143C !important;
+  background: rgb(255, 80, 80) !important;
+  border-color: rgb(255, 80, 80) !important;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 80, 80, 0.35);
   transform: scale(1.05);
 }
 
@@ -267,9 +269,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid #E5E7EB;
+  border: 1px solid #D1D5DB;
   background: #FFFFFF;
-  color: #111827;
+  color: rgb(50, 50, 50);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -278,8 +280,8 @@
 }
 
 .navArrowBtn:hover:not(:disabled) {
-  background: #DC143C;
-  border-color: #DC143C;
+  background: rgb(255, 80, 80);
+  border-color: rgb(255, 80, 80);
   color: #FFFFFF;
 }
 
@@ -298,321 +300,301 @@
   align-items: center;
 }
 
-.timelineHorizontal {
+/* ================ The Horizontal Timeline ================ */
+
+.timeline {
   position: relative;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: clamp(48px, 5vw, 84px);
-  padding: 0 clamp(4rem, 8vw, 12rem);
   width: max-content;
   height: 100%;
+  margin: 0;
+  padding: 0 clamp(4rem, 8vw, 12rem);
+  list-style-type: none;
+  font-family: 'Open Sans', sans-serif;
   will-change: transform;
 }
 
-/* Central Continuous Horizontal Spine Line */
-.timelineBaseSpine {
+/* Central Continuous Horizontal Spine Line with Exact Gradients */
+.timeline:before {
   position: absolute;
-  left: 0;
-  right: 0;
   top: 50%;
+  left: 0;
+  content: ' ';
+  display: block;
+  width: 100%;
   height: 6px;
   margin-top: -3px;
-  background: #E5E7EB;
+  background: rgb(80,80,80);
+  background: -moz-linear-gradient(left, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(30,87,153,1)), color-stop(100%,rgba(125,185,232,1)));
+  background: -webkit-linear-gradient(left, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -o-linear-gradient(left, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: -ms-linear-gradient(left, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
+  background: linear-gradient(to right, rgba(80,80,80,0) 0%, rgb(80,80,80) 8%, rgb(80,80,80) 92%, rgba(80,80,80,0) 100%);
   z-index: 5;
 }
 
-/* Dynamic Animated Active Progress Spine */
+/* Dynamic Animated Active Progress Line (grows as user scrolls) */
 .timelineActiveSpine {
   position: absolute;
-  left: 0;
   top: 50%;
+  left: 0;
   height: 6px;
   margin-top: -3px;
-  background: linear-gradient(to right, #DC143C 0%, #B91C1C 100%);
+  background: linear-gradient(to right, rgb(255,80,80) 0%, rgb(220,20,60) 100%);
   z-index: 6;
   transition: width 0.1s linear;
-  box-shadow: 0 0 14px rgba(220, 20, 60, 0.45);
+  box-shadow: 0 0 12px rgba(255,80,80,0.6);
 }
 
-/* Each Milestone Item on the Horizontal Line */
-.timelineItemHorizontal {
+.timelineItem {
   position: relative;
-  width: clamp(340px, 28vw, 420px);
+  width: clamp(340px, 28vw, 400px);
   height: 100%;
   flex-shrink: 0;
+  padding: 0 1em;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-/* Dedicated Spine Dot on the Central Horizontal Line */
-.spineDot {
+/* ================ Parallel Directions (Top & Bottom) ================ */
+
+/* Direction Top (Parallel above the line) */
+.directionL {
   position: absolute;
+  bottom: calc(50% + 36px);
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 16px;
-  height: 16px;
-  background: #FFFFFF;
-  border-radius: 50% !important;
-  border: 3px solid #9CA3AF;
-  z-index: 12;
+  transform: translateX(-50%);
+  width: 330px;
+  text-align: center;
   transition: all 0.25s ease;
 }
 
-.itemActive .spineDot {
-  border-color: #DC143C !important;
-  background: #DC143C !important;
-  transform: translate(-50%, -50%) scale(1.5);
-  box-shadow: 0 0 0 6px rgba(220, 20, 60, 0.25);
-}
-
-/* Vertical Stems Connecting the Dot to the Flag/Box */
-.stemTop {
+/* Direction Bottom (Parallel below the line) */
+.directionR {
   position: absolute;
+  top: calc(50% + 36px);
   left: 50%;
-  bottom: 50%;
-  width: 2px;
-  height: 24px;
-  margin-left: -1px;
-  background: #E5E7EB;
-  z-index: 7;
-  transition: background 0.25s ease;
-}
-
-.itemActive .stemTop {
-  background: #DC143C;
-}
-
-.stemBottom {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 2px;
-  height: 24px;
-  margin-left: -1px;
-  background: #E5E7EB;
-  z-index: 7;
-  transition: background 0.25s ease;
-}
-
-.itemActive .stemBottom {
-  background: #DC143C;
-}
-
-/* ── Top Branch (Odd items, above center line) ── */
-.directionTop {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(50% + 24px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  transform: translateX(-50%);
+  width: 330px;
   text-align: center;
+  transition: all 0.25s ease;
 }
 
-.directionTop .flag:after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -6px;
-  border: solid transparent;
-  border-top-color: #FFFFFF;
-  border-width: 6px;
-  pointer-events: none;
-}
-
-.itemActive .directionTop .flag:after {
-  border-top-color: #DC143C;
-}
-
-/* ── Bottom Branch (Even items, below center line) ── */
-.directionBottom {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: calc(50% + 24px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.directionBottom .flag:after {
-  content: "";
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -6px;
-  border: solid transparent;
-  border-bottom-color: #FFFFFF;
-  border-width: 6px;
-  pointer-events: none;
-}
-
-.itemActive .directionBottom .flag:after {
-  border-bottom-color: #DC143C;
-}
-
-/* Flag Wrapper */
 .flagWrapper {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
+  display: inline-block;
+  text-align: center;
 }
 
 .flag {
   position: relative;
   display: inline-block;
-  background: #FFFFFF;
+  background: rgb(248,248,248);
   padding: 8px 14px;
-  font-weight: 700;
+  border-radius: 5px;
+  font-weight: 600;
   font-size: 0.95rem;
-  color: #111827;
-  border: 1px solid #E5E7EB;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  color: rgb(50,50,50);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
   transition: all 0.25s ease;
-  border-radius: 6px;
 }
 
 .flagActive {
-  border-color: #DC143C !important;
-  box-shadow: 0 4px 16px rgba(220, 20, 60, 0.15) !important;
-  color: #DC143C !important;
+  background: #FFFFFF !important;
+  color: rgb(220,20,60) !important;
+  box-shadow: 0 3px 12px rgba(255,80,80,0.25) !important;
+  border: 1px solid rgb(255,80,80) !important;
 }
 
-.timeWrapper {
-  display: inline-block;
-  padding: 4px 10px;
-  background: #FFF1F2;
-  border: 1px solid #FECDD3;
-  border-radius: 4px;
-}
-
-.time {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: #DC143C;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ── Active Milestone Box (Preserved with Round Photo) ── */
-.activeMilestoneBox {
-  margin-top: 0.65rem;
-  background: #FFFFFF;
-  border: 1px solid #DC143C;
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: 0 10px 30px rgba(220, 20, 60, 0.12);
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  text-align: left;
-  width: 100%;
-  max-height: 38vh;
-  overflow-y: auto;
+/* ── The Exact Red Dot on the Center Horizontal Line ── */
+.directionL .flag:before {
+  position: absolute;
+  top: calc(100% + 30px);
+  left: 50%;
+  content: ' ';
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-left: -11px;
+  margin-top: -11px;
+  background: #fff;
+  border-radius: 10px;
+  border: 4px solid rgb(255,80,80);
+  z-index: 10;
   transition: all 0.25s ease;
 }
 
-.activeRoundPhotoWrapper {
+.directionR .flag:before {
+  position: absolute;
+  bottom: calc(100% + 30px);
+  left: 50%;
+  content: ' ';
+  display: block;
+  width: 14px;
+  height: 14px;
+  margin-left: -11px;
+  margin-bottom: -11px;
+  background: #fff;
+  border-radius: 10px;
+  border: 4px solid rgb(255,80,80);
+  z-index: 10;
+  transition: all 0.25s ease;
+}
+
+.itemActive .directionL .flag:before,
+.itemActive .directionR .flag:before {
+  background: rgb(255,80,80);
+  transform: scale(1.4);
+  box-shadow: 0 0 0 6px rgba(255,80,80,0.3);
+}
+
+/* ── Speech Bubble Triangle Pointer Pointing to the Line ── */
+.directionL .flag:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  height: 0;
+  width: 0;
+  margin-left: -8px;
+  border: solid transparent;
+  border-top-color: rgb(248,248,248);
+  border-width: 8px;
+  pointer-events: none;
+  transition: border-top-color 0.25s ease;
+}
+
+.directionR .flag:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  height: 0;
+  width: 0;
+  margin-left: -8px;
+  border: solid transparent;
+  border-bottom-color: rgb(248,248,248);
+  border-width: 8px;
+  pointer-events: none;
+  transition: border-bottom-color 0.25s ease;
+}
+
+.itemActive .directionL .flag:after {
+  border-top-color: #FFFFFF;
+}
+
+.itemActive .directionR .flag:after {
+  border-bottom-color: #FFFFFF;
+}
+
+/* Time Badge */
+.timeWrapper {
+  display: inline-block;
+  margin-left: 6px;
+  line-height: 1em;
+  font-size: 0.72em;
+  color: rgb(250,80,80);
+  vertical-align: middle;
+}
+
+.time {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgb(248,248,248);
+  border-radius: 3px;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+/* Description Box */
+.desc {
+  position: relative;
+  margin: 0.7em 0 0 0;
+  padding: 0.85em 1em;
+  background: rgb(255, 255, 255);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  z-index: 15;
+  font-size: 0.8em;
+  line-height: 1.55em;
+  color: rgb(60,60,60);
+  text-align: left;
+  transition: all 0.25s ease;
+  max-height: 34vh;
+  overflow-y: auto;
+}
+
+.itemActive .desc {
+  box-shadow: 0 8px 24px rgba(255,80,80,0.18);
+  border: 1px solid rgb(255,80,80);
+}
+
+.descTop {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
-.activeRoundPhoto {
-  width: 64px;
-  height: 64px;
+.roundThumbnail {
+  width: 48px;
+  height: 48px;
   border-radius: 50% !important;
   overflow: hidden;
-  border: 3px solid #DC143C;
-  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.25);
+  border: 2px solid rgb(255,80,80);
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(255,80,80,0.2);
 }
 
-.activeRoundPhoto img {
+.roundThumbnail img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-.activeTitles {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.activeEpoch {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #DC143C;
-  letter-spacing: 0.05em;
-}
-
-.activeName {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #111827;
-  line-height: 1.2;
-}
-
-.activeQuote {
+.descQuote {
   font-style: italic;
   font-size: 0.8rem;
-  color: #374151;
-  background: #F9FAFB;
-  border-left: 3px solid #DC143C;
-  padding: 0.45rem 0.65rem;
-  line-height: 1.45;
-  border-radius: 0 6px 6px 0;
+  color: rgb(80,80,80);
+  line-height: 1.4;
 }
 
-.activeDesc {
+.descText {
   font-size: 0.82rem;
-  color: #4B5563;
-  line-height: 1.55;
+  color: rgb(75,85,99);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.inspectDossierBtn {
-  align-self: flex-start;
-  background: #111827;
+.dossierBtn {
+  background: rgb(50, 50, 50);
   color: #FFFFFF;
   border: none;
-  border-radius: 9999px;
-  padding: 0.4rem 0.95rem;
-  font-size: 0.75rem;
+  border-radius: 4px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.74rem;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: all 0.15s ease;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
   margin-top: 0.25rem;
 }
 
-.inspectDossierBtn:hover {
-  background: #DC143C;
-}
-
-/* Inactive Description Snippet */
-.inactiveDescSnippet {
-  margin-top: 0.5rem;
-  font-size: 0.78rem;
-  color: #6B7280;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  max-width: 320px;
+.dossierBtn:hover {
+  background: rgb(255, 80, 80);
 }
 
 /* ============================================================

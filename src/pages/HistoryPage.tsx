@@ -612,7 +612,7 @@ export default function HistoryPage() {
   const [scrollProgress, setScrollProgress] = useState(0)
 
   const sectionRef = useRef<HTMLDivElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLUListElement>(null)
   const triggerRef = useRef<ScrollTrigger | null>(null)
   const leavesCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
@@ -798,7 +798,7 @@ export default function HistoryPage() {
       </section>
 
       {/* ============================================================
-          THE HORIZONTAL SPINE LINE TIMELINE (MOVES HORIZONTALLY ON SCROLL)
+          THE HORIZONTAL PARALLEL TIMELINE (EXACT CODEPEN SYSTEM)
           ============================================================ */}
       <section className={h.horizontalTimelineSection} ref={sectionRef}>
         <div className={h.stickyViewport}>
@@ -847,113 +847,81 @@ export default function HistoryPage() {
 
           {/* Horizontal Track Viewport */}
           <div className={h.horizontalTrackViewport}>
-            <div className={h.timelineHorizontal} ref={trackRef}>
-              {/* Central Continuous Horizontal Spine Line */}
-              <div className={h.timelineBaseSpine} />
-
-              {/* Dynamic Animated Active Progress Spine Line */}
+            <ul className={h.timeline} ref={trackRef}>
+              {/* Dynamic Animated Active Progress Line on the 6px line */}
               <div
                 className={h.timelineActiveSpine}
                 style={{ width: `${Math.min(100, scrollProgress * 105)}%` }}
               />
 
-              {/* Milestones Alternating: Top (odd) and Bottom (even) */}
+              {/* Exact alternating parallel items: Top (.directionL) and Bottom (.directionR) */}
               {TIMELINE_MILESTONES.map((item, idx) => {
                 const isTop = idx % 2 === 0
                 const isActive = activeMilestoneId === item.id
 
                 return (
-                  <div
+                  <li
                     key={item.id}
-                    className={`${h.timelineItemHorizontal} ${isActive ? h.itemActive : ''}`}
+                    className={`${h.timelineItem} ${isActive ? h.itemActive : ''}`}
                     onClick={() => {
                       setActiveMilestoneId(item.id)
                       scrollToMilestone(idx)
                     }}
                   >
-                    {/* Dedicated Spine Dot right on the central horizontal line */}
-                    <div className={h.spineDot} />
-
-                    {/* Stem connecting dot to the content */}
-                    <div className={isTop ? h.stemTop : h.stemBottom} />
-
-                    <div className={isTop ? h.directionTop : h.directionBottom}>
+                    <div className={isTop ? h.directionL : h.directionR}>
                       <div className={h.flagWrapper}>
+                        <span className={`${h.flag} ${isActive ? h.flagActive : ''}`}>
+                          {lang === 'en' ? item.nameEn : item.nameHi}
+                        </span>
                         <span className={h.timeWrapper}>
                           <span className={h.time}>
                             {lang === 'en' ? item.dateDisplayEn : item.dateDisplayHi}
                           </span>
                         </span>
-                        <span className={`${h.flag} ${isActive ? h.flagActive : ''}`}>
-                          {lang === 'en' ? item.nameEn : item.nameHi}
-                        </span>
                       </div>
 
-                      {/* ACTIVE STATE: Round photo, details & dossier CTA */}
-                      {isActive ? (
-                        <div className={h.activeMilestoneBox}>
-                          <div className={h.activeRoundPhotoWrapper}>
-                            <div className={h.activeRoundPhoto}>
-                              <img
-                                src={item.image}
-                                alt={lang === 'en' ? item.nameEn : item.nameHi}
-                                onLoad={() => handleImageLoad(item.image)}
-                                style={{
-                                  opacity: loadedImages[item.image] ? 1 : 0,
-                                  transition: 'opacity 0.25s ease',
-                                }}
-                              />
-                            </div>
-
-                            <div className={h.activeTitles}>
-                              <span className={h.activeEpoch}>
-                                {lang === 'en' ? item.epochEn : item.epochHi}
-                              </span>
-                              <strong className={h.activeName}>
-                                {lang === 'en' ? item.nameEn : item.nameHi}
-                              </strong>
-                            </div>
+                      <div className={h.desc}>
+                        <div className={h.descTop}>
+                          <div className={h.roundThumbnail}>
+                            <img
+                              src={item.image}
+                              alt={lang === 'en' ? item.nameEn : item.nameHi}
+                              onLoad={() => handleImageLoad(item.image)}
+                              style={{
+                                opacity: loadedImages[item.image] ? 1 : 0,
+                                transition: 'opacity 0.25s ease',
+                              }}
+                            />
                           </div>
-
-                          <div className={h.activeQuote}>
+                          <div className={h.descQuote}>
                             "{lang === 'en' ? item.quoteEn : item.quoteHi}"
                           </div>
-
-                          <p className={h.activeDesc}>
-                            {lang === 'en' ? item.descEn : item.descHi}
-                          </p>
-
-                          <button
-                            type="button"
-                            className={h.inspectDossierBtn}
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setActiveDossier(item)
-                            }}
-                          >
-                            <BookOpen size={13} />
-                            <span>
-                              {lang === 'en'
-                                ? 'Inspect Verified Archival Dossier'
-                                : 'प्रमाणित पुरातात्विक दस्तावेज देखें'}
-                            </span>
-                            <ChevronRight size={13} />
-                          </button>
                         </div>
-                      ) : (
-                        /* INACTIVE STATE: Clean, compact summary */
-                        <div className={h.inactiveDescSnippet}>
-                          {lang === 'en' ? item.epochEn : item.epochHi} —{' '}
-                          {lang === 'en'
-                            ? item.descEn.split('.')[0] + '.'
-                            : item.descHi.split('।')[0] + '।'}
-                        </div>
-                      )}
+
+                        <p className={h.descText}>
+                          {lang === 'en' ? item.descEn : item.descHi}
+                        </p>
+
+                        <button
+                          type="button"
+                          className={h.dossierBtn}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setActiveDossier(item)
+                          }}
+                        >
+                          <BookOpen size={12} />
+                          <span>
+                            {lang === 'en' ? 'Inspect Dossier' : 'दस्तावेज देखें'}
+                          </span>
+                          <ChevronRight size={12} />
+                        </button>
+                      </div>
                     </div>
-                  </div>
+                  </li>
                 )
               })}
-            </div>
+            </ul>
           </div>
         </div>
       </section>
