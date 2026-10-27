@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom'
 import s from './SocialWorkHero.module.css'
 
 const WORDS = [
-  'WOMEN.',
   'SURVIVORS.',
   'WARRIORS.',
   'DAUGHTERS.',
+  'RURAL GIRLS.',
   'COMMUNITIES.',
 ]
 
 export default function SocialWorkHero() {
   const [wordIdx, setWordIdx] = useState(0)
-  const [charIdx, setCharIdx] = useState(0)
+  const [charIdx, setCharIdx] = useState(WORDS[0].length)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Typewriter effect mimicking Typed.js with full React lifecycle safety
+  // Typewriter effect rotating through empowerment areas
   useEffect(() => {
     const currentWord = WORDS[wordIdx]
     let timeout: ReturnType<typeof setTimeout>
@@ -29,13 +29,13 @@ export default function SocialWorkHero() {
         // Pause at completed word
         timeout = setTimeout(() => {
           setIsDeleting(true)
-        }, 1800)
+        }, 2200)
       }
     } else {
       if (charIdx > 0) {
         timeout = setTimeout(() => {
           setCharIdx((prev) => prev - 1)
-        }, 50)
+        }, 45)
       } else {
         setIsDeleting(false)
         setWordIdx((prev) => (prev + 1) % WORDS.length)
@@ -59,13 +59,18 @@ export default function SocialWorkHero() {
 
         <h1 className={s.heroTitle}>
           <span className={s.headingPrefix}>WE WORK FOR</span>
-          <span className={s.text}>
+          <span className={s.crimsonWord}>WOMEN.</span>
+        </h1>
+
+        <div className={s.missionRotator}>
+          <span className={s.rotatorLabel}>EMPOWERING:</span>
+          <span className={s.rotatorWord}>
             {displayedText}
             <span className={s.cursor}>|</span>
           </span>
-        </h1>
+        </div>
 
-        <p>
+        <p className={s.desc}>
           Twelve years of fearless grassroots empowerment — organizing martial self-defense
           camps, survivor healing pods, legal literacy circles, and rural leadership across 200+ villages.
         </p>
@@ -80,16 +85,10 @@ export default function SocialWorkHero() {
 
       {/* ── Right Part (Animated 3x3 Grid) ── */}
       <div className={s.rightPart}>
-        {/* Animated wave lines */}
+        {/* Animated wave lines (Crimson Red SVG) */}
         <div className={s.bgLine}>
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/wave.svg"
-            alt="Wave line"
-          />
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/wave.svg"
-            alt="Wave line"
-          />
+          <img src="/svg/wave.svg" alt="Wave line" />
+          <img src="/svg/wave.svg" alt="Wave line" />
         </div>
 
         {/* 8-Box Orbiting Grid */}
@@ -99,12 +98,12 @@ export default function SocialWorkHero() {
             <span>Lathi-Kaushal</span>
           </div>
 
-          {/* Box 2: Image (Martial Self-Defense) */}
+          {/* Box 2: Image (Martial Self-Defense & Lathi Training) */}
           <div className={s.box}>
             <div className={s.bgImg}>
               <img
-                src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=900&auto=format&fit=crop&q=80"
-                alt="Village Defense Camp"
+                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=900&auto=format&fit=crop&q=80"
+                alt="Martial Self-Defense Camp"
                 loading="eager"
               />
             </div>
@@ -120,22 +119,22 @@ export default function SocialWorkHero() {
             <span>Legal Rights</span>
           </div>
 
-          {/* Box 5: Image (Survivor Circle Pods) */}
+          {/* Box 5: Image (Survivor Circle Support) */}
           <div className={s.box}>
             <div className={s.bgImg}>
               <img
-                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=80"
+                src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=900&auto=format&fit=crop&q=80"
                 alt="Survivor Healing Pod"
                 loading="lazy"
               />
             </div>
           </div>
 
-          {/* Box 6: Image (Young Leadership & Character) */}
+          {/* Box 6: Image (Young Leadership & Character Academy) */}
           <div className={s.box}>
             <div className={s.bgImg}>
               <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&auto=format&fit=crop&q=80"
+                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=900&auto=format&fit=crop&q=80"
                 alt="Youth Leadership Academy"
                 loading="lazy"
               />
@@ -147,7 +146,7 @@ export default function SocialWorkHero() {
             <span>Rural Outreach</span>
           </div>
 
-          {/* Box 8: Image (Community Gathering & Relief) */}
+          {/* Box 8: Image (Community Gathering & Village Camps) */}
           <div className={s.box}>
             <div className={s.bgImg}>
               <img
@@ -159,28 +158,16 @@ export default function SocialWorkHero() {
           </div>
         </div>
 
-        {/* Triple horizontal circle rings */}
+        {/* Triple horizontal circle rings (Crimson Red SVG) */}
         <div className={s.bgCircleHLine}>
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg"
-            alt="Horizontal circle ring"
-          />
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg"
-            alt="Horizontal circle ring"
-          />
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/circle-ring.svg"
-            alt="Horizontal circle ring"
-          />
+          <img src="/svg/circle-ring.svg" alt="Horizontal circle ring" />
+          <img src="/svg/circle-ring.svg" alt="Horizontal circle ring" />
+          <img src="/svg/circle-ring.svg" alt="Horizontal circle ring" />
         </div>
 
-        {/* Rotating dashed circle */}
+        {/* Rotating dashed circle (Crimson Red SVG) */}
         <div className={s.bgDashCircle}>
-          <img
-            src="https://www.yudiz.com/codepen/photography-banner/dash-circle.svg"
-            alt="Rotating dash circle"
-          />
+          <img src="/svg/dash-circle.svg" alt="Rotating dash circle" />
         </div>
       </div>
     </section>
