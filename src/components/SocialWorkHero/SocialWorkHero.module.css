@@ -96,27 +96,31 @@
   margin: 0;
   color: #FFFFFF;
   font-family: 'Poppins', 'Cinzel', 'Outfit', sans-serif;
-  font-size: clamp(38px, 6vw, 82px);
-  line-height: 1.05;
+  font-size: clamp(34px, 5.5vw, 76px);
+  line-height: 1.08;
   font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  word-spacing: 0.35em;
+  letter-spacing: 0.04em;
+  word-spacing: 0.3em;
   text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95);
 }
 
 .headingPrefix {
   display: block;
   color: #FFFFFF;
-  letter-spacing: 0.06em;
-  word-spacing: 0.4em;
+  letter-spacing: 0.05em;
+  word-spacing: 0.35em;
+  white-space: nowrap;
   margin-bottom: 0.35rem;
 }
 
+.crimsonLine,
 .crimsonWord {
   display: block;
   color: var(--theme-primary, #DC143C);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
+  word-spacing: 0.35em;
+  white-space: nowrap;
   text-shadow: 0 0 45px rgba(220, 20, 60, 0.75), 0 4px 25px rgba(0, 0, 0, 0.95);
 }
 
