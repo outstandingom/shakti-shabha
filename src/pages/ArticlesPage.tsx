@@ -1,15 +1,10 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { EffectCards, Mousewheel, Keyboard } from 'swiper/modules'
-import type { Swiper as SwiperCore } from 'swiper'
-import { BookOpen, ChevronLeft, ChevronRight, X, Clock, User, Compass } from 'lucide-react'
+import { X } from 'lucide-react'
 import { supabase, Article } from '../lib/supabase'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import ap from './ArticlesPage.module.css'
-import 'swiper/css'
-import 'swiper/css/effect-cards'
 
 export interface ArticleItem {
   id: string
@@ -226,11 +221,9 @@ const ARTICLES_LIST: ArticleItem[] = [
 
 export default function ArticlesPage() {
   const [dbArticles, setDbArticles] = useState<ArticleItem[]>([])
-  const [activeIndex, setActiveIndex] = useState(0)
   const [activeModalArticle, setActiveModalArticle] = useState<ArticleItem | null>(null)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const swiperRef = useRef<SwiperCore | null>(null)
 
   useEffect(() => {
     async function loadArticles() {
@@ -269,15 +262,6 @@ export default function ArticlesPage() {
   }, [])
 
   const allArticles = [...dbArticles, ...ARTICLES_LIST]
-  const currentArticle = allArticles[activeIndex] || allArticles[0]
-
-  const handlePrev = () => {
-    swiperRef.current?.slidePrev()
-  }
-
-  const handleNext = () => {
-    swiperRef.current?.slideNext()
-  }
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -299,150 +283,10 @@ export default function ArticlesPage() {
           <p className={ap.hindiSubtitle}>गहन शोध, वीरांगना इतिहास एवं मानसिक स्वास्थ्य</p>
           <p className={ap.desc}>
             Indian women ke liye — clinical psychology, ancient civilizational identity, legal armor, aur ek aisi community jo tumhari taraf hai.
-            Scroll or swipe the 3D cards below to explore our core investigations.
+            Explore our core investigations, research white papers, and articles below.
           </p>
         </div>
       </div>
-
-      {/* ============================================================
-          INTERACTIVE 3D CARDS SHOWCASE (EXACT CODEPEN SYSTEM)
-          Left side content synchronizes smoothly with the cards on scroll/swipe
-          ============================================================ */}
-      <section className={ap.showcaseSection}>
-        {/* Animated Background Circles */}
-        <ul className={ap.circles} aria-hidden="true">
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-
-        {/* Glassmorphic Showcase Content Container */}
-        <div className={ap.content}>
-          {/* ── LEFT SIDE INFO: Updates Dynamically with Active Slide ── */}
-          <div className={ap.info} key={currentArticle.id}>
-            <div className={ap.categoryTag}>
-              {currentArticle.tag}
-            </div>
-
-            <h2 className={ap.infoTitle}>
-              {currentArticle.title}
-            </h2>
-
-            <p>
-              {currentArticle.excerpt.split(currentArticle.highlight).map((part, i, arr) => (
-                <span key={i}>
-                  {part}
-                  {i < arr.length - 1 && (
-                    <span className={ap.highlightText}>{currentArticle.highlight}</span>
-                  )}
-                </span>
-              ))}
-            </p>
-
-            <div className={ap.infoMeta}>
-              <span className={ap.metaItem}>
-                <User size={13} color="#FF3CAC" />
-                <span>{currentArticle.author}</span>
-              </span>
-              <span className={ap.metaItem}>
-                <Clock size={13} color="#2B86C5" />
-                <span>{currentArticle.readTime}</span>
-              </span>
-              <span className={ap.metaItem}>
-                <GoogleIcon name="star" size={16} filled style={{ color: '#F59E0B' }} />
-                <span>{currentArticle.rating}/10</span>
-              </span>
-            </div>
-
-            <button
-              type="button"
-              className={ap.btn}
-              onClick={() => setActiveModalArticle(currentArticle)}
-            >
-              <BookOpen size={16} />
-              <span>Read Investigation</span>
-            </button>
-
-            {/* Slide Navigation & Scroll Indicator */}
-            <div className={ap.controlsRow}>
-              <span className={ap.slideCounter}>
-                {String(activeIndex + 1).padStart(2, '0')} / {String(allArticles.length).padStart(2, '0')}
-              </span>
-              <div className={ap.navArrows}>
-                <button
-                  type="button"
-                  className={ap.arrowBtn}
-                  onClick={handlePrev}
-                  aria-label="Previous Article"
-                  title="Previous Article"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-                <button
-                  type="button"
-                  className={ap.arrowBtn}
-                  onClick={handleNext}
-                  aria-label="Next Article"
-                  title="Next Article"
-                >
-                  <ChevronRight size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className={ap.scrollHint}>
-              <Compass size={12} />
-              <span>Scroll with mousewheel or swipe cards to navigate</span>
-            </div>
-          </div>
-
-          {/* ── RIGHT SIDE SWIPER: 3D Rotating Cards ── */}
-          <div className={ap.swiperContainer}>
-            <Swiper
-              effect="cards"
-              grabCursor={true}
-              initialSlide={0}
-              speed={500}
-              loop={true}
-              mousewheel={{
-                invert: false,
-              }}
-              keyboard={{
-                enabled: true,
-              }}
-              modules={[EffectCards, Mousewheel, Keyboard]}
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper
-              }}
-              onSlideChange={(swiper) => {
-                setActiveIndex(swiper.realIndex)
-              }}
-              className="mySwiper"
-            >
-              {allArticles.map((article) => (
-                <SwiperSlide
-                  key={article.id}
-                  className={ap.slideCard}
-                  onClick={() => setActiveModalArticle(article)}
-                >
-                  <img src={article.image} alt={article.title} />
-                  <div className={ap.overlay}>
-                    <span className={ap.overlayTopPill}>{article.rating}</span>
-                    <h3 className={ap.overlayBottomHeading}>{article.title}</h3>
-                  </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-        </div>
-      </section>
 
       {/* ── FULL ARTICLE READING MODAL ─────────────────────────────── */}
       {activeModalArticle && (
@@ -636,9 +480,7 @@ export default function ArticlesPage() {
                 key={article.id}
                 className={ap.articleCard}
                 onClick={() => {
-                  setActiveIndex(index)
-                  swiperRef.current?.slideToLoop(index)
-                  window.scrollTo({ top: 350, behavior: 'smooth' })
+                  setActiveModalArticle(article)
                 }}
                 style={{ cursor: 'pointer' }}
               >
