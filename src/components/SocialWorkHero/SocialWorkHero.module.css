@@ -40,7 +40,7 @@
   user-select: none;
   background-color: #1A1A1D;
   background-image: radial-gradient(circle at 10% 20%, rgba(220, 20, 60, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 90% 80%, rgba(241, 231, 40, 0.06) 0%, transparent 45%);
+                    radial-gradient(circle at 90% 80%, rgba(220, 20, 60, 0.1) 0%, transparent 45%);
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -49,7 +49,7 @@
   content: "";
   border-radius: 197.5px 0px;
   opacity: 0.35;
-  background: var(--yellow, #f1e728);
+  background: var(--theme-primary, #DC143C);
   filter: blur(160px);
   height: 40%;
   width: 50%;
@@ -74,12 +74,12 @@
   font-family: 'Poppins', sans-serif;
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--yellow, #f1e728);
+  color: var(--theme-primary, #DC143C);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   padding: 0.35rem 0.85rem;
-  background: rgba(241, 231, 40, 0.08);
-  border: 1px solid rgba(241, 231, 40, 0.25);
+  background: rgba(220, 20, 60, 0.1);
+  border: 1px solid rgba(220, 20, 60, 0.35);
   border-radius: 9999px;
   display: inline-block;
 }
@@ -115,17 +115,17 @@
 
 .leftPart h1 .text,
 .text {
-  color: var(--yellow, #f1e728);
+  color: var(--theme-primary, #DC143C);
   display: block;
   min-height: 1.15em;
   letter-spacing: 0.07em;
   word-spacing: 0.35em;
-  text-shadow: 0 0 35px rgba(241, 231, 40, 0.55), 0 4px 20px rgba(0, 0, 0, 0.95);
+  text-shadow: 0 0 40px rgba(220, 20, 60, 0.65), 0 4px 20px rgba(0, 0, 0, 0.95);
 }
 
 .cursor {
   display: inline-block;
-  color: #DC143C;
+  color: #FFFFFF;
   margin-left: 6px;
   animation: blink 1s infinite;
   font-weight: 400;
@@ -205,7 +205,7 @@
 .bookLink .arrow::after {
   position: absolute;
   content: "";
-  background-color: var(--yellow, #f1e728);
+  background-color: var(--theme-primary, #DC143C);
   transition: all ease-in-out 0.35s;
   transform-origin: 0 0;
   border-radius: 30px;
@@ -234,7 +234,7 @@
 }
 
 .bookLink .arrow span {
-  background-color: var(--yellow, #f1e728);
+  background-color: var(--theme-primary, #DC143C);
   height: 2px;
   width: 100%;
   display: inline-block;
@@ -249,7 +249,7 @@
 }
 
 .bookLink .arrow span::before {
-  background-color: var(--yellow, #f1e728);
+  background-color: var(--theme-primary, #DC143C);
   content: "";
   height: 100%;
   width: 15px;
@@ -275,7 +275,7 @@
   content: "";
   border-radius: 197.5px 0px;
   opacity: 0.4;
-  background: var(--yellow, #f1e728);
+  background: var(--theme-primary, #DC143C);
   filter: blur(112px);
   height: 35%;
   width: 55%;
@@ -314,7 +314,7 @@
 }
 
 .box:hover {
-  border-color: var(--yellow, #f1e728);
+  border-color: var(--theme-primary, #DC143C);
 }
 
 /* Box nth-child initial positions & animation names */
