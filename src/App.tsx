@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from './components/Navigation/Navigation'
 import FireCursor from './components/FireCursor/FireCursor'
+import FallingLeaves from './components/FallingLeaves/FallingLeaves'
 import HomePage from './pages/HomePage'
 import AaryaveeraPage from './pages/AaryaveeraPage'
 import SocialWorkPage from './pages/SocialWorkPage'
@@ -68,6 +69,8 @@ function LenisProvider() {
       <ScrollToTop />
       {/* Global fire cursor — fixed, above all content, pointer-events: none */}
       <FireCursor />
+      {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
+      <FallingLeaves />
       <Navigation />
       <Routes>
         <Route path="/"                    element={<HomePage />} />
