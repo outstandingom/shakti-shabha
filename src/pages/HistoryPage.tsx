@@ -610,9 +610,12 @@ export default function HistoryPage() {
   const [hoveredChartItem, setHoveredChartItem] = useState<Milestone | null>(null)
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({})
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [lineLeft, setLineLeft] = useState(0)
+  const [lineWidth, setLineWidth] = useState(0)
 
   const sectionRef = useRef<HTMLDivElement>(null)
   const trackRef = useRef<HTMLUListElement>(null)
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([])
   const triggerRef = useRef<ScrollTrigger | null>(null)
   const leavesCanvasRef = useRef<HTMLCanvasElement>(null)
   const leavesWrapRef = useRef<HTMLDivElement>(null)
@@ -647,8 +650,24 @@ export default function HistoryPage() {
     const track = trackRef.current
     if (!section || !track) return
 
+    const totalMilestones = TIMELINE_MILESTONES.length
+
+    const updateMeasurements = () => {
+      const firstItem = itemRefs.current[0]
+      const lastItem = itemRefs.current[totalMilestones - 1]
+      if (firstItem && lastItem) {
+        const startX = firstItem.offsetLeft + firstItem.offsetWidth / 2
+        const endX = lastItem.offsetLeft + lastItem.offsetWidth / 2
+        setLineLeft(startX)
+        return { startX, endX, totalDist: Math.max(0, endX - startX) }
+      }
+      return { startX: 0, endX: track.scrollWidth, totalDist: track.scrollWidth }
+    }
+
+    const { startX, totalDist } = updateMeasurements()
+
     const getScrollDistance = () => {
-      return Math.max(0, track.scrollWidth - window.innerWidth + 120)
+      return Math.max(0, track.scrollWidth - window.innerWidth + 200)
     }
 
     const totalScroll = getScrollDistance()
@@ -661,18 +680,29 @@ export default function HistoryPage() {
         scrollTrigger: {
           trigger: section,
           start: 'top top',
-          end: () => `+=${totalScroll * 1.15}`,
+          end: () => `+=${Math.max(window.innerHeight * 2.2, totalScroll * 1.2)}`,
           pin: true,
           anticipatePin: 1,
-          scrub: 0.35,
+          scrub: 0.3,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
             setScrollProgress(self.progress)
+
+            // Determine active milestone based on scroll progress
             const activeIdx = Math.min(
-              TIMELINE_MILESTONES.length - 1,
-              Math.max(0, Math.floor(self.progress * TIMELINE_MILESTONES.length))
+              totalMilestones - 1,
+              Math.max(0, Math.floor(self.progress * totalMilestones * 0.999))
             )
             setActiveMilestoneId(TIMELINE_MILESTONES[activeIdx].id)
+
+            // Red line precisely advances from dot 0 to active milestone dot and beyond
+            const currentItem = itemRefs.current[activeIdx]
+            if (currentItem) {
+              const currentX = currentItem.offsetLeft + currentItem.offsetWidth / 2
+              setLineWidth(Math.max(0, currentX - startX))
+            } else {
+              setLineWidth(totalDist * self.progress)
+            }
           },
         },
       })
@@ -680,11 +710,18 @@ export default function HistoryPage() {
     }, section)
 
     const timer = setTimeout(() => {
+      updateMeasurements()
       ScrollTrigger.refresh()
-    }, 200)
+    }, 250)
+
+    const onResize = () => {
+      updateMeasurements()
+    }
+    window.addEventListener('resize', onResize)
 
     return () => {
       clearTimeout(timer)
+      window.removeEventListener('resize', onResize)
       ctx.revert()
       triggerRef.current = null
     }
@@ -693,7 +730,8 @@ export default function HistoryPage() {
   const scrollToMilestone = (index: number) => {
     const st = triggerRef.current
     if (!st) return
-    const targetScroll = st.start + (index / (TIMELINE_MILESTONES.length - 1)) * (st.end - st.start)
+    const totalMilestones = TIMELINE_MILESTONES.length
+    const targetScroll = st.start + (index / (totalMilestones - 1)) * (st.end - st.start)
     window.scrollTo({
       top: targetScroll,
       behavior: 'smooth',
@@ -848,26 +886,39 @@ export default function HistoryPage() {
           {/* Horizontal Track Viewport */}
           <div className={h.horizontalTrackViewport}>
             <ul className={h.timeline} ref={trackRef}>
-              {/* Dynamic Animated Active Progress Line on the 6px line */}
+              {/* Dynamic Animated Active Progress Line: Starts at Dot 0 and precisely tracks each milestone */}
               <div
                 className={h.timelineActiveSpine}
-                style={{ width: `${Math.min(100, scrollProgress * 105)}%` }}
+                style={{
+                  left: `${lineLeft}px`,
+                  width: `${lineWidth}px`,
+                }}
               />
 
               {/* Exact alternating parallel items: Top (.directionL) and Bottom (.directionR) */}
               {TIMELINE_MILESTONES.map((item, idx) => {
                 const isTop = idx % 2 === 0
                 const isActive = activeMilestoneId === item.id
+                const isPassed = activeMilestoneIndex >= idx
 
                 return (
                   <li
                     key={item.id}
-                    className={`${h.timelineItem} ${isActive ? h.itemActive : ''}`}
+                    ref={(el) => {
+                      itemRefs.current[idx] = el
+                    }}
+                    className={`${h.timelineItem} ${isActive ? h.itemActive : ''} ${isPassed ? h.itemPassed : ''}`}
                     onClick={() => {
                       setActiveMilestoneId(item.id)
                       scrollToMilestone(idx)
                     }}
                   >
+                    {/* Dedicated Spine Dot on the Central 6px Line: ZERO overlap with date */}
+                    <div className={h.spineDot} />
+
+                    {/* Vertical Stem connecting dot to flag */}
+                    <div className={isTop ? h.stemTop : h.stemBottom} />
+
                     <div className={isTop ? h.directionL : h.directionR}>
                       <div className={h.flagWrapper}>
                         <span className={`${h.flag} ${isActive ? h.flagActive : ''}`}>
@@ -880,43 +931,46 @@ export default function HistoryPage() {
                         </span>
                       </div>
 
-                      <div className={h.desc}>
-                        <div className={h.descTop}>
-                          <div className={h.roundThumbnail}>
-                            <img
-                              src={item.image}
-                              alt={lang === 'en' ? item.nameEn : item.nameHi}
-                              onLoad={() => handleImageLoad(item.image)}
-                              style={{
-                                opacity: loadedImages[item.image] ? 1 : 0,
-                                transition: 'opacity 0.25s ease',
-                              }}
-                            />
+                      {/* Detail only revealed for the current active milestone */}
+                      {isActive && (
+                        <div className={h.desc}>
+                          <div className={h.descTop}>
+                            <div className={h.roundThumbnail}>
+                              <img
+                                src={item.image}
+                                alt={lang === 'en' ? item.nameEn : item.nameHi}
+                                onLoad={() => handleImageLoad(item.image)}
+                                style={{
+                                  opacity: loadedImages[item.image] ? 1 : 0,
+                                  transition: 'opacity 0.25s ease',
+                                }}
+                              />
+                            </div>
+                            <div className={h.descQuote}>
+                              "{lang === 'en' ? item.quoteEn : item.quoteHi}"
+                            </div>
                           </div>
-                          <div className={h.descQuote}>
-                            "{lang === 'en' ? item.quoteEn : item.quoteHi}"
-                          </div>
+
+                          <p className={h.descText}>
+                            {lang === 'en' ? item.descEn : item.descHi}
+                          </p>
+
+                          <button
+                            type="button"
+                            className={h.dossierBtn}
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setActiveDossier(item)
+                            }}
+                          >
+                            <BookOpen size={12} />
+                            <span>
+                              {lang === 'en' ? 'Inspect Archival Dossier' : 'दस्तावेज देखें'}
+                            </span>
+                            <ChevronRight size={12} />
+                          </button>
                         </div>
-
-                        <p className={h.descText}>
-                          {lang === 'en' ? item.descEn : item.descHi}
-                        </p>
-
-                        <button
-                          type="button"
-                          className={h.dossierBtn}
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setActiveDossier(item)
-                          }}
-                        >
-                          <BookOpen size={12} />
-                          <span>
-                            {lang === 'en' ? 'Inspect Dossier' : 'दस्तावेज देखें'}
-                          </span>
-                          <ChevronRight size={12} />
-                        </button>
-                      </div>
+                      )}
                     </div>
                   </li>
                 )
