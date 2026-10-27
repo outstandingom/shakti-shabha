@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './PageLayout.module.css'
 import sw from './SocialWorkPage.module.css'
+import SocialWorkHero from '../components/SocialWorkHero/SocialWorkHero'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -179,22 +180,8 @@ export default function SocialWorkPage() {
 
   return (
     <main className={s.page}>
-      {/* ── Hero Banner ─────────────────────────────────────────── */}
-      <div
-        className={s.banner}
-        style={{ background: 'linear-gradient(145deg, #7A0A20 0%, #A80E2D 30%, #DC143C 65%, #B01030 100%)' }}
-      >
-        <div className={s.bannerInner}>
-          <Link to="/" className={s.back}>← Back to Home</Link>
-          <span className={s.bannerEyebrow}>12 Years · On the Ground · 6 Divisions</span>
-          <h1 className={s.bannerTitle}>Social Work Archive</h1>
-          <p className={s.bannerHindi}>सामाजिक कार्य — बारह वर्षों की अटूट उपस्थिति</p>
-          <p className={s.bannerDesc}>
-            Twelve years of going where others didn't. Every case study, every camp, every circle
-            of healing — documented here for the world to witness.
-          </p>
-        </div>
-      </div>
+      {/* ── Hero Showcase: "WE WORK FOR WOMEN." ── */}
+      <SocialWorkHero />
 
       {/* ── Animated Stats ──────────────────────────────────────── */}
       <div className={s.statsGrid}>
