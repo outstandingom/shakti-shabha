@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './PageLayout.module.css'
@@ -275,7 +276,7 @@ export default function BrandPage() {
               </div>
               <div className={p.logoPlaceholder}>
                 <div className={p.logoPlaceholderInner}>
-                  <div className={p.placeholderFlame}>🔥</div>
+                  <div className={p.placeholderFlame}><GoogleIcon name="local_fire_department" size={48} /></div>
                   <div className={p.placeholderText}>
                     <span style={{ fontFamily: 'Cinzel, serif', fontWeight: 900, fontSize: '1.2rem', color: '#DC143C', letterSpacing: '0.1em' }}>SHAKTI SABHA</span>
                     <span style={{ fontFamily: 'Noto Sans Devanagari, sans-serif', fontSize: '0.75rem', color: '#777777' }}>शक्ति सभा</span>
@@ -365,7 +366,7 @@ export default function BrandPage() {
                     </div>
                   )}
                   {item.demo === 'badge' && (
-                    <div className={p.demoBadge}>⚔ AARYAVEERA</div>
+                    <div className={p.demoBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="swords" size={16} /> AARYAVEERA</div>
                   )}
                 </div>
                 <div className={p.interactContent}>

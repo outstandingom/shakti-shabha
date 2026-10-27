@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Sahyog.module.css'
@@ -98,12 +99,12 @@ export default function Sahyog() {
 
           <div data-sy="text" className={s.pillars}>
             {[
-              { tag: 'Corporates', title: 'CSR & Sponsorship', icon: '🏢' },
-              { tag: 'NGOs',       title: 'Partner Network',   icon: '🌱' },
-              { tag: 'Students',   title: 'Internships',       icon: '🎓' },
+              { tag: 'Corporates', title: 'CSR & Sponsorship', icon: 'domain' },
+              { tag: 'NGOs',       title: 'Partner Network',   icon: 'eco' },
+              { tag: 'Students',   title: 'Internships',       icon: 'school' },
             ].map(p => (
               <div key={p.title} className={s.pillItem}>
-                <span className={s.pillIcon}>{p.icon}</span>
+                <span className={s.pillIcon}><GoogleIcon name={p.icon} size={22} /></span>
                 <div className={s.pillInfo}>
                   <div className={s.pillTag}>{p.tag}</div>
                   <div className={s.pillTitle}>{p.title}</div>

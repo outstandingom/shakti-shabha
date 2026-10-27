@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import sh from './SahyogPage.module.css'
 
@@ -65,7 +66,9 @@ export default function SahyogPage() {
           <div className={sh.pillarCol}>
             <div className={sh.colTopStrip} style={{ background: '#DC143C' }} />
             <div className={sh.colHeader}>
-              <div className={sh.colIcon}>🏢</div>
+              <div className={sh.colIcon}>
+                <GoogleIcon name="domain" size={32} style={{ color: '#DC143C' }} />
+              </div>
               <div className={sh.colTarget}>For Enterprises & Agencies</div>
               <h3 className={sh.colTitle}>Corporates & CSR</h3>
             </div>
@@ -98,7 +101,9 @@ export default function SahyogPage() {
           <div className={sh.pillarCol}>
             <div className={sh.colTopStrip} style={{ background: '#3D5A45' }} />
             <div className={sh.colHeader}>
-              <div className={sh.colIcon}>🌱</div>
+              <div className={sh.colIcon}>
+                <GoogleIcon name="eco" size={32} style={{ color: '#3D5A45' }} />
+              </div>
               <div className={sh.colTarget}>For Grassroots Organizations</div>
               <h3 className={sh.colTitle}>NGO Network</h3>
             </div>
@@ -131,7 +136,9 @@ export default function SahyogPage() {
           <div className={sh.pillarCol}>
             <div className={sh.colTopStrip} style={{ background: '#C9A96E' }} />
             <div className={sh.colHeader}>
-              <div className={sh.colIcon}>🎓</div>
+              <div className={sh.colIcon}>
+                <GoogleIcon name="school" size={32} style={{ color: '#C9A96E' }} />
+              </div>
               <div className={sh.colTarget}>For College Youth & Scholars</div>
               <h3 className={sh.colTitle}>Students & Interns</h3>
             </div>
@@ -150,49 +157,19 @@ export default function SahyogPage() {
               </div>
               <div className={sh.featureItem}>
                 <div className={sh.featureDot} style={{ background: '#C9A96E' }} />
-                <div><strong>Grassroots Field Experience:</strong> Live on-camp coordination, participant interviews, and report writing.</div>
+                <div><strong>Youth Action Chapters:</strong> Organize campus self-defense clubs backed by Shakti Sabha toolkits.</div>
               </div>
             </div>
             <div className={sh.colFooter}>
               <a href="#partner-form" onClick={() => setPartnerType('STUDENT')} className={sh.actionBtn} style={{ background: '#C9A96E', color: '#111827' }}>
-                Apply for Internship →
+                Apply as Student Intern →
               </a>
             </div>
           </div>
 
         </div>
 
-        {/* How Sahyog Works */}
-        <div className={sh.howItWorks}>
-          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#3D5A45', fontWeight: 700, textTransform: 'uppercase' }}>
-              Simple Onboarding Flow
-            </span>
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.75rem', color: '#111827', marginTop: '0.35rem' }}>
-              How the Ecosystem Works
-            </h2>
-          </div>
-
-          <div className={sh.stepsGrid}>
-            <div className={sh.stepBox}>
-              <div className={sh.stepNum}>01</div>
-              <h4 className={sh.stepTitle}>Submit Proposal or Profile</h4>
-              <p className={sh.stepDesc}>Fill out the specialized interest form indicating whether you are a corporate sponsor, NGO peer, or student intern.</p>
-            </div>
-            <div className={sh.stepBox}>
-              <div className={sh.stepNum}>02</div>
-              <h4 className={sh.stepTitle}>Due Diligence & Alignment</h4>
-              <p className={sh.stepDesc}>Our partnerships committee reviews credentials within 3 business days to align goals, dates, and geographic targets.</p>
-            </div>
-            <div className={sh.stepBox}>
-              <div className={sh.stepNum}>03</div>
-              <h4 className={sh.stepTitle}>Deployment & Impact Logging</h4>
-              <p className={sh.stepDesc}>Execute the camp, research paper, or campaign with live tracking, participant feedback, and official certification.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Interactive Partnership Form */}
+        {/* Dynamic Interactive Partnership Onboarding Form */}
         <div id="partner-form" className={sh.formSection}>
           <div className={sh.formGrid}>
             <div>
@@ -208,13 +185,16 @@ export default function SahyogPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid #E5E7EB', paddingTop: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                  <span>📧</span> <strong>partnerships@shaktisabha.org</strong>
+                  <GoogleIcon name="mail" size={20} style={{ color: '#3D5A45' }} />
+                  <strong>partnerships@shaktisabha.org</strong>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                  <span>📍</span> Vidarbha & Pune Operations Central
+                  <GoogleIcon name="location_on" size={20} style={{ color: '#3D5A45' }} />
+                  Vidarbha & Pune Operations Central
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.9rem', color: '#374151' }}>
-                  <span>⚖</span> Audited NGO Registration · 80G Compliant Pipeline
+                  <GoogleIcon name="balance" size={20} style={{ color: '#3D5A45' }} />
+                  Audited NGO Registration · 80G Compliant Pipeline
                 </div>
               </div>
             </div>
@@ -222,7 +202,7 @@ export default function SahyogPage() {
             <div>
               {formSubmitted ? (
                 <div style={{ padding: '2.5rem', background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>✅</div>
+                  <GoogleIcon name="check_circle" size={44} style={{ color: '#059669', marginBottom: '0.5rem' }} />
                   <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', color: '#065F46', marginBottom: '0.5rem' }}>Proposal Received!</h3>
                   <p style={{ fontSize: '0.9rem', color: '#047857' }}>
                     Thank you for stepping forward. Our partnership director will get in touch with you shortly.
@@ -261,33 +241,33 @@ export default function SahyogPage() {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Full Name / Representative</label>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Full Name or Organization Rep</label>
                     <input required type="text" placeholder="e.g. Radhika Deshmukh" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
-                  </div>
-
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Organization / College / Company Name</label>
-                    <input required type="text" placeholder="e.g. Tata Trusts / St. Xavier's College" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Email Address</label>
-                      <input required type="email" placeholder="contact@org.com" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Work Email</label>
+                      <input required type="email" placeholder="you@company.org" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
                     </div>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Phone Number</label>
-                      <input required type="tel" placeholder="+91 98765 43210" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                      <input required type="tel" placeholder="+91..." style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>How can we collaborate?</label>
-                    <textarea rows={3} placeholder="Tell us about your proposed project, sponsorship scope, or internship interests..." style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', resize: 'vertical' }}></textarea>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Organization / College Name</label>
+                    <input required type="text" placeholder="e.g. Tata Trusts or Pune University" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Collaboration Goals</label>
+                    <textarea rows={3} placeholder="Briefly describe what you wish to achieve together..." style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', resize: 'vertical' }} />
                   </div>
 
                   <button type="submit" style={{ padding: '0.85rem', background: '#3D5A45', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', transition: 'background 0.2s' }}>
-                    Send Sahyog Proposal →
+                    Submit Collaboration Intent →
                   </button>
                 </form>
               )}

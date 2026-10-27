@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase, Article, GalleryCategory, GalleryPhoto, Course, CounsellingRequest } from '../lib/supabase'
 import { useAuth } from '../lib/AuthContext'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AdminDashboard.module.css'
 
 type Section = 'overview' | 'articles' | 'gallery' | 'courses' | 'counselling'
@@ -23,11 +24,11 @@ export default function AdminDashboard() {
   if (!user) return null
 
   const navItems: { key: Section; icon: string; label: string }[] = [
-    { key: 'overview',    icon: '📊', label: 'Overview' },
-    { key: 'articles',   icon: '📝', label: 'Articles' },
-    { key: 'gallery',    icon: '🖼️', label: 'Gallery' },
-    { key: 'courses',    icon: '🎓', label: 'Courses' },
-    { key: 'counselling',icon: '💬', label: 'Counselling' },
+    { key: 'overview',    icon: 'analytics', label: 'Overview' },
+    { key: 'articles',   icon: 'article', label: 'Articles' },
+    { key: 'gallery',    icon: 'photo_library', label: 'Gallery' },
+    { key: 'courses',    icon: 'school', label: 'Courses' },
+    { key: 'counselling',icon: 'forum', label: 'Counselling' },
   ]
 
   const sectionTitles: Record<Section, string> = {
@@ -48,7 +49,9 @@ export default function AdminDashboard() {
       {/* ── Sidebar ── */}
       <aside className={s.sidebar}>
         <Link to="/" className={s.sidebarLogo}>
-          <div className={s.logoIcon}>🛡</div>
+          <div className={s.logoIcon}>
+            <GoogleIcon name="shield" size={24} style={{ color: '#DC143C' }} />
+          </div>
           <div>
             <span className={s.logoText}>Shakti Sabha</span>
             <span className={s.logoSub}>Admin CMS</span>
@@ -63,7 +66,9 @@ export default function AdminDashboard() {
               className={`${s.navItem} ${section === item.key ? s.navItemActive : ''}`}
               onClick={() => setSection(item.key)}
             >
-              <span className={s.navIcon}>{item.icon}</span>
+              <span className={s.navIcon}>
+                <GoogleIcon name={item.icon} size={18} />
+              </span>
               {item.label}
             </button>
           ))}
@@ -72,7 +77,9 @@ export default function AdminDashboard() {
         <div className={s.navSection}>
           <div className={s.navLabel}>Website</div>
           <a className={s.navItem} href="/" target="_blank" rel="noopener noreferrer">
-            <span className={s.navIcon}>🌐</span>
+            <span className={s.navIcon}>
+              <GoogleIcon name="language" size={18} />
+            </span>
             View Website
           </a>
         </div>
@@ -88,7 +95,8 @@ export default function AdminDashboard() {
             </div>
           </div>
           <button className={s.logoutBtn} onClick={handleLogout}>
-            🚪 Sign Out
+            <GoogleIcon name="logout" size={16} style={{ marginRight: 6 }} />
+            Sign Out
           </button>
         </div>
       </aside>
@@ -162,13 +170,15 @@ function OverviewSection() {
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
         {[
-          { icon: '📝', title: 'Write an Article', desc: 'Create bilingual content in Hindi & English with photos.', section: 'articles' },
-          { icon: '🖼️', title: 'Upload Photos', desc: 'Add gallery images organized by category.', section: 'gallery' },
-          { icon: '🎓', title: 'Create a Course', desc: 'Publish courses with pricing, syllabus & cover images.', section: 'courses' },
-          { icon: '💬', title: 'View Counselling Requests', desc: 'Review and respond to user counselling submissions.', section: 'counselling' },
+          { icon: 'article', title: 'Write an Article', desc: 'Create bilingual content in Hindi & English with photos.', section: 'articles' },
+          { icon: 'photo_library', title: 'Upload Photos', desc: 'Add gallery images organized by category.', section: 'gallery' },
+          { icon: 'school', title: 'Create a Course', desc: 'Publish courses with pricing, syllabus & cover images.', section: 'courses' },
+          { icon: 'forum', title: 'View Counselling Requests', desc: 'Review and respond to user counselling submissions.', section: 'counselling' },
         ].map(item => (
           <div key={item.title} style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16, padding: '1.25rem' }}>
-            <div style={{ fontSize: '1.75rem', marginBottom: '0.5rem' }}>{item.icon}</div>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <GoogleIcon name={item.icon} size={28} style={{ color: '#DC143C' }} />
+            </div>
             <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#F3F4F6', marginBottom: '0.35rem' }}>{item.title}</div>
             <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.45)', lineHeight: 1.6 }}>{item.desc}</div>
           </div>
@@ -268,7 +278,9 @@ function ArticlesSection() {
           <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
         ) : articles.length === 0 ? (
           <div className={s.empty}>
-            <div className={s.emptyIcon}>📝</div>
+            <div className={s.emptyIcon}>
+              <GoogleIcon name="article" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+            </div>
             <div className={s.emptyText}>No articles yet</div>
             <div className={s.emptyHint}>Click "New Article" to get started</div>
           </div>
@@ -312,7 +324,7 @@ function ArticlesSection() {
         <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <div className={s.modal}>
             <h2 className={s.modalTitle}>{editing ? 'Edit Article' : 'New Article'}</h2>
-            <button className={s.modalClose} onClick={() => setShowModal(false)}>✕</button>
+            <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
 
             <div className={s.tabs}>
               <LangTab />
@@ -322,7 +334,7 @@ function ArticlesSection() {
 
             <div className={s.modalActions}>
               <button className={s.btnSecondary} onClick={() => setShowModal(false)}>Cancel</button>
-              <button className={s.btnPrimary} onClick={save}>💾 Save Article</button>
+              <button className={s.btnPrimary} onClick={save}><GoogleIcon name="save" size={16} /> Save Article</button>
             </div>
           </div>
         </div>
@@ -346,8 +358,8 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
   return (
     <>
       <div className={s.tabs}>
-        <button className={`${s.tab} ${lang === 'en' ? s.tabActive : ''}`} onClick={() => setLang('en')}>🇬🇧 English</button>
-        <button className={`${s.tab} ${lang === 'hi' ? s.tabActive : ''}`} onClick={() => setLang('hi')}>🇮🇳 Hindi</button>
+        <button className={`${s.tab} ${lang === 'en' ? s.tabActive : ''}`} onClick={() => setLang('en')}><GoogleIcon name="language" size={16} /> English</button>
+        <button className={`${s.tab} ${lang === 'hi' ? s.tabActive : ''}`} onClick={() => setLang('hi')}><GoogleIcon name="translate" size={16} /> Hindi</button>
       </div>
 
       <div className={s.formGrid}>
@@ -419,7 +431,7 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
             onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])}
           />
           <button className={s.btnSecondary} onClick={() => fileRef.current?.click()} disabled={uploading}>
-            {uploading ? '⏳ Uploading...' : '📁 Upload Cover Image'}
+            {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Upload Cover Image</>}
           </button>
         </div>
 
@@ -517,7 +529,7 @@ function GallerySection() {
               style={{ borderRadius: '9999px' }}
               onClick={() => setSelectedCat(cat.id)}
             >
-              📂 {cat.name}
+              <GoogleIcon name="folder" size={16} /> {cat.name}
             </button>
             <button className={s.btnDanger} style={{ borderRadius: '9999px', padding: '0.4rem 0.6rem' }} onClick={() => deleteCategory(cat.id)}>✕</button>
           </div>
@@ -543,7 +555,7 @@ function GallerySection() {
               style={{ display: 'none' }}
               onChange={e => e.target.files && uploadPhotos(e.target.files)}
             />
-            <div className={s.uploadIcon}>📸</div>
+            <div className={s.uploadIcon}><GoogleIcon name="add_a_photo" size={28} /></div>
             <div className={s.uploadText}>{uploading ? 'Uploading photos...' : 'Click to upload photos'}</div>
             <div className={s.uploadHint}>JPG, PNG, WEBP — multiple files supported</div>
           </div>
@@ -565,7 +577,9 @@ function GallerySection() {
             ))}
             {photos.length === 0 && (
               <div style={{ gridColumn: '1/-1' }} className={s.empty}>
-                <div className={s.emptyIcon}>🖼️</div>
+                <div className={s.emptyIcon}>
+                  <GoogleIcon name="photo_library" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+                </div>
                 <div className={s.emptyText}>No photos in this category</div>
                 <div className={s.emptyHint}>Upload photos using the zone above</div>
               </div>
@@ -579,7 +593,7 @@ function GallerySection() {
         <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowCatModal(false)}>
           <div className={s.modal} style={{ maxWidth: 480 }}>
             <h2 className={s.modalTitle}>New Gallery Category</h2>
-            <button className={s.modalClose} onClick={() => setShowCatModal(false)}>✕</button>
+            <button className={s.modalClose} onClick={() => setShowCatModal(false)}><GoogleIcon name="close" size={18} /></button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className={s.field}>
                 <label className={s.label}>Category Name</label>
@@ -682,7 +696,9 @@ function CoursesSection() {
           <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
         ) : courses.length === 0 ? (
           <div className={s.empty}>
-            <div className={s.emptyIcon}>🎓</div>
+            <div className={s.emptyIcon}>
+              <GoogleIcon name="school" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+            </div>
             <div className={s.emptyText}>No courses yet</div>
           </div>
         ) : (
@@ -715,7 +731,7 @@ function CoursesSection() {
         <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
           <div className={s.modal}>
             <h2 className={s.modalTitle}>{editing ? 'Edit Course' : 'New Course'}</h2>
-            <button className={s.modalClose} onClick={() => setShowModal(false)}>✕</button>
+            <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
 
             <div className={s.formGrid}>
               <div className={`${s.field} ${s.formFull}`}>
@@ -752,7 +768,7 @@ function CoursesSection() {
                 {form.cover_image_url && <img src={form.cover_image_url} alt="" style={{ height: 100, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />}
                 <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => e.target.files?.[0] && uploadCover(e.target.files[0])} />
                 <button className={s.btnSecondary} onClick={() => fileRef.current?.click()} disabled={uploading}>
-                  {uploading ? '⏳ Uploading...' : '📁 Upload Cover Image'}
+                  {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Upload Cover Image</>}
                 </button>
               </div>
 
@@ -782,7 +798,7 @@ function CoursesSection() {
 
             <div className={s.modalActions}>
               <button className={s.btnSecondary} onClick={() => setShowModal(false)}>Cancel</button>
-              <button className={s.btnPrimary} onClick={save}>💾 Save Course</button>
+              <button className={s.btnPrimary} onClick={save}><GoogleIcon name="save" size={16} /> Save Course</button>
             </div>
           </div>
         </div>
@@ -840,7 +856,9 @@ function CounsellingSection() {
           <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
         ) : requests.length === 0 ? (
           <div className={s.empty}>
-            <div className={s.emptyIcon}>💬</div>
+            <div className={s.emptyIcon}>
+              <GoogleIcon name="forum" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+            </div>
             <div className={s.emptyText}>No requests found</div>
           </div>
         ) : (
@@ -886,7 +904,7 @@ function CounsellingSection() {
         <div className={s.overlay} onClick={e => e.target === e.currentTarget && setViewItem(null)}>
           <div className={s.modal} style={{ maxWidth: 560 }}>
             <h2 className={s.modalTitle}>Counselling Request</h2>
-            <button className={s.modalClose} onClick={() => setViewItem(null)}>✕</button>
+            <button className={s.modalClose} onClick={() => setViewItem(null)}><GoogleIcon name="close" size={18} /></button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {[
                 ['Name', viewItem.name],
@@ -910,7 +928,7 @@ function CounsellingSection() {
             <div className={s.modalActions}>
               <button className={s.btnSecondary} onClick={() => setViewItem(null)}>Close</button>
               <a href={`mailto:${viewItem.email}?subject=Re: Your Counselling Request at Shakti Sabha`} className={s.btnPrimary} style={{ textDecoration: 'none' }}>
-                📧 Reply via Email
+                <GoogleIcon name="mail" size={16} /> Reply via Email
               </a>
             </div>
           </div>

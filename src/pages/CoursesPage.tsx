@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase, Course } from '../lib/supabase'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import cp from './CoursesPage.module.css'
 
@@ -59,15 +60,15 @@ const COURSES_DATA: CourseItem[] = [
     modules: '16 Modules + Live Mentorship',
     price: '₹3,000',
     desc: 'Community organizing, legal literacy under Bharatiya Nyaya Sanhita, crisis mediation, and grassroots campaign management.',
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80',
+    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80',
   },
   {
     id: 'c-5',
-    title: 'Shakti Varta: Intellectual Discourse & Debating Dogmas',
-    category: 'Thought-Lab',
+    title: 'Dharma, Paurush & Civilizational Discourse',
+    category: 'Philosophy & History',
     level: 'Intermediate',
-    duration: '4 Weeks',
-    modules: '8 Modules + Case Studies',
+    duration: '5 Weeks',
+    modules: '10 Lectures + Source Texts',
     price: '₹1,800',
     desc: 'Master the art of rigorous intellectual debate, analyzing Western feminist narratives vs civilizational Bharatiya thought with verified sources.',
     image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&auto=format&fit=crop&q=80',
@@ -86,10 +87,10 @@ const COURSES_DATA: CourseItem[] = [
 ]
 
 const MERCH_DATA = [
-  { icon: '👕', title: 'Aaryaveera Flame Tee', price: '₹799', tag: '100% Organic Cotton' },
-  { icon: '📚', title: 'The Legal Collage Handbook', price: '₹450', tag: 'Paperback · 220 Pages' },
-  { icon: '🥋', title: 'Traditional Bamboo Lathi Staff', price: '₹650', tag: 'Seasoned Wood · 5.5 ft' },
-  { icon: '👜', title: 'Shakti Sabha Warrior Tote', price: '₹399', tag: 'Durable Canvas' },
+  { icon: 'checkroom', title: 'Aaryaveera Flame Tee', price: '₹799', tag: '100% Organic Cotton' },
+  { icon: 'menu_book', title: 'The Legal Collage Handbook', price: '₹450', tag: 'Paperback · 220 Pages' },
+  { icon: 'sports_martial_arts', title: 'Traditional Bamboo Lathi Staff', price: '₹650', tag: 'Seasoned Wood · 5.5 ft' },
+  { icon: 'shopping_bag', title: 'Shakti Sabha Warrior Tote', price: '₹399', tag: 'Durable Canvas' },
 ]
 
 export default function CoursesPage() {
@@ -146,147 +147,100 @@ export default function CoursesPage() {
 
       {/* Main Content Area */}
       <div className={s.section}>
-
-        {/* Featured Aaryaveera Certification Banner */}
-        <div className={cp.certBox}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2.5rem' }}>
           <div>
-            <div className={cp.certHeader}>
-              <span className={cp.certTag}>Signature Program</span>
-              <span style={{ color: '#D4AF37', fontSize: '0.8rem', fontWeight: 600 }}>6-Week Intensive</span>
-            </div>
-            <h2 className={cp.certTitle}>
-              Aaryaveera Warrior Certification
-            </h2>
-            <p className={cp.certDesc}>
-              The comprehensive flagship curriculum designed by Shakti Sabha. Blends physical self-defense, psychological grounding,
-              ancient Dharmic ethos, and modern legal protection frameworks into a transformational 6-week journey.
-            </p>
-
-            <div className={cp.syllabusList}>
-              <div className={cp.syllabusItem}>
-                <span className={cp.checkIcon}>✓</span>
-                <span><strong>Weeks 1–2:</strong> Biomechanical Self-Defense, Escape Protocols & Voice Conditioning</span>
-              </div>
-              <div className={cp.syllabusItem}>
-                <span className={cp.checkIcon}>✓</span>
-                <span><strong>Weeks 3–4:</strong> Psychological Boundary Defense, Overcoming Trauma & Fear Management</span>
-              </div>
-              <div className={cp.syllabusItem}>
-                <span className={cp.checkIcon}>✓</span>
-                <span><strong>Weeks 5–6:</strong> Dharmic Leadership, Legal Rights under BNS, and Community Defense</span>
-              </div>
-              <div className={cp.syllabusItem}>
-                <span className={cp.checkIcon}>✓</span>
-                <span><strong>Final Capstone:</strong> Video Submission Exam + Digital & Embossed Physical Certificate</span>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <button
-                className={s.goldBtn}
-                onClick={() => {
-                  setSelectedCourse('Aaryaveera Warrior Certification')
-                  setTimeout(() => setSelectedCourse(null), 3000)
-                }}
-              >
-                Enroll in Program — ₹4,500 →
-              </button>
-              <a href="#all-courses" className={s.goldOutlineBtn}>
-                View All Courses
-              </a>
-            </div>
+            <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
+              Structured Curriculum
+            </span>
+            <h2 className={s.sectionTitle} style={{ marginBottom: 0, marginTop: '0.35rem' }}>Available Video Masterclasses</h2>
           </div>
-
-          <div className={cp.certCardRight}>
-            <div className={cp.certBadgeImg}>⚔</div>
-            <div style={{ fontSize: '0.85rem', color: '#D4AF37', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
-              Official Credential
-            </div>
-            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', color: '#FFFFFF', fontSize: '1.25rem', marginBottom: '1rem' }}>
-              Aaryaveera Graduate
-            </h3>
-            <div className={cp.certPrice}>₹4,500</div>
-            <div className={cp.certPeriod}>One-time investment · Lifetime access</div>
-            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', borderTop: '1px solid rgba(201,169,110,0.15)', paddingTop: '1rem' }}>
-              Includes physical embossed certificate delivered anywhere in India + verified QR credential.
-            </div>
+          <div style={{ fontSize: '0.88rem', color: '#6B7280' }}>
+            Showing {allCourses.length} Certified Courses
           </div>
         </div>
 
-        {/* Course Catalog */}
-        <div id="all-courses" style={{ marginTop: '5rem' }}>
-          <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-            Comprehensive Syllabus
-          </span>
-          <h2 className={s.sectionTitle} style={{ marginTop: '0.4rem' }}>All Online Courses</h2>
+        {/* Courses Grid */}
+        <div className={cp.coursesGrid}>
+          {allCourses.map(course => (
+            <div key={course.id} className={cp.courseCard}>
+              <div className={cp.imgWrap}>
+                <img src={course.image} alt={course.title} className={cp.courseImg} loading="lazy" />
+                <span className={cp.badgeLevel}>{course.level}</span>
+              </div>
 
-          <div className={cp.coursesGrid}>
-            {allCourses.map(course => (
-              <div key={course.id} className={cp.courseCard}>
-                <div className={cp.courseImg}>
-                  <img src={course.image} alt={course.title} />
-                  <div className={cp.drmBadge}>
-                    <span>🔒</span> DRM Encrypted
+              <div className={cp.courseBody}>
+                <div className={cp.category}>{course.category}</div>
+                <h3 className={cp.courseTitle}>{course.title}</h3>
+                <p className={cp.descText}>{course.desc}</p>
+
+                <div className={cp.metaGrid}>
+                  <div className={cp.metaItem}>
+                    <GoogleIcon name="schedule" size={16} style={{ color: '#DC143C' }} />
+                    <span>{course.duration}</span>
+                  </div>
+                  <div className={cp.metaItem}>
+                    <GoogleIcon name="play_circle" size={16} style={{ color: '#DC143C' }} />
+                    <span>{course.modules}</span>
                   </div>
                 </div>
 
-                <div className={cp.courseBody}>
-                  <div className={cp.courseCategory}>{course.category}</div>
-                  <h3 className={cp.courseTitle}>{course.title}</h3>
-                  <div className={cp.courseMeta}>
-                    <span>⏱ {course.duration}</span>
-                    <span>📊 {course.level}</span>
-                  </div>
-                  <p className={cp.courseDesc}>{course.desc}</p>
-                </div>
-
-                <div className={cp.courseFooter}>
+                <div className={cp.cardFooter}>
                   <div>
-                    <div className={cp.coursePrice}>{course.price}</div>
-                    <div style={{ fontSize: '0.7rem', color: '#6B7280' }}>{course.modules}</div>
+                    <span style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', display: 'block' }}>One-time Fee</span>
+                    <span className={cp.priceText}>{course.price}</span>
                   </div>
                   <button
+                    onClick={() => setSelectedCourse(course.title)}
                     className={cp.enrollBtn}
-                    onClick={() => {
-                      setSelectedCourse(course.title)
-                      setTimeout(() => setSelectedCourse(null), 3000)
-                    }}
                   >
                     Enroll Now →
                   </button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
-        {/* Confirmation Modal / Toast */}
+        {/* Enrollment Confirmation Modal */}
         {selectedCourse && (
-          <div style={{
-            position: 'fixed',
-            bottom: '2rem',
-            right: '2rem',
-            background: '#111827',
-            color: '#FFFFFF',
-            padding: '1.25rem 2rem',
-            borderRadius: '12px',
-            border: '1px solid #C9A96E',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-            zIndex: 9999,
-          }}>
-            <div style={{ fontWeight: 700, color: '#E8C98A', marginBottom: '0.25rem' }}>Initiating Domestic Gateway</div>
-            <div style={{ fontSize: '0.85rem', color: '#E5E7EB' }}>Course: <strong>{selectedCourse}</strong></div>
-            <div style={{ fontSize: '0.75rem', color: '#9CA3AF', marginTop: '0.4rem' }}>*DRM CloudFront streaming credentials will be emailed upon checkout.</div>
+          <div className={cp.modalOverlay} onClick={() => setSelectedCourse(null)}>
+            <div className={cp.modalContent} onClick={e => e.stopPropagation()}>
+              <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+                <GoogleIcon name="school" size={48} style={{ color: '#DC143C', marginBottom: '0.5rem' }} />
+                <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.4rem', color: '#111827' }}>Enrollment Intake</h3>
+                <p style={{ fontSize: '0.88rem', color: '#4B5563', marginTop: '0.25rem' }}>{selectedCourse}</p>
+              </div>
+
+              <form onSubmit={(e) => { e.preventDefault(); alert('Redirecting to secure Razorpay payment gateway...'); setSelectedCourse(null) }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>Full Name</label>
+                  <input required type="text" placeholder="Your name as it should appear on certificate" style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>Email Address (LMS Login)</label>
+                  <input required type="email" placeholder="you@email.com" style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>WhatsApp / Mobile</label>
+                  <input required type="tel" placeholder="+91..." style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+                  <button type="button" onClick={() => setSelectedCourse(null)} style={{ flex: 1, padding: '0.7rem', background: '#F3F4F6', color: '#374151', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>Cancel</button>
+                  <button type="submit" style={{ flex: 2, padding: '0.7rem', background: '#DC143C', color: '#FFFFFF', border: 'none', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}>Proceed to Pay →</button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
-        {/* LMS Platform Architecture Specs */}
-        <div className={cp.techSpecsSection}>
-          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+        {/* Technical Architecture Specs (SRS Section 11 Compliance) */}
+        <div className={cp.techSpecsBox}>
+          <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 2.5rem' }}>
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Enterprise Grade LMS
+              LMS Platform Architecture
             </span>
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.75rem', color: '#111827', marginTop: '0.35rem' }}>
+            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.6rem', color: '#111827', margin: '0.4rem 0 0' }}>
               Built for Security, Speed & Retention
             </h2>
             <p style={{ fontSize: '0.88rem', color: '#6B7280', marginTop: '0.5rem' }}>
@@ -296,22 +250,30 @@ export default function CoursesPage() {
 
           <div className={cp.specsGrid}>
             <div className={cp.specCard}>
-              <div className={cp.specIcon}>🛡</div>
+              <div className={cp.specIcon}>
+                <GoogleIcon name="shield" size={32} style={{ color: '#DC143C' }} />
+              </div>
               <h4 className={cp.specTitle}>DRM CloudFront</h4>
               <p className={cp.specText}>Time-limited signed URLs and dynamic watermarking prevent unauthorized video downloading and recording.</p>
             </div>
             <div className={cp.specCard}>
-              <div className={cp.specIcon}>📈</div>
+              <div className={cp.specIcon}>
+                <GoogleIcon name="trending_up" size={32} style={{ color: '#DC143C' }} />
+              </div>
               <h4 className={cp.specTitle}>Progress Tracking</h4>
               <p className={cp.specText}>Automatic module completion tracking, formative comprehension quizzes, and structured note-taking.</p>
             </div>
             <div className={cp.specCard}>
-              <div className={cp.specIcon}>📱</div>
+              <div className={cp.specIcon}>
+                <GoogleIcon name="stay_current_portrait" size={32} style={{ color: '#DC143C' }} />
+              </div>
               <h4 className={cp.specTitle}>Responsive Player</h4>
               <p className={cp.specText}>0.5x to 2x speed adjustment, multi-language subtitle tracks (Hindi & English), and mobile offline caching.</p>
             </div>
             <div className={cp.specCard}>
-              <div className={cp.specIcon}>📜</div>
+              <div className={cp.specIcon}>
+                <GoogleIcon name="verified" size={32} style={{ color: '#DC143C' }} />
+              </div>
               <h4 className={cp.specTitle}>Digital Credential</h4>
               <p className={cp.specText}>Cryptographically tamper-proof PDF certificates with public verification hashes for academic credit.</p>
             </div>
@@ -336,31 +298,20 @@ export default function CoursesPage() {
             {MERCH_DATA.map((item, idx) => (
               <div key={idx} className={cp.storeCard}>
                 <div className={cp.storeImg}>
-                  {item.icon}
+                  <GoogleIcon name={item.icon} size={36} style={{ color: '#DC143C' }} />
                 </div>
                 <div className={cp.storeInfo}>
                   <div style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 600 }}>{item.tag}</div>
                   <h4 className={cp.storeTitle}>{item.title}</h4>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem' }}>
                     <span className={cp.storePrice}>{item.price}</span>
-                    <button
-                      onClick={() => alert(`Item "${item.title}" added to order draft.`)}
-                      style={{ padding: '0.4rem 1rem', background: '#F3F4F6', border: '1px solid #D1D5DB', borderRadius: '6px', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer' }}
-                    >
-                      Order →
-                    </button>
+                    <button style={{ padding: '0.35rem 0.85rem', background: '#111827', color: '#FFFFFF', border: 'none', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Order Kit →</button>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-
-        {/* FCRA Compliance Notice */}
-        <div style={{ marginTop: '4rem', padding: '1.25rem 2rem', background: '#FEF2F2', border: '1px solid #FCA5A5', borderRadius: '10px', fontSize: '0.82rem', color: '#991B1B', lineHeight: 1.6 }}>
-          <strong>Legal & FCRA Compliance Notice:</strong> Shakti Sabha collects domestic transactions in Indian Rupees (INR) exclusively via certified domestic payment gateways (Razorpay / RuPay / UPI). In strict adherence to the Foreign Contribution Regulation Act (FCRA), international donation and payment flows are disabled.
-        </div>
-
       </div>
     </main>
   )

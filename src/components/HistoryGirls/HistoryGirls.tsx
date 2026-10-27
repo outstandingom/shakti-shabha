@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -7,17 +8,17 @@ import s from './HistoryGirls.module.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const HISTORICAL = [
-  { icon:'👑', name:'Rani Lakshmibai',       meta:'Warrior Queen · 1857' },
-  { icon:'⚔️', name:'Kittur Chennamma',       meta:'Freedom Fighter · 1824' },
-  { icon:'🔬', name:'Anandibai Joshi',        meta:"India's First Woman Doctor" },
-  { icon:'📜', name:'Vijaya Lakshmi Pandit',  meta:'Diplomat · UN President' },
+  { icon:'workspace_premium', name:'Rani Lakshmibai',       meta:'Warrior Queen · 1857' },
+  { icon:'swords', name:'Kittur Chennamma',       meta:'Freedom Fighter · 1824' },
+  { icon:'biotech', name:'Anandibai Joshi',        meta:"India's First Woman Doctor" },
+  { icon:'history_edu', name:'Vijaya Lakshmi Pandit',  meta:'Diplomat · UN President' },
 ]
 
 const SUCCESS = [
-  { icon:'🚀', name:'Ritu, IAS 2023',         meta:'Shakti Sabha Camp Alumna' },
-  { icon:'🏅', name:'Meera, National Athlete', meta:'Lathi-Kaushal Programme' },
-  { icon:'💻', name:'Anjali, Tech Lead',       meta:'Aaryaveera Graduate' },
-  { icon:'🎨', name:'Kavya, Working Artist',   meta:'Mardini Camp, 2019' },
+  { icon:'rocket_launch', name:'Ritu, IAS 2023',         meta:'Shakti Sabha Camp Alumna' },
+  { icon:'military_tech', name:'Meera, National Athlete', meta:'Lathi-Kaushal Programme' },
+  { icon:'terminal', name:'Anjali, Tech Lead',       meta:'Aaryaveera Graduate' },
+  { icon:'palette', name:'Kavya, Working Artist',   meta:'Mardini Camp, 2019' },
 ]
 
 const TIMELINE = [
@@ -122,7 +123,7 @@ export default function HistoryGirls() {
           <div className={s.cards}>
             {HISTORICAL.map(h => (
               <div key={h.name} data-hg="card" className={s.figCard}>
-                <div className={s.figIcon}>{h.icon}</div>
+                <div className={s.figIcon}><GoogleIcon name={h.icon} size={24} /></div>
                 <div className={s.figName}>{h.name}</div>
                 <div className={s.figMeta}>{h.meta}</div>
               </div>
@@ -138,7 +139,7 @@ export default function HistoryGirls() {
           <div className={s.cards}>
             {SUCCESS.map(g => (
               <div key={g.name} data-hg="card" className={s.figCard}>
-                <div className={s.figIcon}>{g.icon}</div>
+                <div className={s.figIcon}><GoogleIcon name={g.icon} size={24} /></div>
                 <div className={s.figName}>{g.name}</div>
                 <div className={s.figMeta}>{g.meta}</div>
               </div>

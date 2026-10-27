@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AuthPage.module.css'
 
 export default function LoginPage() {
@@ -28,7 +29,9 @@ export default function LoginPage() {
     <div className={s.page}>
       <div className={s.card}>
         <Link to="/" className={s.logo}>
-          <div className={s.logoIcon}>🛡</div>
+          <div className={s.logoIcon}>
+            <GoogleIcon name="shield" size={26} style={{ color: '#DC143C' }} />
+          </div>
           <div>
             <span className={s.logoText}>Shakti Sabha</span>
             <span className={s.logoSub}>Admin Portal</span>

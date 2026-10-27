@@ -5,7 +5,7 @@ const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || ''
 const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || ''
 
 if (!supabaseUrl || !supabaseKey) {
-  console.warn('⚠️ Supabase environment variables not found. Check VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (or SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY on Vercel).')
+  console.warn('[Supabase] Environment variables not found. Check VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (or SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY on Vercel).')
 }
 
 // Safely instantiate client (use dummy url/key if missing so it does not throw on module load)

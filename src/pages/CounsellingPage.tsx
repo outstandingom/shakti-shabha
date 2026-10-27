@@ -4,6 +4,7 @@ import { Maximize2, Minimize2 } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { supabase } from '../lib/supabase'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import cp from './CounsellingPage.module.css'
 
@@ -21,7 +22,7 @@ interface ServiceWheelItem {
 
 const WHEEL_SERVICES: ServiceWheelItem[] = [
   {
-    icon: '🧠',
+    icon: 'psychology',
     title: 'Psychological Empowerment',
     desc: 'Mental wellbeing aur emotional growth ke liye expert guidance. Apne aap ko samjho, apni strength pehchano.',
     actionText: 'Jaanein Aur →',
@@ -30,7 +31,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800',
   },
   {
-    icon: '💬',
+    icon: 'chat',
     title: 'Counselling Services',
     desc: 'Professional counsellors ke saath apni journey mein support paao. Ek safe space — sirf tumhare liye.',
     actionText: 'Jaanein Aur →',
@@ -39,7 +40,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800',
   },
   {
-    icon: '🎓',
+    icon: 'school',
     title: 'Webinars & Workshops',
     desc: 'Live interactive sessions — women empowerment, mental health, career growth par expert speakers ke saath.',
     actionText: 'Jaanein Aur →',
@@ -48,7 +49,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800',
   },
   {
-    icon: '👥',
+    icon: 'groups',
     title: 'Community Platform',
     desc: 'Like-minded Indian women ka ek judgment-free space. Share karo, suno, aur ek doosre se seekho.',
     actionText: 'Jaanein Aur →',
@@ -57,7 +58,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800',
   },
   {
-    icon: '📚',
+    icon: 'menu_book',
     title: 'Online Courses',
     desc: 'Women empowerment, Indian history, aur psychological wellness par comprehensive self-paced courses.',
     actionText: 'Jaanein Aur →',
@@ -66,7 +67,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800',
   },
   {
-    icon: '🌿',
+    icon: 'spa',
     title: 'Healthy Lifestyle',
     desc: 'Holistic wellness — physical, mental, aur spiritual. Balanced life ke liye practical guidance.',
     actionText: 'Jaanein Aur →',
@@ -75,7 +76,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800',
   },
   {
-    icon: '⚔️',
+    icon: 'swords',
     title: 'Our Revolution',
     desc: 'Social change ke liye ek platform. Campaigns, petitions, aur collective action — milke awaaz uthao.',
     actionText: 'Jaanein Aur →',
@@ -84,7 +85,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=800',
   },
   {
-    icon: '🎙️',
+    icon: 'podcasts',
     title: 'Podcasts & Media',
     desc: 'Inspiring conversations, historical investigations, aur motivational content — on-the-go sunte rehno.',
     actionText: 'Jaanein Aur →',
@@ -93,7 +94,7 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
     image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800',
   },
   {
-    icon: '⭐',
+    icon: 'star',
     title: 'Testimonials',
     desc: 'Unki kahaniyaan jo Shakti Sabha ke saath badli hain. Real stories, real transformation.',
     actionText: 'Padhein →',
@@ -147,76 +148,39 @@ export default function CounsellingPage() {
         const spreadY = offset * window.innerHeight * SPREAD_Y
         const rotateZ = offset * ROTATE
         const skewY = offset * SKEW
-        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
+        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.1)
+        const opacity = Math.max(0.2, 1 - absOffset * 0.3)
+        const zIndex = 100 - Math.round(absOffset * 10)
 
-        if (absOffset > 2.2) {
-          card.style.opacity = '0'
-          card.style.pointerEvents = 'none'
-          return
-        }
-
-        const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
-        card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
-        card.style.transform = `
-          translate3d(${spreadX}px, ${spreadY}px, 0)
-          rotate(${rotateZ}deg)
-          skewY(${skewY}deg)
-          scale(${scale})
-        `
-        card.style.opacity = String(opacity)
-        card.style.zIndex = String(Math.round(100 - absOffset * 20))
+        card.style.transform = `translate3d(${spreadX}px, ${spreadY}px, 0px) rotate(${rotateZ}deg) skewY(${skewY}deg) scale(${scale})`
+        card.style.opacity = `${opacity}`
+        card.style.zIndex = `${zIndex}`
       })
     }
 
-    // Initialize cards on load
+    const st = ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: `+=${totalCards * 100}%`,
+      pin: wrapper,
+      scrub: 1.2,
+      anticipatePin: 1,
+      onToggle: (self) => {
+        setIsWheelActive(self.isActive)
+      },
+      onUpdate: (self) => {
+        updateCards(self.progress)
+      },
+    })
+
+    triggerRef.current = st
     updateCards(0)
 
-    // Calculate total pinning scroll distance
-    const pinDistance = window.innerHeight * (totalCards - 1) * 0.85
-
-    const ctx = gsap.context(() => {
-      const st = ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: () => `+=${pinDistance}`,
-        pin: wrapper,
-        pinSpacing: true,
-        anticipatePin: 1,
-        scrub: 0.2,
-        onToggle: (self) => {
-          setIsWheelActive(self.isActive)
-        },
-        onUpdate: (self) => {
-          updateCards(self.progress)
-        },
-      })
-      triggerRef.current = st
-    }, section)
-
-    const timer = setTimeout(() => {
-      ScrollTrigger.refresh()
-    }, 150)
-
     return () => {
-      clearTimeout(timer)
-      ctx.revert()
-      triggerRef.current = null
+      st.kill()
     }
   }, [totalCards])
 
-  // Scroll directly to a specific card when dot indicator is clicked
-  const scrollToCard = (index: number) => {
-    const st = triggerRef.current
-    if (!st) return
-    const targetScroll = st.start + (index / (totalCards - 1)) * (st.end - st.start)
-
-    window.scrollTo({
-      top: targetScroll,
-      behavior: 'smooth',
-    })
-  }
-
-  // Fullscreen toggle handler
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {})
@@ -225,68 +189,40 @@ export default function CounsellingPage() {
     }
   }
 
-  useEffect(() => {
-    const onFsChange = () => setIsFullscreen(!!document.fullscreenElement)
-    document.addEventListener('fullscreenchange', onFsChange)
-    return () => document.removeEventListener('fullscreenchange', onFsChange)
-  }, [])
-
   return (
-    <main className={cp.page}>
-      {/* ── Hero Banner ── */}
+    <main className={s.page}>
+      {/* ── Top Hero Banner ── */}
       <div className={cp.hero}>
         <div className={cp.heroInner}>
           <Link to="/" className={cp.backLink}>← Back to Home</Link>
-          <span className={cp.badge}>Hamare Services · Shakti Sabha Mein Kya Milega</span>
-          <h1 className={cp.title}>Counselling & Psychological Support</h1>
-          <p className={cp.hindiSubtitle}>सुरक्षित मंच · पेशेवर मार्गदर्शन एवं आत्म-विश्वास</p>
+          <span className={cp.badge}>Mental Health & Confidential Intake</span>
+          <h1 className={cp.title}>Counseling & Holistic Healing</h1>
+          <p className={cp.hindiSubtitle}>परामर्श एवं मानसिक सशक्तिकरण · A Safe, Sacred Space</p>
           <p className={cp.desc}>
-            Professional counsellors ke saath apni journey mein support paao.
-            Ek safe space, judgment-free environment — sirf tumhare liye.
+            Indian women ke liye confidential counseling, trauma-informed clinical support, aur judgment-free community spaces.
+            Scroll through our signature services wheel below to discover safe pathways to recovery.
           </p>
         </div>
       </div>
 
-      {/* ── Section Title ── */}
-      <div className={cp.introBar}>
-        <span className={cp.introEyebrow}>Comprehensive Support Architecture</span>
-        <h2 className={cp.introHeading}>Shakti Sabha Mein Kya Milega</h2>
-        <p className={cp.introSubtext}>
-          Scroll through our 3D interactive support wheel below to explore each dedicated service.
-        </p>
-      </div>
-
-      {/* ── Fixed Right-Side Indicator Dots ── */}
-      <div
-        className={`${cp.indicator} ${isWheelActive ? '' : cp.indicatorHidden}`}
-        aria-label="Timeline navigation"
+      {/* ── 3D Floating Wheel Section ── */}
+      <section
+        ref={sectionRef}
+        className={`${cp.wheelSection} ${isWheelActive ? cp.wheelActive : ''}`}
+        aria-label="Interactive services cards wheel"
       >
-        {WHEEL_SERVICES.map((_, idx) => (
-          <div
-            key={idx}
-            className={`${cp.dot} ${activeCardIndex === idx ? cp.dotActive : ''}`}
-            onClick={() => scrollToCard(idx)}
-            title={WHEEL_SERVICES[idx].title}
-          />
-        ))}
-      </div>
-
-      {/* ── 3D Card Wheel Section (#2 Accordéon asymétrique) ── */}
-      <section className={cp.scrollContainer} ref={sectionRef}>
-        <div className={cp.wheelWrapper} ref={wheelWrapperRef}>
-          {WHEEL_SERVICES.map((item, idx) => (
+        <div ref={wheelWrapperRef} className={cp.wheelWrapper}>
+          {WHEEL_SERVICES.map((item, index) => (
             <div
-              key={idx}
-              className={cp.card}
-              data-index={idx}
-              ref={(el) => {
-                cardRefs.current[idx] = el
-              }}
+              key={index}
+              ref={(el) => { cardRefs.current[index] = el }}
+              className={`${cp.card} ${activeCardIndex === index ? cp.cardActive : ''}`}
+              data-card-index={index}
             >
               <div className={cp.cardInner}>
-                {/* Left: Phone Mockup Frame */}
-                <div className={cp.cardImage}>
-                  <div className={cp.phoneMockup}>
+                {/* Left: Device / Mockup preview */}
+                <div className={cp.cardDevice}>
+                  <div className={cp.phoneFrame}>
                     <div className={cp.phoneScreen}>
                       <img src={item.image} alt={item.title} loading="lazy" />
                     </div>
@@ -295,7 +231,9 @@ export default function CounsellingPage() {
 
                 {/* Right: Card Content */}
                 <div className={cp.cardContent}>
-                  <div className={cp.cardIcon}>{item.icon}</div>
+                  <div className={cp.cardIcon}>
+                    <GoogleIcon name={item.icon} size={32} style={{ color: '#3D5A45' }} />
+                  </div>
                   <h2>{item.title}</h2>
                   <p>{item.desc}</p>
 
@@ -334,7 +272,7 @@ export default function CounsellingPage() {
         {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
       </button>
 
-      {/* ── Confidential Intake Booking Box (Preserved) ── */}
+      {/* ── Confidential Intake Booking Box ── */}
       <div className={s.section}>
         <div id="book-session" className={cp.bookingBox}>
           <div className={cp.bookingGrid}>
@@ -350,16 +288,25 @@ export default function CounsellingPage() {
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.88rem', color: '#374151' }}>
-                <div>🔒 <strong>100% Confidential:</strong> We adhere to strict HIPAA & APA privacy codes.</div>
-                <div>💬 <strong>Free First Assessment:</strong> 30-minute intake session at zero cost.</div>
-                <div>🌸 <strong>Online or In-Person:</strong> Tele-counseling available pan-India.</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <GoogleIcon name="lock" size={18} style={{ color: '#059669', marginRight: '8px' }} />
+                  <div><strong>100% Confidential:</strong> We adhere to strict HIPAA & APA privacy codes.</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <GoogleIcon name="chat" size={18} style={{ color: '#059669', marginRight: '8px' }} />
+                  <div><strong>Free First Assessment:</strong> 30-minute intake session at zero cost.</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <GoogleIcon name="spa" size={18} style={{ color: '#059669', marginRight: '8px' }} />
+                  <div><strong>Online or In-Person:</strong> Tele-counseling available pan-India.</div>
+                </div>
               </div>
             </div>
 
             <div>
               {formDone ? (
                 <div style={{ padding: '2.5rem', background: '#ECFDF5', border: '1px solid #A7F3D0', borderRadius: '12px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🌸</div>
+                  <GoogleIcon name="verified" size={44} style={{ color: '#059669', marginBottom: '0.5rem' }} />
                   <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', color: '#065F46', marginBottom: '0.5rem' }}>Intake Request Received</h3>
                   <p style={{ fontSize: '0.88rem', color: '#047857' }}>
                     A counselor coordinator will reach out to you discreetly via your preferred contact mode within 24 hours.

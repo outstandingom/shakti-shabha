@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AuthPage.module.css'
 
 export default function RegisterPage() {
@@ -41,7 +42,9 @@ export default function RegisterPage() {
     <div className={s.page}>
       <div className={s.card}>
         <Link to="/" className={s.logo}>
-          <div className={s.logoIcon}>🛡</div>
+          <div className={s.logoIcon}>
+            <GoogleIcon name="shield" size={26} style={{ color: '#DC143C' }} />
+          </div>
           <div>
             <span className={s.logoText}>Shakti Sabha</span>
             <span className={s.logoSub}>Admin Portal</span>
@@ -100,13 +103,13 @@ export default function RegisterPage() {
             />
           </div>
           <button className={s.btn} type="submit" disabled={loading}>
-            {loading ? 'Creating account...' : 'Create Account →'}
+            {loading ? 'Creating Account...' : 'Register as Editor →'}
           </button>
         </form>
 
         <div className={s.switchLink}>
           Already have an account?{' '}
-          <Link to="/login">Sign in</Link>
+          <Link to="/login">Sign in here</Link>
         </div>
       </div>
     </div>

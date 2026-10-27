@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Physics2DPlugin } from 'gsap/Physics2DPlugin'
@@ -8,9 +9,9 @@ import s from './Aaryaveera.module.css'
 gsap.registerPlugin(ScrollTrigger, Physics2DPlugin)
 
 const CARDS = [
-  { icon: '⚔',  title: 'Self-Defense & Training',  text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.' },
-  { icon: '🔥', title: 'Character & Leadership',    text: 'Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma and cultural roots.' },
-  { icon: '◎',  title: 'Dialogue & Research',       text: '"Aaryaveera Dialogues" under Shakti Varta — honest discourse on true masculinity, Paurush, and Dharma.' },
+  { icon: 'sports_martial_arts',  title: 'Self-Defense & Training',  text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.' },
+  { icon: 'local_fire_department', title: 'Character & Leadership',    text: 'Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma and cultural roots.' },
+  { icon: 'podcasts',  title: 'Dialogue & Research',       text: '"Aaryaveera Dialogues" under Shakti Varta — honest discourse on true masculinity, Paurush, and Dharma.' },
 ]
 
 const COLORS = ['#CC230C','#E0550D','#C8433E','#FA9417','#F7A958','#F4BEA2','#D57A84']
@@ -218,7 +219,7 @@ export default function Aaryaveera() {
           <div className={s.grid}>
             {CARDS.map(c => (
               <div key={c.title} data-av="card" className={s.card}>
-                <div className={s.icon}>{c.icon}</div>
+                <div className={s.icon}><GoogleIcon name={c.icon} size={28} /></div>
                 <div className={s.cardTitle}>{c.title}</div>
                 <p className={s.cardText}>{c.text}</p>
               </div>

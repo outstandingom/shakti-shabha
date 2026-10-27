@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import rp from './ResearchPage.module.css'
 
@@ -102,9 +103,9 @@ export default function ResearchPage() {
               The Legal Collage: Systemic Loopholes and Ground Realities
             </h2>
             <div className={rp.featuredMeta}>
-              <span>👤 Adv. M. R. Deshmukh et al.</span>
-              <span>📄 52 Pages</span>
-              <span>🏷 DOI: 10.5281/ss.2026.0112</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="person" size={15} /> Adv. M. R. Deshmukh et al.</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="description" size={15} /> 52 Pages</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="tag" size={15} /> DOI: 10.5281/ss.2026.0112</span>
             </div>
             <p className={rp.featuredAbstract}>
               Synthesizing 12 years of on-ground case data with rigorous comparative analysis of Bharatiya Nyaya Sanhita (BNS)
@@ -262,7 +263,7 @@ export default function ResearchPage() {
               {activeFootnote === 1
                 ? 'Archaeological Survey of India, Southern Circle Epigraphia Indica Vol. XVII, pp. 204-209. Inscription dated Shaka 1042.'
                 : 'Peshwa Daftar Records, Sanad & Letters Section, Bundle 42, Document 189, Maharashtra State Archives, Mumbai.'}
-              <button onClick={() => setActiveFootnote(null)} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: '#991B1B', fontWeight: 'bold', cursor: 'pointer' }}>Close ✕</button>
+              <button onClick={() => setActiveFootnote(null)} style={{ marginLeft: '1rem', background: 'none', border: 'none', color: '#991B1B', fontWeight: 'bold', cursor: 'pointer' }}>Close <GoogleIcon name="close" size={14} style={{ verticalAlign: 'middle', marginLeft: '2px' }} /></button>
             </div>
           )}
 

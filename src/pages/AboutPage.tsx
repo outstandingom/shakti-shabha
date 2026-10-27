@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import p from './AboutPage.module.css'
 
@@ -9,32 +10,32 @@ gsap.registerPlugin(ScrollTrigger)
 
 const FOUNDER_METRICS = [
   {
-    icon: '🥋',
+    icon: 'sports_martial_arts',
     title: 'Black Belt in Karate',
     desc: 'Tactical Combat & Empty-Hand Mastery'
   },
   {
-    icon: '⚔️',
+    icon: 'swords',
     title: '2,000+ Girls Weaponized',
     desc: 'Armed & Unarmed Street Defense Readiness'
   },
   {
-    icon: '🎙️',
+    icon: 'record_voice_over',
     title: '500+ Seminars Delivered',
     desc: 'Reached 25,000+ students for youth awakening sessions'
   },
   {
-    icon: '🏕️',
+    icon: 'holiday_village',
     title: '7–10 Days Mission Mardini Camps',
     desc: 'Organizing & collaborating with partner groups for camps'
   },
   {
-    icon: '🌾',
+    icon: 'nature_people',
     title: 'Tribal Area Outreach',
     desc: 'On-ground awareness and frontline support for young girls'
   },
   {
-    icon: '🧠',
+    icon: 'psychology',
     title: 'Dual-Tier Curriculum',
     desc: 'Cognitive De-escalation & High-Impact CQC'
   }
@@ -42,17 +43,17 @@ const FOUNDER_METRICS = [
 
 const TACTICAL_INTERVENTIONS = [
   {
-    icon: '🚨',
+    icon: 'emergency',
     title: 'Anti-Trafficking Extractions',
     desc: 'Directly directed and executed the tactical rescue and safe reintegration of 13 minors from organized human-trafficking networks across high-risk jurisdictional corridors.'
   },
   {
-    icon: '🛡️',
+    icon: 'shield',
     title: 'Grooming & Coercive Exploitation Mitigation',
     desc: 'Handled 250+ documented crisis cases, executing 50+ high-stakes field rescues involving predatory exploitation and systematic psychological coercion.'
   },
   {
-    icon: '🧬',
+    icon: 'biotech',
     title: 'Psychological Reclamation & Specialized Trauma Profiling',
     desc: 'Utilizing non-verbal behavioral profiling, micro-expression analysis, and somatic PTSD stabilization techniques, pioneered specialized post-extraction frameworks to de-escalate trauma and neutralize psychological conditioning in young survivors.'
   }
@@ -105,7 +106,7 @@ const CURRICULUM_TIERS = [
 
 const PILLARS_IN_ACTION = [
   {
-    icon: '⚔️',
+    icon: 'swords',
     name: 'Mission Mardini',
     sub: 'Physical Sovereignty & Tactical Defense',
     color: '#DC143C',
@@ -116,7 +117,7 @@ const PILLARS_IN_ACTION = [
     ]
   },
   {
-    icon: '🌸',
+    icon: 'spa',
     name: 'Shakti Bhava',
     sub: 'Mass Awakening & Narrative Deconstruction',
     color: '#3D5A45',
@@ -128,7 +129,7 @@ const PILLARS_IN_ACTION = [
     ]
   },
   {
-    icon: '📚',
+    icon: 'menu_book',
     name: 'Shakti Varta & Deep Research',
     sub: 'Vedic Epistemology & Forgotten Warriors',
     color: '#C9A96E',
@@ -151,10 +152,10 @@ const TIMELINE = [
 ]
 
 const VALUES = [
-  { icon: '🪷', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the sovereign birthright of every daughter of this civilization.' },
-  { icon: '🔥', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and cognitive courage — the trinity that transforms vulnerable targets into tactically invincible sentinels.' },
-  { icon: '🌿', name: 'Truth', dev: 'सत्य', desc: 'Uncompromising clarity — confronting predation, systemic coercion, and cultural conditioning with objective forensics.' },
-  { icon: '⚖', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in timeless Vedic epistemology and Kshatra-Dharma. Duty, justice, and protection without ideological subversion.' },
+  { icon: 'spa', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the sovereign birthright of every daughter of this civilization.' },
+  { icon: 'local_fire_department', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and cognitive courage — the trinity that transforms vulnerable targets into tactically invincible sentinels.' },
+  { icon: 'verified', name: 'Truth', dev: 'सत्य', desc: 'Uncompromising clarity — confronting predation, systemic coercion, and cultural conditioning with objective forensics.' },
+  { icon: 'balance', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in timeless Vedic epistemology and Kshatra-Dharma. Duty, justice, and protection without ideological subversion.' },
 ]
 
 export default function AboutPage() {
@@ -217,12 +218,12 @@ export default function AboutPage() {
                 alt="Harshita Mankar - Founder & Director, Shakti Sabha"
                 className={p.founderImg}
                 onError={(e) => {
-                  // Fallback in case of image load delay
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80'
                 }}
               />
               <div className={p.founderBadgePill}>
-                🛡️ Verified Tactical Instructor & Non-Verbal Profiler
+                <GoogleIcon name="verified_user" size={16} style={{ marginRight: '6px' }} />
+                Verified Tactical Instructor & Non-Verbal Profiler
               </div>
             </div>
 
@@ -246,7 +247,7 @@ export default function AboutPage() {
                 {FOUNDER_METRICS.map((m, idx) => (
                   <div key={idx} className={p.metricBadgeCard}>
                     <div className={p.metricBadgeHeader}>
-                      <span className={p.metricBadgeIcon}>{m.icon}</span>
+                      <GoogleIcon name={m.icon} size={22} className={p.metricBadgeIcon} style={{ color: '#DC143C' }} />
                       <span className={p.metricBadgeTitle}>{m.title}</span>
                     </div>
                     <p className={p.metricBadgeDesc}>{m.desc}</p>
@@ -259,7 +260,8 @@ export default function AboutPage() {
           {/* ── The Genesis ───────────────────────────── */}
           <div className={p.genesisBox}>
             <h3 className={p.genesisTitle}>
-              <span>🌱</span> The Genesis: From Grassroots Activism to Strategic Sovereignty
+              <GoogleIcon name="eco" size={24} style={{ color: '#34D399' }} />
+              The Genesis: From Grassroots Activism to Strategic Sovereignty
             </h3>
             <p className={p.genesisText}>
               Harshita Mankar’s journey began at an early age, working across diverse institutional ecosystems and cultural organizations to awaken youth consciousness. Over years of frontline exposure, she observed a critical limitation in conventional advocacy: modern socio-political frameworks often treat women as passive beneficiaries or perpetual victims, eroding their inherent psychological strength. Evolving through rigorous field realities, Harshita transitioned from collaborative activism to independent, institutional leadership establishing Shakti Sabha to revive the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
@@ -282,7 +284,7 @@ export default function AboutPage() {
           <div className={p.tacticalGrid}>
             {TACTICAL_INTERVENTIONS.map((item, idx) => (
               <div key={idx} className={p.tacticalCard}>
-                <div className={p.tacticalIcon}>{item.icon}</div>
+                <GoogleIcon name={item.icon} size={32} style={{ color: '#DC143C', marginBottom: '0.75rem' }} />
                 <h4 className={p.tacticalTitle}>{item.title}</h4>
                 <p className={p.tacticalDesc}>{item.desc}</p>
               </div>
@@ -338,7 +340,7 @@ export default function AboutPage() {
                 style={{ '--pill-color': pillar.color } as React.CSSProperties}
               >
                 <div className={p.actionPillarHeader}>
-                  <span className={p.actionPillarIcon}>{pillar.icon}</span>
+                  <GoogleIcon name={pillar.icon} size={28} style={{ color: pillar.color }} />
                   <span className={p.actionPillarName}>{pillar.name}</span>
                 </div>
                 <div className={p.actionPillarSub}>{pillar.sub}</div>
@@ -346,7 +348,7 @@ export default function AboutPage() {
                 <ul className={p.actionPillarBullets}>
                   {pillar.bullets.map((b, bIdx) => (
                     <li key={bIdx} className={p.actionPillarBullet}>
-                      <span>●</span>
+                      <span style={{ color: pillar.color }}>●</span>
                       <div>{b}</div>
                     </li>
                   ))}
@@ -405,7 +407,7 @@ export default function AboutPage() {
           <div className={p.valuesGrid}>
             {VALUES.map((v) => (
               <div key={v.name} className={p.valueCard}>
-                <span className={p.valueIcon}>{v.icon}</span>
+                <GoogleIcon name={v.icon} size={28} style={{ color: '#DC143C', marginBottom: '0.5rem' }} />
                 <h3 className={p.valueName}>{v.name}</h3>
                 <span className={p.valueDev}>{v.dev}</span>
                 <p className={p.valueDesc}>{v.desc}</p>

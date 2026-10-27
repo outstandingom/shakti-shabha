@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import sw from './SocialWorkPage.module.css'
 import SocialWorkHero from '../components/SocialWorkHero/SocialWorkHero'
@@ -20,18 +21,18 @@ const STATS: { count: string; num: number; suffix: string; label: string }[] = [
 ]
 
 const REGIONS = [
-  { icon: '🏕', name: 'Nagpur Division', stat: '45 camps' },
-  { icon: '🌾', name: 'Amravati Division', stat: '38 camps' },
-  { icon: '🏛', name: 'Aurangabad Division', stat: '29 camps' },
-  { icon: '🌆', name: 'Pune Region', stat: '22 camps' },
-  { icon: '🌊', name: 'Mumbai Region', stat: '18 camps' },
-  { icon: '🌿', name: 'Vidarbha & Tribal Areas', stat: '54 camps' },
+  { icon: 'holiday_village', name: 'Nagpur Division', stat: '45 camps' },
+  { icon: 'grass', name: 'Amravati Division', stat: '38 camps' },
+  { icon: 'account_balance', name: 'Aurangabad Division', stat: '29 camps' },
+  { icon: 'location_city', name: 'Pune Region', stat: '22 camps' },
+  { icon: 'water', name: 'Mumbai Region', stat: '18 camps' },
+  { icon: 'nature_people', name: 'Vidarbha & Tribal Areas', stat: '54 camps' },
 ]
 
 const PILLARS = [
   {
     id: 'mardini',
-    icon: '⚔',
+    icon: 'swords',
     title: 'Mission MARDINI',
     subtitle: 'Physical Sovereignty & Tactical Defense',
     desc: 'Battle-tested combat framework blending traditional Indian martial arts (Lathi-Kaushal, Sword) with modern Close-Quarter Combat (CQC). Trained 2,000+ girls with 7-10 day residential camps.',
@@ -41,7 +42,7 @@ const PILLARS = [
   },
   {
     id: 'bhava',
-    icon: '🌸',
+    icon: 'spa',
     title: 'Shakti Bhava',
     subtitle: 'Healing Circles & Crisis Interventions',
     desc: 'Non-verbal behavioral profiling, somatic PTSD stabilization, and safe shelter reintegration. 13 minors tactically rescued from trafficking; 250+ grooming cases neutralized.',
@@ -51,7 +52,7 @@ const PILLARS = [
   },
   {
     id: 'varta',
-    icon: '📖',
+    icon: 'menu_book',
     title: 'Shakti Varta',
     subtitle: 'Intellectual Discourse & Research',
     desc: 'Convened 500+ keynotes, symposiums, and institutional seminars reaching 25,000+ students. Shakti Varta Fellowship connecting youth to foundational Vedic texts and forgotten heroines.',
@@ -212,7 +213,9 @@ export default function SocialWorkPage() {
                   '--pillar-accent': p.accent,
                 } as React.CSSProperties}
               >
-                <div className={sw.pillarIcon}>{p.icon}</div>
+                <div className={sw.pillarIcon}>
+                  <GoogleIcon name={p.icon} size={32} style={{ color: p.accent }} />
+                </div>
                 <div className={sw.pillarAccentBar} style={{ background: p.accent }} />
                 <h3 className={sw.pillarTitle} style={{ color: p.accent }}>{p.title}</h3>
                 <div className={sw.pillarSubtitle}>{p.subtitle}</div>
@@ -234,7 +237,9 @@ export default function SocialWorkPage() {
           <div className={sw.regionGrid} ref={regionRef}>
             {REGIONS.map((r) => (
               <div key={r.name} className={sw.regionCard} data-region>
-                <div className={sw.regionIcon}>{r.icon}</div>
+                <div className={sw.regionIcon}>
+                  <GoogleIcon name={r.icon} size={28} style={{ color: '#DC143C' }} />
+                </div>
                 <div className={sw.regionName}>{r.name}</div>
                 <div className={sw.regionStat}>{r.stat}</div>
               </div>
@@ -302,7 +307,7 @@ export default function SocialWorkPage() {
             {REPORTS.map((r) => (
               <div key={r.title} className={sw.reportCard} data-report>
                 <div className={sw.reportIconWrap}>
-                  <span className={sw.reportPdfIcon}>📄</span>
+                  <GoogleIcon name="description" size={26} style={{ color: '#DC143C' }} />
                 </div>
                 <div className={sw.reportBody}>
                   <div className={sw.reportMeta}>

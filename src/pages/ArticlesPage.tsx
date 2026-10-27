@@ -5,6 +5,7 @@ import { EffectCards, Mousewheel, Keyboard } from 'swiper/modules'
 import type { Swiper as SwiperCore } from 'swiper'
 import { BookOpen, ChevronLeft, ChevronRight, X, Clock, User, Compass } from 'lucide-react'
 import { supabase, Article } from '../lib/supabase'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import ap from './ArticlesPage.module.css'
 import 'swiper/css'
@@ -355,7 +356,7 @@ export default function ArticlesPage() {
                 <span>{currentArticle.readTime}</span>
               </span>
               <span className={ap.metaItem}>
-                <span style={{ color: '#F59E0B', fontWeight: 700 }}>★</span>
+                <GoogleIcon name="star" size={16} filled style={{ color: '#F59E0B' }} />
                 <span>{currentArticle.rating}/10</span>
               </span>
             </div>
@@ -550,9 +551,9 @@ export default function ArticlesPage() {
                 borderBottom: '1px solid #E5E7EB',
               }}
             >
-              <span>✍ {activeModalArticle.author}</span>
-              <span>⏱ {activeModalArticle.readTime}</span>
-              <span>★ Score: {activeModalArticle.rating}/10</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="edit" size={14} /> {activeModalArticle.author}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="schedule" size={14} /> {activeModalArticle.readTime}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><GoogleIcon name="star" size={14} filled style={{ color: '#F59E0B' }} /> Score: {activeModalArticle.rating}/10</span>
             </div>
 
             <div
@@ -721,7 +722,7 @@ export default function ArticlesPage() {
                   color: '#FFB3BA',
                 }}
               >
-                <div style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>💌</div>
+                <div style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}><GoogleIcon name="mail" size={32} /></div>
                 <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>सभा में स्वागत है!</div>
                 <div style={{ fontSize: '0.85rem' }}>You are now subscribed to The Shakti Dispatch.</div>
               </div>

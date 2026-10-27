@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useCallback, useState, type CSSProperties } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import './DomeGallery.css'
 
 export interface DomeGalleryImage {
@@ -508,7 +509,7 @@ export default function DomeGallery({
                   </p>
                 )}
                 <div style={{ marginTop: '0.75rem', fontSize: '0.72rem', color: '#C9A96E', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span>🛡</span> Verified 12-Year On-Ground Archival Record
+                  <GoogleIcon name="verified_user" size={16} /> Verified 12-Year On-Ground Archival Record
                 </div>
               </div>
             </motion.div>

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import p from './AaryaveeraPage.module.css'
 
@@ -23,7 +24,7 @@ const PILLARS = [
     tag: 'Revolution & Combat',
     accent: '#DC143C',
     accentBg: 'rgba(220,20,60,0.08)',
-    icon: '⚔',
+    icon: 'swords',
     desc: 'The fire that ignites tactical sovereignty. Spearheaded by Harshita Mankar (Black Belt in Karate), Mission Mardini builds physical and cognitive warriors through asymmetric street combat, traditional Lathi-Kaushal, and blade defense.',
     items: ['2,000+ young women weaponized (armed & unarmed)', '7–10 days residential warrior camps with partner groups', 'Traditional Lathi-Kaushal, Sword parries & CQC mechanics'],
   },
@@ -33,7 +34,7 @@ const PILLARS = [
     tag: 'Psychological Sovereignty',
     accent: '#3D5A45',
     accentBg: 'rgba(61,90,69,0.08)',
-    icon: '🌸',
+    icon: 'spa',
     desc: 'The shield of psychological fortitude. Somatic PTSD stabilization, non-verbal behavioral profiling, and confidential peer intervention. Directly executing frontline rescues of minors and neutralizing predatory grooming.',
     items: ['Tactical rescue & safe reintegration of 13 minors', '250+ grooming & coercive exploitation cases handled', 'Non-verbal profiling & somatic PTSD stabilization'],
   },
@@ -43,7 +44,7 @@ const PILLARS = [
     tag: 'Intellectual Armor',
     accent: '#C9A96E',
     accentBg: 'rgba(201,169,110,0.08)',
-    icon: '📚',
+    icon: 'menu_book',
     desc: 'The intellectual vanguard. Grounded in Vedic epistemology, archival forensics, and deconstructing western reductionist narratives. Equipping youth with the philosophical armor of Kshatra-Dharma.',
     items: ['500+ keynotes & seminars reaching 25,000+ students', 'Shakti Varta Fellowship for classical texts & Vedic sciences', 'Independent archival research on forgotten Indian women warriors'],
   },
@@ -59,9 +60,9 @@ const BRAND_ASSETS = [
 ]
 
 const FEATURES = [
-  { icon: '🛡', title: 'The Dual-Shield Doctrine', text: 'Mental resilience before physical strike. Liberating the mind from fear and replacing the freeze-response with tactical awareness.' },
-  { icon: '🔥', title: 'Character & Kshatra-Dharma', text: 'Sovereign, fearless, dharmic. Training young girls so their hands, elbows, and cognitive agility function as an organic weapon system.' },
-  { icon: '🎙', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, geopolitical subversion, and what it means to be sovereign in contemporary India.' },
+  { icon: 'shield', title: 'The Dual-Shield Doctrine', text: 'Mental resilience before physical strike. Liberating the mind from fear and replacing the freeze-response with tactical awareness.' },
+  { icon: 'local_fire_department', title: 'Character & Kshatra-Dharma', text: 'Sovereign, fearless, dharmic. Training young girls so their hands, elbows, and cognitive agility function as an organic weapon system.' },
+  { icon: 'podcasts', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, geopolitical subversion, and what it means to be sovereign in contemporary India.' },
 ]
 
 export default function AaryaveeraPage() {
@@ -162,7 +163,9 @@ export default function AaryaveeraPage() {
           <div className={p.whatRight} id="what-right">
             {FEATURES.map((f, i) => (
               <div key={i} className={p.featureBox}>
-                <div className={p.featureIcon}>{f.icon}</div>
+                <div className={p.featureIcon}>
+                  <GoogleIcon name={f.icon} size={28} style={{ color: '#DC143C' }} />
+                </div>
                 <div>
                   <h4 className={p.featureTitle}>{f.title}</h4>
                   <p className={p.featureText}>{f.text}</p>
@@ -200,7 +203,9 @@ export default function AaryaveeraPage() {
             {PILLARS.map((pl) => (
               <div key={pl.name} className={p.pillarCard} style={{ '--pillar-accent': pl.accent, '--pillar-bg': pl.accentBg } as React.CSSProperties}>
                 <div className={p.pillarTop}>
-                  <span className={p.pillarIcon}>{pl.icon}</span>
+                  <div className={p.pillarIcon}>
+                    <GoogleIcon name={pl.icon} size={28} style={{ color: pl.accent }} />
+                  </div>
                   <span className={p.pillarTag} style={{ color: pl.accent, background: pl.accentBg, border: `1px solid ${pl.accent}44` }}>{pl.tag}</span>
                 </div>
                 <h3 className={p.pillarName}>{pl.name}</h3>

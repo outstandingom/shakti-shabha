@@ -4,6 +4,7 @@ import { X, BookOpen, ChevronRight, ChevronLeft, Compass } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import h from './HistoryPage.module.css'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -381,7 +382,7 @@ export default function HistoryPage() {
               className={`${h.langBtn} ${lang === 'en' ? h.langBtnActive : ''}`}
               aria-label="Switch to Pure English"
             >
-              <span>🇬🇧</span> English
+              <GoogleIcon name="language" size={16} /> English
             </button>
             <button
               type="button"
@@ -389,7 +390,7 @@ export default function HistoryPage() {
               className={`${h.langBtn} ${lang === 'hi' ? h.langBtnActive : ''}`}
               aria-label="शुद्ध हिन्दी में बदलें"
             >
-              <span>🇮🇳</span> हिन्दी
+              <GoogleIcon name="translate" size={16} /> हिन्दी
             </button>
           </div>
         </div>

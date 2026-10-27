@@ -4,6 +4,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './PageLayout.module.css'
 import ep from './EventsPage.module.css'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -234,15 +235,15 @@ export default function EventsPage() {
                 
                 <div className={ep.eventMeta}>
                   <div className={ep.metaItem}>
-                    <span>📍</span>
+                    <GoogleIcon name="location_on" size={16} />
                     <span>{item.location}</span>
                   </div>
                   <div className={ep.metaItem}>
-                    <span>⏰</span>
+                    <GoogleIcon name="schedule" size={16} />
                     <span>{item.time}</span>
                   </div>
                   <div className={ep.metaItem}>
-                    <span>🎟</span>
+                    <GoogleIcon name="confirmation_number" size={16} />
                     <span style={{ color: item.seats.includes('left') ? '#DC143C' : '#059669', fontWeight: 600 }}>{item.seats}</span>
                   </div>
                 </div>

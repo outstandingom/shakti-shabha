@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import cs from './CaseStudyPage.module.css'
 
@@ -108,7 +109,7 @@ export default function CaseStudyPage() {
           </p>
 
           <div className={cs.alertBox}>
-            <div className={cs.alertIcon}>🔒</div>
+            <div className={cs.alertIcon}><GoogleIcon name="lock" size={20} /></div>
             <div>
               <strong>Strict Privacy & Ethical Notice:</strong> All names, identifiable geographic markers, and exact dates
               have been modified. These narratives are published strictly with informed, signed survivor consent and verified by
@@ -215,7 +216,7 @@ export default function CaseStudyPage() {
                   color: '#374151'
                 }}
               >
-                ✕
+                <GoogleIcon name="close" size={18} />
               </button>
 
               <div style={{ fontSize: '0.75rem', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.25rem' }}>
@@ -258,17 +259,17 @@ export default function CaseStudyPage() {
 
           <div className={cs.securityGrid}>
             <div className={cs.secCard}>
-              <div className={cs.secIcon}>🛡</div>
+              <div className={cs.secIcon}><GoogleIcon name="shield" size={20} /></div>
               <h4 className={cs.secTitle}>AES-256-GCM Encryption</h4>
               <p className={cs.secText}>Every sensitive column is encrypted with unique rotating keys stored in hardware security modules (AWS KMS).</p>
             </div>
             <div className={cs.secCard}>
-              <div className={cs.secIcon}>👤</div>
+              <div className={cs.secIcon}><GoogleIcon name="person" size={20} /></div>
               <h4 className={cs.secTitle}>Zero-Knowledge Database</h4>
               <p className={cs.secText}>No identifying emails, mobile numbers, or GPS stamps are linked to public case files in plaintext.</p>
             </div>
             <div className={cs.secCard}>
-              <div className={cs.secIcon}>⚖</div>
+              <div className={cs.secIcon}><GoogleIcon name="balance" size={20} /></div>
               <h4 className={cs.secTitle}>Consent-Based Workflow</h4>
               <p className={cs.secText}>A 3-tier editorial review: Primary Counselor → Survivor Affirmation → Legal Counsel signoff before publish.</p>
             </div>
@@ -290,7 +291,7 @@ export default function CaseStudyPage() {
 
             {submittedStory ? (
               <div style={{ padding: '2rem', background: '#F0FDF4', border: '1px solid #86EFAC', borderRadius: '12px', color: '#166534' }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>💌</div>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}><GoogleIcon name="mail" size={32} /></div>
                 <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', marginBottom: '0.5rem' }}>Encrypted Submission Received</h3>
                 <p style={{ fontSize: '0.88rem' }}>Thank you for your courage. Your words have been placed into confidential care.</p>
                 <button onClick={() => setSubmittedStory(false)} style={{ marginTop: '1rem', padding: '0.4rem 1.25rem', background: '#16a34a', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontSize: '0.8rem', cursor: 'pointer' }}>
