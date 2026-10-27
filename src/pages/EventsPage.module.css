@@ -255,17 +255,17 @@
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
 }
 
-/* Aaryaveera Camp Series Highlight (Crimson & Rose Red Signature Palette) */
+/* Aaryaveera Camp Series Highlight (True Crimson Red Signature Card) */
 .campSeriesBox {
   margin-top: 5rem;
-  background: linear-gradient(145deg, #1C060B 0%, #2E0B14 45%, #4A0E1F 100%);
-  border: 1.5px solid rgba(220, 20, 60, 0.4);
+  background: linear-gradient(135deg, #9C0E28 0%, #DC143C 48%, #B81132 100%);
+  border: 2px solid rgba(255, 255, 255, 0.28);
   border-radius: 20px;
   padding: clamp(2.5rem, 5vw, 4rem);
   color: #FFFFFF;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 16px 45px rgba(220, 20, 60, 0.16), 0 0 25px rgba(220, 20, 60, 0.08);
+  box-shadow: 0 20px 50px rgba(220, 20, 60, 0.35), 0 0 35px rgba(220, 20, 60, 0.2);
 }
 
 .campSeriesBox::before {
@@ -275,7 +275,7 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #DC143C 0%, #FF6B8B 50%, #DC143C 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, #FFFFFF 50%, rgba(255, 255, 255, 0.6) 100%);
 }
 
 .campEyebrow {
@@ -283,71 +283,76 @@
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #FFB3BA;
-  background: rgba(220, 20, 60, 0.2);
-  border: 1px solid rgba(220, 20, 60, 0.4);
-  padding: 0.3rem 0.9rem;
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 0.32rem 0.95rem;
   border-radius: 9999px;
-  font-weight: 700;
+  font-weight: 800;
   margin-bottom: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .campTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
   color: #FFFFFF;
   margin: 0.25rem 0 1rem;
   font-weight: 700;
   line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
 .campDesc {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.95);
   line-height: 1.7;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
   margin-bottom: 1.75rem;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
 
 .campCrimsonBtn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.85rem;
-  background: #DC143C;
-  color: #FFFFFF;
+  padding: 0.9rem 1.95rem;
+  background: #FFFFFF;
+  color: #B01030;
   border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.88rem;
+  font-weight: 800;
+  font-size: 0.9rem;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.45);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   transition: all 0.25s ease;
   border: none;
   cursor: pointer;
 }
 
 .campCrimsonBtn:hover {
-  background: #B01030;
+  background: #FFF1F2;
+  color: #8F0B25;
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(220, 20, 60, 0.6);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
 }
 
 .campOutlineBtn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 1.85rem;
-  background: rgba(255, 255, 255, 0.08);
+  padding: 0.9rem 1.95rem;
+  background: rgba(255, 255, 255, 0.15);
   color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
   border-radius: 9999px;
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-weight: 700;
+  font-size: 0.9rem;
   text-decoration: none;
   transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
 }
 
 .campOutlineBtn:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.28);
   border-color: #FFFFFF;
   transform: translateY(-2px);
 }
@@ -366,40 +371,42 @@
 }
 
 .featureCard {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(220, 20, 60, 0.22);
+  background: rgba(0, 0, 0, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
   border-radius: 14px;
   padding: 1.4rem;
   transition: all 0.25s ease;
   display: flex;
   flex-direction: column;
+  backdrop-filter: blur(10px);
 }
 
 .featureCard:hover {
-  background: rgba(220, 20, 60, 0.14);
-  border-color: rgba(220, 20, 60, 0.5);
+  background: rgba(0, 0, 0, 0.28);
+  border-color: #FFFFFF;
   transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.25);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
 }
 
 .featureIcon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
-  background: rgba(220, 20, 60, 0.2);
-  border: 1px solid rgba(220, 20, 60, 0.4);
-  color: #FF6B8B;
+  background: #FFFFFF;
+  color: #DC143C;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 0.85rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .googleIcon {
   font-family: 'Material Symbols Outlined', sans-serif;
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
+  font-size: 26px;
   line-height: 1;
   letter-spacing: normal;
   text-transform: none;
@@ -413,15 +420,16 @@
 
 .featureTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   color: #FFFFFF;
   margin-bottom: 0.35rem;
   font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .featureText {
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.83rem;
+  color: rgba(255, 255, 255, 0.92);
   line-height: 1.55;
 }
 
