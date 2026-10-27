@@ -7,7 +7,7 @@ import s from './Navigation.module.css'
 const LINKS = [
   { label: 'Articles', to: '/articles' },
   { label: 'Counselling', to: '/counselling' },
-  { label: 'Itihaas', to: '/history' },
+  { label: 'History', to: '/history' },
   { label: 'Gallery', to: '/gallery' },
   { label: 'Aaryaveera', to: '/aaryaveera' },
   { label: 'Social Work', to: '/social-work' },
