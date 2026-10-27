@@ -180,44 +180,20 @@ export default function SocialWorkPage() {
 
   return (
     <main className={s.page}>
-      {/* ── Hero Showcase: "WE WORK FOR WOMEN." ── */}
-      <SocialWorkHero />
-
-      {/* ── Animated Stats ──────────────────────────────────────── */}
-      <div className={s.statsGrid}>
-        {STATS.map((st, i) => (
-          <div
-            key={i}
-            className={s.statBox}
-            ref={el => { statRefs.current[i] = el }}
-          >
-            <div className={s.statCount} data-count>{st.count}</div>
-            <div className={s.statLabel}>{st.label}</div>
-          </div>
-        ))}
+      {/* ── 1. Top Standard Hero Banner ─────────────────────────── */}
+      <div className={sw.hero}>
+        <div className={sw.heroInner}>
+          <Link to="/" className={sw.backLink}>← Back to Home</Link>
+          <span className={sw.badge}>SRS Section 8 · Grassroots Impact</span>
+          <h1 className={sw.title}>Social Work & Ground Action</h1>
+          <p className={sw.hindiSubtitle}>कार्यक्रम और सामाजिक कार्य · Together On Ground</p>
+          <p className={sw.desc}>
+            From high-risk frontline rescues and anti-trafficking extractions to rural self-defense camps, tribal outreach, and psychological rehabilitation across Maharashtra.
+          </p>
+        </div>
       </div>
 
-      {/* ── Geographic Reach ────────────────────────────────────── */}
-      <section className={sw.reachSection}>
-        <div className={sw.sectionInner}>
-          <h2 className={sw.sectionTitle}>Our Geographic Reach</h2>
-          <p className={sw.sectionSubtitle}>
-            From the rural heartlands of Vidarbha and tribal settlements to universities across Maharashtra —&nbsp;
-            <strong>12 years of frontline strategic leadership and mission execution</strong>
-          </p>
-          <div className={sw.regionGrid} ref={regionRef}>
-            {REGIONS.map((r) => (
-              <div key={r.name} className={sw.regionCard} data-region>
-                <div className={sw.regionIcon}>{r.icon}</div>
-                <div className={sw.regionName}>{r.name}</div>
-                <div className={sw.regionStat}>{r.stat}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── Three Programme Pillars ─────────────────────────────── */}
+      {/* ── 2. Three Programme Pillars ──────────────────────────── */}
       <section className={sw.pillarsSection}>
         <div className={sw.sectionInner}>
           <h2 className={sw.sectionTitle}>Three Programme Pillars</h2>
@@ -247,7 +223,44 @@ export default function SocialWorkPage() {
         </div>
       </section>
 
-      {/* ── Media Vault ─────────────────────────────────────────── */}
+      {/* ── 3. Our Geographic Reach ─────────────────────────────── */}
+      <section className={sw.reachSection}>
+        <div className={sw.sectionInner}>
+          <h2 className={sw.sectionTitle}>Our Geographic Reach</h2>
+          <p className={sw.sectionSubtitle}>
+            From the rural heartlands of Vidarbha and tribal settlements to universities across Maharashtra —&nbsp;
+            <strong>12 years of frontline strategic leadership and mission execution</strong>
+          </p>
+          <div className={sw.regionGrid} ref={regionRef}>
+            {REGIONS.map((r) => (
+              <div key={r.name} className={sw.regionCard} data-region>
+                <div className={sw.regionIcon}>{r.icon}</div>
+                <div className={sw.regionName}>{r.name}</div>
+                <div className={sw.regionStat}>{r.stat}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 4. Animated Stats / Metrics Grid ────────────────────── */}
+      <div className={s.statsGrid}>
+        {STATS.map((st, i) => (
+          <div
+            key={i}
+            className={s.statBox}
+            ref={el => { statRefs.current[i] = el }}
+          >
+            <div className={s.statCount} data-count>{st.count}</div>
+            <div className={s.statLabel}>{st.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── 5. Current Hero Showcase: "WE WORK FOR WOMEN." ────── */}
+      <SocialWorkHero />
+
+      {/* ── 6. Media Vault ──────────────────────────────────────── */}
       <section className={sw.mediaSection}>
         <div className={sw.sectionInner}>
           <h2 className={sw.sectionTitle}>Media Vault</h2>
@@ -278,7 +291,7 @@ export default function SocialWorkPage() {
         </div>
       </section>
 
-      {/* ── Field Reports ───────────────────────────────────────── */}
+      {/* ── 7. Field Reports ────────────────────────────────────── */}
       <section className={sw.reportsSection}>
         <div className={sw.sectionInner}>
           <h2 className={sw.sectionTitle}>Field Reports</h2>
@@ -308,7 +321,7 @@ export default function SocialWorkPage() {
         </div>
       </section>
 
-      {/* ── CTA Banner ──────────────────────────────────────────── */}
+      {/* ── 8. Support Our Mission (CTA) ────────────────────────── */}
       <section className={sw.ctaSection} ref={ctaRef}>
         <div className={sw.ctaInner}>
           <h2 className={sw.ctaTitle}>Support Our Mission</h2>
