@@ -1,20 +1,23 @@
 /* ============================================================
    SocialWork — Section 4
    3D Tilt & Offset Slider with useReducer (Keyframers System)
+   Strictly sized to fit within 1 screen (100vh) on PC
    ============================================================ */
 
 .section {
   background: #111111;
   color: #FFFFFF;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: relative;
   overflow: hidden;
 }
 
-/* ---------- Stats row ---------- */
+/* ---------- Stats row (compact banner) ---------- */
 .statsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -26,7 +29,7 @@
 }
 
 .statBox {
-  padding: 1.25rem 1rem;
+  padding: 0.65rem 0.75rem;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
   transition: background 0.3s;
@@ -42,75 +45,77 @@
 
 .statCount {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.65rem);
   font-weight: 900;
   color: #DC143C;
-  line-height: 1;
-  margin-bottom: 0.35rem;
+  line-height: 1.1;
+  margin-bottom: 0.15rem;
 }
 
 .statLabel {
   font-family: var(--font-body, 'Outfit', sans-serif);
-  font-size: 0.72rem;
+  font-size: clamp(0.6rem, 0.75vw, 0.68rem);
   color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   font-weight: 600;
 }
 
-/* ---------- Header ---------- */
+/* ---------- Header (clean, concise) ---------- */
 .carouselHeader {
   text-align: center;
   max-width: 680px;
-  margin: 2.5rem auto 1.5rem;
-  padding: 0 1.5rem;
+  margin: 0.75rem auto 0.25rem;
+  padding: 0 1rem;
   position: relative;
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .eyebrow {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #FFB3BA;
   border: 1px solid rgba(220, 20, 60, 0.35);
-  padding: 0.32rem 1rem;
+  padding: 0.22rem 0.85rem;
   border-radius: 9999px;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
   background: rgba(220, 20, 60, 0.12);
 }
 
 .carouselTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.35rem, 2.4vw, 1.95rem);
   font-weight: 700;
   color: #FFFFFF;
-  margin-bottom: 0.4rem;
-  line-height: 1.2;
+  margin-bottom: 0.2rem;
+  line-height: 1.15;
 }
 
 .carouselSub {
   font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.5rem;
+  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  color: rgba(255, 255, 255, 0.65);
+  margin-bottom: 0;
 }
 
 /* ============================================================
-   KEYFRAMERS 3D SLIDER (useReducer + offset + tilt)
+   KEYFRAMERS 3D SLIDER (fits within 1 screen)
    ============================================================ */
 
 .carouselWrap {
   position: relative;
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 1rem 1rem 3rem;
+  padding: 0.25rem 1rem 0.85rem;
   width: 100%;
 }
 
@@ -120,7 +125,9 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: clamp(420px, 58vh, 560px);
+  flex: 1;
+  min-height: 0;
+  max-height: clamp(280px, 48vh, 440px);
   perspective: 1200px;
 }
 
@@ -128,8 +135,8 @@
   display: grid;
   place-items: center;
   position: relative;
-  width: clamp(280px, 30vw, 420px);
-  height: clamp(380px, 42vw, 540px);
+  width: clamp(240px, 22vw, 340px);
+  height: clamp(280px, 45vh, 420px);
 }
 
 .slide {
@@ -154,16 +161,16 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  border-radius: 18px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.12);
   transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  opacity: 0.6;
+  opacity: 0.55;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 2vw, 1.75rem);
   transform-style: preserve-3d;
   transform: perspective(1000px) translateX(calc(105% * var(--offset)))
     rotateY(calc(-45deg * var(--dir)));
@@ -188,7 +195,7 @@
   --x: calc(var(--px, 0.5) - 0.5);
   --y: calc(var(--py, 0.5) - 0.5);
   opacity: 1;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 20, 60, 0.28);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(220, 20, 60, 0.28);
   border-color: rgba(220, 20, 60, 0.5);
   transform: perspective(1000px);
 }
@@ -203,9 +210,9 @@
 
 .slideContentInner {
   transform-style: preserve-3d;
-  transform: translateZ(2.2rem);
+  transform: translateZ(2rem);
   transition: opacity 0.3s linear;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.95);
   opacity: 0;
   position: relative;
   z-index: 2;
@@ -217,23 +224,23 @@
 
 .slideTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.35rem, 2.2vw, 1.95rem);
+  font-size: clamp(1.15rem, 1.6vw, 1.55rem);
   font-weight: 700;
-  letter-spacing: 0.08ch;
+  letter-spacing: 0.06ch;
   text-transform: uppercase;
   color: #FFFFFF;
-  margin: 0 0 0.35rem 0;
+  margin: 0 0 0.2rem 0;
   line-height: 1.2;
 }
 
 .slideSubtitle {
   font-family: var(--font-body, 'Outfit', sans-serif);
-  font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+  font-size: clamp(0.72rem, 0.95vw, 0.84rem);
   font-weight: 600;
-  letter-spacing: 0.15ch;
+  letter-spacing: 0.12ch;
   text-transform: uppercase;
   color: #FFB3BA;
-  margin: 0 0 0.75rem 0;
+  margin: 0 0 0.45rem 0;
 }
 
 .slideSubtitle::before {
@@ -241,21 +248,21 @@
 }
 
 .slideDescription {
-  margin: 0 0 1rem 0;
-  font-size: clamp(0.78rem, 1vw, 0.88rem);
-  letter-spacing: 0.04ch;
+  margin: 0 0 0.75rem 0;
+  font-size: clamp(0.7rem, 0.85vw, 0.78rem);
+  letter-spacing: 0.03ch;
   color: rgba(255, 255, 255, 0.85);
-  line-height: 1.55;
-  max-width: 32ch;
+  line-height: 1.45;
+  max-width: 30ch;
 }
 
 .slideBadge {
   display: inline-block;
-  padding: 4px 12px;
+  padding: 3px 10px;
   background: rgba(220, 20, 60, 0.3);
   border: 1px solid rgba(220, 20, 60, 0.5);
   border-radius: 9999px;
-  font-size: 0.7rem;
+  font-size: 0.64rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   color: #FFFFFF;
@@ -277,7 +284,7 @@
 }
 
 .slide[data-active="true"] .slideBackground {
-  opacity: 0.32;
+  opacity: 0.3;
   transform: none;
 }
 
@@ -288,9 +295,9 @@
   border: 1px solid rgba(255, 255, 255, 0.25);
   color: #FFFFFF;
   position: absolute;
-  font-size: 3rem;
-  width: 4rem;
-  height: 4rem;
+  font-size: 2.4rem;
+  width: 3.2rem;
+  height: 3.2rem;
   top: 50%;
   transform: translateY(-50%);
   transition: all 0.25s ease;
@@ -302,7 +309,7 @@
   justify-content: center;
   cursor: pointer;
   line-height: 1;
-  padding-bottom: 4px;
+  padding-bottom: 3px;
   backdrop-filter: blur(10px);
 }
 
@@ -318,11 +325,11 @@
 }
 
 .btnPrev {
-  left: clamp(-4.8rem, -8vw, -2.5rem);
+  left: clamp(-3.8rem, -6vw, -2rem);
 }
 
 .btnNext {
-  right: clamp(-4.8rem, -8vw, -2.5rem);
+  right: clamp(-3.8rem, -6vw, -2rem);
 }
 
 /* Dots Indicator Row */
@@ -330,15 +337,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  margin-top: 1.75rem;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
   position: relative;
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.2);
   border: none;
@@ -349,61 +357,67 @@
 
 .dotActive {
   background: #DC143C;
-  width: 26px;
+  width: 22px;
   border-radius: 9999px;
   box-shadow: 0 0 10px rgba(220, 20, 60, 0.6);
 }
 
 /* Explore Link Row */
 .ctaRow {
-  margin-top: 2rem;
+  margin-top: 0.65rem;
   text-align: center;
   position: relative;
   z-index: 10;
+  flex-shrink: 0;
 }
 
 .exploreLink {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 2.25rem;
+  gap: 0.4rem;
+  padding: 0.55rem 1.6rem;
   background: #DC143C;
   color: #FFFFFF;
   border-radius: 9999px;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.78rem;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4);
   transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
 .exploreLink:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(220, 20, 60, 0.6);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.6);
   background: #B01030;
 }
 
 /* Mobile responsive fallback */
 @media (max-width: 767px) {
+  .section {
+    height: auto;
+    min-height: 100vh;
+    max-height: none;
+  }
   .slides {
-    width: 82vw;
-    height: 110vw;
+    width: 80vw;
+    height: 105vw;
   }
   .slideContent {
     transform: perspective(1000px) translateX(calc(105% * var(--offset)))
       rotateY(calc(-20deg * var(--dir)));
-    padding: 1.5rem 1.25rem;
+    padding: 1.25rem 1rem;
   }
   .btnPrev {
-    left: -1.25rem;
-    width: 3rem;
-    height: 3rem;
-    font-size: 2.2rem;
+    left: -1rem;
+    width: 2.8rem;
+    height: 2.8rem;
+    font-size: 2rem;
   }
   .btnNext {
-    right: -1.25rem;
-    width: 3rem;
-    height: 3rem;
-    font-size: 2.2rem;
+    right: -1rem;
+    width: 2.8rem;
+    height: 2.8rem;
+    font-size: 2rem;
   }
 }
