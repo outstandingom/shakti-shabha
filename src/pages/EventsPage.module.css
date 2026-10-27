@@ -255,16 +255,17 @@
   box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
 }
 
-/* Aaryaveera Camp Series Highlight */
+/* Aaryaveera Camp Series Highlight (Crimson & Rose Red Signature Palette) */
 .campSeriesBox {
   margin-top: 5rem;
-  background: linear-gradient(145deg, #111113 0%, #1D1812 60%, #0F0F10 100%);
-  border: 1px solid rgba(201, 169, 110, 0.35);
-  border-radius: 18px;
+  background: linear-gradient(145deg, #1C060B 0%, #2E0B14 45%, #4A0E1F 100%);
+  border: 1.5px solid rgba(220, 20, 60, 0.4);
+  border-radius: 20px;
   padding: clamp(2.5rem, 5vw, 4rem);
   color: #FFFFFF;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 16px 45px rgba(220, 20, 60, 0.16), 0 0 25px rgba(220, 20, 60, 0.08);
 }
 
 .campSeriesBox::before {
@@ -273,13 +274,87 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #9A7340, #E8C98A, #9A7340);
+  height: 4px;
+  background: linear-gradient(90deg, #DC143C 0%, #FF6B8B 50%, #DC143C 100%);
+}
+
+.campEyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #FFB3BA;
+  background: rgba(220, 20, 60, 0.2);
+  border: 1px solid rgba(220, 20, 60, 0.4);
+  padding: 0.3rem 0.9rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.campTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  color: #FFFFFF;
+  margin: 0.25rem 0 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.campDesc {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 1.75rem;
+}
+
+.campCrimsonBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.85rem;
+  background: #DC143C;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.45);
+  transition: all 0.25s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.campCrimsonBtn:hover {
+  background: #B01030;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(220, 20, 60, 0.6);
+}
+
+.campOutlineBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.85rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.campOutlineBtn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #FFFFFF;
+  transform: translateY(-2px);
 }
 
 .campGrid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.15fr 1fr;
   gap: 3rem;
   align-items: center;
 }
@@ -287,32 +362,67 @@
 .campFeatures {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .featureCard {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(201, 169, 110, 0.2);
-  border-radius: 12px;
-  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(220, 20, 60, 0.22);
+  border-radius: 14px;
+  padding: 1.4rem;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.featureCard:hover {
+  background: rgba(220, 20, 60, 0.14);
+  border-color: rgba(220, 20, 60, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.25);
 }
 
 .featureIcon {
-  font-size: 1.75rem;
-  margin-bottom: 0.75rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(220, 20, 60, 0.2);
+  border: 1px solid rgba(220, 20, 60, 0.4);
+  color: #FF6B8B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.googleIcon {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
 }
 
 .featureTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1rem;
-  color: #E8C98A;
+  font-size: 1.05rem;
+  color: #FFFFFF;
   margin-bottom: 0.35rem;
+  font-weight: 700;
 }
 
 .featureText {
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.55;
 }
 
 /* Steps section */

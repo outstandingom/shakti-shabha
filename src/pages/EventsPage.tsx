@@ -290,48 +290,63 @@ export default function EventsPage() {
           </div>
         )}
 
-        {/* Aaryaveera Camp Series Feature Section */}
+        {/* Aaryaveera Camp Series Feature Section (Crimson & Rose Red Signature Card) */}
         <div className={ep.campSeriesBox}>
           <div className={ep.campGrid}>
             <div>
-              <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37', fontWeight: 700 }}>
+              <span className={ep.campEyebrow}>
                 Signature Format · Institutional & Rural
               </span>
-              <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', color: '#FFFFFF', margin: '0.5rem 0 1rem' }}>
+              <h2 className={ep.campTitle}>
                 The Aaryaveera Camp Series
               </h2>
-              <p style={{ color: 'rgba(255, 255, 255, 0.78)', lineHeight: 1.7, fontSize: '0.95rem', marginBottom: '1.75rem' }}>
+              <p className={ep.campDesc}>
                 We partner with high schools, universities, and rural gram panchayats to deliver intensive residential self-defense and character camps.
                 Our syllabus blends martial discipline, psychological resilience, legal literacy, and physical readiness.
               </p>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <a href="#inquire" className={s.goldBtn}>
+                <a href="#inquire" className={ep.campCrimsonBtn}>
                   Request Camp for Your Institution →
                 </a>
-                <Link to="/courses" className={s.goldOutlineBtn}>
+                <Link to="/courses" className={ep.campOutlineBtn}>
                   Explore Online LMS
                 </Link>
               </div>
             </div>
 
             <div className={ep.campFeatures}>
+              {/* 3-Day Essentials with Google Shield Icon */}
               <div className={ep.featureCard}>
-                <div className={ep.featureIcon}>🛡</div>
+                <div className={ep.featureIcon}>
+                  <span className={ep.googleIcon}>shield</span>
+                </div>
                 <h4 className={ep.featureTitle}>3-Day Essentials</h4>
                 <p className={ep.featureText}>Basic escape techniques, weapon disarming, voice projection, and situational hazard assessment.</p>
               </div>
+
+              {/* 5-Day Warrior with Google Swords Icon */}
               <div className={ep.featureCard}>
-                <div className={ep.featureIcon}>⚔</div>
+                <div className={ep.featureIcon}>
+                  <span className={ep.googleIcon}>swords</span>
+                </div>
                 <h4 className={ep.featureTitle}>5-Day Warrior</h4>
                 <p className={ep.featureText}>Full Lathi-Kaushal combat training, stamina building, nocturnal awareness, and legal self-defense rights.</p>
               </div>
+
+              {/* 7-Day Leadership with Google Fire Icon */}
               <div className={ep.featureCard}>
-                <div className={ep.featureIcon}>🔥</div>
+                <div className={ep.featureIcon}>
+                  <span className={ep.googleIcon}>local_fire_department</span>
+                </div>
                 <h4 className={ep.featureTitle}>7-Day Leadership</h4>
                 <p className={ep.featureText}>Residential train-the-trainer camp, psychological trauma release, emergency first-aid, and certification.</p>
               </div>
+
+              {/* Encrypted QR Passes with Google QR Code Icon */}
               <div className={ep.featureCard}>
-                <div className={ep.featureIcon}>📱</div>
+                <div className={ep.featureIcon}>
+                  <span className={ep.googleIcon}>qr_code_scanner</span>
+                </div>
                 <h4 className={ep.featureTitle}>Encrypted QR Passes</h4>
                 <p className={ep.featureText}>Automated gate scanning, student identity safety, verified guardian pickup, and digital attendance logs.</p>
               </div>
