@@ -52,16 +52,13 @@ export default function SocialWorkHero() {
       {/* ── Left Part ── */}
       <div className={s.leftPart}>
         <div className={s.topNav}>
-          <Link to="/" className={s.backLink}>
-            ← Back to Home
-          </Link>
           <span className={s.badge}>
             NGO Archive · 12 Years on the Ground
           </span>
         </div>
 
-        <h1>
-          <span className={s.dFlex}>WE WORK FOR</span>
+        <h1 className={s.heroTitle}>
+          <span className={s.headingPrefix}>WE WORK FOR</span>
           <span className={s.text}>
             {displayedText}
             <span className={s.cursor}>|</span>

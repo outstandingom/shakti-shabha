@@ -66,80 +66,69 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
   flex-wrap: wrap;
-}
-
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  transition: all 0.25s ease;
-  letter-spacing: 0.03em;
-  padding: 0.4rem 0.9rem;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-.backLink:hover {
-  color: #FFFFFF;
-  background: rgba(220, 20, 60, 0.25);
-  border-color: #DC143C;
-  transform: translateX(-3px);
 }
 
 .badge {
   font-family: 'Poppins', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--yellow, #f1e728);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+  padding: 0.35rem 0.85rem;
+  background: rgba(241, 231, 40, 0.08);
+  border: 1px solid rgba(241, 231, 40, 0.25);
+  border-radius: 9999px;
+  display: inline-block;
 }
 
 /* ── Left Part ── */
 .leftPart {
-  padding: 20px 0 0;
-  max-width: 650px;
+  padding: 10px 0 0;
+  max-width: 680px;
   z-index: 5;
 }
 
+.heroTitle,
 .leftPart h1 {
   margin: 0;
   color: #FFFFFF;
-  font-family: "Extenda Trial 30 Deca", "Outfit", "Cinzel", "Poppins", sans-serif;
-  font-size: clamp(48px, 9.5vw, 120px);
-  line-height: 0.88;
-  font-weight: 900;
-  font-style: normal;
+  font-family: 'Poppins', 'Cinzel', 'Outfit', sans-serif;
+  font-size: clamp(38px, 6vw, 82px);
+  line-height: 1.1;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: -0.02em;
+  letter-spacing: 0.05em;
+  word-spacing: 0.35em;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.95);
 }
 
-.leftPart h1 .dFlex {
-  display: flex;
-  align-items: center;
+.headingPrefix {
+  display: block;
   color: #FFFFFF;
+  letter-spacing: 0.06em;
+  word-spacing: 0.4em;
+  margin-bottom: 0.45rem;
 }
 
-.leftPart h1 .text {
+.leftPart h1 .text,
+.text {
   color: var(--yellow, #f1e728);
   display: block;
-  min-height: 1.1em;
-  text-shadow: 0 0 35px rgba(241, 231, 40, 0.35);
+  min-height: 1.15em;
+  letter-spacing: 0.07em;
+  word-spacing: 0.35em;
+  text-shadow: 0 0 35px rgba(241, 231, 40, 0.55), 0 4px 20px rgba(0, 0, 0, 0.95);
 }
 
 .cursor {
   display: inline-block;
   color: #DC143C;
-  margin-left: 2px;
+  margin-left: 6px;
   animation: blink 1s infinite;
+  font-weight: 400;
 }
 
 @keyframes blink {
