@@ -8,60 +8,60 @@ import p from './AaryaveeraPage.module.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const PLATFORM_CARDS = [
-  { label: 'Homepage Hero', desc: 'Warrior flame motif, full-bleed dark banner with gold lettering across the site homepage.' },
-  { label: 'Course Branding', desc: 'Aaryaveera certificate design, enrollment kit, and in-course visual identity.' },
-  { label: 'Event Series', desc: 'Camp posters, digital banners, invitations, and event backdrop designs.' },
-  { label: 'Merchandise', desc: 'T-shirts, tote bags, stickers, notebooks bearing the Warrior Emblem and Aaryaveera script.' },
-  { label: 'Aaryaveera Dialogues', desc: 'Podcast cover art, episode thumbnails, audiogram templates, and social cards.' },
-  { label: 'Warrior Certification', desc: 'Physical certificate, digital badge, and LinkedIn-shareable credential card.' },
+  { label: 'Mission Mardini Camps', desc: '7–10 days intensive residential self-defense and martial readiness camps organized across institutional and rural corridors.' },
+  { label: 'Warrior Certification', desc: 'Physical and cognitive warrior certificate verifying empty-hand lethality, lathi-kaushal, and legal self-defense literacy.' },
+  { label: 'Course LMS Curriculum', desc: 'Asymmetric combat video modules, situational radar drills, and trauma-de-escalation coursework.' },
+  { label: 'Event Series & Seminars', desc: 'Keynotes, institutional assemblies, and student awakening sessions reaching 25,000+ youth.' },
+  { label: 'Aaryaveera Dialogues', desc: 'Civilizational podcast exploring Kshatra-Dharma, non-verbal psychology, and uncorrupted Vedic history.' },
+  { label: 'Warrior Merchandise', desc: 'Custom bamboo lathi staffs, combat training gear, and civilizational identity apparel.' },
 ]
 
 const PILLARS = [
   {
     name: 'MARDINI',
     dev: 'मर्दिनी',
-    tag: 'Revolution',
+    tag: 'Revolution & Combat',
     accent: '#DC143C',
     accentBg: 'rgba(220,20,60,0.08)',
     icon: '⚔',
-    desc: 'The fire that ignites change. Mardini leads Shakti Sabha\'s on-ground revolution — lathi-kaushal, sword training, self-defense workshops, and rural camps across Maharashtra. More than physical training, Mardini forges fearless women who stand tall in their villages and cities alike.',
-    items: ['50,000+ women trained across 400+ schools', 'Traditional Bharatiya martial arts & modern defense', 'Quarterly Shakti Camps in rural districts'],
+    desc: 'The fire that ignites tactical sovereignty. Spearheaded by Harshita Mankar (Black Belt in Karate), Mission Mardini builds physical and cognitive warriors through asymmetric street combat, traditional Lathi-Kaushal, and blade defense.',
+    items: ['2,000+ young women weaponized (armed & unarmed)', '7–10 days residential warrior camps with partner groups', 'Traditional Lathi-Kaushal, Sword parries & CQC mechanics'],
   },
   {
     name: 'SHAKTI BHAVA',
     dev: 'शक्ति भव',
-    tag: 'Healing Space',
+    tag: 'Psychological Sovereignty',
     accent: '#3D5A45',
     accentBg: 'rgba(61,90,69,0.08)',
     icon: '🌸',
-    desc: 'The lotus of peace. Shakti Bhava is the safe, sacred space for survivors, seekers, and those healing in silence. Confidential counseling, trauma recovery circles, and peer support networks that break taboo and restore dignity — one conversation at a time.',
-    items: ['Confidential psychological support sessions', 'Survivor listening circles & community healing', 'Breaking silence on trafficking, PTSD & abuse'],
+    desc: 'The shield of psychological fortitude. Somatic PTSD stabilization, non-verbal behavioral profiling, and confidential peer intervention. Directly executing frontline rescues of minors and neutralizing predatory grooming.',
+    items: ['Tactical rescue & safe reintegration of 13 minors', '250+ grooming & coercive exploitation cases handled', 'Non-verbal profiling & somatic PTSD stabilization'],
   },
   {
     name: 'SHAKTI VARTA',
     dev: 'शक्ति वार्ता',
-    tag: 'Intellectual Discourse',
+    tag: 'Intellectual Armor',
     accent: '#C9A96E',
     accentBg: 'rgba(201,169,110,0.08)',
     icon: '📚',
-    desc: 'The intellectual engine. Shakti Varta powers discourse on true masculinity, Paurush, Dharma, and the civilizational role of women. White papers, research publications, the Aaryaveera Dialogues podcast, and academic seminars — backing revolution with verified knowledge.',
-    items: ['Aaryaveera Dialogues — podcast on Dharma & identity', 'Policy white papers on women\'s security', 'Academic alliances & historical narrative research'],
+    desc: 'The intellectual vanguard. Grounded in Vedic epistemology, archival forensics, and deconstructing western reductionist narratives. Equipping youth with the philosophical armor of Kshatra-Dharma.',
+    items: ['500+ keynotes & seminars reaching 25,000+ students', 'Shakti Varta Fellowship for classical texts & Vedic sciences', 'Independent archival research on forgotten Indian women warriors'],
   },
 ]
 
 const BRAND_ASSETS = [
   { item: 'Primary Logo', spec: 'Flame + lotus composite in SVG & PNG — full color, monochrome, reversed' },
   { item: 'Warrior Emblem', spec: 'Icon-only mark for certification badges, merchandise, and favicon' },
-  { item: 'Brand Story Document', spec: '12-page PDF covering origin, values, visual language, and tone of voice' },
+  { item: 'Brand Story Document', spec: 'Comprehensive dossier covering origin, values, visual language, and tone of voice' },
   { item: 'Animated Intro', spec: '5-second MP4/WebM flame reveal for video openers and social reels' },
-  { item: 'Merchandise Templates', spec: 'Print-ready AI files for garments, tote bags, and print collateral' },
-  { item: 'Social Kit', spec: 'Instagram, YouTube, X, and LinkedIn templates in Figma format' },
+  { item: 'Merchandise Templates', spec: 'Print-ready files for training garments, tote bags, and bamboo lathi staffs' },
+  { item: 'Social Kit', spec: 'Civilizational discourse graphics, reels templates, and white paper covers' },
 ]
 
 const FEATURES = [
-  { icon: '🛡', title: 'Self-Defense Training', text: 'Physical courage as the first act of liberation. Lathi-kaushal, traditional martial arts, and situational awareness built into every camp.' },
-  { icon: '🔥', title: 'Character & Leadership', text: 'Noble, fearless, dharmic. Aaryaveera courses build the inner architecture of leaders — grounded in culture and fired by purpose.' },
-  { icon: '🎙', title: 'Dialogue & Research', text: 'Aaryaveera Dialogues — honest, rigorous conversations on Paurush, Dharma, and what it means to be truly strong in contemporary India.' },
+  { icon: '🛡', title: 'The Dual-Shield Doctrine', text: 'Mental resilience before physical strike. Liberating the mind from fear and replacing the freeze-response with tactical awareness.' },
+  { icon: '🔥', title: 'Character & Kshatra-Dharma', text: 'Sovereign, fearless, dharmic. Training young girls so their hands, elbows, and cognitive agility function as an organic weapon system.' },
+  { icon: '🎙', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, geopolitical subversion, and what it means to be sovereign in contemporary India.' },
 ]
 
 export default function AaryaveeraPage() {
@@ -109,12 +109,12 @@ export default function AaryaveeraPage() {
       <div className={p.hero} ref={heroRef}>
         <div className={p.heroInner}>
           <Link to="/" className={s.back}>← Back to Home</Link>
-          <span className={p.eyebrow}>Signature Initiative · Powered by PrintingTask</span>
+          <span className={p.eyebrow}>Signature Initiative · Mission Mardini</span>
           <div className={p.heroTitle}>
             <span className={p.heroEn}>AARYAVEERA</span>
             <span className={p.heroDev}>आर्यवीरा</span>
           </div>
-          <p className={p.heroSub}>The Warrior Spirit</p>
+          <p className={p.heroSub}>The Warrior Spirit & Tactical Sovereignty</p>
           <p className={p.heroMotto}>"Shakti Se Shanti — From Strength, Peace"</p>
 
           {/* Animated Flame SVG */}
@@ -147,16 +147,16 @@ export default function AaryaveeraPage() {
       <section className={p.whatSection} ref={whatRef}>
         <div className={p.whatInner}>
           <div className={p.whatLeft} id="what-left">
-            <span className={p.sectionEyebrow}>The Concept</span>
+            <span className={p.sectionEyebrow}>The Doctrine</span>
             <h2 className={p.sectionH2}>What is Aaryaveera?</h2>
             <p className={p.bodyText}>
-              Aaryaveera is more than a brand — it is a manifestation. Born from the union of the <strong>flame of revolution</strong> (Mardini) and the <strong>lotus of peace</strong> (Shakti Bhava), Aaryaveera is Shakti Sabha's flagship identity for the warrior woman and the noble man.
+              Aaryaveera is more than a brand — it is a civilizational manifestation. Engineered by <strong>Harshita Mankar</strong> (Founder & Director, Shakti Sabha), Aaryaveera unites the <strong>flame of tactical revolution</strong> (Mission Mardini) with the <strong>lotus of psychological sovereignty</strong> (Shakti Bhava).
             </p>
             <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              The name itself carries civilizational weight: <em>Aarya</em> — noble, cultured, dharmic; <em>Veera</em> — brave, courageous, strong. Together, they describe the highest aspiration: a human being who is both fierce and gentle, both warrior and peacemaker.
+              The name itself carries civilizational weight: <em>Aarya</em> — noble, cultured, dharmic; <em>Veera</em> — brave, courageous, tactically formidable. Together, they describe the highest aspiration: a sovereign sentinel who is both intellectually fortified and physically invincible.
             </p>
             <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              Powered by <strong>PrintingTask</strong>, the Aaryaveera brand manifests across every touchpoint — from physical merchandise to digital certification, from podcast cover art to camp banners — creating a coherent, powerful identity that speaks to India's soul.
+              From 7–10 days intensive residential camps across high schools and rural settlements to institutional white papers and digital fellowships, Aaryaveera creates a disciplined, coherent identity that rejects victimhood and restores Kshatra-Dharma.
             </p>
           </div>
           <div className={p.whatRight} id="what-right">
@@ -176,9 +176,9 @@ export default function AaryaveeraPage() {
       {/* ── PLATFORM INTEGRATION ────────────────────── */}
       <section className={p.platformSection}>
         <div className={p.platformInner}>
-          <span className={p.sectionEyebrow} style={{ color: '#C9A96E' }}>Brand Presence</span>
+          <span className={p.sectionEyebrow} style={{ color: '#C9A96E' }}>Brand & Operational Surfaces</span>
           <h2 className={p.sectionH2Dark}>Platform Integration</h2>
-          <p className={p.platformDesc}>The Aaryaveera identity lives across every digital and physical surface of Shakti Sabha's ecosystem.</p>
+          <p className={p.platformDesc}>The Aaryaveera identity lives across every operational surface of Shakti Sabha's ecosystem.</p>
         </div>
         <div className={p.platformScroll} ref={platformRef}>
           {PLATFORM_CARDS.map((c, i) => (
@@ -224,8 +224,8 @@ export default function AaryaveeraPage() {
       <section className={p.assetsSection} ref={assetsRef}>
         <div className={p.assetsInner}>
           <span className={p.sectionEyebrow} style={{ color: '#C9A96E' }}>Deliverables</span>
-          <h2 className={p.sectionH2Dark}>Brand Assets Required</h2>
-          <p className={p.assetsDesc}>Every touchpoint of the Aaryaveera experience requires these brand deliverables — crafted, consistent, and campaign-ready.</p>
+          <h2 className={p.sectionH2Dark}>Brand Assets & Deliverables</h2>
+          <p className={p.assetsDesc}>Every touchpoint of the Aaryaveera experience is rigorously crafted, consistent, and mission-ready.</p>
           <div className={p.assetsList}>
             {BRAND_ASSETS.map((a, i) => (
               <div key={i} className={p.assetRow}>
@@ -245,11 +245,11 @@ export default function AaryaveeraPage() {
         <div className={p.ctaInner}>
           <div>
             <h3 className={p.ctaTitle}>Begin the Warrior Journey</h3>
-            <p className={p.ctaSub}>Join thousands who have claimed their strength through Aaryaveera.</p>
+            <p className={p.ctaSub}>Join thousands of young women who have claimed their physical and cognitive sovereignty.</p>
           </div>
           <div className={p.ctaBtns}>
             <Link to="/courses" className={s.goldBtn}>Enroll in Aaryaveera Course</Link>
-            <Link to="/events" className={s.goldOutlineBtn}>View Events</Link>
+            <Link to="/events" className={s.goldOutlineBtn}>Attend Mission Mardini Camp</Link>
           </div>
         </div>
       </div>

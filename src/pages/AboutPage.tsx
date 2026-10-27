@@ -7,98 +7,163 @@ import p from './AboutPage.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const PILLARS = [
+const FOUNDER_METRICS = [
   {
-    icon: '⚔',
-    name: 'MARDINI',
-    dev: 'मर्दिनी',
-    sub: 'Revolution & Self-Defense',
-    accent: '#DC143C',
-    accentBg: 'rgba(220,20,60,0.06)',
-    border: 'rgba(220,20,60,0.22)',
-    desc: 'The fire of Shakti Sabha\'s revolution. Mardini conducts on-ground self-defense camps, lathi-kaushal workshops, and sword training across rural Maharashtra and beyond. Over 12 years, the revolution has reached 400+ schools, 50,000+ women, and dozens of village communities — transforming vulnerability into sovereignty.',
-    reach: ['400+ schools across Maharashtra', '50,000+ women trained', 'Quarterly warrior camps in 20+ districts'],
+    icon: '🥋',
+    title: 'Black Belt in Karate',
+    desc: 'Tactical Combat & Empty-Hand Mastery'
+  },
+  {
+    icon: '⚔️',
+    title: '2,000+ Girls Weaponized',
+    desc: 'Armed & Unarmed Street Defense Readiness'
+  },
+  {
+    icon: '🎙️',
+    title: '500+ Seminars Delivered',
+    desc: 'Reached 25,000+ students for youth awakening sessions'
+  },
+  {
+    icon: '🏕️',
+    title: '7–10 Days Mission Mardini Camps',
+    desc: 'Organizing & collaborating with partner groups for camps'
+  },
+  {
+    icon: '🌾',
+    title: 'Tribal Area Outreach',
+    desc: 'On-ground awareness and frontline support for young girls'
+  },
+  {
+    icon: '🧠',
+    title: 'Dual-Tier Curriculum',
+    desc: 'Cognitive De-escalation & High-Impact CQC'
+  }
+]
+
+const TACTICAL_INTERVENTIONS = [
+  {
+    icon: '🚨',
+    title: 'Anti-Trafficking Extractions',
+    desc: 'Directly directed and executed the tactical rescue and safe reintegration of 13 minors from organized human-trafficking networks across high-risk jurisdictional corridors.'
+  },
+  {
+    icon: '🛡️',
+    title: 'Grooming & Coercive Exploitation Mitigation',
+    desc: 'Handled 250+ documented crisis cases, executing 50+ high-stakes field rescues involving predatory exploitation and systematic psychological coercion.'
+  },
+  {
+    icon: '🧬',
+    title: 'Psychological Reclamation & Specialized Trauma Profiling',
+    desc: 'Utilizing non-verbal behavioral profiling, micro-expression analysis, and somatic PTSD stabilization techniques, pioneered specialized post-extraction frameworks to de-escalate trauma and neutralize psychological conditioning in young survivors.'
+  }
+]
+
+const CURRICULUM_TIERS = [
+  {
+    tier: 'Tier 1 · Mental Shield',
+    title: 'Psychological Inoculation & Situational Radar',
+    items: [
+      {
+        head: 'Pre-Attack Threat Recognition',
+        body: 'Training young girls to scan baseline human behavior, decode pre-violence cues (grooming, stalking, spatial encroachment), and react before a physical trap closes.'
+      },
+      {
+        head: 'Overcoming Freeze Response',
+        body: 'Using stress-inoculation drills to replace the biological "freeze" response with calculated tactical awareness, ensuring that sudden danger triggers clarity rather than panic.'
+      }
+    ]
+  },
+  {
+    tier: 'Tier 2 · Empty Hand',
+    title: 'Unarmed Lethality (Empty-Hand Combat)',
+    items: [
+      {
+        head: 'Body Mechanics & Leverage',
+        body: 'Rooted in her Karate discipline, girls are trained to use their natural body structure to overpower larger, heavier adversaries through targeted strikes to critical vulnerabilities (eyes, throat, groin, solar plexus).'
+      },
+      {
+        head: 'Improvised Defense',
+        body: 'Conditioning young women so that even in the complete absence of a tool or weapon, their hands, elbows, knees, and cognitive agility function as an organic weapon system.'
+      }
+    ]
+  },
+  {
+    tier: 'Tier 3 · Tactical Arms',
+    title: 'Weaponized Defense (Traditional Tactical Arms)',
+    items: [
+      {
+        head: 'Lathi-Kaushal (Tactical Stick Combat)',
+        body: 'Reviving the ancient Indian martial discipline of the staff/lathi, adapting it into an effective perimeter-defense and crowd-control weapon for young girls in rural and urban corridors.'
+      },
+      {
+        head: 'Blade Warfare & Close-Quarter Combat (CQC)',
+        body: 'Handling and neutralizing edge-weapon threats, teaching grip retention, distance management, and defensive redirection under high-adrenaline contact scenarios.'
+      }
+    ]
+  }
+]
+
+const PILLARS_IN_ACTION = [
+  {
+    icon: '⚔️',
+    name: 'Mission Mardini',
+    sub: 'Physical Sovereignty & Tactical Defense',
+    color: '#DC143C',
+    desc: 'Rejecting passive self-defense models, Harshita engineered Mission Mardini — a battle-tested combat framework blending traditional Indian martial arts with modern defensive mechanics.',
+    bullets: [
+      'Trained 2,000+ young women across schools, colleges, and rural settlements in high-impact survival tactics.',
+      'Integrated tactical stick-combat (Lathi-Kaushal), traditional blade warfare, and modern Close-Quarter Combat (CQC) with situational peripheral awareness, training participants to neutralize physical threats within split-second windows.'
+    ]
   },
   {
     icon: '🌸',
-    name: 'SHAKTI BHAVA',
-    dev: 'शक्ति भव',
-    sub: 'Healing Space & Survivor Support',
-    accent: '#3D5A45',
-    accentBg: 'rgba(61,90,69,0.06)',
-    border: 'rgba(61,90,69,0.22)',
-    desc: 'The sacred space of healing. Shakti Bhava holds the pain of survivors without flinching — offering confidential counseling, trauma recovery, and peer support circles. It breaks silence on trafficking, PTSD, puberty, and depression, creating a community where pain becomes power and secrecy becomes solidarity.',
-    reach: ['Confidential survivor counseling sessions', 'Anonymous case study documentation', 'Holistic trauma recovery programs'],
+    name: 'Shakti Bhava',
+    sub: 'Mass Awakening & Narrative Deconstruction',
+    color: '#3D5A45',
+    desc: 'Through Shakti Bhava, Harshita conducts large-scale intellectual and cognitive interventions to immunize youth against civilizational subversion and cognitive conditioning.',
+    bullets: [
+      'Convened 500+ keynotes, symposiums, and institutional seminars across schools, universities, residential hostels, and cultural forums.',
+      'Addresses root causes of systemic alienation by dismantling western reductionist narratives and hyper-consumerist paradigms.',
+      'Systematically reconstructs civilizational identity by anchoring youth in advanced Indian sciences, historical epistemology, and awakened human consciousness.'
+    ]
   },
   {
     icon: '📚',
-    name: 'SHAKTI VARTA',
-    dev: 'शक्ति वार्ता',
-    sub: 'Intellectual Discourse & Research',
-    accent: '#C9A96E',
-    accentBg: 'rgba(201,169,110,0.06)',
-    border: 'rgba(201,169,110,0.3)',
-    desc: 'The intellectual backbone of the movement. Shakti Varta produces white papers, hosts the Aaryaveera Dialogues podcast, and convenes seminars examining Dharma, Paurush, and the civilizational role of women. Academic alliances and verified historical research back every claim with evidence and depth.',
-    reach: ['Aaryaveera Dialogues podcast series', 'Policy white papers on women\'s security', 'Historical narratives of women warriors'],
-  },
+    name: 'Shakti Varta & Deep Research',
+    sub: 'Vedic Epistemology & Forgotten Warriors',
+    color: '#C9A96E',
+    desc: 'Anchoring social transformation in rigorous textual analysis, Harshita leads continuous research into classical literature and forgotten historical archives.',
+    bullets: [
+      'Shakti Varta Digital Fellowship: Curated an ongoing intellectual forum connecting 200+ young women to foundational texts — including the Bhagavad Gita, Maharshi Dayananda’s Satyarth Prakash, and original Vedic philosophies.',
+      'Historical Reclamation Project: Spearheading independent archival research documenting forgotten Indian women warriors, reconstructing uncensored historical narratives to counter distortion and inspire modern youth.',
+      'Digital Outreach: Synthesizes historical forensics, non-verbal psychology, and geopolitical analysis across short-form digital series, delivering civilizational discourse to thousands of youth globally.'
+    ]
+  }
 ]
 
 const TIMELINE = [
-  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born in Pune, Maharashtra — with a vision to unite the strength of women across India.' },
-  { year: '2014', title: 'First Warrior Camp', desc: 'The inaugural self-defense camp reached 200 women across rural Pune district.' },
-  { year: '2016', title: '100 Schools Reached', desc: 'Mardini expanded to 100 schools — bringing self-defense and character education to young girls.' },
-  { year: '2018', title: 'Shakti Bhava Launched', desc: 'Survivor support and counseling programs formalized — breaking the silence on gender-based trauma.' },
-  { year: '2022', title: 'Aaryaveera Launched', desc: 'The flagship warrior brand — Aaryaveera — born as a unified identity for the whole movement.' },
-  { year: '2024', title: '400+ Schools & National Stage', desc: 'From village camps to national recognition — Shakti Sabha stands at the heart of India\'s women\'s movement.' },
+  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born with a vision to revive the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.' },
+  { year: '2014', title: 'First Mission Mardini Camp', desc: 'Inaugural residential camp blending Karate empty-hand combat with Lathi-Kaushal staff defense.' },
+  { year: '2016', title: '100+ Schools Reached', desc: 'Expanded across rural and urban corridors, training adolescent girls in situational radar and freeze-response elimination.' },
+  { year: '2018', title: 'Shakti Bhava & Trauma Profiling', desc: 'Somatic PTSD stabilization and non-verbal behavioral profiling frameworks formalized for crisis rescue.' },
+  { year: '2022', title: 'Aaryaveera Leadership Series', desc: 'Flagship residential leadership and train-the-trainer camp established for pan-India student sentinels.' },
+  { year: '2024', title: '25,000+ Students Awakened', desc: 'Over 500 seminars, 2,000+ weaponized young warriors, and active tribal outreach operations pan-India.' },
 ]
 
 const VALUES = [
-  { icon: '🪷', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the birthright of every daughter of this land.' },
-  { icon: '🔥', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and spiritual courage — the trinity that separates the awakened from the fearful.' },
-  { icon: '🌿', name: 'Truth', dev: 'सत्य', desc: 'Shakti Sabha speaks plainly — about trauma, about society, about what needs to change.' },
-  { icon: '⚖', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in civilizational wisdom, not ideology. Justice through duty, not anger.' },
-]
-
-const TESTIMONIALS = [
-  {
-    quote: '"Pehli baar kisi platform ne mujhe sirf ek problem nahi, ek warrior feel karaaya. Gargi ki story padhke laga — main bhi kuch soch sakti hoon."',
-    name: 'Priya S.',
-    location: 'Mumbai, Maharashtra',
-    tag: 'Community Member'
-  },
-  {
-    quote: '"Depression article ne woh baat boli jo main 2 saal se kisi ko nahi bol paayi thi. Laga kisi ne actually samjha aur mujhe ek safe space diya."',
-    name: 'Ananya R.',
-    location: 'Delhi',
-    tag: 'Counseling & Mental Health'
-  },
-  {
-    quote: '"Community mein aane ke baad realize hua main akeli nahi hoon. Itni strong women hain — aur sab ek doosre ki unconditionally help karti hain."',
-    name: 'Kavitha M.',
-    location: 'Bangalore, Karnataka',
-    tag: 'Sahyog Volunteer'
-  },
+  { icon: '🪷', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the sovereign birthright of every daughter of this civilization.' },
+  { icon: '🔥', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and cognitive courage — the trinity that transforms vulnerable targets into tactically invincible sentinels.' },
+  { icon: '🌿', name: 'Truth', dev: 'सत्य', desc: 'Uncompromising clarity — confronting predation, systemic coercion, and cultural conditioning with objective forensics.' },
+  { icon: '⚖', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in timeless Vedic epistemology and Kshatra-Dharma. Duty, justice, and protection without ideological subversion.' },
 ]
 
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null)
-  const pillarsRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      if (pillarsRef.current) {
-        gsap.from(pillarsRef.current.querySelectorAll(`.${p.pillarCard}`), {
-          scrollTrigger: { trigger: pillarsRef.current, start: 'top 80%' },
-          opacity: 0,
-          y: 40,
-          stagger: 0.15,
-          duration: 0.7,
-          ease: 'power2.out',
-        })
-      }
-
       if (timelineRef.current) {
         gsap.from(timelineRef.current.querySelectorAll(`.${p.timelineItem}`), {
           scrollTrigger: { trigger: timelineRef.current, start: 'top 80%' },
@@ -131,21 +196,172 @@ export default function AboutPage() {
       <div className={p.hero}>
         <div className={p.heroInner}>
           <Link to="/" className={p.backLink}>← Back to Home</Link>
-          <span className={p.heroEyebrow}>Union of Peace & Revolution</span>
+          <span className={p.eyebrow}>Civilizational Leadership & Tactical Sovereignty</span>
           <h1 className={p.heroTitle}>About Shakti Sabha</h1>
-          <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul of the Movement</p>
+          <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul & Strategy of the Movement</p>
           <p className={p.heroDesc}>
-            12 years of on-ground impact — from the villages of Maharashtra to the national stage.
-            Shakti Sabha is where the fearless become free. Ancient roots. Modern strength.
+            Reviving the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
+            From high-risk frontline rescues to residential combat camps, Shakti Sabha forges young women into intellectually fortified and tactically invincible sentinels.
           </p>
         </div>
       </div>
+
+      {/* ── FOUNDER DOSSIER & STRATEGIC BLUEPRINT ──── */}
+      <section className={p.founderSection} id="founder">
+        <div className={p.founderInner}>
+          {/* Main Founder Card */}
+          <div className={p.founderCard}>
+            <div className={p.founderPortraitWrap}>
+              <img
+                src="/harshitama'am.jpg"
+                alt="Harshita Mankar - Founder & Director, Shakti Sabha"
+                className={p.founderImg}
+                onError={(e) => {
+                  // Fallback in case of image load delay
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80'
+                }}
+              />
+              <div className={p.founderBadgePill}>
+                🛡️ Verified Tactical Instructor & Non-Verbal Profiler
+              </div>
+            </div>
+
+            <div className={p.founderInfo}>
+              <span className={p.founderEyebrow}>Founder & Institutional Leadership</span>
+              <h2 className={p.founderName}>Harshita Mankar</h2>
+              <div className={p.founderTitle}>Founder & Director, Shakti Sabha</div>
+              <div className={p.founderSpecialties}>
+                Civilizational Strategist | Tactical Combat Instructor | Non-Verbal Profiler & PTSD Counselor
+              </div>
+
+              {/* Hero Quote Directly Below Name and Title */}
+              <div className={p.heroQuoteBox}>
+                <blockquote className={p.heroQuoteText}>
+                  "We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically invincible sentinels of Indian civilization.”
+                </blockquote>
+              </div>
+
+              {/* Key Metric Badges */}
+              <div className={p.metricBadgesGrid}>
+                {FOUNDER_METRICS.map((m, idx) => (
+                  <div key={idx} className={p.metricBadgeCard}>
+                    <div className={p.metricBadgeHeader}>
+                      <span className={p.metricBadgeIcon}>{m.icon}</span>
+                      <span className={p.metricBadgeTitle}>{m.title}</span>
+                    </div>
+                    <p className={p.metricBadgeDesc}>{m.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* ── The Genesis ───────────────────────────── */}
+          <div className={p.genesisBox}>
+            <h3 className={p.genesisTitle}>
+              <span>🌱</span> The Genesis: From Grassroots Activism to Strategic Sovereignty
+            </h3>
+            <p className={p.genesisText}>
+              Harshita Mankar’s journey began at an early age, working across diverse institutional ecosystems and cultural organizations to awaken youth consciousness. Over years of frontline exposure, she observed a critical limitation in conventional advocacy: modern socio-political frameworks often treat women as passive beneficiaries or perpetual victims, eroding their inherent psychological strength. Evolving through rigorous field realities, Harshita transitioned from collaborative activism to independent, institutional leadership establishing Shakti Sabha to revive the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
+            </p>
+          </div>
+
+          {/* ── Tactical Frontline Interventions & Crisis Rescue ── */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
+              Operational Interventions
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#FFFFFF', margin: '0.35rem 0 1rem' }}>
+              Tactical Frontline Interventions & Crisis Rescue
+            </h3>
+            <p style={{ color: '#94A3B8', fontSize: '0.92rem', maxWidth: '750px', marginBottom: '2rem' }}>
+              Operating in high-risk environments across rural heartlands, urban centers, and institutional corridors, Harshita has led frontline intervention and operational rescue missions where statutory systems faced jurisdictional limitations:
+            </p>
+          </div>
+
+          <div className={p.tacticalGrid}>
+            {TACTICAL_INTERVENTIONS.map((item, idx) => (
+              <div key={idx} className={p.tacticalCard}>
+                <div className={p.tacticalIcon}>{item.icon}</div>
+                <h4 className={p.tacticalTitle}>{item.title}</h4>
+                <p className={p.tacticalDesc}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Mission Mardini: Tactical Combat & Integrated Sovereignty ── */}
+          <div className={p.doctrineBox}>
+            <div className={p.doctrineSubtitle}>The Dual-Shield Doctrine</div>
+            <h3 className={p.doctrineHeading}>
+              Mission Mardini: Tactical Combat & Integrated Sovereignty
+            </h3>
+            <p className={p.doctrinePremise}>
+              "Mental Resilience Before Physical Strike: The Dual-Shield Doctrine"<br />
+              Harshita Mankar holds a Black Belt in Karate, Expert in Lathi-Kaushal, Sword and serves as a tactical combat instructor who rejects conventional, passive self-defense models. Her core training doctrine is built on an inviolable premise: "Before the body can strike, the mind must be liberated from fear. True empowerment is not a slogan it is the simultaneous mastery of cognitive composure and physical capability."
+            </p>
+            <p style={{ color: '#E2E8F0', fontSize: '0.9rem', marginBottom: '2rem' }}>
+              Under Mission Mardini, she trains young women and teenage girls through an asymmetric combat curriculum designed to handle real-world street violence, ambushes, and coercive physical encounters:
+            </p>
+
+            <div className={p.curriculumGrid}>
+              {CURRICULUM_TIERS.map((tier, idx) => (
+                <div key={idx} className={p.curriculumCard}>
+                  <span className={p.curriculumNumber}>{tier.tier}</span>
+                  <h4 className={p.curriculumTitle}>{tier.title}</h4>
+                  <ul className={p.curriculumList}>
+                    {tier.items.map((item, iIdx) => (
+                      <li key={iIdx} className={p.curriculumItem}>
+                        <strong>{item.head}:</strong> {item.body}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── The Three Pillars in Action ──────────── */}
+          <div style={{ marginBottom: '1.5rem' }}>
+            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
+              Strategic Wings
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#FFFFFF', margin: '0.35rem 0 1.5rem' }}>
+              The Three Pillars in Action by Harshita Mankar
+            </h3>
+          </div>
+
+          <div className={p.actionPillarsGrid}>
+            {PILLARS_IN_ACTION.map((pillar, idx) => (
+              <div
+                key={idx}
+                className={p.actionPillarCard}
+                style={{ '--pill-color': pillar.color } as React.CSSProperties}
+              >
+                <div className={p.actionPillarHeader}>
+                  <span className={p.actionPillarIcon}>{pillar.icon}</span>
+                  <span className={p.actionPillarName}>{pillar.name}</span>
+                </div>
+                <div className={p.actionPillarSub}>{pillar.sub}</div>
+                <p className={p.actionPillarDesc}>{pillar.desc}</p>
+                <ul className={p.actionPillarBullets}>
+                  {pillar.bullets.map((b, bIdx) => (
+                    <li key={bIdx} className={p.actionPillarBullet}>
+                      <span>●</span>
+                      <div>{b}</div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ── BOLD MISSION STATEMENT ───────────────────── */}
       <div className={p.quoteSection} style={{ background: '#0F0E11', color: '#FFFFFF', padding: 'clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem)' }}>
         <div className={p.quoteInner} style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '1rem' }}>
-            Mission Statement · Brand Ka Dil
+            Civilizational Conviction · Brand Ka Dil
           </span>
           <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.25rem, 2.3vw, 1.75rem)', lineHeight: 1.6, color: '#E8C98A', fontStyle: 'italic', marginBottom: '1.25rem' }}>
             "Sadiyaan beet gayi, Indian woman ki asli kahani dobara sunne ki. Woh sirf ghar nahi sambhalti thi — woh yuddh jeetti thi, darshan padhati thi, rajya chalati thi. Shakti Sabha usi sach ko wapas laane ke liye hai."
@@ -155,117 +371,6 @@ export default function AboutPage() {
           </p>
         </div>
       </div>
-
-      {/* ── DO WINGS: SHAKTI + SABHA (PLATFORM KA DNA) ── */}
-      <section style={{ padding: 'clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem)', background: '#F8FAFC', borderBottom: '1px solid #E2E8F0' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Platform Ka DNA
-            </span>
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', color: '#111827', marginTop: '0.4rem' }}>
-              Shakti Sabha — Do Wings, Ek Mission
-            </h2>
-            <p style={{ fontSize: '0.92rem', color: '#64748B', maxWidth: '600px', margin: '0.5rem auto 0' }}>
-              Website ke do pillars: Left = SHAKTI (knowledge, history, itihaas). Right = SABHA (support, community, counselling).
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 450px), 1fr))', gap: '2.5rem' }}>
-            {/* Wing 1: Shakti */}
-            <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid rgba(220, 20, 60, 0.25)', padding: '2.5rem', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: '#DC143C' }} />
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⚔️</div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', color: '#DC143C', textTransform: 'uppercase' }}>Wing 1</div>
-              <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.6rem', color: '#111827', margin: '0.25rem 0 0.5rem' }}>
-                SHAKTI
-              </h3>
-              <p style={{ fontStyle: 'italic', color: '#4B5563', fontSize: '0.95rem', marginBottom: '1.5rem', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.75rem' }}>
-                "Jaano apni asli taakat kahan se aayi"
-              </p>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.9rem', color: '#334155' }}>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#DC143C' }}>●</span> Ancient India mein women ka actual role
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#DC143C' }}>●</span> Forgotten heroines — Gargi, Abbakka, Durgavati
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#DC143C' }}>●</span> Modern women empowerment movements
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#DC143C' }}>●</span> Identity — "Indian woman" hona aaj kya matlab rakhta hai
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#DC143C' }}>●</span> Civilizational history — jo textbooks ne nahi bataya
-                </li>
-              </ul>
-            </div>
-
-            {/* Wing 2: Sabha */}
-            <div style={{ background: '#FFFFFF', borderRadius: '18px', border: '1px solid rgba(61, 90, 69, 0.3)', padding: '2.5rem', boxShadow: '0 10px 30px rgba(0,0,0,0.04)', position: 'relative', overflow: 'hidden' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: '#3D5A45' }} />
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🤝</div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.15em', color: '#3D5A45', textTransform: 'uppercase' }}>Wing 2</div>
-              <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.6rem', color: '#111827', margin: '0.25rem 0 0.5rem' }}>
-                SABHA
-              </h3>
-              <p style={{ fontStyle: 'italic', color: '#4B5563', fontSize: '0.95rem', marginBottom: '1.5rem', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.75rem' }}>
-                "Yahan bol sakti ho, yahan suna jaayega"
-              </p>
-              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.9rem', color: '#334155' }}>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#3D5A45' }}>●</span> Mental health + psychological support
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#3D5A45' }}>●</span> Professional counselling resources
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#3D5A45' }}>●</span> Career, relationships, self-worth guidance
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#3D5A45' }}>●</span> Community — judgment-free safe space
-                </li>
-                <li style={{ display: 'flex', gap: '0.65rem' }}>
-                  <span style={{ color: '#3D5A45' }}>●</span> Workshops & Webinars — live interactive sessions
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── THREE PILLARS ───────────────────────────── */}
-      <section className={p.pillarsSection} ref={pillarsRef}>
-        <div className={p.sectionInner}>
-          <span className={p.sectionEyebrow}>Our Foundation</span>
-          <h2 className={p.sectionTitle}>The Three Pillars</h2>
-          <div className={p.pillarsGrid}>
-            {PILLARS.map((pl) => (
-              <div key={pl.name} className={p.pillarCard} style={{ '--pl-accent': pl.accent, '--pl-bg': pl.accentBg, '--pl-border': pl.border } as React.CSSProperties}>
-                <div className={p.pillarAccentBar} style={{ background: pl.accent }} />
-                <div className={p.pillarHead}>
-                  <span className={p.pillarIcon}>{pl.icon}</span>
-                  <span className={p.pillarBadge} style={{ color: pl.accent, background: pl.accentBg, border: `1px solid ${pl.border}` }}>
-                    {pl.sub}
-                  </span>
-                </div>
-                <h3 className={p.pillarName}>{pl.name}</h3>
-                <span className={p.pillarDev}>{pl.dev}</span>
-                <p className={p.pillarDesc}>{pl.desc}</p>
-                <ul className={p.pillarList}>
-                  {pl.reach.map((r, i) => (
-                    <li key={i} className={p.pillarItem}>
-                      <span className={p.pillarDot} style={{ background: pl.accent }} />
-                      {r}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ── TIMELINE ────────────────────────────────── */}
       <section className={p.timelineSection} ref={timelineRef}>
@@ -296,7 +401,7 @@ export default function AboutPage() {
       <section className={p.valuesSection} ref={valuesRef}>
         <div className={p.sectionInner}>
           <span className={p.sectionEyebrow}>What We Stand For</span>
-          <h2 className={p.sectionTitle}>Our Values</h2>
+          <h2 className={p.sectionTitle}>Our Core Values</h2>
           <div className={p.valuesGrid}>
             {VALUES.map((v) => (
               <div key={v.name} className={p.valueCard}>
@@ -310,45 +415,14 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIALS SECTION ─────────────────────── */}
-      <section style={{ padding: 'clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem)', background: '#FFFFFF' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Real Kahaniyaan
-            </span>
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)', color: '#111827', marginTop: '0.4rem' }}>
-              Shakti Sabha ne Badla Kya
-            </h2>
-            <p style={{ fontSize: '0.92rem', color: '#64748B', maxWidth: '550px', margin: '0.5rem auto 0' }}>
-              Real voices of women whose courage, self-worth, and purpose were reignited through our community and counseling.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))', gap: '2rem' }}>
-            {TESTIMONIALS.map((t, idx) => (
-              <div key={idx} style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '14px', padding: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <p style={{ fontStyle: 'italic', color: '#334155', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '1.5rem' }}>
-                  {t.quote}
-                </p>
-                <div style={{ borderTop: '1px solid #E2E8F0', paddingTop: '1rem' }}>
-                  <div style={{ fontWeight: 700, color: '#111827', fontSize: '1rem' }}>{t.name}</div>
-                  <div style={{ fontSize: '0.8rem', color: '#64748B' }}>{t.location} · <span style={{ color: '#DC143C' }}>{t.tag}</span></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── CTA ─────────────────────────────────────── */}
       <div className={p.ctaSection}>
         <div className={p.ctaInner}>
-          <h3 className={p.ctaTitle}>Join the Movement</h3>
-          <p className={p.ctaDesc}>Whether you volunteer, enroll in a camp, or train — your role in this revolution matters.</p>
+          <h3 className={p.ctaTitle}>Join the Revolution</h3>
+          <p className={p.ctaDesc}>Whether you request an institutional camp, seek confidential psychological support, or join our fellowship — your sovereignty starts here.</p>
           <div className={p.ctaBtns}>
             <Link to="/sahyog" className={p.ctaPrimary}>Sabha Join Karein →</Link>
-            <Link to="/events" className={p.ctaOutline}>Attend Next Camp</Link>
+            <Link to="/events" className={p.ctaOutline}>Attend Mission Mardini Camp</Link>
           </div>
         </div>
       </div>
