@@ -3,6 +3,11 @@
    ============================================================ */
 
 .section {
+  position: relative;
+  z-index: 16;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  box-shadow: 0 -25px 80px rgba(0, 0, 0, 0.25);
   padding: clamp(2.5rem, 5vh, 4rem) 0;
   border-top: 1px solid var(--border);
   background: var(--theme-bg, #FFFFFF);

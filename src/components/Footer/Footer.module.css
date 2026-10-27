@@ -3,6 +3,11 @@
    ============================================================ */
 
 .footer {
+  position: relative;
+  z-index: 18;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  box-shadow: 0 -25px 80px rgba(0, 0, 0, 0.45);
   background: #0A0A0B;
   color: rgba(255, 255, 255, 0.75);
   padding: 5rem clamp(1.5rem, 4vw, 3rem) 2rem;

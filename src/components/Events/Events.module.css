@@ -1,4 +1,9 @@
-﻿.section { 
+﻿.section {
+  position: relative;
+  z-index: 14;
+  border-top-left-radius: 28px;
+  border-top-right-radius: 28px;
+  box-shadow: 0 -25px 80px rgba(0, 0, 0, 0.25); 
   padding: 2.5rem 3rem; 
   border-top: 1px solid var(--border); 
   background: var(--theme-bg-alt, #F8F8F9);

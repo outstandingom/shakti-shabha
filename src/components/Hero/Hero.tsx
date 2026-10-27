@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Hero.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 type ImageData = {
   src: string
@@ -479,7 +482,9 @@ function createLeavesEngine(
    ============================================================ */
 
 export default function Hero() {
+  const wrapperRef = useRef<HTMLDivElement>(null)
   const secRef = useRef<HTMLElement>(null)
+  const downRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const imgRefs = useRef<(HTMLImageElement | null)[]>([])
 
@@ -623,8 +628,43 @@ export default function Hero() {
     engineRef.current?.setColorMode(colorMode)
   }, [colorMode])
 
+  
+  /* ---------- @traf shrink & scale-down parallax scroll ---------- */
+  useEffect(() => {
+    const wrap = wrapperRef.current
+    const hero = secRef.current
+    const down = downRef.current
+    if (!wrap || !hero) return
+
+    const st = ScrollTrigger.create({
+      trigger: wrap,
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 0.3,
+      onUpdate: (self) => {
+        const p = self.progress
+        const scale = 1 - p * 0.12
+        const yPercent = p * 8
+        const radius = p * 24
+        const shadowAlpha = p * 0.35
+        hero.style.transform = `translate3d(0, ${yPercent}%, 0) scale(${scale})`
+        hero.style.borderRadius = `${radius}px`
+        hero.style.boxShadow = `0 25px 70px rgba(0, 0, 0, ${shadowAlpha})`
+
+        if (down) {
+          down.style.opacity = `${Math.max(0, 1 - p * 3.5)}`
+        }
+      },
+    })
+
+    return () => {
+      st.kill()
+    }
+  }, [])
+
   const handleExplore = () => {
-    const nextEl = secRef.current?.nextElementSibling
+    const wrap = wrapperRef.current
+    const nextEl = wrap?.nextElementSibling ?? secRef.current?.nextElementSibling
     if (nextEl) {
       nextEl.scrollIntoView({ behavior: 'smooth' })
     } else {
@@ -642,8 +682,9 @@ export default function Hero() {
     }
 
   return (
-    <section
-      ref={secRef}
+    <div ref={wrapperRef} className={s.heroWrapper}>
+      <section
+        ref={secRef}
       className={s.heroSection}
       data-color={colorMode ? 'true' : 'false'}
     >
@@ -687,6 +728,30 @@ export default function Hero() {
           </div>
         ))}
       </div>
-    </section>
+        {/* @traf scroll down chevron indicator */}
+        <div
+          ref={downRef}
+          className={s.down}
+          onClick={handleExplore}
+          role="button"
+          tabIndex={0}
+          aria-label="Scroll down"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="26"
+            height="26"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            fill="none"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="7 13 12 18 17 13" />
+            <polyline points="7 6 12 11 17 6" />
+          </svg>
+        </div>
+      </section>
+    </div>
   )
 }
