@@ -1,61 +1,243 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { EffectCards, Mousewheel, Keyboard } from 'swiper/modules'
+import type { Swiper as SwiperCore } from 'swiper'
+import { BookOpen, ChevronLeft, ChevronRight, X, Clock, User, Compass } from 'lucide-react'
 import s from './PageLayout.module.css'
 import ap from './ArticlesPage.module.css'
+import 'swiper/css'
+import 'swiper/css/effect-cards'
 
-interface ArticleItem {
+export interface ArticleItem {
   id: string
   tag: string
+  rating: string
   title: string
+  hindiTitle?: string
   excerpt: string
+  highlight: string
   author: string
   readTime: string
   image: string
+  fullBody: {
+    context: string
+    keyFindings: string[]
+    conclusion: string
+  }
 }
 
 const ARTICLES_LIST: ArticleItem[] = [
   {
     id: 'art-1',
-    tag: 'Itihaas',
-    title: 'गार्गी — जिसने याज्ञवल्क्य से दार्शनिक बहस जीती',
-    excerpt: 'Brihadaranyaka Upanishad ke darbar mein ek aisi mahila ka parcham jisne purush-pradhan dhyan ko hila kar rakh diya.',
-    author: 'Shakti Sabha Research Cell',
-    readTime: '6 min read',
-    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+    tag: 'Clinical Psychology',
+    rating: '9.6',
+    title: 'महिलाओं में Depression के 10 छुपे हुए लक्षण',
+    hindiTitle: 'जब दर्द बाहर नहीं दिखता पर अंदर से तोड़ता है',
+    excerpt: 'भारतीय परिवारों में महिलाओं का अवसाद अक्सर अत्यधिक काम, चिड़चिड़ापन और मौन थकावट के पीछे छिप जाता है। जानिए कैसे इस अदृश्य संघर्ष को पहचानें और पुनर्प्राप्ति की ओर बढ़ें।',
+    highlight: 'हाई-फंक्शनिंग अवसाद',
+    author: 'Dr. Shruti Kulkarni (PTSD Specialist)',
+    readTime: '8 min read',
+    image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'भारतीय समाज में महिलाएं अक्सर परिवार की प्राथमिक देखभालकर्ता होती हैं। ऐसे में उनका स्वयं का मानसिक स्वास्थ्य द्वितीयक बन जाता है। इस क्लिनिकल अध्ययन में 500 से अधिक महिलाओं के अनुभवों का दस्तावेजीकरण किया गया है।',
+      keyFindings: [
+        'उदासी की जगह लगातार चिड़चिड़ापन और अत्यधिक काम में खुद को डुबोए रखना।',
+        'शारीरिक रूप से अस्पष्टीकृत दर्द — विशेषकर माइग्रेन, पीठ दर्द और पाचन संबंधी समस्याएं।',
+        'स्वयं के लिए समय निकालने या आराम करने पर अत्यधिक अपराधबोध (Caregiver Guilt)।',
+        'अपनों के बीच रहते हुए भी एक गहरी भावनात्मक शून्यता का अनुभव होना।',
+        'दैनिक पारिवारिक दायित्वों को मशीन की तरह निभाना परंतु जीवन में आनंद का समाप्त हो जाना।'
+      ],
+      conclusion: 'शक्ति सभा का "शक्ति भाव" प्रकल्प महिलाओं को एक गोपनीय, सहानुभूतिपूर्ण और बिना किसी पूर्वाग्रह के सुरक्षित वातावरण प्रदान करता है जहाँ वे अपनी पीड़ा साझा कर सकती हैं।'
+    }
   },
   {
     id: 'art-2',
-    tag: 'Veerangana',
-    title: 'रानी अब्बक्का — पहली anti-colonial naval commander',
-    excerpt: 'Portuguese armada ko chaar baar samundar mein dhool chatane wali Ullal ki rani ki an-kahi veerata.',
-    author: 'Aaryaveera Archives',
-    readTime: '10 min read',
-    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
+    tag: 'Upanishadic Wisdom',
+    rating: '9.5',
+    title: 'गार्गी वाचक्नवी — शास्त्रार्थ में याज्ञवल्क्य को चुनौती',
+    hindiTitle: 'वैदिक काल की प्रखर ब्रह्मवादिनी',
+    excerpt: 'बृहदारण्यक उपनिषद के राजा जनक के दरबार में गार्गी ने अपनी दार्शनिक प्रखरता से समकालीन विद्वत समाज को झकझोर कर रख दिया। एक ऐतिहासिक दृष्टि जो नारी स्वाभिमान को पुनः परिभाषित करती है।',
+    highlight: 'दार्शनिक स्वाभिमान',
+    author: 'Shakti Sabha Research Cell',
+    readTime: '7 min read',
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'राजा जनक के बहु-दक्षिणा यज्ञ में भारत भर के शीर्ष ऋषियों को आमंत्रित किया गया था। याज्ञवल्क्य के समक्ष जब बड़े-बड़े विद्वान मौन हो गए, तब गार्गी ने खड़े होकर ब्रह्मविद्या पर कठिनतम प्रश्न पूछे।',
+      keyFindings: [
+        'गार्गी ने ब्रह्मांड के ताने-बाने पर प्रश्न उठाते हुए पूछा: "हे याज्ञवल्क्य! यह संपूर्ण दृश्य जगत किसमें ओत-प्रोत है?"',
+        'प्राचीन भारत में कन्याओं का उपनयन संस्कार, वेदाध्ययन और दार्शनिक सभाओं में नेतृत्व सामान्य अधिकार था।',
+        'रूढ़िवादी व्याख्याओं द्वारा गार्गी जैसी विदुषियों के योगदान को मुख्यधारा के विमर्श से ओझल करने का प्रयास किया गया।'
+      ],
+      conclusion: 'गार्गी का आख्यान केवल अतीत की स्मृति नहीं है, बल्कि आज की प्रत्येक भारतीय बेटी के लिए बौद्धिक निर्भीकता का प्रेरणा-पुंज है।'
+    }
   },
   {
     id: 'art-3',
-    tag: 'Wellness',
-    title: 'Indian Women aur Anxiety — jo bolna mushkil lagta hai',
-    excerpt: 'Ghar, career aur expectations ke bojh tale dabi sanson ko samajhna — clinical psychological insights.',
-    author: 'Dr. Shruti Kulkarni',
-    readTime: '7 min read',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
+    tag: 'Warrior Queens',
+    rating: '9.8',
+    title: 'रानी अब्बक्का चौटा — पहली Anti-Colonial Naval Commander',
+    hindiTitle: 'उल्लाल की अपराजेय वीरांगना',
+    excerpt: 'पुर्तगाली जहाजी बेड़ों को उल्लाल (कर्नाटक) के तटीय समुद्र में लगातार चार बार धूल चटाने वाली वीरांगना रानी की रणनीति और असाधारण नौसैनिक कौशल का प्रामाणिक इतिहास।',
+    highlight: 'समुद्री रक्षा रणनीति',
+    author: 'Aaryaveera Military Archives',
+    readTime: '10 min read',
+    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: '१६वीं शताब्दी में जब पुर्तगाली साम्राज्य हिंद महासागर पर एकछत्र राज स्थापित करना चाहता था, तब कर्नाटक के एक छोटे से राज्य उल्लाल की रानी अब्बक्का ने उनके विशाल जहाजों को अग्निबाणों से भस्म कर दिया।',
+      keyFindings: [
+        'रानी अब्बक्का ने सभी जातियों, मछुआरों और स्थानीय लड़ाकों को एकजुट कर एक सशक्त तटीय रक्षा वाहिनी बनाई।',
+        'पुर्तगाली गवर्नर डॉन अल्वारो दा सिल्वेरा को युद्ध में बुरी तरह खदेड़ दिया गया।',
+        'उनकी युद्धनीति आधुनिक गुरिल्ला नौसैनिक युद्धकला का अप्रतिम प्राचीन उदाहरण है।'
+      ],
+      conclusion: 'रानी अब्बक्का का जीवन दर्शाता है कि मातृभूमि की रक्षा और स्वाभिमान के लिए शस्त्र उठाना नारी का सनातन धर्म रहा है।'
+    }
   },
   {
     id: 'art-4',
-    tag: 'Identity',
-    title: 'Vedic India mein women ka actual role — textbooks ne kya chhupa diya',
-    excerpt: 'Epigraphical evidence aur shastra praman jo batate hain ki Bharatiya nari hamesha se swatantra aur shaktishali thi.',
-    author: 'Shakti Varta Collective',
+    tag: 'Caregiver Wellness',
+    rating: '9.2',
+    title: 'Indian Women & Anxiety — अनकही थकान का मनोवैज्ञानिक हल',
+    hindiTitle: 'पारिवारिक अपेक्षाओं के बीच मानसिक संतुलन',
+    excerpt: 'घर, करियर और सामाजिक अपेक्षाओं के बीच पिसती सांसों का यथार्थ। जानिए कैसे सोमाटिक थेरेपी, श्वास तकनीक और स्पष्ट सीमाएं निर्धारित करके अपनी ऊर्जा को संरक्षित किया जाए।',
+    highlight: 'सोमाटिक हीलिंग',
+    author: 'Dr. Aditi Sharma (Neuro-Psychologist)',
+    readTime: '6 min read',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'आधुनिक भारतीय कामकाजी महिलाओं पर "सुपर-वुमन" बनने का सामाजिक दबाव उनके तंत्रिका तंत्र को निरंतर तनाव मोड (Fight or Flight) में रखता है।',
+      keyFindings: [
+        'पुरानी थकान और मांसपेशियों का तनाव असल में अनसुलझे तनाव और दमित भावनाओं का शारीरिक प्रकटीकरण है।',
+        'सहानुभूतिपूर्ण न कहना सीखना (Compassionate Boundary Setting) मानसिक स्वास्थ्य की पहली सीढ़ी है।',
+        'दैनिक १५ मिनट का प्राणायाम और प्रामाणिक योगनिद्रा कोर्टिसोल स्तर को ३५% तक घटाती है।'
+      ],
+      conclusion: 'अपनी देखभाल करना कोई स्वार्थ नहीं, बल्कि परिवार और समाज को सशक्त रखने की मूल आवश्यकता है।'
+    }
+  },
+  {
+    id: 'art-5',
+    tag: 'Civilizational Truths',
+    rating: '9.4',
+    title: 'वैदिक काल में नारी का स्थान — पाठ्यपुस्तकों ने क्या छिपाया?',
+    hindiTitle: 'शिलालेखों और मूल ग्रंथों के प्रमाण',
+    excerpt: 'शिलालेखीय साक्ष्य और वैदिक ऋचाएं जो सिद्ध करती हैं कि प्राचीन भारत में नारी पराधीन नहीं बल्कि सह-धर्मिणी, संपत्तिकर्ता, शस्त्रधारिणी और समाज की प्रेरक शक्ति थी।',
+    highlight: 'ऐतिहासिक पुनर्स्थापना',
+    author: 'Shakti Varta Research Group',
     readTime: '12 min read',
     image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'औपनिवेशिक काल में भारतीय समाज को पिछड़ा साबित करने हेतु महिलाओं की स्थिति का भ्रामक चित्रण प्रस्तुत किया गया, जो आज भी कई इतिहास पुस्तकों में दोहराया जाता है।',
+      keyFindings: [
+        'ऋग्वेद के लगभग ३० से अधिक सूक्तों की रचना लोपामुद्रा, घोषा, अपाला जैसी विदुषी ऋषिकाओं द्वारा की गई।',
+        'विवाह के समय वर नहीं, बल्कि वधू को गृहस्वामिनी (साम्राज्ञी) के रूप में प्रतिष्ठित किया जाता था।',
+        'मध्यकालीन आक्रमणों के काल में सुरक्षा की दृष्टि से उत्पन्न कुरीतियों को सनातन संस्कृति का अंग मान लेना सबसे बड़ा ऐतिहासिक प्रमाद है।'
+      ],
+      conclusion: 'सत्य को जानना ही आत्मसम्मान की पुनर्प्राप्ति का प्रथम सोपान है।'
+    }
   },
+  {
+    id: 'art-6',
+    tag: 'Mardini Combat',
+    rating: '9.7',
+    title: 'लट्ठ और तलवार — जब आत्मरक्षा जीवन-साधना बनी',
+    hindiTitle: 'भय-मुक्ति और शारीरिक स्वाभिमान',
+    excerpt: 'पारंपरिक लाठी और तलवारबाजी केवल शारीरिक व्यायाम नहीं है, बल्कि मस्तिष्क में भय के केंद्र को शांत करने और त्वरित निर्णय-क्षमता विकसित करने का प्राचीन विज्ञान है।',
+    highlight: 'मार्शल आत्मविश्वास',
+    author: 'Aaryaveera Martial Academy',
+    readTime: '9 min read',
+    image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'शक्ति सभा द्वारा संचालित "मिशन मर्दिनी" के अंतर्गत अब तक ४०० से अधिक विद्यालयों में लाखों बालिकाओं को पारंपरिक लट्ठ कला का प्रशिक्षण दिया गया है।',
+      keyFindings: [
+        'लट्ठ चालन से शरीर की परिधीय दृष्टि (Peripheral Vision) और संतुलन में असाधारण सुधार होता है।',
+        'शारीरिक रूप से सक्षम बालिकाएं सार्वजनिक स्थानों पर बिना भय और संकोच के विचरण करती हैं।',
+        'मार्शल आर्ट्स का अभ्यास कोर्टिसोल घटाकर आत्म-विश्वास के डोपामाइन पाथवे को सक्रिय करता है।'
+      ],
+      conclusion: 'प्रत्येक भारतीय कन्या के हाथ में कलम के साथ-साथ आत्मरक्षा की सामर्थ्य होना राष्ट्र की सुरक्षा की पहली शर्त है।'
+    }
+  },
+  {
+    id: 'art-7',
+    tag: 'Survivor Pods',
+    rating: '9.3',
+    title: 'घरेलू हिंसा से पुनर्वास तक — गरिमा और संबल का मार्ग',
+    hindiTitle: 'पीड़िता से समाज-निर्मात्री बनने की यात्रा',
+    excerpt: 'आर्थिक आत्मनिर्भरता, विधिक सहायता और मनोवैज्ञानिक संबल का एकीकृत मॉडल जो संकटग्रस्त बहनों को केवल राहत नहीं देता, बल्कि उन्हें स्वावलंबी नेतृत्वकर्ता बनाता है।',
+    highlight: 'पुनर्वास इकोसिस्टम',
+    author: 'Shakti Bhava Legal Pod',
+    readTime: '8 min read',
+    image: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'घरेलू उत्पीड़न से बाहर निकलने वाली महिलाओं के सामने सबसे बड़ी चुनौती सामाजिक अलगाव और आर्थिक निर्भरता होती है। शक्ति सभा का सपोर्ट मॉडल इसी शून्यता को भरता है।',
+      keyFindings: [
+        'तात्कालिक सुरक्षित आश्रय, मेडिकल सहायता और विधिक प्राथमिकी (FIR) में सक्रिय सहयोग।',
+        'दीर्घकालिक आजीविका के लिए कौशल विकास — जैसे स्वयं सहायता समूह और माइक्रो-बिजनेस मेंटॉरशिप।',
+        'नियमित काउंसिलिंग से ट्रॉमा को शक्ति और समाज-सेवा के संकल्प में बदलना।'
+      ],
+      conclusion: 'जब एक बहन संभलती है, तो वह अपने पीछे आने वाली सैकड़ों बहनों का संबल बनती है।'
+    }
+  },
+  {
+    id: 'art-8',
+    tag: 'Legal Armor',
+    rating: '9.6',
+    title: 'कानूनी अधिकार जो हर भारतीय महिला को मालूम होने चाहिए',
+    hindiTitle: 'संवैधानिक सुरक्षा और व्यावहारिक कवच',
+    excerpt: 'Zero FIR, घरेलू हिंसा संरक्षण अधिनियम, कार्यस्थल पर सुरक्षा (POSH), और पैतृक संपत्ति में समान अधिकार — कानूनी सुरक्षा की सरल और व्यावहारिक मार्गदर्शिका।',
+    highlight: 'विधिक साक्षरता',
+    author: 'Adv. Meenakshi Lekhi & Legal Associates',
+    readTime: '11 min read',
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'कानून की अज्ञानता के कारण कई महिलाएं अपने अधिकारों से वंचित रह जाती हैं। यह लेख भारतीय न्याय संहिता (BNS) और विशेष महिला सुरक्षा कानूनों का सार प्रस्तुत करता है।',
+      keyFindings: [
+        'Zero FIR: किसी भी थाने में अपराध की सूचना दर्ज कराई जा सकती है, भले ही अधिकार क्षेत्र कोई भी हो।',
+        'महिला की गिरफ्तारी: सूर्यास्त के बाद और सूर्योदय से पहले महिला पुलिस अधिकारी की उपस्थिति के बिना गिरफ्तारी नहीं हो सकती।',
+        'घरेलू हिंसा अधिनियम २००५: साझा गृहस्थी में रहने का अधिकार और अंतरिम भरण-पोषण की गारंटी।',
+        'समान उत्तराधिकार: बेटियों का पैतृक संपत्ति में पुत्रों के बराबर जन्मसिद्ध अधिकार।'
+      ],
+      conclusion: 'कानून का ज्ञान भय को समाप्त करता है और स्वाभिमान से जीने का मार्ग प्रशस्त करता है।'
+    }
+  },
+  {
+    id: 'art-9',
+    tag: 'Youth Leadership',
+    rating: '9.5',
+    title: 'आर्यवीरा लीडरशिप — बेटियों में शौर्य और संस्कार का रोपण',
+    hindiTitle: 'चरित्र निर्माण से राष्ट्र निर्माण की ओर',
+    excerpt: 'स्कूली बालिकाओं और युवा युवतियों में राष्ट्रीय चेतना, सेवा भाव और मानसिक सुदृढ़ता का विकास करने वाले राष्ट्रव्यापी आर्यवीरा प्रशिक्षण शिविरों का प्रभाव प्रतिवेदन।',
+    highlight: 'राष्ट्रीय पहचान',
+    author: 'Aaryaveera Core Committee',
+    readTime: '7 min read',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
+    fullBody: {
+      context: 'आर्यवीरा केवल एक संस्था नहीं, बल्कि युवा पीढ़ी में भारत के शाश्वत मूल्यों और आधुनिक वैज्ञानिक सोच के समन्वय का राष्ट्रीय आंदोलन है।',
+      keyFindings: [
+        '१ लाख से अधिक प्रशिक्षित वीरांगनाएं आज विभिन्न क्षेत्रों में नेतृत्व कर रही हैं।',
+        'ग्रामीण और नगरीय क्षेत्रों की बेटियों के मध्य सांस्कृतिक सेतु का निर्माण।',
+        'आत्मरक्षा, प्राथमिक चिकित्सा और आपदा प्रबंधन का समग्र व्यावहारिक प्रशिक्षण।'
+      ],
+      conclusion: 'सशक्त बेटी ही सशक्त परिवार और अजेय राष्ट्र की आधारशिला है।'
+    }
+  }
 ]
 
 export default function ArticlesPage() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [activeModalArticle, setActiveModalArticle] = useState<ArticleItem | null>(null)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
-  const [activeArticle, setActiveArticle] = useState<string | null>(null)
+  const swiperRef = useRef<SwiperCore | null>(null)
+
+  const currentArticle = ARTICLES_LIST[activeIndex] || ARTICLES_LIST[0]
+
+  const handlePrev = () => {
+    swiperRef.current?.slidePrev()
+  }
+
+  const handleNext = () => {
+    swiperRef.current?.slideNext()
+  }
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -68,120 +250,339 @@ export default function ArticlesPage() {
 
   return (
     <main className={s.page}>
-      {/* Hero Banner */}
+      {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={ap.hero}>
         <div className={ap.heroInner}>
           <Link to="/" className={ap.backLink}>← Back to Home</Link>
-          <span className={ap.badge}>Content Ka Dil · Latest Investigations</span>
-          <h1 className={ap.title}>Featured Articles & Investigations</h1>
-          <p className={ap.hindiSubtitle}>गहन शोध, इतिहास एवं मानसिक स्वास्थ्य</p>
+          <span className={ap.badge}>Content Ka Dil · Investigative Journalism</span>
+          <h1 className={ap.title}>Articles & Deep Investigations</h1>
+          <p className={ap.hindiSubtitle}>गहन शोध, वीरांगना इतिहास एवं मानसिक स्वास्थ्य</p>
           <p className={ap.desc}>
-            Indian women ke liye — psychological support, historical identity, aur ek aisi community jo tumhari taraf hai.
-            Ancient roots. Modern strength.
+            Indian women ke liye — clinical psychology, ancient civilizational identity, legal armor, aur ek aisi community jo tumhari taraf hai.
+            Scroll or swipe the 3D cards below to explore our core investigations.
           </p>
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className={s.section}>
+      {/* ============================================================
+          INTERACTIVE 3D CARDS SHOWCASE (EXACT CODEPEN SYSTEM)
+          Left side content synchronizes smoothly with the cards on scroll/swipe
+          ============================================================ */}
+      <section className={ap.showcaseSection}>
+        {/* Animated Background Circles */}
+        <ul className={ap.circles} aria-hidden="true">
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
 
-        {/* Big Featured Article */}
-        <div className={ap.featuredBox}>
-          <div className={ap.featuredImg}>
-            <img
-              src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=900&auto=format&fit=crop&q=80"
-              alt="Mental Health Depression in Indian Women"
-            />
-          </div>
-          <div className={ap.featuredBody}>
-            <div className={ap.featuredTag}>
-              <span>●</span> Mental Health & Psychology
+        {/* Glassmorphic Showcase Content Container */}
+        <div className={ap.content}>
+          {/* ── LEFT SIDE INFO: Updates Dynamically with Active Slide ── */}
+          <div className={ap.info} key={currentArticle.id}>
+            <div className={ap.categoryTag}>
+              {currentArticle.tag}
             </div>
-            <h2 className={ap.featuredTitle}>
-              महिलाओं में Depression के 10 छुपे हुए लक्षण — जो बाहर नहीं दिखते
+
+            <h2 className={ap.infoTitle}>
+              {currentArticle.title}
             </h2>
-            <p className={ap.featuredExcerpt}>
-              जब दर्द दिखता नहीं पर अंदर से तोड़ता है — एक Psychologist और PTSD Counselor की नज़र से।
-              Ghariloo zimmewari, social conditioning aur unspoken exhaustion ko kaise pehchanein aur kaise apni shakti wapas paayein.
+
+            <p>
+              {currentArticle.excerpt.split(currentArticle.highlight).map((part, i, arr) => (
+                <span key={i}>
+                  {part}
+                  {i < arr.length - 1 && (
+                    <span className={ap.highlightText}>{currentArticle.highlight}</span>
+                  )}
+                </span>
+              ))}
             </p>
-            <div className={ap.featuredMeta}>
-              <span>✍ Shakti Sabha Team</span>
-              <span>⏱ 8 min read</span>
+
+            <div className={ap.infoMeta}>
+              <span className={ap.metaItem}>
+                <User size={13} color="#FF3CAC" />
+                <span>{currentArticle.author}</span>
+              </span>
+              <span className={ap.metaItem}>
+                <Clock size={13} color="#2B86C5" />
+                <span>{currentArticle.readTime}</span>
+              </span>
+              <span className={ap.metaItem}>
+                <span style={{ color: '#F59E0B', fontWeight: 700 }}>★</span>
+                <span>{currentArticle.rating}/10</span>
+              </span>
             </div>
-            <div style={{ marginTop: '1rem' }}>
-              <button
-                onClick={() => setActiveArticle('महिलाओं में Depression के 10 छुपे हुए लक्षण')}
-                style={{ padding: '0.75rem 2rem', background: '#DC143C', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer' }}
-              >
-                Read Investigation →
-              </button>
+
+            <button
+              type="button"
+              className={ap.btn}
+              onClick={() => setActiveModalArticle(currentArticle)}
+            >
+              <BookOpen size={16} />
+              <span>Read Investigation</span>
+            </button>
+
+            {/* Slide Navigation & Scroll Indicator */}
+            <div className={ap.controlsRow}>
+              <span className={ap.slideCounter}>
+                {String(activeIndex + 1).padStart(2, '0')} / {String(ARTICLES_LIST.length).padStart(2, '0')}
+              </span>
+              <div className={ap.navArrows}>
+                <button
+                  type="button"
+                  className={ap.arrowBtn}
+                  onClick={handlePrev}
+                  aria-label="Previous Article"
+                  title="Previous Article"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  type="button"
+                  className={ap.arrowBtn}
+                  onClick={handleNext}
+                  aria-label="Next Article"
+                  title="Next Article"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
             </div>
+
+            <div className={ap.scrollHint}>
+              <Compass size={12} />
+              <span>Scroll with mousewheel or swipe cards to navigate</span>
+            </div>
+          </div>
+
+          {/* ── RIGHT SIDE SWIPER: 3D Rotating Cards ── */}
+          <div className={ap.swiperContainer}>
+            <Swiper
+              effect="cards"
+              grabCursor={true}
+              initialSlide={0}
+              speed={500}
+              loop={true}
+              mousewheel={{
+                invert: false,
+              }}
+              keyboard={{
+                enabled: true,
+              }}
+              modules={[EffectCards, Mousewheel, Keyboard]}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper
+              }}
+              onSlideChange={(swiper) => {
+                setActiveIndex(swiper.realIndex)
+              }}
+              className="mySwiper"
+            >
+              {ARTICLES_LIST.map((article) => (
+                <SwiperSlide
+                  key={article.id}
+                  className={ap.slideCard}
+                  onClick={() => setActiveModalArticle(article)}
+                >
+                  <img src={article.image} alt={article.title} />
+                  <div className={ap.overlay}>
+                    <span className={ap.overlayTopPill}>{article.rating}</span>
+                    <h3 className={ap.overlayBottomHeading}>{article.title}</h3>
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
         </div>
+      </section>
 
-        {/* Modal for Article reading */}
-        {activeArticle && (
-          <div style={{
+      {/* ── FULL ARTICLE READING MODAL ─────────────────────────────── */}
+      {activeModalArticle && (
+        <div
+          style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(0,0,0,0.8)',
-            backdropFilter: 'blur(6px)',
+            background: 'rgba(0,0,0,0.85)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: '1.5rem',
-            zIndex: 999999
-          }}>
-            <div style={{
+            zIndex: 999999,
+          }}
+          onClick={() => setActiveModalArticle(null)}
+        >
+          <div
+            style={{
               background: '#FFFFFF',
-              borderRadius: '16px',
-              maxWidth: '680px',
+              borderRadius: '20px',
+              maxWidth: '720px',
               width: '100%',
-              maxHeight: '90vh',
+              maxHeight: '88vh',
               overflowY: 'auto',
-              padding: '2.5rem',
-              position: 'relative'
-            }}>
-              <button
-                onClick={() => setActiveArticle(null)}
-                style={{ position: 'absolute', top: '1rem', right: '1rem', background: '#F3F4F6', border: 'none', borderRadius: '50%', width: '36px', height: '36px', fontWeight: 'bold', cursor: 'pointer' }}
+              padding: 'clamp(1.75rem, 4vw, 3rem)',
+              position: 'relative',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
+              border: '1px solid #E5E7EB',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setActiveModalArticle(null)}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: '#F3F4F6',
+                border: 'none',
+                borderRadius: '50%',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+              aria-label="Close modal"
+            >
+              <X size={18} color="#374151" />
+            </button>
+
+            <div
+              style={{
+                fontSize: '0.75rem',
+                color: '#DC143C',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.12em',
+                marginBottom: '0.5rem',
+              }}
+            >
+              Shakti Sabha Verified Investigation · {activeModalArticle.tag}
+            </div>
+
+            <h2
+              style={{
+                fontFamily: 'var(--font-display, "Cinzel", serif)',
+                fontSize: 'clamp(1.5rem, 2.5vw, 2rem)',
+                color: '#111827',
+                marginBottom: '0.5rem',
+                lineHeight: 1.25,
+              }}
+            >
+              {activeModalArticle.title}
+            </h2>
+
+            {activeModalArticle.hindiTitle && (
+              <div
+                style={{
+                  fontFamily: 'var(--font-devanagari, "Noto Sans Devanagari", sans-serif)',
+                  fontSize: '1.1rem',
+                  color: '#DC143C',
+                  marginBottom: '1rem',
+                  fontWeight: 600,
+                }}
               >
-                ✕
-              </button>
-              <div style={{ fontSize: '0.72rem', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-                Shakti Sabha Investigation · Verified Clinical Review
+                {activeModalArticle.hindiTitle}
               </div>
-              <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.6rem', color: '#111827', marginBottom: '1rem', lineHeight: 1.3 }}>
-                {activeArticle}
-              </h2>
-              <div style={{ fontSize: '0.92rem', color: '#374151', lineHeight: 1.8 }}>
-                <p style={{ marginBottom: '1rem', fontWeight: 600 }}>
-                  Clinical psychological observations reveal that high-functioning depression in Indian women frequently masks behind relentless caregiving, chronic fatigue labeled as 'weakness', and silent psychosomatic pain.
-                </p>
-                <p style={{ marginBottom: '1rem' }}>
-                  1. High irritability rather than overt sadness.<br />
-                  2. Guilt when resting or taking personal time.<br />
-                  3. Chronic somatic digestive and spinal stiffness.<br />
-                  4. Over-functioning at work or household chores to avoid intrusive thoughts.<br />
-                  5. Loss of joy in traditional rituals and personal grooming.
-                </p>
-                <p>
-                  Our Shakti Bhava counseling circles provide confidential, judgment-free support led by certified therapists. You do not have to carry this alone.
-                </p>
+            )}
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '1.25rem',
+                alignItems: 'center',
+                fontSize: '0.82rem',
+                color: '#6B7280',
+                paddingBottom: '1.25rem',
+                marginBottom: '1.5rem',
+                borderBottom: '1px solid #E5E7EB',
+              }}
+            >
+              <span>✍ {activeModalArticle.author}</span>
+              <span>⏱ {activeModalArticle.readTime}</span>
+              <span>★ Score: {activeModalArticle.rating}/10</span>
+            </div>
+
+            <div
+              style={{
+                fontSize: '0.96rem',
+                color: '#374151',
+                lineHeight: 1.8,
+              }}
+            >
+              <p style={{ marginBottom: '1.25rem', fontWeight: 500, fontSize: '1.02rem', color: '#1F2937' }}>
+                {activeModalArticle.fullBody.context}
+              </p>
+
+              <div
+                style={{
+                  background: '#F9FAFB',
+                  borderLeft: '4px solid #DC143C',
+                  padding: '1.25rem 1.5rem',
+                  borderRadius: '0 12px 12px 0',
+                  margin: '1.5rem 0',
+                }}
+              >
+                <div style={{ fontWeight: 700, color: '#111827', marginBottom: '0.75rem', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  प्रमुख निष्कर्ष एवं अवलोकन (Key Insights):
+                </div>
+                <ul style={{ paddingLeft: '1.25rem', margin: 0 }}>
+                  {activeModalArticle.fullBody.keyFindings.map((point, i) => (
+                    <li key={i} style={{ marginBottom: '0.65rem' }}>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
               </div>
+
+              <p style={{ marginTop: '1.25rem', color: '#4B5563', fontStyle: 'italic' }}>
+                {activeModalArticle.fullBody.conclusion}
+              </p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* 4 Foundation Articles Grid */}
-        <div style={{ marginTop: '5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
+      {/* ── LOWER SECTION: COMPLETE ARCHIVE GRID ──────────────────── */}
+      <div className={s.section}>
+        <div style={{ marginTop: '2rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-end',
+              flexWrap: 'wrap',
+              gap: '1rem',
+              marginBottom: '1.5rem',
+            }}
+          >
             <div>
-              <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-                Foundation Articles
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.15em',
+                  color: '#DC143C',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                }}
+              >
+                Full Repository
               </span>
               <h2 className={s.sectionTitle} style={{ marginBottom: 0, marginTop: '0.35rem' }}>
-                Veerangana & Itihaas Archive
+                All Articles & White Papers
               </h2>
             </div>
             <Link to="/research" style={{ fontSize: '0.85rem', color: '#DC143C', fontWeight: 600 }}>
@@ -190,8 +591,17 @@ export default function ArticlesPage() {
           </div>
 
           <div className={ap.articlesGrid}>
-            {ARTICLES_LIST.map(article => (
-              <div key={article.id} className={ap.articleCard}>
+            {ARTICLES_LIST.map((article, index) => (
+              <div
+                key={article.id}
+                className={ap.articleCard}
+                onClick={() => {
+                  setActiveIndex(index)
+                  swiperRef.current?.slideToLoop(index)
+                  window.scrollTo({ top: 350, behavior: 'smooth' })
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className={ap.cardImg}>
                   <img src={article.image} alt={article.title} />
                 </div>
@@ -203,12 +613,23 @@ export default function ArticlesPage() {
                   </p>
                 </div>
                 <div className={ap.cardFooter}>
-                  <span>{article.author}</span>
+                  <span>{article.author.split('(')[0]}</span>
                   <button
-                    onClick={() => setActiveArticle(article.title)}
-                    style={{ background: 'none', border: 'none', color: '#DC143C', fontWeight: 600, cursor: 'pointer', fontSize: '0.82rem' }}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setActiveModalArticle(article)
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#DC143C',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                    }}
                   >
-                    {article.readTime} →
+                    Read →
                   </button>
                 </div>
               </div>
@@ -216,33 +637,71 @@ export default function ArticlesPage() {
           </div>
         </div>
 
-        {/* The Shakti Dispatch Newsletter Box */}
+        {/* ── THE SHAKTI DISPATCH NEWSLETTER BOX ────────────────────── */}
         <div className={ap.dispatchBox}>
           <div style={{ maxWidth: '640px', margin: '0 auto' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#E8C98A', fontWeight: 700 }}>
-              Section 9 · Weekly Insights
+            <span
+              style={{
+                fontSize: '0.72rem',
+                letterSpacing: '0.2em',
+                textTransform: 'uppercase',
+                color: '#E8C98A',
+                fontWeight: 700,
+              }}
+            >
+              Weekly Insights
             </span>
-            <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)', color: '#FFFFFF', margin: '0.5rem 0 1rem' }}>
+            <h2
+              style={{
+                fontFamily: 'var(--font-display, "Cinzel", serif)',
+                fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+                color: '#FFFFFF',
+                margin: '0.5rem 0 1rem',
+              }}
+            >
               The Shakti Dispatch
             </h2>
-            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '2rem' }}>
-              Har hafte — ek naya article, ek forgotten heroine ki kahani, ek psychological insight. Seedha aapke inbox mein.
+            <p
+              style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                fontSize: '0.95rem',
+                lineHeight: 1.7,
+                marginBottom: '2rem',
+              }}
+            >
+              हर सप्ताह — एक नया शोध, एक विस्मृत वीरांगना की गाथा, और मनोवैज्ञानिक संबल। सीधा आपके इनबॉक्स में।
             </p>
 
             {subscribed ? (
-              <div style={{ padding: '1.25rem', background: 'rgba(220, 20, 60, 0.2)', border: '1px solid #DC143C', borderRadius: '12px', color: '#FFB3BA' }}>
+              <div
+                style={{
+                  padding: '1.25rem',
+                  background: 'rgba(220, 20, 60, 0.2)',
+                  border: '1px solid #DC143C',
+                  borderRadius: '12px',
+                  color: '#FFB3BA',
+                }}
+              >
                 <div style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>💌</div>
-                <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>Sabha mein swagat hai!</div>
+                <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>सभा में स्वागत है!</div>
                 <div style={{ fontSize: '0.85rem' }}>You are now subscribed to The Shakti Dispatch.</div>
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <form
+                onSubmit={handleSubscribe}
+                style={{
+                  display: 'flex',
+                  gap: '0.75rem',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
                 <input
                   type="email"
                   required
                   value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Enter your email address..."
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="अपना ईमेल दर्ज करें..."
                   style={{
                     flex: '1 1 300px',
                     maxWidth: '400px',
@@ -274,12 +733,17 @@ export default function ArticlesPage() {
               </form>
             )}
 
-            <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.5)', marginTop: '1.25rem' }}>
-              ✦ Free hai. Kabhi bhi unsubscribe kar sakte hain. No spam.
+            <div
+              style={{
+                fontSize: '0.78rem',
+                color: 'rgba(255, 255, 255, 0.5)',
+                marginTop: '1.25rem',
+              }}
+            >
+              ✦ निःशुल्क है। किसी भी समय सदस्यता समाप्त कर सकते हैं। कोई स्पैम नहीं।
             </div>
           </div>
         </div>
-
       </div>
     </main>
   )
