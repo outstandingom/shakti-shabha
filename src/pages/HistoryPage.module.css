@@ -391,6 +391,33 @@
   box-shadow: 0 0 0 6px rgba(255, 80, 80, 0.3) !important;
 }
 
+.spineDotUnreached {
+  border-color: #D1D5DB !important;
+  background: #FFFFFF !important;
+  opacity: 0.35;
+}
+
+.spineDotReached {
+  border-color: rgb(255, 80, 80) !important;
+  background: rgb(255, 80, 80) !important;
+  opacity: 1;
+}
+
+.milestoneBoxRevealed {
+  animation: revealBranch 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes revealBranch {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
 /* ── Vertical Stems Connecting the Dot to the Flag ── */
 .stemTop {
   position: absolute;
