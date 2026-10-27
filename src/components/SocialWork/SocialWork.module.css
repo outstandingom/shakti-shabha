@@ -1,27 +1,33 @@
 /* ============================================================
-   SocialWork — Stats + 3D Card Carousel
+   SocialWork — Section 4
+   3D Tilt & Offset Slider with useReducer (Keyframers System)
    ============================================================ */
 
 .section {
-  background: var(--theme-bg, #FFFFFF);
-  border-top: 1px solid var(--border);
+  background: #111111;
+  color: #FFFFFF;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  overflow: hidden;
 }
 
 /* ---------- Stats row ---------- */
 .statsRow {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border-bottom: 1px solid var(--border);
-  background: var(--theme-bg, #FFFFFF);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
   flex-shrink: 0;
+  position: relative;
+  z-index: 10;
 }
 
 .statBox {
-  padding: 1.1rem 1rem;
-  border-right: 1px solid var(--border);
+  padding: 1.25rem 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   text-align: center;
   transition: background 0.3s;
 }
@@ -31,35 +37,72 @@
 }
 
 .statBox:hover {
-  background: rgba(220, 20, 60, 0.02);
+  background: rgba(220, 20, 60, 0.08);
 }
 
 .statCount {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.6rem, 3.2vw, 2.5rem);
   font-weight: 900;
-  color: var(--theme-primary, #DC143C);
+  color: #DC143C;
   line-height: 1;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.35rem;
 }
 
 .statLabel {
   font-family: var(--font-body, 'Outfit', sans-serif);
-  font-size: 0.7rem;
-  color: var(--theme-text-subtle, #777777);
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.65);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 500;
+  letter-spacing: 0.12em;
+  font-weight: 600;
 }
 
-/* ---------- Carousel wrapper ---------- */
-.carouselWrap {
-  /* Card sizing — scales with viewport height so everything fits on one screen */
-  --card-height: clamp(240px, 38vh, 400px);
-  --card-width: calc(var(--card-height) * 0.65);
-  --card-duration: 800ms;
-  --card-ease: ease;
+/* ---------- Header ---------- */
+.carouselHeader {
+  text-align: center;
+  max-width: 680px;
+  margin: 2.5rem auto 1.5rem;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 10;
+}
 
+.eyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #FFB3BA;
+  border: 1px solid rgba(220, 20, 60, 0.35);
+  padding: 0.32rem 1rem;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+  background: rgba(220, 20, 60, 0.12);
+}
+
+.carouselTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+}
+
+.carouselSub {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.5rem;
+}
+
+/* ============================================================
+   KEYFRAMERS 3D SLIDER (useReducer + offset + tilt)
+   ============================================================ */
+
+.carouselWrap {
   position: relative;
   flex: 1;
   display: flex;
@@ -67,489 +110,300 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 2rem 2rem 1.5rem;
-  gap: 1.25rem;
-  background: #000;
+  padding: 1rem 1rem 3rem;
+  width: 100%;
 }
 
-/* Dark overlay above the blurred background */
-.carouselWrap::before {
+.slidesContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: clamp(420px, 58vh, 560px);
+  perspective: 1200px;
+}
+
+.slides {
+  display: grid;
+  place-items: center;
+  position: relative;
+  width: clamp(280px, 30vw, 420px);
+  height: clamp(380px, 42vw, 540px);
+}
+
+.slide {
+  grid-area: 1 / -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  transition: z-index 0.3s;
+}
+
+.slide[data-active="true"] {
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.slideContent {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  opacity: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  transform-style: preserve-3d;
+  transform: perspective(1000px) translateX(calc(105% * var(--offset)))
+    rotateY(calc(-45deg * var(--dir)));
+  cursor: pointer;
+  position: relative;
+}
+
+.slideContent::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.78);
+  background: linear-gradient(
+    to top,
+    rgba(10, 5, 8, 0.95) 0%,
+    rgba(10, 5, 8, 0.5) 50%,
+    rgba(10, 5, 8, 0.1) 100%
+  );
   z-index: 1;
 }
 
-/* Everything inside sits above the overlay */
-.carouselHeader,
-.stage,
-.dots,
-.ctaRow {
+.slide[data-active="true"] .slideContent {
+  --x: calc(var(--px, 0.5) - 0.5);
+  --y: calc(var(--py, 0.5) - 0.5);
+  opacity: 1;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 20, 60, 0.28);
+  border-color: rgba(220, 20, 60, 0.5);
+  transform: perspective(1000px);
+}
+
+@media (hover: hover) and (min-width: 768px) {
+  .slide[data-active="true"] .slideContent:hover {
+    transition: none;
+    transform: perspective(1000px) rotateY(calc(var(--x) * 45deg))
+      rotateX(calc(var(--y) * -45deg));
+  }
+}
+
+.slideContentInner {
+  transform-style: preserve-3d;
+  transform: translateZ(2.2rem);
+  transition: opacity 0.3s linear;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+  opacity: 0;
   position: relative;
   z-index: 2;
 }
 
-/* ---------- Blurred background (parallax slide + fade) ---------- */
-.bgLayer {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-  user-select: none;
-}
-
-.bgImg {
-  --bg-x: 0%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 150%;
-  height: 150%;
-  opacity: 0;
-  transform: translate(-50%, -50%) translateX(var(--bg-x));
-  transition: transform 1000ms ease, opacity 1000ms ease;
-}
-
-.bgImg img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: blur(8px);
-}
-
-.bgImg[data-pos='current'] {
+.slide[data-active="true"] .slideContentInner {
   opacity: 1;
-  --bg-x: 0%;
 }
 
-.bgImg[data-pos='prev'],
-.bgImg[data-pos='hiddenLeft'] {
-  --bg-x: -15%;
-}
-
-.bgImg[data-pos='next'],
-.bgImg[data-pos='hiddenRight'] {
-  --bg-x: 15%;
-}
-
-/* ---------- Header ---------- */
-.carouselHeader {
-  text-align: center;
-  max-width: 640px;
-}
-
-.eyebrow {
-  display: inline-block;
-  font-size: 0.68rem;
+.slideTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.35rem, 2.2vw, 1.95rem);
   font-weight: 700;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.08ch;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.28rem 0.85rem;
-  border-radius: 9999px;
-  margin-bottom: 0.6rem;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.carouselTitle {
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
-  font-size: clamp(1.4rem, 3vw, 2.1rem);
-  font-weight: 700;
   color: #FFFFFF;
-  margin-bottom: 0.25rem;
+  margin: 0 0 0.35rem 0;
   line-height: 1.2;
 }
 
-.carouselSub {
-  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+.slideSubtitle {
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+  font-weight: 600;
+  letter-spacing: 0.15ch;
+  text-transform: uppercase;
+  color: #FFB3BA;
+  margin: 0 0 0.75rem 0;
 }
 
-/* ---------- Stage (cards + info + arrows share this box) ---------- */
-.stage {
-  --tilt: 0deg; /* updated from JS on pointer move; shared by card + info */
-  width: 100%;
-  height: calc(var(--card-height) * 1.3);
-  flex-shrink: 0;
+.slideSubtitle::before {
+  content: "— ";
 }
 
-.cardList {
+.slideDescription {
+  margin: 0 0 1rem 0;
+  font-size: clamp(0.78rem, 1vw, 0.88rem);
+  letter-spacing: 0.04ch;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.55;
+  max-width: 32ch;
+}
+
+.slideBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(220, 20, 60, 0.3);
+  border: 1px solid rgba(220, 20, 60, 0.5);
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #FFFFFF;
+  text-transform: uppercase;
+}
+
+/* Ambient full-bleed background */
+.slideBackground {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(var(--card-width) * 3);
-  height: 100%;
-  transform: translate(-50%, -50%);
-}
-
-.cardsWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  perspective: 1000px;
-}
-
-/* ---------- Cards ---------- */
-.card {
-  --x: 0px;
-  --rot: 0deg;
-  --scale: 1;
-  --dim: 0.6;
-
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--card-width);
-  height: var(--card-height);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  transform: translate(-50%, -50%) translateX(var(--x)) rotateY(var(--rot)) scale(var(--scale));
-  transition: transform var(--card-duration) var(--card-ease),
-              opacity var(--card-duration) var(--card-ease);
-  user-select: none;
-  will-change: transform;
-}
-
-/* Darkening layer — current card is bright, neighbours are dimmed */
-.card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: #000;
-  z-index: 1;
-  opacity: var(--dim);
-  pointer-events: none;
-  transition: opacity var(--card-duration) var(--card-ease);
-}
-
-.card img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.card[data-pos='current'] {
-  --x: 0px;
-  --rot: var(--tilt);
-  --scale: 1.2;
-  --dim: 0.2;
-  z-index: 30;
-}
-
-.card[data-pos='prev'] {
-  --x: calc(var(--card-width) * -1.1);
-  --rot: 25deg;
-  --scale: 0.9;
-  --dim: 0.6;
-  z-index: 20;
-  cursor: pointer;
-}
-
-.card[data-pos='next'] {
-  --x: calc(var(--card-width) * 1.1);
-  --rot: -25deg;
-  --scale: 0.9;
-  --dim: 0.6;
-  z-index: 20;
-  cursor: pointer;
-}
-
-/* Cards that aren't visible — parked off to the side */
-.card[data-pos='hiddenLeft'],
-.card[data-pos='hiddenRight'] {
-  --scale: 0.8;
-  --dim: 0.8;
+  inset: -15%;
+  background-size: cover;
+  background-position: center center;
+  z-index: -1;
   opacity: 0;
+  filter: blur(35px) brightness(0.3);
+  transition: opacity 0.4s linear, transform 0.4s ease-in-out;
   pointer-events: none;
-  z-index: 0;
+  transform: translateX(calc(10% * var(--dir)));
 }
 
-.card[data-pos='hiddenLeft'] {
-  --x: calc(var(--card-width) * -2.2);
-  --rot: 40deg;
+.slide[data-active="true"] .slideBackground {
+  opacity: 0.32;
+  transform: none;
 }
 
-.card[data-pos='hiddenRight'] {
-  --x: calc(var(--card-width) * 2.2);
-  --rot: -40deg;
-}
-
-/* ---------- Arrow buttons ---------- */
-.arrowBtn {
+/* Navigation Arrow Buttons */
+.navBtn {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
   position: absolute;
+  font-size: 3rem;
+  width: 4rem;
+  height: 4rem;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 100;
-  width: 40px;
-  height: 40px;
+  transition: all 0.25s ease;
+  opacity: 0.75;
+  z-index: 30;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(6px);
   cursor: pointer;
-  padding: 0;
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  line-height: 1;
+  padding-bottom: 4px;
+  backdrop-filter: blur(10px);
 }
 
-.btnLeft {
-  left: max(0.25rem, calc(50% - var(--card-width) * 1.85));
-}
-
-.btnRight {
-  right: max(0.25rem, calc(50% - var(--card-width) * 1.85));
-}
-
-.arrowBtn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.arrowBtn:hover {
-  background: rgba(220, 20, 60, 0.5);
+.navBtn:hover {
+  opacity: 1;
+  background: rgba(220, 20, 60, 0.85);
   border-color: #DC143C;
   transform: translateY(-50%) scale(1.08);
 }
 
-.arrowBtn:focus-visible,
-.dot:focus-visible {
-  outline: 2px solid #FFFFFF;
-  outline-offset: 3px;
+.navBtn:focus {
+  outline: none;
 }
 
-/* ---------- Info text (overlaps the cards, tilts with the current card) ---------- */
-.infoList {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: calc(var(--card-width) * 3);
-  height: var(--card-height);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 60;
+.btnPrev {
+  left: clamp(-4.8rem, -8vw, -2.5rem);
 }
 
-.infoWrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
+.btnNext {
+  right: clamp(-4.8rem, -8vw, -2.5rem);
+}
+
+/* Dots Indicator Row */
+.dotsRow {
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-}
-
-.info {
-  display: none;
-  margin-bottom: calc(var(--card-height) / 8);
-  margin-left: calc(var(--card-width) / 1.5);
-  transform: translateZ(2rem) rotateY(var(--tilt));
-  transition: transform var(--card-duration) var(--card-ease);
-}
-
-.infoActive {
-  display: block;
-}
-
-.text {
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.75rem;
   position: relative;
-  width: fit-content;
-  color: #FFFFFF;
-  white-space: nowrap;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
-}
-
-.infoTitle {
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
-  font-size: calc(var(--card-width) * 0.14);
-  font-weight: 700;
-  line-height: 1.1;
-  text-transform: uppercase;
-}
-
-.infoLoc {
-  --mg-left: 40px;
-  font-family: var(--font-body, 'Outfit', sans-serif);
-  font-size: calc(var(--card-width) * 0.085);
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  margin-left: var(--mg-left);
-  margin-bottom: calc(var(--mg-left) / 2);
-  padding-bottom: 0.8rem;
-}
-
-.infoLoc::before,
-.infoLoc::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  transform: translate(calc(-1 * var(--mg-left)), -50%);
-}
-
-.infoLoc::before {
-  top: 50%;
-  width: 20px;
-  height: 5px;
-  background: var(--theme-primary, #DC143C);
-}
-
-.infoLoc::after {
-  bottom: 0;
-  width: 60px;
-  height: 2px;
-  background: #FFFFFF;
-}
-
-.infoDesc {
-  font-family: var(--font-body, 'Outfit', sans-serif);
-  font-size: calc(var(--card-width) * 0.058);
-  font-weight: 500;
-}
-
-/* ---------- Dots ---------- */
-.dots {
-  display: flex;
-  gap: 0.4rem;
+  z-index: 10;
 }
 
 .dot {
-  width: 7px;
-  height: 7px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   padding: 0;
 }
 
 .dotActive {
   background: #DC143C;
-  transform: scale(1.3);
+  width: 26px;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(220, 20, 60, 0.6);
 }
 
-/* ---------- CTA row ---------- */
+/* Explore Link Row */
 .ctaRow {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  margin-top: 2rem;
+  text-align: center;
+  position: relative;
+  z-index: 10;
 }
 
-.ctaBtn,
-.ctaGhost {
+.exploreLink {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.55rem 1.6rem;
-  font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-radius: var(--btn-radius, 9999px);
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.ctaBtn {
+  gap: 0.5rem;
+  padding: 0.85rem 2.25rem;
+  background: #DC143C;
   color: #FFFFFF;
-  background: var(--theme-primary, #DC143C);
-  border: 1px solid var(--theme-primary, #DC143C);
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(220, 20, 60, 0.4);
+  transition: transform 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
-.ctaBtn:hover {
-  background: var(--theme-primary-dark, #B01030);
+.exploreLink:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 8px 25px rgba(220, 20, 60, 0.6);
+  background: #B01030;
 }
 
-.ctaGhost {
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.ctaGhost:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-2px);
-}
-
-/* ---------- Mobile ---------- */
-@media (max-width: 768px) {
-  .statsRow { grid-template-columns: 1fr 1fr; }
-  .statBox:nth-child(2) { border-right: none; }
-  .statBox:nth-child(3),
-  .statBox:nth-child(4) { border-top: 1px solid var(--border); }
-  .statBox:nth-child(4) { border-right: none; }
-
-  .carouselWrap {
-    --card-height: clamp(220px, 34vh, 320px);
-    padding: 1.5rem 1rem 1.25rem;
+/* Mobile responsive fallback */
+@media (max-width: 767px) {
+  .slides {
+    width: 82vw;
+    height: 110vw;
   }
-
-  /* Reserve room for the info block, which moves below the cards */
-  .stage { margin-bottom: 4.5rem; }
-
-  .infoList {
-    top: calc(100% + 0.5rem);
-    width: min(100%, 22rem);
-    height: auto;
-    transform: translateX(-50%);
+  .slideContent {
+    transform: perspective(1000px) translateX(calc(105% * var(--offset)))
+      rotateY(calc(-20deg * var(--dir)));
+    padding: 1.5rem 1.25rem;
   }
-
-  .infoWrapper {
-    display: block;
-    transform-style: flat;
+  .btnPrev {
+    left: -1.25rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2.2rem;
   }
-
-  .info {
-    margin: 0;
-    text-align: center;
-    transform: none;
-  }
-
-  .text {
-    white-space: normal;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .infoTitle { font-size: 1.15rem; }
-
-  .infoLoc {
-    font-size: 0.75rem;
-    margin-left: auto;
-    margin-bottom: 0.15rem;
-    padding-bottom: 0;
-  }
-
-  .infoLoc::before,
-  .infoLoc::after { display: none; }
-
-  .infoDesc { font-size: 0.8rem; }
-}
-
-/* ---------- Reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
-  .card,
-  .card::before,
-  .bgImg,
-  .info {
-    transition-duration: 1ms;
+  .btnNext {
+    right: -1.25rem;
+    width: 3rem;
+    height: 3rem;
+    font-size: 2.2rem;
   }
 }

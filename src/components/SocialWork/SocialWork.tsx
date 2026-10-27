@@ -1,6 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import type { PointerEvent as ReactPointerEvent } from 'react'
-import { flushSync } from 'react-dom'
+import { useEffect, useReducer, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -8,41 +6,53 @@ import s from './SocialWork.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CASES = [
+/* ------------------------------------------------------------------ */
+/* 1. useReducer & Slides Data Model                                   */
+/* ------------------------------------------------------------------ */
+
+interface SlideData {
+  title: string
+  subtitle: string
+  description: string
+  stat: string
+  image: string
+}
+
+const SLIDES: SlideData[] = [
   {
     title: 'Village Defense Camp',
-    location: 'Nagpur, Maharashtra',
-    description: '340 women trained in Lathi-Kaushal',
-    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=600&auto=format&fit=crop&q=80',
-    bg: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=1920&auto=format&fit=crop&q=50',
+    subtitle: 'Nagpur, Maharashtra',
+    description: '340+ women trained in Lathi-Kaushal and tactical neighborhood defense.',
+    stat: '340+ Trained',
+    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=1200&auto=format&fit=crop&q=80',
   },
   {
     title: 'Survivor Circle',
-    location: 'Amravati, Maharashtra',
-    description: 'Breaking silence on PTSD & trauma',
-    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&auto=format&fit=crop&q=80',
-    bg: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1920&auto=format&fit=crop&q=50',
+    subtitle: 'Amravati, Maharashtra',
+    description: 'Breaking silence on domestic trauma with confidential psychological pods.',
+    stat: '1,200+ Healed',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&auto=format&fit=crop&q=80',
   },
   {
     title: 'Shakti Varta Seminar',
-    location: 'Pune, Maharashtra',
-    description: 'Research & discourse on women warriors',
-    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&auto=format&fit=crop&q=80',
-    bg: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=1920&auto=format&fit=crop&q=50',
+    subtitle: 'Pune, Maharashtra',
+    description: 'Academic research, white papers, and epigraphical discourse on Vedic heroines.',
+    stat: '45+ Papers',
+    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=1200&auto=format&fit=crop&q=80',
   },
   {
     title: 'Sword Training Camp',
-    location: 'Wardha, Maharashtra',
-    description: 'Ancient Bharatiya martial arts revival',
-    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&auto=format&fit=crop&q=80',
-    bg: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=1920&auto=format&fit=crop&q=50',
+    subtitle: 'Wardha, Maharashtra',
+    description: 'Revival of ancient Bharatiya martial arts and mental fear-eradication.',
+    stat: '600+ Warriors',
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=1200&auto=format&fit=crop&q=80',
   },
   {
-    title: 'Youth Leadership Program',
-    location: 'Yavatmal, Maharashtra',
-    description: 'Aaryaveera certification for girls 14–20',
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&auto=format&fit=crop&q=80',
-    bg: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&auto=format&fit=crop&q=50',
+    title: 'Youth Leadership',
+    subtitle: 'Yavatmal, Maharashtra',
+    description: 'Aaryaveera character certification and leadership academy for girls 14–20.',
+    stat: '15,000+ Cadets',
+    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&auto=format&fit=crop&q=80',
   },
 ]
 
@@ -53,86 +63,145 @@ const STATS = [
   { count: '3', label: 'Active Programmes' },
 ]
 
-type Pos = 'current' | 'prev' | 'next' | 'hiddenLeft' | 'hiddenRight'
-
-function mod(n: number, m: number) {
-  return ((n % m) + m) % m
+interface SlidesState {
+  slideIndex: number
 }
 
-/** Where a card sits relative to the current one. Drives CSS via data-pos. */
-function getPos(index: number, current: number, total: number): Pos {
-  const d = mod(index - current, total)
-  if (d === 0) return 'current'
-  if (d === 1) return 'next'
-  if (d === total - 1) return 'prev'
-  return d <= total / 2 ? 'hiddenRight' : 'hiddenLeft'
+type SlidesAction =
+  | { type: 'NEXT' }
+  | { type: 'PREV' }
+  | { type: 'GOTO'; index: number }
+
+const initialState: SlidesState = {
+  slideIndex: 0,
 }
+
+function slidesReducer(state: SlidesState, event: SlidesAction): SlidesState {
+  if (event.type === 'NEXT') {
+    return {
+      ...state,
+      slideIndex: (state.slideIndex + 1) % SLIDES.length,
+    }
+  }
+  if (event.type === 'PREV') {
+    return {
+      ...state,
+      slideIndex: state.slideIndex === 0 ? SLIDES.length - 1 : state.slideIndex - 1,
+    }
+  }
+  if (event.type === 'GOTO') {
+    return {
+      ...state,
+      slideIndex: event.index,
+    }
+  }
+  return state
+}
+
+/* ------------------------------------------------------------------ */
+/* 2. useTilt Hook (Mouse Coordinates & 3D Tilt on Hover)             */
+/* ------------------------------------------------------------------ */
+
+function useTilt(active: boolean) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current || !active) return
+
+    const el = ref.current
+    let rect: DOMRect | null = null
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!el) return
+      if (!rect) {
+        rect = el.getBoundingClientRect()
+      }
+      const px = (e.clientX - rect.left) / rect.width
+      const py = (e.clientY - rect.top) / rect.height
+      el.style.setProperty('--px', String(px))
+      el.style.setProperty('--py', String(py))
+    }
+
+    const handleMouseLeave = () => {
+      rect = null
+      el.style.setProperty('--px', '0.5')
+      el.style.setProperty('--py', '0.5')
+    }
+
+    el.addEventListener('mousemove', handleMouseMove)
+    el.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove)
+      el.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [active])
+
+  return ref
+}
+
+/* ------------------------------------------------------------------ */
+/* 3. Slide Component (Offset, 3D Perspective, & Tilt)                */
+/* ------------------------------------------------------------------ */
+
+interface SlideProps {
+  slide: SlideData
+  offset: number
+  onSelect: () => void
+}
+
+function Slide({ slide, offset, onSelect }: SlideProps) {
+  const active = offset === 0
+  const ref = useTilt(active)
+
+  return (
+    <div
+      ref={ref}
+      className={s.slide}
+      data-active={active ? 'true' : 'false'}
+      style={
+        {
+          '--offset': offset,
+          '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
+        } as React.CSSProperties
+      }
+      onClick={!active ? onSelect : undefined}
+    >
+      {/* Ambient background with parallax offset */}
+      <div
+        className={s.slideBackground}
+        style={{
+          backgroundImage: `url('${slide.image}')`,
+        }}
+      />
+
+      {/* 3D Tilted Card Content */}
+      <div
+        className={s.slideContent}
+        style={{
+          backgroundImage: `url('${slide.image}')`,
+        }}
+      >
+        <div className={s.slideContentInner}>
+          <div className={s.slideBadge}>{slide.stat}</div>
+          <h2 className={s.slideTitle}>{slide.title}</h2>
+          <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
+          <p className={s.slideDescription}>{slide.description}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/* 4. Main SocialWork Component (Section 4)                            */
+/* ------------------------------------------------------------------ */
 
 export default function SocialWork() {
+  const [state, dispatch] = useReducer(slidesReducer, initialState)
   const secRef = useRef<HTMLElement>(null)
-  const stageRef = useRef<HTMLDivElement>(null)
-  const btnLeft = useRef<HTMLButtonElement>(null)
-  const btnRight = useRef<HTMLButtonElement>(null)
-  const infoRefs = useRef<(HTMLDivElement | null)[]>([])
-  const tlRef = useRef<gsap.core.Timeline | null>(null)
-  const animating = useRef(false)
 
-  // `current` drives cards + background (CSS transitions, instant).
-  // `infoIndex` drives the text block, which swaps midway through a GSAP timeline.
-  const [current, setCurrent] = useState(0)
-  const [infoIndex, setInfoIndex] = useState(0)
-
-  const resetTilt = useCallback(() => {
-    stageRef.current?.style.setProperty('--tilt', '0deg')
-  }, [])
-
-  const goTo = useCallback(
-    (target: number) => {
-      if (animating.current || target === current) return
-      animating.current = true
-      resetTilt()
-
-      const buttons = [btnLeft.current, btnRight.current].filter(Boolean)
-      const outTexts = infoRefs.current[infoIndex]?.querySelectorAll('[data-sw-text]') ?? []
-      const inTexts = infoRefs.current[target]?.querySelectorAll('[data-sw-text]') ?? []
-
-      // Cards and background animate through CSS transitions as soon as state changes
-      setCurrent(target)
-
-      tlRef.current = gsap
-        .timeline({
-          onComplete: () => {
-            animating.current = false
-          },
-        })
-        .to(buttons, { opacity: 0.5, pointerEvents: 'none', duration: 0.2 })
-        .to(outTexts, { y: -120, opacity: 0, stagger: 0.1, duration: 0.4 }, '<')
-        // Swap which info block is displayed, synchronously, so the next tween can see it
-        .call(() => {
-          flushSync(() => setInfoIndex(target))
-        })
-        .fromTo(
-          inTexts,
-          { y: 40, opacity: 0 },
-          { y: 0, opacity: 1, stagger: 0.1, duration: 0.4 }
-        )
-        .to(buttons, { opacity: 1, pointerEvents: 'all', duration: 0.2 })
-    },
-    [current, infoIndex, resetTilt]
-  )
-
-  const next = () => goTo(mod(current + 1, CASES.length))
-  const prev = () => goTo(mod(current - 1, CASES.length))
-
-  /* Mouse-follow tilt on the current card (the info text tilts with it via --tilt) */
-  const handleTilt = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const box = e.currentTarget.getBoundingClientRect()
-    const nx = (e.clientX - (box.left + box.width / 2)) / (box.width / 2)
-    const clamped = Math.max(-1, Math.min(1, nx))
-    stageRef.current?.style.setProperty('--tilt', `${clamped * 15}deg`)
-  }
-
-  /* Intro animations */
+  /* Intro GSAP scroll animations */
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sw="header"]', {
@@ -152,22 +221,32 @@ export default function SocialWork() {
       })
       gsap.from('[data-sw="stage"]', {
         opacity: 0,
-        y: 80,
-        duration: 0.9,
+        y: 50,
+        duration: 0.8,
         ease: 'power3.out',
-        scrollTrigger: { trigger: '[data-sw="stage"]', start: 'top 90%' },
+        scrollTrigger: { trigger: '[data-sw="stage"]', start: 'top 85%' },
       })
     }, secRef)
 
-    return () => {
-      ctx.revert()
-      tlRef.current?.kill()
+    return () => ctx.revert()
+  }, [])
+
+  /* Keyboard arrow navigation */
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        dispatch({ type: 'PREV' })
+      } else if (e.key === 'ArrowRight') {
+        dispatch({ type: 'NEXT' })
+      }
     }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
   return (
     <section ref={secRef} className={s.section}>
-      {/* Stats row */}
+      {/* ── Stats Row ────────────────────────────────────────────── */}
       <div data-sw="stats" className={s.statsRow}>
         {STATS.map((st, i) => (
           <div key={i} data-sw="stat" className={s.statBox}>
@@ -177,109 +256,71 @@ export default function SocialWork() {
         ))}
       </div>
 
-      {/* Carousel area */}
-      <div className={s.carouselWrap}>
-        {/* Blurred background — every image stays mounted so it can transition */}
-        <div className={s.bgLayer} aria-hidden="true">
-          {CASES.map((c, i) => (
-            <div
-              key={i}
-              className={s.bgImg}
-              data-pos={getPos(i, current, CASES.length)}
-            >
-              <img src={c.bg} alt="" />
-            </div>
-          ))}
-        </div>
+      {/* ── Section Header ───────────────────────────────────────── */}
+      <div data-sw="header" className={s.carouselHeader}>
+        <span className={s.eyebrow}>12 Years · 3 Streams · 1 Mission</span>
+        <h2 className={s.carouselTitle}>Where Shakti Sabha Has Stood</h2>
+        <p className={s.carouselSub}>जहाँ हम खड़े हैं — धरातलीय सामाजिक कार्य</p>
+      </div>
 
-        {/* Header */}
-        <div data-sw="header" className={s.carouselHeader}>
-          <span className={s.eyebrow}>12 Years · 3 Streams · 1 Mission</span>
-          <h2 className={s.carouselTitle}>Where Shakti Sabha Has Stood</h2>
-          <p className={s.carouselSub}>जहाँ हम खड़े हैं</p>
-        </div>
-
-        {/* Stage: cards, info text and arrows */}
-        <div data-sw="stage" ref={stageRef} className={s.stage}>
-          <div className={s.cardList}>
-            <div className={s.cardsWrapper}>
-              {CASES.map((c, i) => {
-                const pos = getPos(i, current, CASES.length)
-                const isCurrent = pos === 'current'
-                return (
-                  <div
-                    key={i} /* stable key: the same element persists, so CSS can animate it */
-                    className={s.card}
-                    data-pos={pos}
-                    onPointerMove={isCurrent ? handleTilt : undefined}
-                    onPointerLeave={isCurrent ? resetTilt : undefined}
-                    onClick={pos === 'prev' || pos === 'next' ? () => goTo(i) : undefined}
-                  >
-                    <img src={c.image} alt={c.title} draggable={false} />
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div className={s.infoList} aria-live="polite">
-            <div className={s.infoWrapper}>
-              {CASES.map((c, i) => (
-                <div
-                  key={i}
-                  ref={(el) => {
-                    infoRefs.current[i] = el
-                  }}
-                  className={`${s.info} ${i === infoIndex ? s.infoActive : ''}`}
-                  aria-hidden={i !== infoIndex}
-                >
-                  <div data-sw-text className={`${s.text} ${s.infoTitle}`}>{c.title}</div>
-                  <div data-sw-text className={`${s.text} ${s.infoLoc}`}>{c.location}</div>
-                  <div data-sw-text className={`${s.text} ${s.infoDesc}`}>{c.description}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <button
-            ref={btnLeft}
-            className={`${s.arrowBtn} ${s.btnLeft}`}
-            onClick={prev}
-            aria-label="Previous"
-          >
-            <svg viewBox="0 0 512 512" fill="none">
-              <polyline points="328 112 184 256 328 400" stroke="#fff" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-
-          <button
-            ref={btnRight}
-            className={`${s.arrowBtn} ${s.btnRight}`}
-            onClick={next}
-            aria-label="Next"
-          >
-            <svg viewBox="0 0 512 512" fill="none">
-              <polyline points="184 112 328 256 184 400" stroke="#fff" strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className={s.dots}>
-          {CASES.map((_, i) => (
+      {/* ── Keyframers 3D Carousel (useReducer + offset + tilt) ──── */}
+      <div data-sw="stage" className={s.carouselWrap}>
+        <div className={s.slidesContainer}>
+          <div className={s.slides}>
             <button
-              key={i}
-              className={`${s.dot} ${i === current ? s.dotActive : ''}`}
-              onClick={() => goTo(i)}
-              aria-label={`Go to case ${i + 1}`}
+              type="button"
+              className={`${s.navBtn} ${s.btnPrev}`}
+              onClick={() => dispatch({ type: 'PREV' })}
+              aria-label="Previous Slide"
+              title="Previous Slide"
+            >
+              ‹
+            </button>
+
+            {[...SLIDES, ...SLIDES, ...SLIDES].map((slide, i) => {
+              const offset = SLIDES.length + (state.slideIndex - i)
+              // Only render slides within visible range (-2 to 2) for maximum smoothness
+              if (Math.abs(offset) > 2) return null
+              return (
+                <Slide
+                  key={`${slide.title}-${i}`}
+                  slide={slide}
+                  offset={offset}
+                  onSelect={() => dispatch({ type: 'GOTO', index: i % SLIDES.length })}
+                />
+              )
+            })}
+
+            <button
+              type="button"
+              className={`${s.navBtn} ${s.btnNext}`}
+              onClick={() => dispatch({ type: 'NEXT' })}
+              aria-label="Next Slide"
+              title="Next Slide"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        {/* Dots Navigation */}
+        <div className={s.dotsRow}>
+          {SLIDES.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              className={`${s.dot} ${state.slideIndex === idx ? s.dotActive : ''}`}
+              onClick={() => dispatch({ type: 'GOTO', index: idx })}
+              aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA to complete Social Work archive */}
         <div className={s.ctaRow}>
-          <Link to="/social-work" className={s.ctaBtn}>Full Impact Archive →</Link>
-          <Link to="/events" className={s.ctaGhost}>Upcoming Camps →</Link>
+          <Link to="/social-work" className={s.exploreLink}>
+            Explore Full Social Work Archive & Field Reports →
+          </Link>
         </div>
       </div>
     </section>
