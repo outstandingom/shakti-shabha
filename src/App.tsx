@@ -6,6 +6,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from './components/Navigation/Navigation'
 import FireCursor from './components/FireCursor/FireCursor'
 import FallingLeaves from './components/FallingLeaves/FallingLeaves'
+import { AuthProvider } from './lib/AuthContext'
 import HomePage from './pages/HomePage'
 import AaryaveeraPage from './pages/AaryaveeraPage'
 import SocialWorkPage from './pages/SocialWorkPage'
@@ -20,6 +21,9 @@ import ResearchPage from './pages/ResearchPage'
 import GalleryPage from './pages/GalleryPage'
 import ArticlesPage from './pages/ArticlesPage'
 import CounsellingPage from './pages/CounsellingPage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import AdminDashboard from './pages/AdminDashboard'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -73,21 +77,24 @@ function LenisProvider() {
       <FallingLeaves />
       <Navigation />
       <Routes>
-        <Route path="/"                    element={<HomePage />} />
-        <Route path="/aaryaveera"          element={<AaryaveeraPage />} />
-        <Route path="/social-work"         element={<SocialWorkPage />} />
-        <Route path="/events"              element={<EventsPage />} />
-        <Route path="/sahyog"              element={<SahyogPage />} />
-        <Route path="/courses"             element={<CoursesPage />} />
-        <Route path="/history"             element={<HistoryPage />} />
-        <Route path="/gallery"             element={<GalleryPage />} />
-        <Route path="/articles"            element={<ArticlesPage />} />
-        <Route path="/counselling"         element={<CounsellingPage />} />
-        <Route path="/case-study"          element={<CaseStudyPage />} />
-        <Route path="/research"            element={<ResearchPage />} />
-        <Route path="/brand"               element={<BrandPage />} />
-        <Route path="/about"               element={<AboutPage />} />
+        <Route path="/"                     element={<HomePage />} />
+        <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
+        <Route path="/social-work"          element={<SocialWorkPage />} />
+        <Route path="/events"               element={<EventsPage />} />
+        <Route path="/sahyog"               element={<SahyogPage />} />
+        <Route path="/courses"              element={<CoursesPage />} />
+        <Route path="/history"              element={<HistoryPage />} />
+        <Route path="/gallery"              element={<GalleryPage />} />
+        <Route path="/articles"             element={<ArticlesPage />} />
+        <Route path="/counselling"          element={<CounsellingPage />} />
+        <Route path="/case-study"           element={<CaseStudyPage />} />
+        <Route path="/research"             element={<ResearchPage />} />
+        <Route path="/brand"                element={<BrandPage />} />
+        <Route path="/about"                element={<AboutPage />} />
         <Route path="/peace-and-revolution" element={<AboutPage />} />
+        <Route path="/login"                element={<LoginPage />} />
+        <Route path="/register"             element={<RegisterPage />} />
+        <Route path="/admin"                element={<AdminDashboard />} />
       </Routes>
     </LenisContext.Provider>
   )
@@ -96,7 +103,9 @@ function LenisProvider() {
 export default function App() {
   return (
     <BrowserRouter>
-      <LenisProvider />
+      <AuthProvider>
+        <LenisProvider />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

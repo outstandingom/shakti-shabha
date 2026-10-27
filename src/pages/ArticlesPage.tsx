@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { EffectCards, Mousewheel, Keyboard } from 'swiper/modules'
 import type { Swiper as SwiperCore } from 'swiper'
 import { BookOpen, ChevronLeft, ChevronRight, X, Clock, User, Compass } from 'lucide-react'
+import { supabase, Article } from '../lib/supabase'
 import s from './PageLayout.module.css'
 import ap from './ArticlesPage.module.css'
 import 'swiper/css'
@@ -223,13 +224,51 @@ const ARTICLES_LIST: ArticleItem[] = [
 ]
 
 export default function ArticlesPage() {
+  const [dbArticles, setDbArticles] = useState<ArticleItem[]>([])
   const [activeIndex, setActiveIndex] = useState(0)
   const [activeModalArticle, setActiveModalArticle] = useState<ArticleItem | null>(null)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const swiperRef = useRef<SwiperCore | null>(null)
 
-  const currentArticle = ARTICLES_LIST[activeIndex] || ARTICLES_LIST[0]
+  useEffect(() => {
+    async function loadArticles() {
+      try {
+        const { data } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false })
+
+        if (data && data.length > 0) {
+          const mapped: ArticleItem[] = (data as Article[]).map(a => ({
+            id: a.id,
+            tag: a.category || 'Article',
+            rating: '9.8',
+            title: a.title_en || a.title_hi || 'Untitled Article',
+            hindiTitle: a.title_hi || undefined,
+            excerpt: a.excerpt_en || a.excerpt_hi || (a.content_en?.slice(0, 160) ?? ''),
+            highlight: a.tags?.[0] || 'Featured',
+            author: a.author_name || 'Shakti Sabha Editorial',
+            readTime: '6 min read',
+            image: a.cover_image_url || 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+            fullBody: {
+              context: a.content_en || a.content_hi || '',
+              keyFindings: a.content_hi ? [a.content_hi] : [a.content_en || ''],
+              conclusion: 'Published by Shakti Sabha Editorial Council.'
+            }
+          }))
+          setDbArticles(mapped)
+        }
+      } catch (err) {
+        console.warn('Articles fetch error:', err)
+      }
+    }
+    loadArticles()
+  }, [])
+
+  const allArticles = [...dbArticles, ...ARTICLES_LIST]
+  const currentArticle = allArticles[activeIndex] || allArticles[0]
 
   const handlePrev = () => {
     swiperRef.current?.slidePrev()
@@ -333,7 +372,7 @@ export default function ArticlesPage() {
             {/* Slide Navigation & Scroll Indicator */}
             <div className={ap.controlsRow}>
               <span className={ap.slideCounter}>
-                {String(activeIndex + 1).padStart(2, '0')} / {String(ARTICLES_LIST.length).padStart(2, '0')}
+                {String(activeIndex + 1).padStart(2, '0')} / {String(allArticles.length).padStart(2, '0')}
               </span>
               <div className={ap.navArrows}>
                 <button
@@ -386,7 +425,7 @@ export default function ArticlesPage() {
               }}
               className="mySwiper"
             >
-              {ARTICLES_LIST.map((article) => (
+              {allArticles.map((article) => (
                 <SwiperSlide
                   key={article.id}
                   className={ap.slideCard}
@@ -591,7 +630,7 @@ export default function ArticlesPage() {
           </div>
 
           <div className={ap.articlesGrid}>
-            {ARTICLES_LIST.map((article, index) => (
+            {allArticles.map((article, index) => (
               <div
                 key={article.id}
                 className={ap.articleCard}

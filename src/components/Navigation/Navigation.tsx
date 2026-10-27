@@ -85,6 +85,10 @@ export default function Navigation() {
     }
   }
 
+  if (location.pathname.startsWith('/admin') || location.pathname === '/login' || location.pathname === '/register') {
+    return null
+  }
+
   return (
     <nav className={`${s.nav} ${scrolled ? s.navScrolled : ''}`}>
       {/* ---------- logo: flip image + writing text ---------- */}

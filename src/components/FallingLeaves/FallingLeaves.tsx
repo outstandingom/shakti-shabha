@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import s from './FallingLeaves.module.css'
 
 /* ============================================================
@@ -217,6 +218,9 @@ class Leaf {
 export default function FallingLeaves() {
   const wrapRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const location = useLocation()
+
+  const isAuthOrAdmin = location.pathname.startsWith('/admin') || location.pathname === '/login' || location.pathname === '/register'
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -336,6 +340,8 @@ export default function FallingLeaves() {
       window.removeEventListener('resize', resize)
     }
   }, [])
+
+  if (isAuthOrAdmin) return null
 
   return (
     <div ref={wrapRef} className={s.leavesWrap} aria-hidden="true">

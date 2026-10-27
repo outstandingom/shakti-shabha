@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { supabase, Course } from '../lib/supabase'
 import s from './PageLayout.module.css'
 import cp from './CoursesPage.module.css'
 
@@ -93,6 +94,39 @@ const MERCH_DATA = [
 
 export default function CoursesPage() {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null)
+  const [dbCourses, setDbCourses] = useState<CourseItem[]>([])
+
+  useEffect(() => {
+    async function loadCourses() {
+      try {
+        const { data } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false })
+
+        if (data && data.length > 0) {
+          const mapped: CourseItem[] = (data as Course[]).map(c => ({
+            id: c.id,
+            title: c.title,
+            category: c.instructor ? `Instructor: ${c.instructor}` : 'Shakti Academy',
+            level: c.level ? c.level.charAt(0).toUpperCase() + c.level.slice(1) : 'All Levels',
+            duration: c.duration || 'Flexible',
+            modules: c.syllabus ? `${c.syllabus.length} Modules` : 'Structured Curriculum',
+            price: c.price ? `₹${c.price}` : 'Free',
+            desc: c.description || '',
+            image: c.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+          }))
+          setDbCourses(mapped)
+        }
+      } catch (err) {
+        console.warn('Courses fetch error:', err)
+      }
+    }
+    loadCourses()
+  }, [])
+
+  const allCourses = [...dbCourses, ...COURSES_DATA]
 
   return (
     <main className={s.page}>
@@ -187,7 +221,7 @@ export default function CoursesPage() {
           <h2 className={s.sectionTitle} style={{ marginTop: '0.4rem' }}>All Online Courses</h2>
 
           <div className={cp.coursesGrid}>
-            {COURSES_DATA.map(course => (
+            {allCourses.map(course => (
               <div key={course.id} className={cp.courseCard}>
                 <div className={cp.courseImg}>
                   <img src={course.image} alt={course.title} />

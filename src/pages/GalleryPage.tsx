@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { supabase } from '../lib/supabase'
 import DomeGallery, { DEFAULT_SHAKTI_IMAGES, type DomeGalleryImage } from '../components/DomeGallery/DomeGallery'
 import gp from './GalleryPage.module.css'
 
@@ -59,11 +60,38 @@ const ALL_IMAGES = [...DEFAULT_SHAKTI_IMAGES, ...EXTRA_GALLERY_IMAGES]
 
 export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<string>('ALL')
+  const [dbImages, setDbImages] = useState<DomeGalleryImage[]>([])
+
+  useEffect(() => {
+    Promise.all([
+      supabase.from('gallery_photos').select('*').order('created_at', { ascending: false }),
+      supabase.from('gallery_categories').select('*'),
+    ]).then(([photosRes, catsRes]) => {
+      const photos = photosRes.data || []
+      const cats = catsRes.data || []
+      const catMap = new Map<string, string>()
+      cats.forEach((c: { id: string; name: string }) => catMap.set(c.id, c.name.toUpperCase()))
+
+      if (photos.length > 0) {
+        const mapped: DomeGalleryImage[] = photos.map((p: { url: string; caption?: string; category_id?: string }) => ({
+          src: p.url,
+          alt: p.caption || 'Shakti Sabha Gallery Photo',
+          tag: p.category_id ? (catMap.get(p.category_id) || 'COMMUNITY') : 'COMMUNITY',
+          desc: p.caption || '',
+        }))
+        setDbImages(mapped)
+      }
+    }).catch(err => console.warn('Gallery photos fetch error:', err))
+  }, [])
+
+  const allGalleryImages = useMemo(() => {
+    return [...dbImages, ...ALL_IMAGES]
+  }, [dbImages])
 
   const displayedImages = useMemo(() => {
-    if (activeCategory === 'ALL') return ALL_IMAGES
-    return ALL_IMAGES.filter(img => img.tag?.toLowerCase().includes(activeCategory.toLowerCase()))
-  }, [activeCategory])
+    if (activeCategory === 'ALL') return allGalleryImages
+    return allGalleryImages.filter(img => img.tag?.toLowerCase().includes(activeCategory.toLowerCase()))
+  }, [activeCategory, allGalleryImages])
 
   return (
     <div className={gp.pageContainer}>

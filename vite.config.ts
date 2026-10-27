@@ -4,6 +4,7 @@ import path from 'path'
 
 export default defineConfig({
   base: './',
+  envPrefix: ['VITE_', 'SUPABASE_'],
   plugins: [react()],
   server: {
     port: 3000,

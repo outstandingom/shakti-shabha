@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Maximize2, Minimize2 } from 'lucide-react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { supabase } from '../lib/supabase'
 import s from './PageLayout.module.css'
 import cp from './CounsellingPage.module.css'
 
@@ -104,6 +105,14 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
 
 export default function CounsellingPage() {
   const [formDone, setFormDone] = useState(false)
+  const [formData, setFormData] = useState({
+    name: '',
+    concern: 'Anxiety, Stress & Overthinking',
+    email: '',
+    phone: '',
+    message: ''
+  })
+  const [submitting, setSubmitting] = useState(false)
   const [activeCardIndex, setActiveCardIndex] = useState(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [isWheelActive, setIsWheelActive] = useState(false)
@@ -355,20 +364,52 @@ export default function CounsellingPage() {
                   <p style={{ fontSize: '0.88rem', color: '#047857' }}>
                     A counselor coordinator will reach out to you discreetly via your preferred contact mode within 24 hours.
                   </p>
-                  <button onClick={() => setFormDone(false)} style={{ marginTop: '1.25rem', padding: '0.45rem 1.25rem', background: '#059669', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontSize: '0.8rem', cursor: 'pointer' }}>
+                  <button onClick={() => { setFormDone(false); setFormData({ name: '', concern: 'Anxiety, Stress & Overthinking', email: '', phone: '', message: '' }) }} style={{ marginTop: '1.25rem', padding: '0.45rem 1.25rem', background: '#059669', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontSize: '0.8rem', cursor: 'pointer' }}>
                     Submit Another
                   </button>
                 </div>
               ) : (
-                <form onSubmit={e => { e.preventDefault(); setFormDone(true) }} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                <form
+                  onSubmit={async e => {
+                    e.preventDefault()
+                    setSubmitting(true)
+                    try {
+                      await supabase.from('counselling_requests').insert([{
+                        name: formData.name,
+                        concern: formData.concern,
+                        email: formData.email,
+                        phone: formData.phone,
+                        message: formData.message || '',
+                        status: 'pending'
+                      }])
+                    } catch (err) {
+                      console.warn('Counselling submission error:', err)
+                    } finally {
+                      setSubmitting(false)
+                      setFormDone(true)
+                    }
+                  }}
+                  style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}
+                >
                   <div>
                     <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Name or Preferred Alias</label>
-                    <input required type="text" placeholder="e.g. Meera (Alias ok)" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Meera (Alias ok)"
+                      value={formData.name}
+                      onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
+                    />
                   </div>
 
                   <div>
                     <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Area of Support</label>
-                    <select style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', background: '#FFFFFF' }}>
+                    <select
+                      value={formData.concern}
+                      onChange={e => setFormData(prev => ({ ...prev, concern: e.target.value }))}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', background: '#FFFFFF' }}
+                    >
                       <option>Anxiety, Stress & Overthinking</option>
                       <option>Depression & Loss of Motivation</option>
                       <option>Trauma, Domestic Coercion & Recovery</option>
@@ -380,16 +421,45 @@ export default function CounsellingPage() {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Email Address</label>
-                      <input required type="email" placeholder="you@email.com" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                      <input
+                        required
+                        type="email"
+                        placeholder="you@email.com"
+                        value={formData.email}
+                        onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                        style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
+                      />
                     </div>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Phone / WhatsApp</label>
-                      <input required type="tel" placeholder="+91..." style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                      <input
+                        required
+                        type="tel"
+                        placeholder="+91..."
+                        value={formData.phone}
+                        onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                        style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
+                      />
                     </div>
                   </div>
 
-                  <button type="submit" style={{ padding: '0.85rem', background: '#3D5A45', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', transition: 'background 0.2s' }}>
-                    Request Safe Callback →
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Brief Message / Notes (Optional)</label>
+                    <textarea
+                      placeholder="Any specific timings or questions..."
+                      rows={2}
+                      value={formData.message}
+                      onChange={e => setFormData(prev => ({ ...prev, message: e.target.value }))}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', resize: 'vertical' }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    style={{ padding: '0.85rem', background: '#3D5A45', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', transition: 'background 0.2s', opacity: submitting ? 0.7 : 1 }}
+                  >
+                    {submitting ? 'Submitting...' : 'Request Safe Callback →'}
                   </button>
                 </form>
               )}
