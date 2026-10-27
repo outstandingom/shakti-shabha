@@ -176,12 +176,17 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
       />
 
       {/* 3D Tilted Card Content */}
-      <div
-        className={s.slideContent}
-        style={{
-          backgroundImage: `url('${slide.image}')`,
-        }}
-      >
+      <div className={s.slideContent}>
+        {/* Slightly blurred image layer */}
+        <div
+          className={s.slideImage}
+          style={{
+            backgroundImage: `url('${slide.image}')`,
+          }}
+        />
+        <div className={s.slideGradient} />
+
+        {/* Crystal-sharp text on top */}
         <div className={s.slideContentInner}>
           <div className={s.slideBadge}>{slide.stat}</div>
           <h2 className={s.slideTitle}>{slide.title}</h2>

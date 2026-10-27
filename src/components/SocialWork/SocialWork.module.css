@@ -158,9 +158,6 @@
 .slideContent {
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
@@ -178,17 +175,40 @@
   position: relative;
 }
 
-.slideContent::before {
-  content: '';
+/* Slightly blurred image layer behind crystal-sharp text */
+.slideImage {
+  position: absolute;
+  inset: -12px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2.5px);
+  transform: scale(1.08);
+  transition: filter 0.5s ease, transform 0.5s ease;
+  z-index: 0;
+}
+
+.slide[data-active="true"] .slideImage {
+  filter: blur(2px);
+  transform: scale(1.08);
+}
+
+.slide[data-active="false"] .slideImage {
+  filter: blur(4.5px);
+  transform: scale(1.05);
+}
+
+.slideGradient {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(15, 10, 12, 0.95) 0%,
-    rgba(15, 10, 12, 0.5) 50%,
+    rgba(15, 10, 12, 0.92) 0%,
+    rgba(15, 10, 12, 0.45) 50%,
     rgba(15, 10, 12, 0.08) 100%
   );
   z-index: 1;
+  pointer-events: none;
 }
 
 .slide[data-active="true"] .slideContent {
