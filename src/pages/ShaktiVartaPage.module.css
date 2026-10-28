@@ -141,15 +141,7 @@
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
-.statCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: #4338CA;
-}
+
 
 .statNumber {
   font-family: var(--font-display, 'Cinzel', serif);
@@ -177,7 +169,7 @@
 .overviewBox {
   background: #EEF2FF;
   border: 1px solid #E0E7FF;
-  border-left: 5px solid #4338CA;
+  
   border-radius: 16px;
   padding: clamp(2rem, 3.5vw, 3rem);
   margin-bottom: 4.5rem;
@@ -281,10 +273,11 @@
 
 /* ── CTA Banner ── */
 .ctaBanner {
-  background: linear-gradient(135deg, #312E81 0%, #4338CA 100%);
-  border-radius: 20px;
+  background: #EEF2FF;
+  border: 1px solid #E0E7FF;
+  border-radius: 16px;
   padding: clamp(2.5rem, 5vw, 4rem);
-  color: #FFFFFF;
+  color: #111827;
   text-align: center;
 }
 
@@ -292,13 +285,13 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.8rem, 3.5vw, 2.5rem);
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   margin-bottom: 0.75rem;
 }
 
 .ctaText {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: #4B5563;
   max-width: 650px;
   margin: 0 auto 2rem;
   line-height: 1.7;
@@ -315,37 +308,40 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #FFFFFF;
-  color: #312E81;
+  background: #4338CA;
+  color: #FFFFFF;
   font-weight: 700;
   font-size: 0.88rem;
   padding: 0.85rem 2rem;
   border-radius: 9999px;
   text-decoration: none;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(67, 56, 202, 0.25);
 }
 
 .btnPrimary:hover {
+  background: #3730A3;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(67, 56, 202, 0.35);
 }
 
 .btnOutline {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #111827;
   font-weight: 600;
   font-size: 0.88rem;
   padding: 0.85rem 2rem;
   border-radius: 9999px;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
 }
 
 .btnOutline:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: #EEF2FF;
+  border-color: #4338CA;
+  color: #4338CA;
 }
