@@ -148,6 +148,17 @@
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.pillar:hover .pillarLink { 
+  background: var(--theme-primary, #DC143C);
+  border-color: var(--theme-primary, #DC143C);
+  color: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.3);
 }
 
 .pillar:hover { 

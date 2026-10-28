@@ -205,8 +205,7 @@ export default function Aaryaveera() {
             <p className={s.identityLead}>
               Aaryaveera is the flagship identity of Shakti Sabha&apos;s revolutionary spirit —
               representing the awakened warrior within every woman and the noble masculinity
-              (Paurush) that protects Dharma. It is the unifying symbol that bridges Mission
-              Mardini, Shakti Bhava, and Shakti Varta.
+              (Paurush) that protects Dharma. It is the unifying symbol that bridges <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
             </p>
             <ul className={s.identityList}>
               <li><strong>Symbolism:</strong> The flame of revolution + the lotus of peace</li>

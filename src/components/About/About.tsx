@@ -94,12 +94,12 @@ export default function About() {
         </div>
         <div data-ab="pillars" className={s.pillars}>
           {PILLARS.map(p => (
-            <div
+            <Link
               key={p.num}
+              to={p.link}
               data-ab="pillar"
               className={s.pillar}
-              style={{ '--pl-accent': p.accent, '--pl-tag-bg': p.tagBg, cursor: 'pointer' } as React.CSSProperties}
-              onClick={() => navigate(p.link)}
+              style={{ '--pl-accent': p.accent, '--pl-tag-bg': p.tagBg } as React.CSSProperties}
             >
               <div className={s.pillarHead}>
                 <span className={s.pillarNum}>{p.num}</span>
@@ -108,10 +108,10 @@ export default function About() {
               <div className={s.pillarName}>{p.name}</div>
               <div className={s.pillarDev}>{p.dev}</div>
               <p className={s.pillarText}>{p.text}</p>
-              <Link to={p.link} className={s.pillarLink}>
+              <span className={s.pillarLink}>
                 {p.linkLabel} →
-              </Link>
-            </div>
+              </span>
+            </Link>
           ))}
         </div>
       </div>
