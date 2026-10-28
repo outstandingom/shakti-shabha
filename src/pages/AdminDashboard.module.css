@@ -485,25 +485,48 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
-  z-index: 200;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 1.5rem;
+  padding: clamp(1.25rem, 3vw, 2.5rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal {
   background: #111115;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 20px;
-  padding: 2rem;
+  padding: 2rem 2.25rem;
   width: 100%;
   max-width: 760px;
   position: relative;
-  max-height: 90vh;
+  margin: auto 0;
+  max-height: calc(100vh - 4.5rem);
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #DC143C rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+
+.modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: #DC143C;
+  border-radius: 8px;
 }
 
 .modalTitle {
@@ -542,8 +565,17 @@
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 1.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid rgba(255,255,255,0.07);
+  position: sticky;
+  bottom: -2rem;
+  background: #111115;
+  margin-left: -2.25rem;
+  margin-right: -2.25rem;
+  margin-bottom: -2rem;
+  padding: 1.25rem 2.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  z-index: 10;
 }
 
 /* ── Status Badges ── */

@@ -14,7 +14,31 @@ const COURSES = [
   { badge:'Research', title:'The Legal Collage — Know Your Rights', detail:'Understanding IPC, BNS, and systemic loopholes. Fact-based, lawyer-reviewed, essential for every woman in India.', modules:'5 Modules', duration:'3 Weeks', level:'Open', featured:false },
 ]
 
+
+const getInitialCourses = () => {
+  try {
+    const local = typeof window !== 'undefined' ? localStorage.getItem('shakti_custom_courses') : null
+    if (local) {
+      const parsed = JSON.parse(local)
+      const published = parsed.filter((c: any) => c.published).map((c: any) => ({
+        badge: c.instructor ? `Instructor · ${c.instructor}` : 'Academy',
+        title: c.title,
+        detail: c.description || 'Comprehensive training curriculum.',
+        modules: c.syllabus?.length ? `${c.syllabus.length} Modules` : 'Self-Paced',
+        duration: c.duration || 'Flexible',
+        level: c.level || 'All Levels',
+        featured: false
+      }))
+      if (published.length > 0) return [...published, ...COURSES]
+    }
+  } catch (e) {
+    // fallback
+  }
+  return COURSES
+}
+
 export default function Courses() {
+  const [coursesList] = useState(getInitialCourses)
   const secRef  = useRef<HTMLElement>(null)
   const trackRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
@@ -103,7 +127,7 @@ export default function Courses() {
 
       {/* GSAP translates this element — no native overflow scroll */}
       <div ref={trackRef} className={s.track}>
-        {COURSES.map(c => (
+        {coursesList.map(c => (
           <div key={c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
             <div className={s.cardBadge}>{c.badge}</div>
             <div className={s.cardTitle}>{c.title}</div>

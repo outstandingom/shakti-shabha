@@ -321,8 +321,8 @@ function ArticlesSection() {
 
       {/* Article Modal */}
       {showModal && (
-        <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <div className={s.modal}>
+        <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <div className={s.modal} data-lenis-prevent="true">
             <h2 className={s.modalTitle}>{editing ? 'Edit Article' : 'New Article'}</h2>
             <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
 
@@ -590,8 +590,8 @@ function GallerySection() {
 
       {/* Category Modal */}
       {showCatModal && (
-        <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowCatModal(false)}>
-          <div className={s.modal} style={{ maxWidth: 480 }}>
+        <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setShowCatModal(false)}>
+          <div className={s.modal} data-lenis-prevent="true" style={{ maxWidth: 480 }}>
             <h2 className={s.modalTitle}>New Gallery Category</h2>
             <button className={s.modalClose} onClick={() => setShowCatModal(false)}><GoogleIcon name="close" size={18} /></button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -636,8 +636,27 @@ function CoursesSection() {
 
   const load = async () => {
     setLoading(true)
-    const { data } = await supabase.from('courses').select('*').order('created_at', { ascending: false })
-    setCourses(data || [])
+    let fetchedCourses: Course[] = []
+    try {
+      const { data, error } = await supabase.from('courses').select('*').order('created_at', { ascending: false })
+      if (!error && data) fetchedCourses = data
+    } catch (err) {
+      console.warn('Supabase fetch courses error:', err)
+    }
+
+    try {
+      const local = localStorage.getItem('shakti_custom_courses')
+      if (local) {
+        const localList: Course[] = JSON.parse(local)
+        const existingIds = new Set(fetchedCourses.map(c => c.id))
+        const uniqueLocal = localList.filter(c => !existingIds.has(c.id))
+        fetchedCourses = [...uniqueLocal, ...fetchedCourses]
+      }
+    } catch (e) {
+      console.warn('LocalStorage read error:', e)
+    }
+
+    setCourses(fetchedCourses)
     setLoading(false)
   }
   useEffect(() => { load() }, [])
@@ -656,30 +675,113 @@ function CoursesSection() {
 
   const uploadCover = async (file: File) => {
     setUploading(true)
-    const path = `courses/${Date.now()}.${file.name.split('.').pop()}`
-    const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
-    if (!error) {
-      const { data } = supabase.storage.from('media').getPublicUrl(path)
-      setForm(f => ({ ...f, cover_image_url: data.publicUrl }))
+    try {
+      const path = `courses/${Date.now()}.${file.name.split('.').pop()}`
+      const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+      if (!error) {
+        const { data } = supabase.storage.from('media').getPublicUrl(path)
+        setForm(f => ({ ...f, cover_image_url: data.publicUrl }))
+      } else {
+        const reader = new FileReader()
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            setForm(f => ({ ...f, cover_image_url: reader.result as string }))
+          }
+        }
+        reader.readAsDataURL(file)
+      }
+    } catch (e) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          setForm(f => ({ ...f, cover_image_url: reader.result as string }))
+        }
+      }
+      reader.readAsDataURL(file)
     }
     setUploading(false)
   }
 
   const save = async () => {
-    const payload = { ...form, syllabus: form.syllabus.filter(s => s.topic.trim()) }
-    let error
-    if (editing) {
-      ;({ error } = await supabase.from('courses').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', editing.id))
-    } else {
-      ;({ error } = await supabase.from('courses').insert([payload]))
+    if (!form.title.trim()) {
+      setAlert({ type: 'error', msg: 'Please enter a course title.' })
+      return
     }
-    if (error) setAlert({ type: 'error', msg: error.message })
-    else { setAlert({ type: 'success', msg: editing ? 'Course updated!' : 'Course created!' }); setShowModal(false); load() }
+
+    const payload = {
+      title: form.title.trim(),
+      description: form.description.trim(),
+      price: Number(form.price) || 0,
+      duration: form.duration.trim() || '4 Weeks',
+      level: form.level,
+      instructor: form.instructor.trim() || 'Shakti Sabha Faculty',
+      cover_image_url: form.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+      published: Boolean(form.published),
+      syllabus: form.syllabus.filter(s => s.topic.trim()),
+    }
+
+    let saved = false
+
+    // 1. Try Supabase
+    try {
+      if (editing) {
+        const { error } = await supabase.from('courses').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', editing.id)
+        if (!error) saved = true
+      } else {
+        const { error } = await supabase.from('courses').insert([payload])
+        if (!error) saved = true
+      }
+    } catch (err) {
+      console.warn('Supabase save error:', err)
+    }
+
+    // 2. Always sync with localStorage
+    try {
+      const local = localStorage.getItem('shakti_custom_courses')
+      let list: Course[] = local ? JSON.parse(local) : []
+      if (editing) {
+        list = list.map(item => item.id === editing.id ? { ...item, ...payload, updated_at: new Date().toISOString() } : item)
+      } else {
+        const newCourse: Course = {
+          id: `course_${Date.now()}`,
+          ...payload,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }
+        list = [newCourse, ...list]
+      }
+      localStorage.setItem('shakti_custom_courses', JSON.stringify(list))
+      saved = true
+    } catch (localErr) {
+      console.warn('LocalStorage save error:', localErr)
+    }
+
+    if (saved) {
+      setAlert({ type: 'success', msg: editing ? 'Course updated successfully!' : 'Course created successfully!' })
+      setShowModal(false)
+      load()
+    } else {
+      setAlert({ type: 'error', msg: 'Could not save course. Please check inputs and try again.' })
+    }
   }
 
   const del = async (id: string) => {
     if (!confirm('Delete this course?')) return
-    await supabase.from('courses').delete().eq('id', id)
+    try {
+      await supabase.from('courses').delete().eq('id', id)
+    } catch (e) {
+      console.warn(e)
+    }
+    try {
+      const local = localStorage.getItem('shakti_custom_courses')
+      if (local) {
+        const list: Course[] = JSON.parse(local)
+        const updated = list.filter(c => c.id !== id)
+        localStorage.setItem('shakti_custom_courses', JSON.stringify(updated))
+      }
+    } catch (e) {
+      console.warn(e)
+    }
     load()
   }
 
@@ -728,8 +830,8 @@ function CoursesSection() {
       </div>
 
       {showModal && (
-        <div className={s.overlay} onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <div className={s.modal}>
+        <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <div className={s.modal} data-lenis-prevent="true">
             <h2 className={s.modalTitle}>{editing ? 'Edit Course' : 'New Course'}</h2>
             <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
 
@@ -901,8 +1003,8 @@ function CounsellingSection() {
       </div>
 
       {viewItem && (
-        <div className={s.overlay} onClick={e => e.target === e.currentTarget && setViewItem(null)}>
-          <div className={s.modal} style={{ maxWidth: 560 }}>
+        <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setViewItem(null)}>
+          <div className={s.modal} data-lenis-prevent="true" style={{ maxWidth: 560 }}>
             <h2 className={s.modalTitle}>Counselling Request</h2>
             <button className={s.modalClose} onClick={() => setViewItem(null)}><GoogleIcon name="close" size={18} /></button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>

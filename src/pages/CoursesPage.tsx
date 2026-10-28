@@ -15,6 +15,7 @@ interface CourseItem {
   price: string
   desc: string
   image: string
+  syllabus?: { week: string; topic: string }[]
 }
 
 const COURSES_DATA: CourseItem[] = [
@@ -26,8 +27,14 @@ const COURSES_DATA: CourseItem[] = [
     duration: '4 Weeks',
     modules: '8 Video Modules + Quizzes',
     price: '₹1,800',
-    desc: 'Core biomechanics of human vulnerabilities, escaping holds, improvised weapon defense, and rapid emergency voice command protocols.',
+    desc: 'Core biomechanics of human vulnerabilities, escaping holds, improvised weapon defense, and rapid emergency voice command protocols. Learn active perimeter management, recognizing pre-violence indicators, and executing explosive counter-strikes.',
     image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'Cognitive Radar & Threat Identification: Color-code awareness and micro-expression red flags.' },
+      { week: 'Week 2', topic: 'Bio-mechanical Escapes: Wrist grabs, bear hugs, chokeholds, and pinned-to-wall extractions.' },
+      { week: 'Week 3', topic: 'Empty-Hand High-Impact Strikes: Palm-heel, hammer-fist, elbows, and knee drives.' },
+      { week: 'Week 4', topic: 'Improvised Environmental Weapons: Everyday carry items, rapid exit pathways, and post-incident stabilization.' },
+    ]
   },
   {
     id: 'c-2',
@@ -37,8 +44,16 @@ const COURSES_DATA: CourseItem[] = [
     duration: '6 Weeks',
     modules: '12 Deep Dives + Journal',
     price: '₹2,200',
-    desc: 'Unapologetic boundary setting, overcoming public anxiety, vocal projection, resilience training, and cultivating unshakeable self-worth.',
+    desc: 'Unapologetic boundary setting, overcoming public anxiety, vocal projection, resilience training, and cultivating unshakeable self-worth grounded in Vedic models of feminine courage.',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'De-conditioning People-Pleasing & Autonomic Freeze Responses.' },
+      { week: 'Week 2', topic: 'Voice Projection & Command Presence in High-Pressure Environments.' },
+      { week: 'Week 3', topic: 'Psychological Resilience: Reframing Adversity through Kshatra-Dharma.' },
+      { week: 'Week 4', topic: 'Boundary Architecture: Emotional, Physical, and Professional.' },
+      { week: 'Week 5', topic: 'Overcoming Social Anxiety & Public Speaking Mastery.' },
+      { week: 'Week 6', topic: 'The Sovereign Warrior Mindset: Long-term Integrity & Community Leadership.' },
+    ]
   },
   {
     id: 'c-3',
@@ -48,8 +63,13 @@ const COURSES_DATA: CourseItem[] = [
     duration: '3 Weeks',
     modules: '6 Modules + Community',
     price: '₹1,500',
-    desc: 'How classical Indian wisdom, sanskaras, and emotional anchoring build confident children resilient against toxic digital addiction.',
+    desc: 'How classical Indian wisdom, sanskaras, and emotional anchoring build confident children resilient against toxic digital addiction and predatory influences.',
     image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'Foundations of Dharmic Parenting: Sanskaras in the Digital Age.' },
+      { week: 'Week 2', topic: 'Emotional Regulation & Building Lifelong Trust with Teenagers.' },
+      { week: 'Week 3', topic: 'Countering Algorithm Addiction & Instilling Cultural Pride.' },
+    ]
   },
   {
     id: 'c-4',
@@ -59,8 +79,18 @@ const COURSES_DATA: CourseItem[] = [
     duration: '8 Weeks',
     modules: '16 Modules + Live Mentorship',
     price: '₹3,000',
-    desc: 'Community organizing, legal literacy under Bharatiya Nyaya Sanhita, crisis mediation, and grassroots campaign management.',
+    desc: 'Community organizing, legal literacy under Bharatiya Nyaya Sanhita, crisis mediation, and grassroots campaign management for impactful institutional change.',
     image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'Civilizational Strategy & Historical Case Studies of Rani Chennamma and Ahilyabai.' },
+      { week: 'Week 2', topic: 'Institutional Dynamics & Public Speaking Frameworks.' },
+      { week: 'Week 3', topic: 'Legal Shield: Statutory Protections under BNS, IPC, and POSH Act.' },
+      { week: 'Week 4', topic: 'Crisis Communication & Media De-escalation.' },
+      { week: 'Week 5', topic: 'Grassroots Mobilization & Volunteer Management.' },
+      { week: 'Week 6', topic: 'Strategic Negotiation in Hostile Environments.' },
+      { week: 'Week 7', topic: 'Resource Allocation & Domestic Philanthropic Compliance.' },
+      { week: 'Week 8', topic: 'Final Capstone Project: Leading an On-Ground Community Intervention.' },
+    ]
   },
   {
     id: 'c-5',
@@ -72,6 +102,13 @@ const COURSES_DATA: CourseItem[] = [
     price: '₹1,800',
     desc: 'Master the art of rigorous intellectual debate, analyzing Western feminist narratives vs civilizational Bharatiya thought with verified sources.',
     image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'Epistemic Frameworks of Indian Philosophy: Pramanas and Nyaya.' },
+      { week: 'Week 2', topic: 'De-colonizing Indian Historiography: Correcting the Distortion.' },
+      { week: 'Week 3', topic: 'Understanding Paurush: True Masculinity as Dharma-Rakshak.' },
+      { week: 'Week 4', topic: 'Critical Analysis of Modern Feminist vs Dharmic Models.' },
+      { week: 'Week 5', topic: 'Conducting Intellectual Symposia & Public Debates.' },
+    ]
   },
   {
     id: 'c-6',
@@ -83,6 +120,14 @@ const COURSES_DATA: CourseItem[] = [
     price: '₹2,000',
     desc: 'Step-by-step master angles, footwork, dual-strike blocks, and rhythmic flow drills from experienced Maharashtra lathi masters.',
     image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=600&auto=format&fit=crop&q=80',
+    syllabus: [
+      { week: 'Week 1', topic: 'Stance, Footwork (Chaal), and Grip Dynamics.' },
+      { week: 'Week 2', topic: 'The 12 Fundamental Target Strikes of Mardani Khel.' },
+      { week: 'Week 3', topic: 'Parries, Circular Blocks, and Momentum Trapping.' },
+      { week: 'Week 4', topic: 'Two-Handed Continuous Spinning (Gheraa) Defense.' },
+      { week: 'Week 5', topic: 'Weapon Disarms & Empty-Hand Counter vs Lathi.' },
+      { week: 'Week 6', topic: 'Live Partner Sparring & Form Mastery Certification.' },
+    ]
   },
 ]
 
@@ -95,10 +140,12 @@ const MERCH_DATA = [
 
 export default function CoursesPage() {
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null)
+  const [detailCourse, setDetailCourse] = useState<CourseItem | null>(null)
   const [dbCourses, setDbCourses] = useState<CourseItem[]>([])
 
   useEffect(() => {
     async function loadCourses() {
+      let fetched: Course[] = []
       try {
         const { data } = await supabase
           .from('courses')
@@ -106,22 +153,39 @@ export default function CoursesPage() {
           .eq('published', true)
           .order('created_at', { ascending: false })
 
-        if (data && data.length > 0) {
-          const mapped: CourseItem[] = (data as Course[]).map(c => ({
-            id: c.id,
-            title: c.title,
-            category: c.instructor ? `Instructor: ${c.instructor}` : 'Shakti Academy',
-            level: c.level ? c.level.charAt(0).toUpperCase() + c.level.slice(1) : 'All Levels',
-            duration: c.duration || 'Flexible',
-            modules: c.syllabus ? `${c.syllabus.length} Modules` : 'Structured Curriculum',
-            price: c.price ? `₹${c.price}` : 'Free',
-            desc: c.description || '',
-            image: c.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
-          }))
-          setDbCourses(mapped)
-        }
+        if (data) fetched = data as Course[]
       } catch (err) {
         console.warn('Courses fetch error:', err)
+      }
+
+      // Merge with custom courses from LocalStorage
+      try {
+        const local = localStorage.getItem('shakti_custom_courses')
+        if (local) {
+          const localList: Course[] = JSON.parse(local)
+          const published = localList.filter(c => c.published)
+          const existingIds = new Set(fetched.map(c => c.id))
+          const unique = published.filter(c => !existingIds.has(c.id))
+          fetched = [...unique, ...fetched]
+        }
+      } catch (e) {
+        console.warn('LocalStorage course load error:', e)
+      }
+
+      if (fetched.length > 0) {
+        const mapped: CourseItem[] = fetched.map(c => ({
+          id: c.id,
+          title: c.title,
+          category: c.instructor ? `Instructor · ${c.instructor}` : 'Shakti Academy',
+          level: c.level ? c.level.charAt(0).toUpperCase() + c.level.slice(1) : 'All Levels',
+          duration: c.duration || 'Flexible',
+          modules: c.syllabus && c.syllabus.length > 0 ? `${c.syllabus.length} Modules` : 'Structured Curriculum',
+          price: c.price ? `₹${c.price.toLocaleString()}` : 'Free',
+          desc: c.description || '',
+          image: c.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+          syllabus: c.syllabus,
+        }))
+        setDbCourses(mapped)
       }
     }
     loadCourses()
@@ -136,8 +200,8 @@ export default function CoursesPage() {
         <div className={cp.heroInner}>
           <Link to="/" className={cp.backLink}>← Back to Home</Link>
           <span className={cp.badge}>SRS Section 11 · DRM Protected LMS</span>
-          <h1 className={cp.title}>Courses & Learning</h1>
-          <p className={cp.hindiSubtitle}>पाठ्यक्रम एवं ज्ञान मंच · Self-Defense & Leadership</p>
+          <h1 className={cp.title}>Courses &amp; Learning</h1>
+          <p className={cp.hindiSubtitle}>पाठ्यक्रम एवं ज्ञान मंच · Self-Defense &amp; Leadership</p>
           <p className={cp.desc}>
             Structured, high-definition online masterclasses protected by AWS CloudFront signed URLs to prevent unauthorized piracy.
             Earn the prestigious Aaryaveera Warrior Certification and gain lifetime access to updates and private student forums.
@@ -163,14 +227,21 @@ export default function CoursesPage() {
         <div className={cp.coursesGrid}>
           {allCourses.map(course => (
             <div key={course.id} className={cp.courseCard}>
-              <div className={cp.imgWrap}>
+              <div className={cp.imgWrap} onClick={() => setDetailCourse(course)} style={{ cursor: 'pointer' }}>
                 <img src={course.image} alt={course.title} className={cp.courseImg} loading="lazy" />
                 <span className={cp.badgeLevel}>{course.level}</span>
               </div>
 
               <div className={cp.courseBody}>
                 <div className={cp.category}>{course.category}</div>
-                <h3 className={cp.courseTitle}>{course.title}</h3>
+                <h3
+                  className={cp.courseTitle}
+                  onClick={() => setDetailCourse(course)}
+                  style={{ cursor: 'pointer' }}
+                  title="Click to view full course details & syllabus"
+                >
+                  {course.title}
+                </h3>
                 <p className={cp.descText}>{course.desc}</p>
 
                 <div className={cp.metaGrid}>
@@ -189,29 +260,164 @@ export default function CoursesPage() {
                     <span style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', display: 'block' }}>One-time Fee</span>
                     <span className={cp.priceText}>{course.price}</span>
                   </div>
-                  <button
-                    onClick={() => setSelectedCourse(course.title)}
-                    className={cp.enrollBtn}
-                  >
-                    Enroll Now →
-                  </button>
+                  <div className={cp.cardActions}>
+                    <button
+                      type="button"
+                      onClick={() => setDetailCourse(course)}
+                      className={cp.viewBtn}
+                      title="View full syllabus and details"
+                    >
+                      Details &amp; Syllabus
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCourse(course.title)}
+                      className={cp.enrollBtn}
+                    >
+                      Enroll Now →
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Enrollment Confirmation Modal */}
+        {/* FULL INFORMATION & SYLLABUS SCROLLABLE MODAL */}
+        {detailCourse && (
+          <div
+            className={cp.modalOverlay}
+            data-lenis-prevent="true"
+            onClick={() => setDetailCourse(null)}
+          >
+            <div
+              className={cp.modalContent}
+              data-lenis-prevent="true"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                className={cp.modalCloseBtn}
+                onClick={() => setDetailCourse(null)}
+                title="Close modal"
+              >
+                <GoogleIcon name="close" size={18} />
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.6rem' }}>
+                <span className={cp.category}>{detailCourse.category}</span>
+                <span style={{ color: '#D1D5DB' }}>·</span>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#166534', background: 'rgba(22,101,52,0.1)', padding: '0.2rem 0.65rem', borderRadius: 9999 }}>
+                  {detailCourse.level}
+                </span>
+              </div>
+
+              <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', color: '#111827', lineHeight: 1.25, marginBottom: '1rem' }}>
+                {detailCourse.title}
+              </h2>
+
+              {detailCourse.image && (
+                <div style={{ width: '100%', height: 200, borderRadius: 12, overflow: 'hidden', marginBottom: '1.25rem' }}>
+                  <img src={detailCourse.image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', padding: '0.85rem 1.1rem', background: '#F9FAFB', borderRadius: 10, border: '1px solid #E5E7EB', marginBottom: '1.25rem' }}>
+                <div>
+                  <div style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 600 }}>Duration</div>
+                  <div style={{ fontWeight: 700, color: '#111827', fontSize: '0.95rem' }}>{detailCourse.duration}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 600 }}>Curriculum</div>
+                  <div style={{ fontWeight: 700, color: '#111827', fontSize: '0.95rem' }}>{detailCourse.modules}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 600 }}>Tuition</div>
+                  <div style={{ fontWeight: 700, color: '#DC143C', fontSize: '0.95rem' }}>{detailCourse.price}</div>
+                </div>
+                <div>
+                  <div style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 600 }}>Certificate</div>
+                  <div style={{ fontWeight: 700, color: '#111827', fontSize: '0.95rem' }}>Verified Hash PDF</div>
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '1.5rem' }}>
+                <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#111827', marginBottom: '0.4rem' }}>Course Overview</h4>
+                <p style={{ fontSize: '0.92rem', color: '#4B5563', lineHeight: 1.75 }}>
+                  {detailCourse.desc}
+                </p>
+              </div>
+
+              {detailCourse.syllabus && detailCourse.syllabus.length > 0 && (
+                <div className={cp.syllabusBox}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
+                    <GoogleIcon name="menu_book" size={20} style={{ color: '#DC143C' }} />
+                    <h4 style={{ fontSize: '0.98rem', fontWeight: 700, color: '#111827', margin: 0 }}>
+                      Complete Weekly Syllabus ({detailCourse.syllabus.length} Modules)
+                    </h4>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {detailCourse.syllabus.map((item, idx) => (
+                      <div key={idx} className={cp.syllabusRow}>
+                        <span className={cp.syllabusWeek}>{item.week}</span>
+                        <span style={{ color: '#374151', lineHeight: 1.55 }}>{item.topic}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '2rem', paddingTop: '1.25rem', borderTop: '1px solid #E5E7EB' }}>
+                <button
+                  type="button"
+                  onClick={() => setDetailCourse(null)}
+                  style={{ padding: '0.7rem 1.4rem', borderRadius: 9999, border: '1px solid #D1D5DB', background: '#FFFFFF', color: '#374151', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Close
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const title = detailCourse.title
+                    setDetailCourse(null)
+                    setSelectedCourse(title)
+                  }}
+                  className={cp.enrollBtn}
+                  style={{ padding: '0.7rem 1.75rem', fontSize: '0.9rem' }}
+                >
+                  Enroll in this Course ({detailCourse.price}) →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Enrollment Intake Modal */}
         {selectedCourse && (
-          <div className={cp.modalOverlay} onClick={() => setSelectedCourse(null)}>
-            <div className={cp.modalContent} onClick={e => e.stopPropagation()}>
+          <div
+            className={cp.modalOverlay}
+            data-lenis-prevent="true"
+            onClick={() => setSelectedCourse(null)}
+          >
+            <div
+              className={cp.modalContent}
+              data-lenis-prevent="true"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                className={cp.modalCloseBtn}
+                onClick={() => setSelectedCourse(null)}
+                title="Close"
+              >
+                <GoogleIcon name="close" size={18} />
+              </button>
+
               <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
                 <GoogleIcon name="school" size={48} style={{ color: '#DC143C', marginBottom: '0.5rem' }} />
                 <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.4rem', color: '#111827' }}>Enrollment Intake</h3>
                 <p style={{ fontSize: '0.88rem', color: '#4B5563', marginTop: '0.25rem' }}>{selectedCourse}</p>
               </div>
 
-              <form onSubmit={(e) => { e.preventDefault(); alert('Redirecting to secure Razorpay payment gateway...'); setSelectedCourse(null) }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <form onSubmit={(e) => { e.preventDefault(); alert('Redirecting to secure payment gateway...'); setSelectedCourse(null) }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>Full Name</label>
                   <input required type="text" placeholder="Your name as it should appear on certificate" style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
@@ -241,7 +447,7 @@ export default function CoursesPage() {
               LMS Platform Architecture
             </span>
             <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.6rem', color: '#111827', margin: '0.4rem 0 0' }}>
-              Built for Security, Speed & Retention
+              Built for Security, Speed &amp; Retention
             </h2>
             <p style={{ fontSize: '0.88rem', color: '#6B7280', marginTop: '0.5rem' }}>
               Our bespoke streaming infrastructure prevents content leaks and screen-scraping while delivering crisp video even on 2G/3G rural networks.
@@ -268,7 +474,7 @@ export default function CoursesPage() {
                 <GoogleIcon name="stay_current_portrait" size={32} style={{ color: '#DC143C' }} />
               </div>
               <h4 className={cp.specTitle}>Responsive Player</h4>
-              <p className={cp.specText}>0.5x to 2x speed adjustment, multi-language subtitle tracks (Hindi & English), and mobile offline caching.</p>
+              <p className={cp.specText}>0.5x to 2x speed adjustment, multi-language subtitle tracks (Hindi &amp; English), and mobile offline caching.</p>
             </div>
             <div className={cp.specCard}>
               <div className={cp.specIcon}>
@@ -287,7 +493,7 @@ export default function CoursesPage() {
               <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
                 SRS Section 11 · Value Store
               </span>
-              <h2 className={s.sectionTitle} style={{ marginBottom: 0, marginTop: '0.35rem' }}>Aaryaveera Merchandise & Books</h2>
+              <h2 className={s.sectionTitle} style={{ marginBottom: 0, marginTop: '0.35rem' }}>Aaryaveera Merchandise &amp; Books</h2>
             </div>
             <div style={{ fontSize: '0.82rem', color: '#6B7280' }}>
               *100% of merchandise proceeds directly fund free rural village camps.
