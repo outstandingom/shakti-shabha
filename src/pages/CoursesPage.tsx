@@ -158,14 +158,15 @@ export default function CoursesPage() {
         console.warn('Courses fetch error:', err)
       }
 
-      // Merge with custom courses from LocalStorage
+      // Merge with custom courses from LocalStorage (Deduplicated)
       try {
         const local = localStorage.getItem('shakti_custom_courses')
         if (local) {
           const localList: Course[] = JSON.parse(local)
           const published = localList.filter(c => c.published)
           const existingIds = new Set(fetched.map(c => c.id))
-          const unique = published.filter(c => !existingIds.has(c.id))
+          const existingTitles = new Set(fetched.map(c => c.title.trim().toLowerCase()))
+          const unique = published.filter(c => !existingIds.has(c.id) && !existingTitles.has(c.title.trim().toLowerCase()))
           fetched = [...unique, ...fetched]
         }
       } catch (e) {
@@ -191,7 +192,16 @@ export default function CoursesPage() {
     loadCourses()
   }, [])
 
-  const allCourses = [...dbCourses, ...COURSES_DATA]
+  // Deduplicate all courses strictly by title so duplicates are never rendered
+  const titleSet = new Set<string>()
+  const allCourses: CourseItem[] = []
+  for (const c of [...dbCourses, ...COURSES_DATA]) {
+    const key = c.title.trim().toLowerCase()
+    if (!titleSet.has(key)) {
+      titleSet.add(key)
+      allCourses.push(c)
+    }
+  }
 
   return (
     <main className={s.page}>

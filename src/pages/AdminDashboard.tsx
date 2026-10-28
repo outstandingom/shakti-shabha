@@ -807,9 +807,21 @@ function CoursesSection() {
     try {
       const local = localStorage.getItem('shakti_custom_courses')
       if (local) {
-        const localList: Course[] = JSON.parse(local)
+        let localList: Course[] = JSON.parse(local)
+        // Clean any existing duplicates in local storage
+        const seenLocalTitles = new Set<string>()
+        localList = localList.filter(c => {
+          const key = c.title.trim().toLowerCase()
+          if (seenLocalTitles.has(key)) return false
+          seenLocalTitles.add(key)
+          return true
+        })
+        localStorage.setItem('shakti_custom_courses', JSON.stringify(localList))
+
+        // Merge with fetchedCourses, deduplicating by both ID and Title
         const existingIds = new Set(fetchedCourses.map(c => c.id))
-        const uniqueLocal = localList.filter(c => !existingIds.has(c.id))
+        const existingTitles = new Set(fetchedCourses.map(c => c.title.trim().toLowerCase()))
+        const uniqueLocal = localList.filter(c => !existingIds.has(c.id) && !existingTitles.has(c.title.trim().toLowerCase()))
         fetchedCourses = [...uniqueLocal, ...fetchedCourses]
       }
     } catch (e) {
@@ -835,29 +847,28 @@ function CoursesSection() {
 
   const uploadCover = async (file: File) => {
     setUploading(true)
+    // 1. Immediately read as base64 data URL so image previews instantly in the form
+    const reader = new FileReader()
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        setForm(f => ({ ...f, cover_image_url: reader.result as string }))
+      }
+    }
+    reader.readAsDataURL(file)
+
+    // 2. Upload to Supabase storage in background if available
     try {
-      const path = `courses/${Date.now()}.${file.name.split('.').pop()}`
+      const ext = file.name.split('.').pop()
+      const path = `courses/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
       const { error } = await supabase.storage.from('media').upload(path, file, { upsert: true })
       if (!error) {
         const { data } = supabase.storage.from('media').getPublicUrl(path)
-        setForm(f => ({ ...f, cover_image_url: data.publicUrl }))
-      } else {
-        const reader = new FileReader()
-        reader.onload = () => {
-          if (typeof reader.result === 'string') {
-            setForm(f => ({ ...f, cover_image_url: reader.result as string }))
-          }
+        if (data?.publicUrl) {
+          setForm(f => ({ ...f, cover_image_url: data.publicUrl }))
         }
-        reader.readAsDataURL(file)
       }
     } catch (e) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setForm(f => ({ ...f, cover_image_url: reader.result as string }))
-        }
-      }
-      reader.readAsDataURL(file)
+      console.warn('Supabase storage upload error, maintaining local preview:', e)
     }
     setUploading(false)
   }
@@ -881,6 +892,7 @@ function CoursesSection() {
     }
 
     let saved = false
+    let savedId = editing ? editing.id : ''
 
     // 1. Try Supabase
     try {
@@ -888,28 +900,39 @@ function CoursesSection() {
         const { error } = await supabase.from('courses').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', editing.id)
         if (!error) saved = true
       } else {
-        const { error } = await supabase.from('courses').insert([payload])
-        if (!error) saved = true
+        const { data, error } = await supabase.from('courses').insert([payload]).select().single()
+        if (!error && data) {
+          saved = true
+          savedId = data.id
+        }
       }
     } catch (err) {
       console.warn('Supabase save error:', err)
     }
 
-    // 2. Always sync with localStorage
+    // 2. Deduplicated LocalStorage Sync (prevents creating duplicate courses)
     try {
       const local = localStorage.getItem('shakti_custom_courses')
       let list: Course[] = local ? JSON.parse(local) : []
-      if (editing) {
-        list = list.map(item => item.id === editing.id ? { ...item, ...payload, updated_at: new Date().toISOString() } : item)
-      } else {
-        const newCourse: Course = {
-          id: `course_${Date.now()}`,
-          ...payload,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }
-        list = [newCourse, ...list]
+
+      const courseId = savedId || (editing ? editing.id : `course_${Date.now()}`)
+      const courseObj: Course = {
+        id: courseId,
+        ...payload,
+        created_at: editing?.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
       }
+
+      // Check if course already exists by ID or by title
+      const targetTitle = payload.title.toLowerCase()
+      const existingIdx = list.findIndex(c => c.id === courseId || c.title.trim().toLowerCase() === targetTitle)
+
+      if (existingIdx >= 0) {
+        list[existingIdx] = courseObj
+      } else {
+        list = [courseObj, ...list]
+      }
+
       localStorage.setItem('shakti_custom_courses', JSON.stringify(list))
       saved = true
     } catch (localErr) {
@@ -927,6 +950,7 @@ function CoursesSection() {
 
   const del = async (id: string) => {
     if (!confirm('Delete this course?')) return
+    const target = courses.find(c => c.id === id)
     try {
       await supabase.from('courses').delete().eq('id', id)
     } catch (e) {
@@ -936,7 +960,7 @@ function CoursesSection() {
       const local = localStorage.getItem('shakti_custom_courses')
       if (local) {
         const list: Course[] = JSON.parse(local)
-        const updated = list.filter(c => c.id !== id)
+        const updated = list.filter(c => c.id !== id && (!target || c.title.trim().toLowerCase() !== target.title.trim().toLowerCase()))
         localStorage.setItem('shakti_custom_courses', JSON.stringify(updated))
       }
     } catch (e) {
@@ -1032,12 +1056,53 @@ function CoursesSection() {
               </div>
 
               <div className={`${s.field} ${s.formFull}`}>
-                <label className={s.label}>Cover Image</label>
-                {form.cover_image_url && <img src={form.cover_image_url} alt="" style={{ height: 100, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />}
-                <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={e => e.target.files?.[0] && uploadCover(e.target.files[0])} />
-                <button className={s.btnSecondary} onClick={() => fileRef.current?.click()} disabled={uploading}>
-                  {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Upload Cover Image</>}
-                </button>
+                <label className={s.label}>Course Cover Image</label>
+                {form.cover_image_url ? (
+                  <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
+                    <img
+                      src={form.cover_image_url}
+                      alt="Cover Preview"
+                      style={{ height: 130, maxWidth: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, cover_image_url: '' }))}
+                      className={s.btnDanger}
+                      style={{ position: 'absolute', top: 6, right: 6, borderRadius: '50%', width: 26, height: 26, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      title="Remove image"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>
+                    No cover image selected. Choose an image file or paste a URL below.
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={e => e.target.files?.[0] && uploadCover(e.target.files[0])}
+                  />
+                  <button
+                    type="button"
+                    className={s.btnSecondary}
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Choose Image File</>}
+                  </button>
+                  <input
+                    className={s.input}
+                    style={{ flex: 1, minWidth: 220 }}
+                    value={form.cover_image_url}
+                    onChange={e => setForm(f => ({ ...f, cover_image_url: e.target.value }))}
+                    placeholder="Or paste direct image URL (https://...)"
+                  />
+                </div>
               </div>
 
               <div className={`${s.field} ${s.formFull}`}>

@@ -27,9 +27,21 @@ const getInitialCourses = () => {
         modules: c.syllabus?.length ? `${c.syllabus.length} Modules` : 'Self-Paced',
         duration: c.duration || 'Flexible',
         level: c.level || 'All Levels',
+        image: c.cover_image_url || '',
         featured: false
       }))
-      if (published.length > 0) return [...published, ...COURSES]
+      if (published.length > 0) {
+        const titleSet = new Set<string>()
+        const merged: any[] = []
+        for (const item of [...published, ...COURSES]) {
+          const key = item.title.trim().toLowerCase()
+          if (!titleSet.has(key)) {
+            titleSet.add(key)
+            merged.push(item)
+          }
+        }
+        return merged
+      }
     }
   } catch (e) {
     // fallback
@@ -129,6 +141,11 @@ export default function Courses() {
       <div ref={trackRef} className={s.track}>
         {coursesList.map(c => (
           <div key={c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
+            {c.image && (
+              <div className={s.cardImgWrap}>
+                <img src={c.image} alt={c.title} className={s.cardImg} loading="lazy" />
+              </div>
+            )}
             <div className={s.cardBadge}>{c.badge}</div>
             <div className={s.cardTitle}>{c.title}</div>
             <p className={s.cardDetail}>{c.detail}</p>
