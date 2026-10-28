@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Maximize2, Minimize2 } from 'lucide-react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { supabase } from '../lib/supabase'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import cp from './CounsellingPage.module.css'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface ServiceWheelItem {
   icon: string
@@ -24,80 +19,80 @@ const WHEEL_SERVICES: ServiceWheelItem[] = [
   {
     icon: 'psychology',
     title: 'Psychological Empowerment',
-    desc: 'Mental wellbeing aur emotional growth ke liye expert guidance. Apne aap ko samjho, apni strength pehchano.',
-    actionText: 'Jaanein Aur →',
+    desc: 'Mental wellbeing aur emotional resilience ke liye certified clinical psychologists dwara expert guidance. Apne swa-roop ko samjhein aur aatmasamman ko punah sthapit karein.',
+    actionText: 'Book Session →',
     actionLink: '#book-session',
-    tags: ['Mental Health', 'Empowerment', 'Shakti Bhawah'],
+    tags: ['Mental Health', 'Empowerment', 'Shakti Bhava'],
     image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800',
   },
   {
     icon: 'chat',
-    title: 'Counselling Services',
-    desc: 'Professional counsellors ke saath apni journey mein support paao. Ek safe space — sirf tumhare liye.',
-    actionText: 'Jaanein Aur →',
+    title: 'Confidential 1-on-1 Counselling',
+    desc: 'Professional licensed counsellors ke saath surakshit aur gopniya baatcheet. Ek aisi jagah jahan bina kisi judgment ke aap apni peeda aur sangharsh sajha kar sakti hain.',
+    actionText: 'Book Session →',
     actionLink: '#book-session',
-    tags: ['Safe Space', 'Confidential', 'Therapy'],
+    tags: ['Safe Space', '100% Confidential', 'Tele-Counseling'],
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800',
   },
   {
     icon: 'school',
-    title: 'Webinars & Workshops',
-    desc: 'Live interactive sessions — women empowerment, mental health, career growth par expert speakers ke saath.',
-    actionText: 'Jaanein Aur →',
+    title: 'Trauma & PTSD Workshops',
+    desc: 'Somatic PTSD stabilization, boundary setting, aur cognitive de-escalation par expert-led interactive offline camps aur online workshops.',
+    actionText: 'Explore Events →',
     actionLink: '/events',
-    tags: ['Live Sessions', 'Workshops', 'Growth'],
+    tags: ['Workshops', 'PTSD Recovery', 'Interactive'],
     image: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800',
   },
   {
     icon: 'groups',
-    title: 'Community Platform',
-    desc: 'Like-minded Indian women ka ek judgment-free space. Share karo, suno, aur ek doosre se seekho.',
-    actionText: 'Jaanein Aur →',
+    title: 'Sisterhood Healing Circles',
+    desc: 'Bhartiya mahilaon ka ek sangathit samuh jahan sahanubhuti, sahyog aur paraspar prerana ke madhyam se bhavnatmak ghawon ka upchar kiya jata hai.',
+    actionText: 'Join Community →',
     actionLink: '/sahyog',
     tags: ['Sisterhood', 'Solidarity', 'Sahyog'],
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=800',
   },
   {
     icon: 'menu_book',
-    title: 'Online Courses',
-    desc: 'Women empowerment, Indian history, aur psychological wellness par comprehensive self-paced courses.',
-    actionText: 'Jaanein Aur →',
+    title: 'Cognitive Wellness Modules',
+    desc: 'Atmavishwas, stress management, aur emotional intelligence par self-paced digital curriculum aur practical worksheets.',
+    actionText: 'Explore Courses →',
     actionLink: '/courses',
-    tags: ['LMS', 'History', 'Self-Paced'],
+    tags: ['LMS', 'Self-Paced', 'Wellness'],
     image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800',
   },
   {
     icon: 'spa',
-    title: 'Healthy Lifestyle',
-    desc: 'Holistic wellness — physical, mental, aur spiritual. Balanced life ke liye practical guidance.',
-    actionText: 'Jaanein Aur →',
+    title: 'Somatic Recovery & Mindfulness',
+    desc: 'Shareerik aur mansik santulan hetu prana-ayam, snayu shantata, aur dhyan vidhiyan jo sthirata aur urja pradan karti hain.',
+    actionText: 'Start Recovery →',
     actionLink: '#book-session',
-    tags: ['Holistic', 'Mindfulness', 'Wellness'],
+    tags: ['Holistic', 'Mindfulness', 'Somatic'],
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800',
   },
   {
     icon: 'swords',
-    title: 'Our Revolution',
-    desc: 'Social change ke liye ek platform. Campaigns, petitions, aur collective action — milke awaaz uthao.',
-    actionText: 'Jaanein Aur →',
-    actionLink: '/aaryaveera',
-    tags: ['Mardini', 'Aaryaveera', 'Action'],
+    title: 'Crisis Rescue & Intervention Support',
+    desc: 'High-risk sthitiyon, parivarik dabav, aur shoshan ke mamlon mein aapatkaleen sahayata, legal paramarsh, aur punarvas margdarshan.',
+    actionText: 'Emergency Help →',
+    actionLink: '#book-session',
+    tags: ['Crisis Rescue', 'Frontline', 'Legal Armor'],
     image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=800',
   },
   {
     icon: 'podcasts',
-    title: 'Podcasts & Media',
-    desc: 'Inspiring conversations, historical investigations, aur motivational content — on-the-go sunte rehno.',
-    actionText: 'Jaanein Aur →',
+    title: 'Inner Strength & Aaryaveera Dialogues',
+    desc: 'Veerangana itihas, mansik mazbooti, aur aadhunik chunautiyon par dharavahik podcast sessions — suniye aur aatmabal badhaiye.',
+    actionText: 'Listen Now →',
     actionLink: '/aaryaveera',
-    tags: ['Shakti Varta', 'Podcasts', 'Audio'],
+    tags: ['Shakti Varta', 'Audio Series', 'Resilience'],
     image: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?q=80&w=800',
   },
   {
     icon: 'star',
-    title: 'Testimonials',
-    desc: 'Unki kahaniyaan jo Shakti Sabha ke saath badli hain. Real stories, real transformation.',
-    actionText: 'Padhein →',
+    title: 'Survivor Transformation Archives',
+    desc: 'Sangharsh se Vijay tak ki pramanit kahaniyan jahan mahilaon ne mansik shoshan ko harakar aatmanirbharta haasil ki.',
+    actionText: 'Read Stories →',
     actionLink: '/about',
     tags: ['Real Stories', 'Transformation', 'About'],
     image: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?q=80&w=800',
@@ -114,33 +109,34 @@ export default function CounsellingPage() {
     message: ''
   })
   const [submitting, setSubmitting] = useState(false)
-  const [activeCardIndex, setActiveCardIndex] = useState(0)
-  const [isFullscreen, setIsFullscreen] = useState(false)
-  const [isWheelActive, setIsWheelActive] = useState(false)
+  const [activeDot, setActiveDot] = useState(0)
 
-  const sectionRef = useRef<HTMLElement>(null)
-  const wheelWrapperRef = useRef<HTMLDivElement>(null)
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([])
-  const triggerRef = useRef<ScrollTrigger | null>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
 
-  const totalCards = WHEEL_SERVICES.length
-  const SPREAD_X = 0.16
-  const SPREAD_Y = 0.28
-  const ROTATE = 4
-  const SKEW = -2
-  const SCALE_MIN = 0.7
-
+  /* ── 3D Card Wheel (Accordéon Asymétrique) Animation Logic ── */
   useEffect(() => {
-    const section = sectionRef.current
-    const wrapper = wheelWrapperRef.current
-    if (!section || !wrapper || totalCards === 0) return
+    const scrollContainer = scrollContainerRef.current
+    if (!scrollContainer) return
 
-    const updateCards = (progress: number) => {
+    const SPREAD_X = 0.16
+    const SPREAD_Y = 0.28
+    const ROTATE = 4
+    const SKEW = -2
+    const SCALE_MIN = 0.7
+
+    function updateScroll() {
+      if (!scrollContainer) return
+      const rect = scrollContainer.getBoundingClientRect()
+      const totalScrollable = scrollContainer.offsetHeight - window.innerHeight
+      if (totalScrollable <= 0) return
+
+      const scrolled = Math.max(0, -rect.top)
+      const progress = Math.min(1, Math.max(0, scrolled / totalScrollable))
+      const totalCards = WHEEL_SERVICES.length
       const current = progress * (totalCards - 1)
-      const activeIdx = Math.min(totalCards - 1, Math.max(0, Math.round(current)))
-      setActiveCardIndex(activeIdx)
 
-      cardRefs.current.forEach((card, index) => {
+      cardsRef.current.forEach((card, index) => {
         if (!card) return
         const offset = index - current
         const absOffset = Math.abs(offset)
@@ -148,49 +144,65 @@ export default function CounsellingPage() {
         const spreadY = offset * window.innerHeight * SPREAD_Y
         const rotateZ = offset * ROTATE
         const skewY = offset * SKEW
-        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.1)
-        const opacity = Math.max(0.2, 1 - absOffset * 0.3)
-        const zIndex = 100 - Math.round(absOffset * 10)
+        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
 
-        card.style.transform = `translate3d(${spreadX}px, ${spreadY}px, 0px) rotate(${rotateZ}deg) skewY(${skewY}deg) scale(${scale})`
+        if (absOffset > 2.2) {
+          card.style.opacity = '0'
+          card.style.pointerEvents = 'none'
+          return
+        }
+
+        const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
+        card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
+        card.style.transform = `
+          translate3d(${spreadX}px, ${spreadY}px, 0)
+          rotate(${rotateZ}deg)
+          skewY(${skewY}deg)
+          scale(${scale})
+        `
         card.style.opacity = `${opacity}`
-        card.style.zIndex = `${zIndex}`
+        card.style.zIndex = `${Math.round(100 - absOffset * 20)}`
+
+        if (absOffset < 0.5) {
+          setActiveDot(index)
+        }
       })
     }
 
-    const st = ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: `+=${totalCards * 100}%`,
-      pin: wrapper,
-      scrub: 1.2,
-      anticipatePin: 1,
-      onToggle: (self) => {
-        setIsWheelActive(self.isActive)
-      },
-      onUpdate: (self) => {
-        updateCards(self.progress)
-      },
-    })
+    let ticking = false
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
 
-    triggerRef.current = st
-    updateCards(0)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', updateScroll)
+    updateScroll()
 
     return () => {
-      st.kill()
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', updateScroll)
     }
-  }, [totalCards])
+  }, [])
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().then(() => setIsFullscreen(true)).catch(() => {})
-    } else {
-      document.exitFullscreen().then(() => setIsFullscreen(false)).catch(() => {})
-    }
+  const scrollToCard = (index: number) => {
+    if (!scrollContainerRef.current) return
+    const containerTop = scrollContainerRef.current.offsetTop
+    const totalScrollable = scrollContainerRef.current.offsetHeight - window.innerHeight
+    const targetScroll = (index / (WHEEL_SERVICES.length - 1)) * totalScrollable
+    window.scrollTo({
+      top: containerTop + targetScroll,
+      behavior: 'smooth'
+    })
   }
 
   return (
-    <main className={s.page}>
+    <main className={cp.page}>
       {/* ── Top Hero Banner ── */}
       <div className={cp.hero}>
         <div className={cp.heroInner}>
@@ -200,84 +212,101 @@ export default function CounsellingPage() {
           <p className={cp.hindiSubtitle}>परामर्श एवं मानसिक सशक्तिकरण · A Safe, Sacred Space</p>
           <p className={cp.desc}>
             Indian women ke liye confidential counseling, trauma-informed clinical support, aur judgment-free community spaces.
-            Scroll through our signature services wheel below to discover safe pathways to recovery.
+            Explore our specialized therapeutic services below.
           </p>
         </div>
       </div>
 
-      {/* ── 3D Floating Wheel Section ── */}
+      {/* ── 3D Card Wheel (Accordéon Asymétrique) — Clean White Background ── */}
       <section
-        ref={sectionRef}
-        className={`${cp.wheelSection} ${isWheelActive ? cp.wheelActive : ''}`}
-        aria-label="Interactive services cards wheel"
+        ref={scrollContainerRef}
+        className={cp.scrollContainer}
+        style={{ height: `${Math.max(650, WHEEL_SERVICES.length * 85)}vh` }}
       >
-        <div ref={wheelWrapperRef} className={cp.wheelWrapper}>
-          {WHEEL_SERVICES.map((item, index) => (
+        <div className={cp.wheelWrapper}>
+          <div className={cp.wheelGlow} />
+
+          {/* Vertical Dots Indicator */}
+          <div className={cp.indicator}>
+            {WHEEL_SERVICES.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`${cp.dot} ${idx === activeDot ? cp.dotActive : ''}`}
+                onClick={() => scrollToCard(idx)}
+                aria-label={`Jump to service ${idx + 1}`}
+                title={WHEEL_SERVICES[idx].title}
+              />
+            ))}
+          </div>
+
+          {/* 3D Asymmetric Accordion Cards */}
+          {WHEEL_SERVICES.map((item, idx) => (
             <div
-              key={index}
-              ref={(el) => { cardRefs.current[index] = el }}
-              className={`${cp.card} ${activeCardIndex === index ? cp.cardActive : ''}`}
-              data-card-index={index}
+              key={idx}
+              ref={(el) => { cardsRef.current[idx] = el }}
+              className={cp.cardWheel}
+              data-index={idx}
             >
               <div className={cp.cardInner}>
-                {/* Left: Device / Mockup preview */}
-                <div className={cp.cardDevice}>
-                  <div className={cp.phoneFrame}>
+                {/* Left Side: Phone Mockup with Cover Image */}
+                <div className={cp.cardImage}>
+                  <div className={cp.phoneMockup}>
                     <div className={cp.phoneScreen}>
                       <img src={item.image} alt={item.title} loading="lazy" />
                     </div>
                   </div>
                 </div>
 
-                {/* Right: Card Content */}
+                {/* Right Side: Card Content */}
                 <div className={cp.cardContent}>
-                  <div className={cp.cardIcon}>
-                    <GoogleIcon name={item.icon} size={32} style={{ color: '#3D5A45' }} />
+                  <div className={cp.tags}>
+                    <span className={`${cp.tag} ${cp.tagHighlight}`}>
+                      <GoogleIcon name={item.icon} size={14} style={{ color: '#DC143C' }} />
+                      {item.tags[0]}
+                    </span>
+                    {item.tags.slice(1).map((t, ti) => (
+                      <span key={ti} className={cp.tag}>
+                        {t}
+                      </span>
+                    ))}
                   </div>
+
                   <h2>{item.title}</h2>
                   <p>{item.desc}</p>
 
-                  {item.actionLink.startsWith('#') ? (
-                    <a href={item.actionLink} className={cp.cardActionBtn}>
-                      <span>{item.actionText}</span>
-                    </a>
-                  ) : (
-                    <Link to={item.actionLink} className={cp.cardActionBtn}>
-                      <span>{item.actionText}</span>
-                    </Link>
-                  )}
-
-                  <div className={cp.tags}>
-                    {item.tags.map((tag, tIdx) => (
-                      <span key={tIdx} className={cp.tag}>
-                        {tag}
-                      </span>
-                    ))}
+                  <div className={cp.wheelActions}>
+                    {item.actionLink.startsWith('#') ? (
+                      <a href={item.actionLink} className={cp.cardActionBtn}>
+                        <span>{item.actionText}</span>
+                        <GoogleIcon name="arrow_forward" size={16} />
+                      </a>
+                    ) : (
+                      <Link to={item.actionLink} className={cp.cardActionBtn}>
+                        <span>{item.actionText}</span>
+                        <GoogleIcon name="arrow_forward" size={16} />
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
             </div>
           ))}
+
+          {/* Bottom Scroll Hint */}
+          <div className={cp.wheelScrollHint}>
+            <GoogleIcon name="south" size={15} />
+            <span>Scroll down to explore all services</span>
+          </div>
         </div>
       </section>
 
-      {/* ── Fullscreen Toggle Button ── */}
-      <button
-        type="button"
-        className={cp.fullscreenBtn}
-        onClick={toggleFullscreen}
-        aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-        title={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
-      >
-        {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-      </button>
-
       {/* ── Confidential Intake Booking Box ── */}
-      <div className={s.section}>
+      <div className={s.section} style={{ background: '#FFFFFF' }}>
         <div id="book-session" className={cp.bookingBox}>
           <div className={cp.bookingGrid}>
             <div>
-              <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#3D5A45', fontWeight: 700, textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.72rem', letterSpacing: '0.15em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
                 Safe & Confidential
               </span>
               <h2 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.8rem', color: '#111827', margin: '0.5rem 0 1rem' }}>
@@ -404,7 +433,7 @@ export default function CounsellingPage() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    style={{ padding: '0.85rem', background: '#3D5A45', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', transition: 'background 0.2s', opacity: submitting ? 0.7 : 1 }}
+                    style={{ padding: '0.85rem', background: '#DC143C', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontWeight: 600, cursor: 'pointer', fontSize: '0.9rem', transition: 'background 0.2s', opacity: submitting ? 0.7 : 1 }}
                   >
                     {submitting ? 'Submitting...' : 'Request Safe Callback →'}
                   </button>
