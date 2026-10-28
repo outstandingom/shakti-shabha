@@ -50,6 +50,7 @@ export default function Footer() {
         <div className={s.col}>
           <div className={s.colTitle}>The Three Wings</div>
           <ul className={s.links}>
+            <li><Link to="/three-streams" className={s.link} style={{ color: '#FDE047', fontWeight: 600 }}>The Union of Peace &amp; Revolution</Link></li>
             <li><Link to="/mardini" className={s.link} style={{ color: '#FFB3BA' }}>01 · Mission Mardini (Combat)</Link></li>
             <li><Link to="/shakti-bhava" className={s.link} style={{ color: '#A7F3D0' }}>02 · Shakti Bhava (Healing)</Link></li>
             <li><Link to="/shakti-varta" className={s.link} style={{ color: '#C7D2FE' }}>03 · Shakti Varta (Discourse)</Link></li>

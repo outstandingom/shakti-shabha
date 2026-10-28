@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './About.module.css'
@@ -44,6 +45,7 @@ const PILLARS = [
 ]
 
 export default function About() {
+  const navigate = useNavigate()
   const secRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -71,10 +73,23 @@ export default function About() {
     <section ref={secRef} className={s.section}>
       <div className={s.inner}>
         <div data-ab="header" className={s.header}>
-          <span className={s.eyebrow}>Our Three Streams</span>
-          <h2>The Union of Peace &amp; Revolution</h2>
+          <div className={s.headerTopRow}>
+            <span className={s.eyebrow}>Our Three Streams</span>
+            <Link to="/three-streams" className={s.dedicatedPillLink}>
+              <span>Explore Dedicated Page</span>
+              <GoogleIcon name="arrow_forward" size={13} />
+            </Link>
+          </div>
+          <h2>
+            <Link to="/three-streams" className={s.headerTitleLink} title="Explore The Union of Peace & Revolution">
+              The Union of Peace &amp; Revolution
+            </Link>
+          </h2>
           <p>
-            Everything Shakti Sabha builds lives within one of three streams — each distinct in method, unified in purpose: dignity, safety, and awakening for every woman who stands with us.
+            Everything Shakti Sabha builds lives within one of three streams — each distinct in method, unified in purpose: dignity, safety, and awakening for every woman who stands with us.{' '}
+            <Link to="/three-streams" className={s.inlineLearnMore}>
+              View Tri-Stream Doctrine →
+            </Link>
           </p>
         </div>
         <div data-ab="pillars" className={s.pillars}>
@@ -83,7 +98,8 @@ export default function About() {
               key={p.num}
               data-ab="pillar"
               className={s.pillar}
-              style={{ '--pl-accent': p.accent, '--pl-tag-bg': p.tagBg } as React.CSSProperties}
+              style={{ '--pl-accent': p.accent, '--pl-tag-bg': p.tagBg, cursor: 'pointer' } as React.CSSProperties}
+              onClick={() => navigate(p.link)}
             >
               <div className={s.pillarHead}>
                 <span className={s.pillarNum}>{p.num}</span>

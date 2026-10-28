@@ -27,6 +27,7 @@ import AdminDashboard from './pages/AdminDashboard'
 import MardiniPage from './pages/MardiniPage'
 import ShaktiBhavaPage from './pages/ShaktiBhavaPage'
 import ShaktiVartaPage from './pages/ShaktiVartaPage'
+import ThreeStreamsPage from './pages/ThreeStreamsPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -98,7 +99,9 @@ function LenisProvider() {
         <Route path="/research"             element={<ResearchPage />} />
         <Route path="/brand"                element={<BrandPage />} />
         <Route path="/about"                element={<AboutPage />} />
-        <Route path="/peace-and-revolution" element={<AboutPage />} />
+        <Route path="/three-streams"        element={<ThreeStreamsPage />} />
+        <Route path="/streams"              element={<ThreeStreamsPage />} />
+        <Route path="/peace-and-revolution" element={<ThreeStreamsPage />} />
         <Route path="/login"                element={<LoginPage />} />
         <Route path="/register"             element={<RegisterPage />} />
         <Route path="/admin"                element={<AdminDashboard />} />

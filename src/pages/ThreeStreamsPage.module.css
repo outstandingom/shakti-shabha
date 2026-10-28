@@ -1,0 +1,488 @@
+/* ============================================================
+   ThreeStreamsPage.module.css — The Union of Peace & Revolution
+   Clean White Theme · Crimson Red #DC143C Accents
+   ============================================================ */
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+  background: #FFFFFF;
+  color: #111827;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+  padding-bottom: 5rem;
+}
+
+/* ── HERO BANNER ────────────────────────────────────────── */
+.hero {
+  background: #FFFFFF;
+  padding: calc(clamp(3.5rem, 6vw, 5.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 6vw, 4.5rem);
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #6B7280;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #DC143C;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  margin-bottom: 1.25rem;
+}
+
+.title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  max-width: 26ch;
+}
+
+.hindiSubtitle {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.25rem;
+  color: #DC143C;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.desc {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  color: #4B5563;
+  max-width: 78ch;
+  line-height: 1.75;
+  margin-bottom: 1.75rem;
+}
+
+.heroTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.heroTag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.tagMardini {
+  background: rgba(220, 20, 60, 0.08);
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.25);
+}
+.tagMardini:hover {
+  background: #DC143C;
+  color: #FFFFFF;
+}
+
+.tagBhava {
+  background: rgba(22, 101, 52, 0.08);
+  color: #166534;
+  border: 1px solid rgba(22, 101, 52, 0.25);
+}
+.tagBhava:hover {
+  background: #166534;
+  color: #FFFFFF;
+}
+
+.tagVarta {
+  background: rgba(67, 56, 202, 0.08);
+  color: #4338CA;
+  border: 1px solid rgba(67, 56, 202, 0.25);
+}
+.tagVarta:hover {
+  background: #4338CA;
+  color: #FFFFFF;
+}
+
+/* ── MAIN CONTENT CONTAINER ─────────────────────────────── */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+/* ── STATS ROW ──────────────────────────────────────────── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+}
+
+.statCard {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+}
+
+.statNumber {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  font-weight: 700;
+  color: #DC143C;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.35rem;
+}
+
+.statDesc {
+  font-size: 0.75rem;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+/* ── PHILOSOPHY MANIFESTO ───────────────────────────────── */
+.manifestoBox {
+  background: #FFF5F5;
+  border: 1px solid #FEE2E2;
+  border-left: 5px solid #DC143C;
+  border-radius: 12px;
+  padding: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 4.5rem;
+}
+
+.eyebrow {
+  display: block;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: #DC143C;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.heading {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  color: #111827;
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+.manifestoQuote {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.1rem, 2vw, 1.45rem);
+  font-style: italic;
+  color: #881337;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+
+.manifestoText {
+  font-size: 0.95rem;
+  color: #4B5563;
+  line-height: 1.75;
+  max-width: 82ch;
+  margin-bottom: 1rem;
+}
+
+/* ── THREE DETAILED STREAM CARDS ────────────────────────── */
+.streamsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 4.5rem;
+}
+
+.streamCard {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.streamCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+.streamCardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.streamNum {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 2.2rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.streamBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+}
+
+.streamName {
+  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.15;
+  margin-bottom: 0.2rem;
+}
+
+.streamDev {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.05rem;
+  color: #6B7280;
+  font-weight: 600;
+  margin-bottom: 1.1rem;
+}
+
+.streamSummary {
+  font-size: 0.92rem;
+  color: #4B5563;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.streamHighlights {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.streamHighlightItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.84rem;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.streamBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  align-self: flex-start;
+  letter-spacing: 0.03em;
+}
+
+.streamBtnMardini {
+  background: #DC143C;
+  color: #FFFFFF;
+}
+.streamBtnMardini:hover {
+  background: #B01030;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(220, 20, 60, 0.35);
+}
+
+.streamBtnBhava {
+  background: #166534;
+  color: #FFFFFF;
+}
+.streamBtnBhava:hover {
+  background: #14532D;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(22, 101, 52, 0.35);
+}
+
+.streamBtnVarta {
+  background: #4338CA;
+  color: #FFFFFF;
+}
+.streamBtnVarta:hover {
+  background: #3730A3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(67, 56, 202, 0.35);
+}
+
+/* ── CONVERGENCE SECTION ────────────────────────────────── */
+.convergenceSection {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 4rem;
+}
+
+.convergenceGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.convStep {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.convStepNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(220, 20, 60, 0.1);
+  color: #DC143C;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 0.75rem;
+}
+
+.convStepTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.convStepDesc {
+  font-size: 0.85rem;
+  color: #4B5563;
+  line-height: 1.55;
+}
+
+/* ── BOTTOM CTA ─────────────────────────────────────────── */
+.bottomCta {
+  background: #FFF5F5;
+  border: 1px solid #FEE2E2;
+  border-radius: 14px;
+  padding: clamp(2.5rem, 5vw, 3.5rem);
+  text-align: center;
+}
+
+.ctaButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.primaryBtn {
+  background: #DC143C;
+  color: #FFFFFF;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.primaryBtn:hover {
+  background: #B01030;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.3);
+}
+
+.secondaryBtn {
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  border: 1px solid #D1D5DB;
+  transition: all 0.2s ease;
+}
+
+.secondaryBtn:hover {
+  border-color: #DC143C;
+  color: #DC143C;
+}
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .streamsGrid {
+    grid-template-columns: 1fr;
+  }
+  .convergenceGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
