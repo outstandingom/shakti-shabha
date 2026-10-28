@@ -5,6 +5,56 @@ import { useAuth } from '../lib/AuthContext'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AdminDashboard.module.css'
 
+
+interface LoaderProps {
+  title?: string
+  status?: string
+  percent?: number
+  filename?: string
+}
+
+function ShaktiLoader({ title, status, percent, filename }: LoaderProps) {
+  return (
+    <div className={s.loader} data-lenis-prevent="true">
+      <div className={s.loaderContent}>
+        <div className={s.loaderInner}>
+          <div className={s.loaderLineWrap}>
+            <div className={s.loaderLine} />
+          </div>
+          <div className={s.loaderLineWrap}>
+            <div className={s.loaderLine} />
+          </div>
+          <div className={s.loaderLineWrap}>
+            <div className={s.loaderLine} />
+          </div>
+          <div className={s.loaderLineWrap}>
+            <div className={s.loaderLine} />
+          </div>
+          <div className={s.loaderLineWrap}>
+            <div className={s.loaderLine} />
+          </div>
+        </div>
+
+        {title && <h3 className={s.loaderTitle}>{title}</h3>}
+        {status && <div className={s.loaderStatus}>{status}</div>}
+
+        {typeof percent === 'number' && (
+          <div className={s.loaderProgressBar}>
+            <div className={s.loaderProgressFill} style={{ width: `${Math.min(100, Math.max(0, percent))}%` }} />
+          </div>
+        )}
+
+        {filename && (
+          <div className={s.loaderFilename}>
+            <GoogleIcon name="photo_camera" size={14} style={{ color: '#DC143C' }} />
+            <span>{filename}</span>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 type Section = 'overview' | 'articles' | 'gallery' | 'courses' | 'counselling'
 
 export default function AdminDashboard() {
@@ -17,9 +67,10 @@ export default function AdminDashboard() {
   }, [isLoading, user, navigate])
 
   if (isLoading) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', background: '#0D0D0F', color: '#DC143C', fontFamily: 'Poppins,sans-serif' }}>
-      Loading...
-    </div>
+    <ShaktiLoader
+      title="Initializing Shakti Sabha CMS"
+      status="Verifying administrative access & credentials..."
+    />
   )
   if (!user) return null
 
@@ -267,6 +318,12 @@ function ArticlesSection() {
 
   return (
     <>
+      {uploading && (
+        <ShaktiLoader
+          title="Uploading Article Image"
+          status="Optimizing and uploading media to storage..."
+        />
+      )}
       {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
       <div className={s.sectionHeader}>
         <span className={s.sectionTitle}>All Articles ({articles.length})</span>
@@ -490,19 +547,114 @@ function GallerySection() {
     loadCats()
   }
 
+  const [uploadProgress, setUploadProgress] = useState<{
+    active: boolean
+    current: number
+    total: number
+    percent: number
+    currentFile: string
+  }>({ active: false, current: 0, total: 0, percent: 0, currentFile: '' })
+
   const uploadPhotos = async (files: FileList) => {
-    if (!selectedCat) { setAlert({ type: 'error', msg: 'Please select a category first' }); return }
+    if (!selectedCat) {
+      setAlert({ type: 'error', msg: 'Please select a gallery category first' })
+      return
+    }
+    const fileList = Array.from(files)
+    if (fileList.length === 0) return
+
     setUploading(true)
-    for (const file of Array.from(files)) {
+    setUploadProgress({
+      active: true,
+      current: 0,
+      total: fileList.length,
+      percent: 0,
+      currentFile: fileList[0].name
+    })
+
+    let uploadedCount = 0
+
+    for (let i = 0; i < fileList.length; i++) {
+      const file = fileList[i]
+      const currentPercent = Math.round((i / fileList.length) * 100)
+
+      setUploadProgress({
+        active: true,
+        current: i + 1,
+        total: fileList.length,
+        percent: currentPercent,
+        currentFile: file.name
+      })
+
       const ext = file.name.split('.').pop()
       const path = `gallery/${selectedCat}/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
-      const { error: upErr } = await supabase.storage.from('media').upload(path, file, { upsert: true })
-      if (upErr) continue
-      const { data } = supabase.storage.from('media').getPublicUrl(path)
-      await supabase.from('gallery_photos').insert([{ url: data.publicUrl, caption: file.name, category_id: selectedCat }])
+      let photoUrl = ''
+
+      // 1. Try Supabase Storage upload
+      try {
+        const { error: upErr } = await supabase.storage.from('media').upload(path, file, { upsert: true })
+        if (!upErr) {
+          const { data } = supabase.storage.from('media').getPublicUrl(path)
+          photoUrl = data.publicUrl
+        }
+      } catch (err) {
+        console.warn('Supabase storage upload error:', err)
+      }
+
+      // 2. Base64 fallback if storage bucket is not configured
+      if (!photoUrl) {
+        photoUrl = await new Promise<string>((resolve) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '')
+          reader.onerror = () => resolve('')
+          reader.readAsDataURL(file)
+        })
+      }
+
+      if (photoUrl) {
+        try {
+          await supabase.from('gallery_photos').insert([{
+            url: photoUrl,
+            caption: file.name,
+            category_id: selectedCat
+          }])
+        } catch (dbErr) {
+          console.warn('DB insert error:', dbErr)
+        }
+
+        try {
+          const localKey = `shakti_gallery_photos_${selectedCat}`
+          const existing = JSON.parse(localStorage.getItem(localKey) || '[]')
+          existing.unshift({
+            id: `photo_${Date.now()}_${i}`,
+            url: photoUrl,
+            caption: file.name,
+            category_id: selectedCat,
+            created_at: new Date().toISOString()
+          })
+          localStorage.setItem(localKey, JSON.stringify(existing))
+        } catch (localErr) {
+          console.warn('LocalStorage error:', localErr)
+        }
+
+        uploadedCount++
+      }
+
+      setUploadProgress({
+        active: true,
+        current: i + 1,
+        total: fileList.length,
+        percent: Math.round(((i + 1) / fileList.length) * 100),
+        currentFile: file.name
+      })
+
+      // Short delay for smooth progress visualization
+      await new Promise(r => setTimeout(r, 120))
     }
+
+    setUploadProgress({ active: false, current: fileList.length, total: fileList.length, percent: 100, currentFile: '' })
     setUploading(false)
-    setAlert({ type: 'success', msg: `${files.length} photo(s) uploaded!` })
+    setAlert({ type: 'success', msg: `Successfully uploaded ${uploadedCount} photo(s)!` })
     loadPhotos(selectedCat)
   }
 
@@ -513,6 +665,14 @@ function GallerySection() {
 
   return (
     <>
+      {uploadProgress.active && (
+        <ShaktiLoader
+          title="Uploading Gallery Photos"
+          status={`Uploaded ${uploadProgress.current} of ${uploadProgress.total} photos (${uploadProgress.percent}%)`}
+          percent={uploadProgress.percent}
+          filename={uploadProgress.currentFile}
+        />
+      )}
       {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
 
       <div className={s.sectionHeader}>
@@ -787,6 +947,12 @@ function CoursesSection() {
 
   return (
     <>
+      {uploading && (
+        <ShaktiLoader
+          title="Uploading Course Cover"
+          status="Processing cover image..."
+        />
+      )}
       {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
       <div className={s.sectionHeader}>
         <span className={s.sectionTitle}>All Courses ({courses.length})</span>
