@@ -48,14 +48,15 @@ export default function Footer() {
 
         {/* Explore Links */}
         <div className={s.col}>
-          <div className={s.colTitle}>Explore</div>
+          <div className={s.colTitle}>The Three Wings</div>
           <ul className={s.links}>
+            <li><Link to="/mardini" className={s.link} style={{ color: '#FFB3BA' }}>01 · Mission Mardini (Combat)</Link></li>
+            <li><Link to="/shakti-bhava" className={s.link} style={{ color: '#A7F3D0' }}>02 · Shakti Bhava (Healing)</Link></li>
+            <li><Link to="/shakti-varta" className={s.link} style={{ color: '#C7D2FE' }}>03 · Shakti Varta (Discourse)</Link></li>
             <li><Link to="/articles" className={s.link}>Latest Articles</Link></li>
             <li><Link to="/history" className={s.link}>Veeranganas</Link></li>
             <li><Link to="/counselling" className={s.link}>Mental Health & Counselling</Link></li>
             <li><Link to="/research" className={s.link}>Indian History & Thought-Lab</Link></li>
-            <li><Link to="/history" className={s.link}>Shakti Sutras</Link></li>
-            <li><Link to="/aaryaveera" className={s.link}>Aaryaveera Dialogues (Podcasts)</Link></li>
             <li><Link to="/gallery" className={s.link}>3D Media Vault</Link></li>
           </ul>
         </div>
@@ -65,6 +66,7 @@ export default function Footer() {
           <div className={s.colTitle}>Platform</div>
           <ul className={s.links}>
             <li><Link to="/about" className={s.link}>About Us</Link></li>
+            <li><Link to="/aaryaveera" className={s.link}>Aaryaveera Initiative</Link></li>
             <li><Link to="/counselling" className={s.link}>Counselling Services</Link></li>
             <li><Link to="/sahyog" className={s.link}>Community Ecosystem</Link></li>
             <li><Link to="/courses" className={s.link}>Online Courses & LMS</Link></li>

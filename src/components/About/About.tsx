@@ -14,8 +14,8 @@ const PILLARS = [
     name: 'Mardini', 
     dev: 'मर्दिनी', 
     text: 'Self-defense. Lathi-Kaushal. Sword training. Village camps across Maharashtra and beyond. The revolution that begins in the body and spreads to the spirit.', 
-    link: '/social-work', 
-    linkLabel: 'Explore Social Work' 
+    link: '/mardini', 
+    linkLabel: 'Explore Mission Mardini' 
   },
   { 
     num: '02', 
@@ -26,8 +26,8 @@ const PILLARS = [
     name: 'Shakti Bhava', 
     dev: 'शक्ति भव', 
     text: 'Counseling. Anonymized case studies. Breaking silence on trafficking, PTSD, puberty, and depression. The space where survivors become warriors.', 
-    link: '/history', 
-    linkLabel: 'Read Survivor Stories' 
+    link: '/shakti-bhava', 
+    linkLabel: 'Explore Shakti Bhava' 
   },
   { 
     num: '03', 
@@ -38,8 +38,8 @@ const PILLARS = [
     name: 'Shakti Varta', 
     dev: 'शक्ति वार्ता', 
     text: 'White papers. Research. Podcasts. Seminars. The intellectual engine that backs the revolution with verified knowledge and historical truth.', 
-    link: '/aaryaveera', 
-    linkLabel: 'Discover Aaryaveera' 
+    link: '/shakti-varta', 
+    linkLabel: 'Explore Shakti Varta' 
   },
 ]
 
@@ -79,22 +79,15 @@ export default function About() {
         </div>
         <div data-ab="pillars" className={s.pillars}>
           {PILLARS.map(p => (
-            <div key={p.name} data-ab="pillar" className={s.pillar}>
-              <span className={s.accent} style={{ background: p.accent }} />
-              <div className={s.cardTop}>
-                <div className={s.number} style={{ color: p.accent }}>
-                  {p.num}
-                </div>
-                <div 
-                  className={s.pillarTag} 
-                  style={{ 
-                    color: p.tagColor, 
-                    background: p.tagBg,
-                    border: `1px solid ${p.tagColor}33` 
-                  }}
-                >
-                  {p.tag}
-                </div>
+            <div
+              key={p.num}
+              data-ab="pillar"
+              className={s.pillar}
+              style={{ '--pl-accent': p.accent, '--pl-tag-bg': p.tagBg } as React.CSSProperties}
+            >
+              <div className={s.pillarHead}>
+                <span className={s.pillarNum}>{p.num}</span>
+                <span className={s.pillarTag} style={{ color: p.tagColor }}>{p.tag}</span>
               </div>
               <div className={s.pillarName}>{p.name}</div>
               <div className={s.pillarDev}>{p.dev}</div>

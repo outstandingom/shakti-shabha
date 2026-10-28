@@ -24,6 +24,9 @@ import CounsellingPage from './pages/CounsellingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AdminDashboard from './pages/AdminDashboard'
+import MardiniPage from './pages/MardiniPage'
+import ShaktiBhavaPage from './pages/ShaktiBhavaPage'
+import ShaktiVartaPage from './pages/ShaktiVartaPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -79,6 +82,10 @@ function LenisProvider() {
       <Routes>
         <Route path="/"                     element={<HomePage />} />
         <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
+        <Route path="/mardini"              element={<MardiniPage />} />
+        <Route path="/mission-mardini"      element={<MardiniPage />} />
+        <Route path="/shakti-bhava"         element={<ShaktiBhavaPage />} />
+        <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
         <Route path="/social-work"          element={<SocialWorkPage />} />
         <Route path="/events"               element={<EventsPage />} />
         <Route path="/sahyog"               element={<SahyogPage />} />

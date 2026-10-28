@@ -110,6 +110,8 @@ const PILLARS_IN_ACTION = [
     name: 'Mission Mardini',
     sub: 'Physical Sovereignty & Tactical Defense',
     color: '#DC143C',
+    dedicatedLink: '/mardini',
+    dedicatedLabel: 'Explore Mission Mardini Page →',
     desc: 'Rejecting passive self-defense models, Harshita engineered Mission Mardini — a battle-tested combat framework blending traditional Indian martial arts with modern defensive mechanics.',
     bullets: [
       'Trained 2,000+ young women across schools, colleges, and rural settlements in high-impact survival tactics.',
@@ -120,7 +122,9 @@ const PILLARS_IN_ACTION = [
     icon: 'spa',
     name: 'Shakti Bhava',
     sub: 'Mass Awakening & Narrative Deconstruction',
-    color: '#3D5A45',
+    color: '#059669',
+    dedicatedLink: '/shakti-bhava',
+    dedicatedLabel: 'Explore Shakti Bhava Page →',
     desc: 'Through Shakti Bhava, Harshita conducts large-scale intellectual and cognitive interventions to immunize youth against civilizational subversion and cognitive conditioning.',
     bullets: [
       'Convened 500+ keynotes, symposiums, and institutional seminars across schools, universities, residential hostels, and cultural forums.',
@@ -132,7 +136,9 @@ const PILLARS_IN_ACTION = [
     icon: 'menu_book',
     name: 'Shakti Varta & Deep Research',
     sub: 'Vedic Epistemology & Forgotten Warriors',
-    color: '#C9A96E',
+    color: '#4338CA',
+    dedicatedLink: '/shakti-varta',
+    dedicatedLabel: 'Explore Shakti Varta Page →',
     desc: 'Anchoring social transformation in rigorous textual analysis, Harshita leads continuous research into classical literature and forgotten historical archives.',
     bullets: [
       'Shakti Varta Digital Fellowship: Curated an ongoing intellectual forum connecting 200+ young women to foundational texts — including the Bhagavad Gita, Maharshi Dayananda’s Satyarth Prakash, and original Vedic philosophies.',
@@ -273,10 +279,10 @@ export default function AboutPage() {
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
               Operational Interventions
             </span>
-            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#FFFFFF', margin: '0.35rem 0 1rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1rem' }}>
               Tactical Frontline Interventions & Crisis Rescue
             </h3>
-            <p style={{ color: '#94A3B8', fontSize: '0.92rem', maxWidth: '750px', marginBottom: '2rem' }}>
+            <p style={{ color: '#4B5563', fontSize: '0.92rem', maxWidth: '750px', marginBottom: '2rem' }}>
               Operating in high-risk environments across rural heartlands, urban centers, and institutional corridors, Harshita has led frontline intervention and operational rescue missions where statutory systems faced jurisdictional limitations:
             </p>
           </div>
@@ -301,7 +307,7 @@ export default function AboutPage() {
               "Mental Resilience Before Physical Strike: The Dual-Shield Doctrine"<br />
               Harshita Mankar holds a Black Belt in Karate, Expert in Lathi-Kaushal, Sword and serves as a tactical combat instructor who rejects conventional, passive self-defense models. Her core training doctrine is built on an inviolable premise: "Before the body can strike, the mind must be liberated from fear. True empowerment is not a slogan it is the simultaneous mastery of cognitive composure and physical capability."
             </p>
-            <p style={{ color: '#E2E8F0', fontSize: '0.9rem', marginBottom: '2rem' }}>
+            <p style={{ color: '#374151', fontSize: '0.9rem', marginBottom: '2rem' }}>
               Under Mission Mardini, she trains young women and teenage girls through an asymmetric combat curriculum designed to handle real-world street violence, ambushes, and coercive physical encounters:
             </p>
 
@@ -327,7 +333,7 @@ export default function AboutPage() {
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
               Strategic Wings
             </span>
-            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#FFFFFF', margin: '0.35rem 0 1.5rem' }}>
+            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1.5rem' }}>
               The Three Pillars in Action by Harshita Mankar
             </h3>
           </div>
@@ -353,6 +359,11 @@ export default function AboutPage() {
                     </li>
                   ))}
                 </ul>
+
+                <Link to={pillar.dedicatedLink} className={p.actionPillarLink}>
+                  <span>{pillar.dedicatedLabel}</span>
+                  <GoogleIcon name="arrow_forward" size={15} />
+                </Link>
               </div>
             ))}
           </div>

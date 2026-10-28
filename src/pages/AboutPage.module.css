@@ -563,24 +563,18 @@
    FOUNDER DOSSIER & TACTICAL BLUEPRINT (HARSHITA MANKAR)
    ============================================================ */
 
+/* ============================================================
+   FOUNDER DOSSIER & TACTICAL BLUEPRINT (HARSHITA MANKAR)
+   Clean Light / White Theme
+   ============================================================ */
+
 .founderSection {
-  background: #0B0B0E;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #111827;
   padding: clamp(3.5rem, 6vw, 6rem) clamp(1.5rem, 4vw, 3rem);
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgba(220, 20, 60, 0.2);
-}
-
-.founderSection::before {
-  content: '';
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(220, 20, 60, 0.12) 0%, transparent 70%);
-  pointer-events: none;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .founderInner {
@@ -591,11 +585,11 @@
 }
 
 .founderCard {
-  background: linear-gradient(145deg, rgba(24, 24, 30, 0.95) 0%, rgba(15, 15, 18, 0.98) 100%);
-  border: 1px solid rgba(220, 20, 60, 0.35);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 24px;
   padding: clamp(2rem, 4vw, 3.5rem);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
   display: grid;
   grid-template-columns: 340px 1fr;
   gap: clamp(2rem, 4vw, 3.5rem);
@@ -614,9 +608,9 @@
   position: relative;
   border-radius: 18px;
   overflow: hidden;
-  border: 2px solid rgba(220, 20, 60, 0.45);
-  box-shadow: 0 15px 35px rgba(220, 20, 60, 0.2);
-  background: #15151A;
+  border: 2px solid rgba(220, 20, 60, 0.3);
+  box-shadow: 0 10px 25px rgba(220, 20, 60, 0.12);
+  background: #F9FAFB;
 }
 
 .founderImg {
@@ -637,17 +631,18 @@
   bottom: 12px;
   left: 12px;
   right: 12px;
-  background: rgba(11, 11, 14, 0.88);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(220, 20, 60, 0.4);
+  border: 1px solid rgba(220, 20, 60, 0.3);
   padding: 0.5rem 0.8rem;
   border-radius: 10px;
   font-size: 0.72rem;
-  color: #F87171;
+  color: #DC143C;
   text-align: center;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .founderInfo {
@@ -662,8 +657,8 @@
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #DC143C;
-  background: rgba(220, 20, 60, 0.12);
-  border: 1px solid rgba(220, 20, 60, 0.3);
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.2);
   padding: 0.35rem 0.9rem;
   border-radius: 9999px;
   margin-bottom: 1rem;
@@ -674,7 +669,7 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(2rem, 3.5vw, 3rem);
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   line-height: 1.15;
   margin: 0 0 0.35rem 0;
 }
@@ -682,21 +677,21 @@
 .founderTitle {
   font-size: 1.05rem;
   font-weight: 600;
-  color: #E2E8F0;
+  color: #374151;
   margin-bottom: 0.4rem;
 }
 
 .founderSpecialties {
-  font-size: 0.86rem;
-  color: #94A3B8;
-  letter-spacing: 0.04em;
+  font-size: 0.88rem;
+  color: #6B7280;
+  letter-spacing: 0.02em;
   line-height: 1.5;
   margin-bottom: 1.35rem;
 }
 
 .heroQuoteBox {
-  background: rgba(220, 20, 60, 0.08);
-  border-left: 3px solid #DC143C;
+  background: #FFF5F5;
+  border-left: 4px solid #DC143C;
   border-radius: 0 12px 12px 0;
   padding: 1.15rem 1.4rem;
   margin-bottom: 1.5rem;
@@ -705,7 +700,7 @@
 .heroQuoteText {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(0.95rem, 1.4vw, 1.15rem);
-  color: #FEE2E2;
+  color: #111827;
   font-style: italic;
   line-height: 1.6;
   margin: 0;
@@ -720,16 +715,17 @@
 }
 
 .metricBadgeCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 1rem 1.15rem;
   transition: all 0.25s ease;
 }
 
 .metricBadgeCard:hover {
-  background: rgba(220, 20, 60, 0.08);
-  border-color: rgba(220, 20, 60, 0.35);
+  background: #FFFFFF;
+  border-color: rgba(220, 20, 60, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -748,20 +744,20 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.88rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
 }
 
 .metricBadgeDesc {
   font-size: 0.8rem;
-  color: #94A3B8;
+  color: #6B7280;
   line-height: 1.5;
   margin: 0;
 }
 
 /* Genesis Section */
 .genesisBox {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
   border-radius: 18px;
   padding: clamp(1.75rem, 3vw, 2.5rem);
   margin-bottom: 3.5rem;
@@ -770,7 +766,7 @@
 .genesisTitle {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.3rem, 2.2vw, 1.7rem);
-  color: #FFFFFF;
+  color: #166534;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -779,7 +775,7 @@
 
 .genesisText {
   font-size: 0.96rem;
-  color: #CBD5E1;
+  color: #374151;
   line-height: 1.8;
   margin: 0;
 }
@@ -793,18 +789,20 @@
 }
 
 .tacticalCard {
-  background: linear-gradient(160deg, rgba(28, 20, 25, 0.75) 0%, rgba(15, 12, 16, 0.85) 100%);
-  border: 1px solid rgba(220, 20, 60, 0.25);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 1.75rem;
   position: relative;
   overflow: hidden;
-  transition: transform 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .tacticalCard:hover {
   transform: translateY(-3px);
   border-color: #DC143C;
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.1);
 }
 
 .tacticalCard::before {
@@ -817,30 +815,25 @@
   background: #DC143C;
 }
 
-.tacticalIcon {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-}
-
 .tacticalTitle {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.15rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   margin-bottom: 0.6rem;
 }
 
 .tacticalDesc {
   font-size: 0.88rem;
-  color: #94A3B8;
+  color: #4B5563;
   line-height: 1.7;
   margin: 0;
 }
 
 /* Dual-Shield Doctrine Section */
 .doctrineBox {
-  background: linear-gradient(145deg, #16151B 0%, #0E0D12 100%);
-  border: 1px solid rgba(220, 20, 60, 0.3);
+  background: #FAF5FF;
+  border: 1px solid #F3E8FF;
   border-radius: 20px;
   padding: clamp(2rem, 3.5vw, 3rem);
   margin-bottom: 3.5rem;
@@ -858,14 +851,14 @@
 .doctrineHeading {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.4rem, 2.5vw, 2rem);
-  color: #FFFFFF;
+  color: #111827;
   margin-bottom: 1rem;
 }
 
 .doctrinePremise {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.05rem;
-  color: #FCA5A5;
+  color: #831843;
   font-style: italic;
   line-height: 1.7;
   border-left: 3px solid #DC143C;
@@ -880,10 +873,11 @@
 }
 
 .curriculumCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
   padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .curriculumNumber {
@@ -892,8 +886,8 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   color: #DC143C;
-  background: rgba(220, 20, 60, 0.12);
-  border: 1px solid rgba(220, 20, 60, 0.25);
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.2);
   padding: 0.25rem 0.65rem;
   border-radius: 6px;
   margin-bottom: 0.75rem;
@@ -904,7 +898,7 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.05rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   margin-bottom: 0.85rem;
 }
 
@@ -919,12 +913,12 @@
 
 .curriculumItem {
   font-size: 0.84rem;
-  color: #CBD5E1;
+  color: #4B5563;
   line-height: 1.6;
 }
 
 .curriculumItem strong {
-  color: #FFFFFF;
+  color: #111827;
 }
 
 /* Three Pillars in Action */
@@ -935,14 +929,21 @@
 }
 
 .actionPillarCard {
-  background: #141318;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 2rem;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.actionPillarCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
 .actionPillarCard::after {
@@ -951,7 +952,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--pill-color, #DC143C);
 }
 
@@ -962,15 +963,11 @@
   margin-bottom: 0.5rem;
 }
 
-.actionPillarIcon {
-  font-size: 1.75rem;
-}
-
 .actionPillarName {
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.25rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
 }
 
 .actionPillarSub {
@@ -979,11 +976,12 @@
   text-transform: uppercase;
   color: var(--pill-color, #DC143C);
   margin-bottom: 1rem;
+  font-weight: 600;
 }
 
 .actionPillarDesc {
   font-size: 0.88rem;
-  color: #94A3B8;
+  color: #4B5563;
   line-height: 1.7;
   margin-bottom: 1.25rem;
 }
@@ -995,19 +993,32 @@
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid #F3F4F6;
   padding-top: 1rem;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
 }
 
 .actionPillarBullet {
   font-size: 0.82rem;
-  color: #CBD5E1;
+  color: #4B5563;
   line-height: 1.6;
   display: flex;
   gap: 0.5rem;
 }
 
-.actionPillarBullet span {
+.actionPillarLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.84rem;
+  font-weight: 700;
   color: var(--pill-color, #DC143C);
+  text-decoration: none;
+  transition: transform 0.2s ease;
+  margin-top: auto;
 }
 
+.actionPillarLink:hover {
+  transform: translateX(4px);
+}

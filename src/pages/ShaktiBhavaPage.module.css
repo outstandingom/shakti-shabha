@@ -1,0 +1,351 @@
+/* ============================================================
+   ShaktiBhavaPage.module.css — Shakti Bhava Dedicated Page
+   Clean White Theme with Forest Green (#059669) & Crimson Red Accents
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  background: #FFFFFF;
+  color: #111827;
+  font-family: var(--font-body, 'Outfit', sans-serif);
+}
+
+/* ── Hero Banner ── */
+.hero {
+  background: linear-gradient(145deg, #062013 0%, #0F3320 50%, #1A4D32 100%);
+  padding: calc(clamp(3.5rem, 6vw, 5.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 6vw, 5rem);
+  color: #FFFFFF;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(5, 150, 105, 0.4);
+}
+
+.heroInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #A7F3D0;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #A7F3D0;
+  background: rgba(167, 243, 208, 0.15);
+  border: 1px solid rgba(167, 243, 208, 0.35);
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+.hindiSubtitle {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 1.2rem;
+  color: #A7F3D0;
+  margin-bottom: 0.75rem;
+}
+
+.desc {
+  font-size: clamp(0.95rem, 1.25vw, 1.12rem);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 68ch;
+  line-height: 1.7;
+}
+
+/* ── Content Container ── */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
+}
+
+.sectionHeader {
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #059669;
+  margin-bottom: 0.4rem;
+}
+
+.heading {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.lead {
+  font-size: 1rem;
+  color: #4B5563;
+  line-height: 1.7;
+  max-width: 75ch;
+  margin-top: 0.5rem;
+}
+
+/* ── Stats Grid ── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.statCard {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.statCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #059669;
+}
+
+.statNumber {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 700;
+  color: #059669;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.statDesc {
+  font-size: 0.82rem;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+/* ── Overview Box ── */
+.overviewBox {
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  border-left: 5px solid #059669;
+  border-radius: 16px;
+  padding: clamp(2rem, 3.5vw, 3rem);
+  margin-bottom: 4.5rem;
+}
+
+.overviewQuote {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: #065F46;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+}
+
+.overviewText {
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.8;
+}
+
+/* ── Modalities Grid ── */
+.modalitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+  gap: 2rem;
+  margin-bottom: 4.5rem;
+}
+
+.modalityCard {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 2.25rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.modalityCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.modalityCard::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #059669;
+}
+
+.modalityHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.modalityTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.modalityDesc {
+  font-size: 0.9rem;
+  color: #4B5563;
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.modalityBullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  border-top: 1px solid #F3F4F6;
+  padding-top: 1rem;
+}
+
+.modalityBullet {
+  font-size: 0.82rem;
+  color: #374151;
+  display: flex;
+  gap: 0.5rem;
+  line-height: 1.5;
+}
+
+.modalityBullet span {
+  color: #059669;
+}
+
+/* ── CTA Banner ── */
+.ctaBanner {
+  background: linear-gradient(135deg, #065F46 0%, #059669 100%);
+  border-radius: 20px;
+  padding: clamp(2.5rem, 5vw, 4rem);
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.75rem;
+}
+
+.ctaText {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 650px;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #FFFFFF;
+  color: #065F46;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.btnOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.85rem 2rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btnOutline:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
