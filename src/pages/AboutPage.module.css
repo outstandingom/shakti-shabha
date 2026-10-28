@@ -10,20 +10,13 @@
   padding-top: 5.5rem;
 }
 
-/* ── HERO ─────────────────────────────────────────────────── */
+/* ── HERO — CLEAN WHITE BACKGROUND ────────────────────── */
 .hero {
-  background: linear-gradient(145deg, #A80E2D 0%, #DC143C 55%, #B01030 100%);
-  padding: clamp(4rem, 7vw, 6rem) clamp(1.5rem, 4vw, 3rem);
+  background: #FFFFFF;
+  padding: calc(clamp(3.5rem, 6vw, 5.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 6vw, 4.5rem);
   position: relative;
   overflow: hidden;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 50% 80% at 90% 50%, rgba(255,255,255,0.06) 0%, transparent 70%);
-  pointer-events: none;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .heroInner {
@@ -33,42 +26,61 @@
   z-index: 1;
 }
 
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #6B7280;
+  text-decoration: none;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #DC143C;
+}
+
 .eyebrow {
   display: inline-block;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  padding: 0.35rem 1rem;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  padding: 0.35rem 1.1rem;
   border-radius: 9999px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .heroTitle {
   font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
   font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.15;
-  margin-bottom: 0.6rem;
-  max-width: 22ch;
+  color: #111827;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  max-width: 24ch;
 }
 
 .heroHindi {
   font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
-  font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.75);
-  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: #DC143C;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
 }
 
 .heroDesc {
-  font-size: clamp(0.92rem, 1.2vw, 1.05rem);
-  color: rgba(255, 255, 255, 0.88);
-  max-width: 58ch;
-  line-height: 1.8;
+  font-size: clamp(0.95rem, 1.25vw, 1.12rem);
+  color: #4B5563;
+  max-width: 68ch;
+  line-height: 1.7;
 }
 
 /* ── SHARED SECTION ───────────────────────────────────────── */
@@ -219,7 +231,9 @@
 
 /* ── MISSION QUOTE ────────────────────────────────────────── */
 .quoteSection {
-  background: linear-gradient(135deg, #0A0A0B 0%, #1A0808 100%);
+  background: #FFF5F5;
+  border-top: 1px solid #FEE2E2;
+  border-bottom: 1px solid #FEE2E2;
   padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 3rem);
   text-align: center;
 }

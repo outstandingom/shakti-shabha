@@ -371,15 +371,15 @@ export default function AboutPage() {
       </section>
 
       {/* ── BOLD MISSION STATEMENT ───────────────────── */}
-      <div className={p.quoteSection} style={{ background: '#0F0E11', color: '#FFFFFF', padding: 'clamp(3rem, 5vw, 4.5rem) clamp(1.5rem, 4vw, 3rem)' }}>
+      <div className={p.quoteSection}>
         <div className={p.quoteInner} style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '1rem' }}>
             Civilizational Conviction · Brand Ka Dil
           </span>
-          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.25rem, 2.3vw, 1.75rem)', lineHeight: 1.6, color: '#E8C98A', fontStyle: 'italic', marginBottom: '1.25rem' }}>
+          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.25rem, 2.3vw, 1.75rem)', lineHeight: 1.6, color: '#881337', fontStyle: 'italic', marginBottom: '1.25rem' }}>
             "Sadiyaan beet gayi, Indian woman ki asli kahani dobara sunne ki. Woh sirf ghar nahi sambhalti thi — woh yuddh jeetti thi, darshan padhati thi, rajya chalati thi. Shakti Sabha usi sach ko wapas laane ke liye hai."
           </blockquote>
-          <p style={{ color: 'rgba(255, 255, 255, 0.65)', fontSize: '0.9rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+          <p style={{ color: '#4B5563', fontSize: '0.9rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             — Shakti Sabha Mission & Conviction
           </p>
         </div>
