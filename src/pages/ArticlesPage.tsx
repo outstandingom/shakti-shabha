@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { X } from 'lucide-react'
 import { supabase, Article } from '../lib/supabase'
@@ -224,6 +224,10 @@ export default function ArticlesPage() {
   const [activeModalArticle, setActiveModalArticle] = useState<ArticleItem | null>(null)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [activeDot, setActiveDot] = useState(0)
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     async function loadArticles() {
@@ -263,6 +267,94 @@ export default function ArticlesPage() {
 
   const allArticles = [...dbArticles, ...ARTICLES_LIST]
 
+  /* ── 3D Card Wheel #2 (Accordéon Asymétrique) Animation Logic ── */
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current
+    if (!scrollContainer) return
+
+    const SPREAD_X = 0.16
+    const SPREAD_Y = 0.28
+    const ROTATE = 4
+    const SKEW = -2
+    const SCALE_MIN = 0.7
+
+    function updateScroll() {
+      if (!scrollContainer) return
+      const rect = scrollContainer.getBoundingClientRect()
+      const totalScrollable = scrollContainer.offsetHeight - window.innerHeight
+      if (totalScrollable <= 0) return
+
+      const scrolled = Math.max(0, -rect.top)
+      const progress = Math.min(1, Math.max(0, scrolled / totalScrollable))
+      const totalCards = allArticles.length
+      if (totalCards === 0) return
+      const current = progress * (totalCards - 1)
+
+      cardsRef.current.forEach((card, index) => {
+        if (!card) return
+        const offset = index - current
+        const absOffset = Math.abs(offset)
+        const spreadX = -offset * window.innerWidth * SPREAD_X
+        const spreadY = offset * window.innerHeight * SPREAD_Y
+        const rotateZ = offset * ROTATE
+        const skewY = offset * SKEW
+        const scale = Math.max(SCALE_MIN, 1 - absOffset * 0.08)
+
+        if (absOffset > 2.2) {
+          card.style.opacity = '0'
+          card.style.pointerEvents = 'none'
+          return
+        }
+
+        const opacity = absOffset > 1.8 ? 0 : Math.max(0, 1 - absOffset * 0.45)
+        card.style.pointerEvents = absOffset < 0.4 ? 'auto' : 'none'
+        card.style.transform = `
+          translate3d(${spreadX}px, ${spreadY}px, 0)
+          rotate(${rotateZ}deg)
+          skewY(${skewY}deg)
+          scale(${scale})
+        `
+        card.style.opacity = `${opacity}`
+        card.style.zIndex = `${Math.round(100 - absOffset * 20)}`
+
+        if (absOffset < 0.5) {
+          setActiveDot(index)
+        }
+      })
+    }
+
+    let ticking = false
+    function onScroll() {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          updateScroll()
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', updateScroll)
+    updateScroll()
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', updateScroll)
+    }
+  }, [allArticles.length])
+
+  const scrollToCard = (index: number) => {
+    if (!scrollContainerRef.current) return
+    const containerTop = scrollContainerRef.current.offsetTop
+    const totalScrollable = scrollContainerRef.current.offsetHeight - window.innerHeight
+    const targetScroll = (index / (allArticles.length - 1)) * totalScrollable
+    window.scrollTo({
+      top: containerTop + targetScroll,
+      behavior: 'smooth'
+    })
+  }
+
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
     if (email.trim()) {
@@ -283,10 +375,109 @@ export default function ArticlesPage() {
           <p className={ap.hindiSubtitle}>गहन शोध, वीरांगना इतिहास एवं मानसिक स्वास्थ्य</p>
           <p className={ap.desc}>
             Indian women ke liye — clinical psychology, ancient civilizational identity, legal armor, aur ek aisi community jo tumhari taraf hai.
-            Explore our core investigations, research white papers, and articles below.
+            Explore our core investigations below through the interactive 3D Card Wheel Accordéon.
           </p>
         </div>
       </div>
+
+      {/* ── 3D CARD WHEEL #2 (ACCORDÉON ASYMÉTRIQUE) ───────────────── */}
+      <section
+        ref={scrollContainerRef}
+        className={ap.scrollContainer}
+        style={{ height: `${Math.max(650, allArticles.length * 85)}vh` }}
+      >
+        <div className={ap.wheelWrapper}>
+          <div className={ap.wheelGlow} />
+
+          {/* Top Header Badge */}
+          <div className={ap.wheelHeader}>
+            <span className={ap.wheelBadge}>
+              <GoogleIcon name="motion_photos_auto" size={14} style={{ marginRight: '6px' }} />
+              3D Card Wheel · Accordéon Asymétrique
+            </span>
+          </div>
+
+          {/* Vertical Dots Indicator */}
+          <div className={ap.indicator}>
+            {allArticles.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`${ap.dot} ${idx === activeDot ? ap.dotActive : ''}`}
+                onClick={() => scrollToCard(idx)}
+                aria-label={`Go to article ${idx + 1}`}
+                title={`Article ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          {/* 3D Asymmetric Accordion Cards */}
+          {allArticles.map((article, idx) => (
+            <div
+              key={article.id}
+              ref={(el) => { cardsRef.current[idx] = el }}
+              className={ap.cardWheel}
+              data-index={idx}
+            >
+              <div className={ap.cardInner}>
+                {/* Left Side: Phone Mockup with Cover Image */}
+                <div className={ap.cardImage}>
+                  <div className={ap.phoneMockup}>
+                    <div className={ap.phoneScreen}>
+                      <img src={article.image} alt={article.title} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Side: Card Content */}
+                <div className={ap.cardContent}>
+                  <div className={ap.wheelTags}>
+                    <span className={`${ap.wheelTag} ${ap.wheelTagHighlight}`}>
+                      {article.tag}
+                    </span>
+                    <span className={ap.wheelTag}>
+                      <GoogleIcon name="schedule" size={13} />
+                      {article.readTime}
+                    </span>
+                    <span className={ap.wheelTag}>
+                      <GoogleIcon name="star" size={13} filled style={{ color: '#F59E0B' }} />
+                      {article.rating}/10
+                    </span>
+                  </div>
+
+                  <h2>{article.title}</h2>
+                  {article.hindiTitle && (
+                    <div className={ap.cardHindiTitle}>{article.hindiTitle}</div>
+                  )}
+
+                  <p>{article.excerpt}</p>
+
+                  <div className={ap.wheelActions}>
+                    <button
+                      type="button"
+                      className={ap.wheelBtn}
+                      onClick={() => setActiveModalArticle(article)}
+                    >
+                      <span>Read Investigation</span>
+                      <GoogleIcon name="arrow_forward" size={16} />
+                    </button>
+                    <span className={ap.wheelAuthor}>
+                      <GoogleIcon name="edit" size={14} />
+                      {article.author}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Bottom Scroll Indicator */}
+          <div className={ap.wheelScrollHint}>
+            <GoogleIcon name="south" size={15} />
+            <span>Scroll down to navigate through 3D wheel</span>
+          </div>
+        </div>
+      </section>
 
       {/* ── FULL ARTICLE READING MODAL ─────────────────────────────── */}
       {activeModalArticle && (
