@@ -81,3 +81,16 @@ export type AdminProfile = {
   avatar_url: string
   created_at: string
 }
+
+export type Testimonial = {
+  id: string
+  name: string
+  role: string
+  quote: string
+  image_url: string
+  rating?: number
+  location?: string
+  published: boolean
+  created_at: string
+  updated_at?: string
+}

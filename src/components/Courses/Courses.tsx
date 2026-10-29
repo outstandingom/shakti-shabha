@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Courses.module.css'
+import Testimonials from '../Testimonials/Testimonials'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -109,7 +110,8 @@ export default function Courses() {
   const canScrollRight = progress < 0.98
 
   return (
-    <section ref={secRef} className={s.section} data-courses-section>
+    <>
+      <section ref={secRef} className={s.section} data-courses-section>
       <div className={s.header}>
         <div className={s.headerLeft}>
           <span className={s.eyebrow}>Programmes &amp; Learning</span>
@@ -158,6 +160,8 @@ export default function Courses() {
           </div>
         ))}
       </div>
-    </section>
+      </section>
+      <Testimonials />
+    </>
   )
 }

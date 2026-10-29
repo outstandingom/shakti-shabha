@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { supabase, Article, GalleryCategory, GalleryPhoto, Course, CounsellingRequest } from '../lib/supabase'
+import { supabase, Article, GalleryCategory, GalleryPhoto, Course, CounsellingRequest, Testimonial } from '../lib/supabase'
+import { DEFAULT_TESTIMONIALS } from '../components/Testimonials/testimonialsData'
 import { useAuth } from '../lib/AuthContext'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AdminDashboard.module.css'
@@ -56,7 +57,7 @@ function ShaktiLoader({ title, status, percent, filename }: LoaderProps) {
   )
 }
 
-type Section = 'overview' | 'articles' | 'gallery' | 'courses' | 'counselling'
+type Section = 'overview' | 'articles' | 'gallery' | 'courses' | 'counselling' | 'testimonials'
 
 export default function AdminDashboard() {
   const { user, adminProfile, signOut, isAdmin, isLoading } = useAuth()
@@ -80,6 +81,7 @@ export default function AdminDashboard() {
     { key: 'articles',   icon: 'article', label: 'Articles' },
     { key: 'gallery',    icon: 'photo_library', label: 'Gallery' },
     { key: 'courses',    icon: 'school', label: 'Courses' },
+    { key: 'testimonials', icon: 'format_quote', label: 'Testimonials' },
     { key: 'counselling',icon: 'forum', label: 'Counselling' },
   ]
 
@@ -88,6 +90,7 @@ export default function AdminDashboard() {
     articles: 'Article Management',
     gallery: 'Gallery Management',
     courses: 'Course Management',
+    testimonials: 'Testimonial Management',
     counselling: 'Counselling Requests',
   }
 
@@ -165,6 +168,7 @@ export default function AdminDashboard() {
           {section === 'articles'   && <ArticlesSection />}
           {section === 'gallery'    && <GallerySection />}
           {section === 'courses'    && <CoursesSection />}
+          {section === 'testimonials' && <TestimonialsSection />}
           {section === 'counselling'&& <CounsellingSection />}
         </div>
       </main>
@@ -1276,6 +1280,392 @@ function CounsellingSection() {
               <a href={`mailto:${viewItem.email}?subject=Re: Your Counselling Request at Shakti Sabha`} className={s.btnPrimary} style={{ textDecoration: 'none' }}>
                 <GoogleIcon name="mail" size={16} /> Reply via Email
               </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+/* ============================================================
+   TESTIMONIALS SECTION
+   ============================================================ */
+function TestimonialsSection() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [loading, setLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [editing, setEditing] = useState<Testimonial | null>(null)
+  const [alert, setAlert] = useState<{ type: 'error' | 'success'; msg: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const defaultForm = {
+    name: '',
+    role: '',
+    location: '',
+    quote: '',
+    image_url: '',
+    rating: 5,
+    published: true,
+  }
+  const [form, setForm] = useState(defaultForm)
+
+  const load = async () => {
+    setLoading(true)
+    let list: Testimonial[] = []
+
+    // 1. Fetch from Supabase
+    try {
+      const { data, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (!error && data && data.length > 0) list = data
+    } catch (err) {
+      console.warn('Supabase fetch testimonials error:', err)
+    }
+
+    // 2. Fetch from LocalStorage and merge
+    try {
+      const local = localStorage.getItem('shakti_testimonials')
+      if (local) {
+        const localList: Testimonial[] = JSON.parse(local)
+        const idMap = new Map<string, Testimonial>()
+        for (const t of list) idMap.set(t.id, t)
+        for (const t of localList) {
+          if (!idMap.has(t.id)) {
+            idMap.set(t.id, t)
+            list.push(t)
+          }
+        }
+      } else {
+        localStorage.setItem('shakti_testimonials', JSON.stringify(DEFAULT_TESTIMONIALS))
+        const idMap = new Map<string, Testimonial>()
+        for (const t of list) idMap.set(t.id, t)
+        for (const t of DEFAULT_TESTIMONIALS) {
+          if (!idMap.has(t.id)) {
+            idMap.set(t.id, t)
+            list.push(t)
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('LocalStorage error:', e)
+    }
+
+    setTestimonials(list)
+    setLoading(false)
+  }
+
+  useEffect(() => { load() }, [])
+
+  const openNew = () => {
+    setEditing(null)
+    setForm(defaultForm)
+    setShowModal(true)
+  }
+
+  const openEdit = (t: Testimonial) => {
+    setEditing(t)
+    setForm({
+      name: t.name,
+      role: t.role,
+      location: t.location || '',
+      quote: t.quote,
+      image_url: t.image_url || '',
+      rating: t.rating || 5,
+      published: t.published !== false,
+    })
+    setShowModal(true)
+  }
+
+  const uploadPhoto = async (file: File) => {
+    setUploading(true)
+    try {
+      // Compress person's image down to 500x500 (quality 0.8) for fast loading & light footprint (~30KB)
+      const comp = await compressImage(file, { maxWidth: 500, maxHeight: 500, quality: 0.8 })
+      setForm(f => ({ ...f, image_url: comp.dataUrl }))
+
+      const ext = comp.file.name.split('.').pop()
+      const path = `testimonials/${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`
+      const { error } = await supabase.storage.from('media').upload(path, comp.file, { upsert: true })
+      if (!error) {
+        const { data } = supabase.storage.from('media').getPublicUrl(path)
+        if (data?.publicUrl) {
+          setForm(f => ({ ...f, image_url: data.publicUrl }))
+        }
+      }
+    } catch (e) {
+      console.warn('Testimonial image upload error:', e)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const save = async () => {
+    if (!form.name.trim()) {
+      setAlert({ type: 'error', msg: "Please enter the person's name." })
+      return
+    }
+    if (!form.quote.trim()) {
+      setAlert({ type: 'error', msg: 'Please enter the testimonial text.' })
+      return
+    }
+
+    const payload = {
+      name: form.name.trim(),
+      role: form.role.trim() || 'Community Member',
+      location: form.location.trim() || 'Maharashtra',
+      quote: form.quote.trim(),
+      image_url: form.image_url || '',
+      rating: Number(form.rating) || 5,
+      published: Boolean(form.published),
+    }
+
+    let saved = false
+    let savedId = editing ? editing.id : ''
+
+    // 1. Try Supabase
+    try {
+      if (editing) {
+        const { error } = await supabase.from('testimonials').update({ ...payload, updated_at: new Date().toISOString() }).eq('id', editing.id)
+        if (!error) saved = true
+      } else {
+        const { data, error } = await supabase.from('testimonials').insert([payload]).select().single()
+        if (!error && data) {
+          saved = true
+          savedId = data.id
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase testimonial save error:', err)
+    }
+
+    // 2. LocalStorage Sync
+    try {
+      const local = localStorage.getItem('shakti_testimonials')
+      let list: Testimonial[] = local ? JSON.parse(local) : []
+      const id = savedId || (editing ? editing.id : `testim_${Date.now()}`)
+      const item: Testimonial = {
+        id,
+        ...payload,
+        created_at: editing?.created_at || new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+
+      const idx = list.findIndex(t => t.id === id)
+      if (idx >= 0) {
+        list[idx] = item
+      } else {
+        list = [item, ...list]
+      }
+      localStorage.setItem('shakti_testimonials', JSON.stringify(list))
+      window.dispatchEvent(new Event('storage'))
+      saved = true
+    } catch (localErr) {
+      console.warn('LocalStorage save error:', localErr)
+    }
+
+    if (saved) {
+      setAlert({ type: 'success', msg: editing ? 'Testimonial updated!' : 'Testimonial added!' })
+      setShowModal(false)
+      load()
+    } else {
+      setAlert({ type: 'error', msg: 'Failed to save testimonial.' })
+    }
+  }
+
+  const del = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this testimonial?')) return
+
+    try {
+      await supabase.from('testimonials').delete().eq('id', id)
+    } catch (err) {
+      console.warn('Supabase delete error:', err)
+    }
+
+    try {
+      const local = localStorage.getItem('shakti_testimonials')
+      if (local) {
+        const list: Testimonial[] = JSON.parse(local)
+        const filtered = list.filter(t => t.id !== id)
+        localStorage.setItem('shakti_testimonials', JSON.stringify(filtered))
+        window.dispatchEvent(new Event('storage'))
+      }
+    } catch (localErr) {
+      console.warn('LocalStorage delete error:', localErr)
+    }
+
+    setAlert({ type: 'success', msg: 'Testimonial deleted.' })
+    load()
+  }
+
+  return (
+    <>
+      {uploading && (
+        <ShaktiLoader
+          title="Processing Photo"
+          status="Optimizing and uploading testimonial photo..."
+        />
+      )}
+      {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
+
+      <div className={s.sectionHeader}>
+        <span className={s.sectionTitle}>Community Testimonials ({testimonials.length})</span>
+        <button className={s.btnPrimary} onClick={openNew}>+ New Testimonial</button>
+      </div>
+
+      <div className={s.tableWrap}>
+        {loading ? (
+          <div style={{ padding: '2rem', textAlign: 'center', color: 'rgba(255,255,255,0.4)' }}>Loading...</div>
+        ) : testimonials.length === 0 ? (
+          <div className={s.empty}>
+            <div className={s.emptyIcon}>
+              <GoogleIcon name="format_quote" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+            </div>
+            <div className={s.emptyText}>No testimonials yet</div>
+          </div>
+        ) : (
+          <table className={s.table}>
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Role / Context</th>
+                <th>Location</th>
+                <th>Rating</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {testimonials.map(t => (
+                <tr key={t.id}>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{ width: 36, height: 36, borderRadius: '50%', overflow: 'hidden', background: '#333', flexShrink: 0, border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        {t.image_url ? (
+                          <img src={t.image_url} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#DC143C' }}>{t.name.charAt(0)}</span>
+                        )}
+                      </div>
+                      <span style={{ fontWeight: 600, color: '#F9FAFB' }}>{t.name}</span>
+                    </div>
+                  </td>
+                  <td>{t.role}</td>
+                  <td>{t.location || '—'}</td>
+                  <td><span style={{ color: '#F59E0B' }}>{'★'.repeat(t.rating || 5)}</span></td>
+                  <td><span className={`${s.badge} ${t.published ? s.badgeGreen : s.badgeGray}`}>{t.published ? 'Published' : 'Draft'}</span></td>
+                  <td>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button className={s.btnEdit} onClick={() => openEdit(t)}>Edit</button>
+                      <button className={s.btnDanger} onClick={() => del(t.id)}>Delete</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {showModal && (
+        <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
+          <div className={s.modal} data-lenis-prevent="true">
+            <h2 className={s.modalTitle}>{editing ? 'Edit Testimonial' : 'New Testimonial'}</h2>
+            <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
+
+            <div className={s.formGrid}>
+              <div className={s.field}>
+                <label className={s.label}>Person's Name *</label>
+                <input className={s.input} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Pooja Deshmukh" />
+              </div>
+              <div className={s.field}>
+                <label className={s.label}>Role / Designation</label>
+                <input className={s.input} value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))} placeholder="e.g. Lathi-Kaushal Graduate, Survivor & Mentor" />
+              </div>
+              <div className={s.field}>
+                <label className={s.label}>Location / City</label>
+                <input className={s.input} value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder="e.g. Pune, Maharashtra" />
+              </div>
+              <div className={s.field}>
+                <label className={s.label}>Rating (1 - 5 Stars)</label>
+                <select className={s.select} value={form.rating} onChange={e => setForm(f => ({ ...f, rating: Number(e.target.value) }))}>
+                  <option value={5}>5 Stars ★★★★★</option>
+                  <option value={4}>4 Stars ★★★★☆</option>
+                  <option value={3}>3 Stars ★★★☆☆</option>
+                  <option value={2}>2 Stars ★★☆☆☆</option>
+                  <option value={1}>1 Star ★☆☆☆☆</option>
+                </select>
+              </div>
+
+              {/* Photo Upload with Instant Preview */}
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Person's Photo</label>
+                <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={e => e.target.files?.[0] && uploadPhoto(e.target.files[0])}
+                  />
+                  <button
+                    type="button"
+                    className={s.btnSecondary}
+                    onClick={() => fileRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? 'Compressing...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Choose Photo</>}
+                  </button>
+                  <input
+                    className={s.input}
+                    style={{ flex: 1, minWidth: 220 }}
+                    value={form.image_url}
+                    onChange={e => setForm(f => ({ ...f, image_url: e.target.value }))}
+                    placeholder="Or enter Image URL directly"
+                  />
+                </div>
+
+                {/* Live Preview */}
+                {form.image_url && (
+                  <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ width: 64, height: 64, borderRadius: '50%', overflow: 'hidden', border: '2px solid #DC143C' }}>
+                      <img src={form.image_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    </div>
+                    <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Photo ready &amp; compressed</span>
+                  </div>
+                )}
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Testimonial Quote / Story *</label>
+                <textarea
+                  className={s.textarea}
+                  style={{ minHeight: 110 }}
+                  value={form.quote}
+                  onChange={e => setForm(f => ({ ...f, quote: e.target.value }))}
+                  placeholder="What did this person say about their journey with Shakti Sabha?"
+                />
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', color: '#F3F4F6' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.published}
+                    onChange={e => setForm(f => ({ ...f, published: e.target.checked }))}
+                    style={{ accentColor: '#DC143C', width: 16, height: 16 }}
+                  />
+                  Publish this testimonial to the website immediately
+                </label>
+              </div>
+            </div>
+
+            <div className={s.modalActions}>
+              <button className={s.btnSecondary} onClick={() => setShowModal(false)}>Cancel</button>
+              <button className={s.btnPrimary} onClick={save}><GoogleIcon name="save" size={16} /> Save Testimonial</button>
             </div>
           </div>
         </div>
