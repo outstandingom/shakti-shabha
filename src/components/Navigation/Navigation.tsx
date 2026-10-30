@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
 import s from './Navigation.module.css'
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 
 const LINKS = [
   { label: 'Articles', to: '/articles' },
@@ -120,6 +121,10 @@ export default function Navigation() {
             </NavLink>
           ))}
         </div>
+      </div>
+
+      <div className={s.langWrapper}>
+        <LanguageSwitcher />
       </div>
 
       <Link
