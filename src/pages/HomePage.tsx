@@ -1,7 +1,7 @@
 import Hero         from '../components/Hero/Hero'
 import Profile      from '../components/Profile/Profile'
-import ImpactGrid   from '../components/ImpactGrid/ImpactGrid'
 import About        from '../components/About/About'
+import ImpactGrid   from '../components/ImpactGrid/ImpactGrid'
 import Aaryaveera   from '../components/Aaryaveera/Aaryaveera'
 import SocialWork   from '../components/SocialWork/SocialWork'
 import Events       from '../components/Events/Events'
@@ -15,8 +15,8 @@ export default function HomePage() {
     <main>
       <Hero />
       <Profile />
-      <ImpactGrid />
       <About />
+      <ImpactGrid />
       <Aaryaveera />
       <SocialWork />
       <Events />

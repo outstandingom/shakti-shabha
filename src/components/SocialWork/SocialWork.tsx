@@ -203,7 +203,7 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
 
         {/* Crystal-sharp text on top */}
         <div className={s.slideContentInner}>
-          <div className={s.slideBadge}>{slide.stat}</div>
+          
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
           <p className={s.slideDescription}>{slide.description}</p>
@@ -262,14 +262,7 @@ export default function SocialWork() {
         ease: 'power3.out',
         scrollTrigger: { trigger: secRef.current, start: 'top 75%' },
       })
-      gsap.from('[data-sw="stat"]', {
-        opacity: 0,
-        y: 20,
-        stagger: 0.1,
-        duration: 0.6,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: '[data-sw="stats"]', start: 'top 80%' },
-      })
+
       gsap.from('[data-sw="stage"]', {
         opacity: 0,
         y: 50,
@@ -297,15 +290,7 @@ export default function SocialWork() {
 
   return (
     <section ref={secRef} className={s.section}>
-      {/* ── Stats Row ────────────────────────────────────────────── */}
-      <div data-sw="stats" className={s.statsRow}>
-        {STATS.map((st, i) => (
-          <div key={i} data-sw="stat" className={s.statBox}>
-            <div className={s.statCount}>{st.count}</div>
-            <div className={s.statLabel}>{st.label}</div>
-          </div>
-        ))}
-      </div>
+
 
       {/* ── Section Header ───────────────────────────────────────── */}
       <div data-sw="header" className={s.carouselHeader}>
