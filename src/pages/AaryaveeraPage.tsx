@@ -2,264 +2,430 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
-import s from './PageLayout.module.css'
 import p from './AaryaveeraPage.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const PLATFORM_CARDS = [
-  { label: 'Mission Mardini Camps', desc: '7–10 days intensive residential self-defense and martial readiness camps organized across institutional, rural, and tribal corridors.' },
-  { label: 'Dual-Shield Doctrine', desc: 'Cognitive de-escalation, threat recognition, and managing the freeze response combined with bio-mechanical combat.' },
-  { label: 'Lathi-Kaushal & Karate', desc: 'Traditional staff training, martial arts discipline, and practical street-safety empty-hand defense.' },
-  { label: 'Event Series & Seminars', desc: 'Keynotes, institutional assemblies, and consciousness-building sessions reaching 25,000+ youth across India.' },
-  { label: 'Aaryaveera Dialogues', desc: 'Civilizational podcast exploring Kshatra-Dharma, non-verbal psychology, and uncorrupted Vedic history.' },
-  { label: 'Frontline Safeguarding', desc: 'Vulnerability interception at transit nodes, pre-FIR family mediations, and somatic trauma de-escalation.' },
-]
-
-const PILLARS = [
+/* ── Static data ─────────────────────────────────────────────────── */
+const PRINCIPLES = [
   {
-    name: 'MARDINI',
-    dev: 'मर्दिनी',
-    tag: 'Physical Sovereignty & Tactical Preparedness',
-    accent: '#DC143C',
-    accentBg: 'rgba(220,20,60,0.08)',
-    icon: 'swords',
-    desc: 'Led by Aaryaveera (Black Belt in Karate), Mission Mardini challenges passive self-defense by developing mental composure, situational awareness, Karate empty-hand defense, and Lathi-Kaushal.',
-    items: ['2,000+ girls trained in armed and unarmed defense', '7–10 days intensive residential warrior camps', 'Tribal and rural outreach beyond urban centers'],
+    num: '01',
+    title: 'Intellectual Sovereignty',
+    body:
+      'The right and responsibility to examine ideas independently. No authority — religious, political, cultural, or social — should replace an individual\'s own reasoning and judgement.',
   },
   {
-    name: 'SHAKTI BHAVA',
-    dev: 'शक्ति भव',
-    tag: 'Cognitive Awakening & Human Consciousness',
-    accent: '#3D5A45',
-    accentBg: 'rgba(61,90,69,0.08)',
-    icon: 'spa',
-    desc: 'Youth-awareness and consciousness initiative cultivating independent thinkers who examine narratives through reason. Direct crisis mediator handling complex vulnerability and family reconciliations.',
-    items: ['500+ institutional seminars reaching 25,000+ students', '13 minors safely reintegrated under statutory oversight', '50+ critical family mediations & somatic grounding'],
+    num: '02',
+    title: 'Strength with Responsibility',
+    body:
+      'Strength is not merely physical capability. It encompasses moral clarity, emotional regulation, and the willingness to bear responsibility for one\'s actions and their consequences.',
   },
   {
-    name: 'SHAKTI VARTA',
-    dev: 'शक्ति वार्ता',
-    tag: 'Intellectual Sovereignty & Critical Inquiry',
-    accent: '#C9A96E',
-    accentBg: 'rgba(201,169,110,0.08)',
-    icon: 'menu_book',
-    desc: 'Research, mentorship, and public discourse platform equipping youth with research literacy, primary textual inquiry (Vedas, Gita, Satyarth Prakash), and media deconstruction tools.',
-    items: ['Vedic Digital Fellowship for classical texts & philosophy', 'Critical media analysis & algorithm deconstruction', 'Archival research on forgotten Indian women warriors'],
+    num: '03',
+    title: 'Inner Mastery',
+    body:
+      'Before exercising authority or influence over others, an individual must develop mastery over their own mind, emotions, impulses, and reactions.',
+  },
+  {
+    num: '04',
+    title: 'Civilisational Consciousness',
+    body:
+      'An awareness of one\'s cultural inheritance, history, and civilisational roots — understood critically, not blindly. Knowledge of the past to inform present decisions.',
+  },
+  {
+    num: '05',
+    title: 'Fearless Individuality',
+    body:
+      'The courage to hold and express one\'s convictions even under social pressure, ridicule, or opposition — provided those convictions have been arrived at through honest thought.',
+  },
+  {
+    num: '06',
+    title: 'Ethical Courage',
+    body:
+      'The willingness to act according to conscience, even when such action is difficult, unpopular, or personally costly. Courage that is grounded in ethics, not ego.',
+  },
+  {
+    num: '07',
+    title: 'Human Dignity & Mutual Respect',
+    body:
+      'Recognition of the fundamental worth of every human being. Strength that never degrades others. Power that is exercised with awareness of its effect on human dignity.',
   },
 ]
 
-const BRAND_ASSETS = [
-  { item: 'Primary Logo', spec: 'Flame + lotus composite in SVG & PNG — full color, monochrome, reversed' },
-  { item: 'Warrior Emblem', spec: 'Icon-only mark for certification badges, merchandise, and favicon' },
-  { item: 'Brand Story Document', spec: 'Comprehensive dossier covering origin, values, visual language, and tone of voice' },
-  { item: 'Animated Intro', spec: '5-second MP4/WebM flame reveal for video openers and social reels' },
-  { item: 'Merchandise Templates', spec: 'Print-ready files for training garments, tote bags, and bamboo lathi staffs' },
-  { item: 'Social Kit', spec: 'Civilizational discourse graphics, reels templates, and white paper covers' },
+const WORLDVIEW_PAIRS = [
+  ['Strength', 'without hatred or aggression'],
+  ['Courage', 'without recklessness or ego'],
+  ['Knowledge', 'without blind submission or false certainty'],
+  ['Freedom', 'accompanied by responsibility'],
+  ['Tradition', 'understood and examined, not blindly inherited'],
+  ['Faith', 'that can withstand honest questioning'],
+  ['Power', 'that serves human dignity, not merely personal interest'],
 ]
 
-const FEATURES = [
-  { icon: 'shield', title: 'The Dual-Shield Doctrine', text: 'Mental resilience before physical strike. Liberating the mind from fear and replacing the freeze-response with tactical awareness.' },
-  { icon: 'local_fire_department', title: 'Character & Kshatra-Dharma', text: 'The responsibility to protect, the courage to confront injustice, the discipline to exercise power responsibly, and the wisdom to distinguish strength from aggression.' },
-  { icon: 'podcasts', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, narrative deconstruction, and sovereign human dignity.' },
+const SELF_QUESTIONS = [
+  'Am I thinking for myself, or am I following because it feels safer to belong?',
+  'Do I hold this belief because I have examined it, or because I was raised with it?',
+  'Am I responding from genuine conviction, or from fear of judgement?',
+  'Does my sense of strength come from growth and discipline, or from the diminishment of others?',
+  'Am I willing to acknowledge when I am wrong, when I have acted poorly, or when I need to change?',
+  'What kind of person am I becoming through the choices I make each day?',
 ]
 
+/* ── Component ───────────────────────────────────────────────────── */
 export default function AaryaveeraPage() {
   const heroRef = useRef<HTMLDivElement>(null)
-  const whatRef = useRef<HTMLDivElement>(null)
-  const platformRef = useRef<HTMLDivElement>(null)
-  const pillarsRef = useRef<HTMLDivElement>(null)
-  const assetsRef = useRef<HTMLDivElement>(null)
-  const ctaRef = useRef<HTMLDivElement>(null)
+  const principlesRef = useRef<HTMLDivElement>(null)
 
+  /* page title */
   useEffect(() => {
-    window.scrollTo(0, 0)
+    document.title = 'Aaryaveera | The Philosophy & Ideology of Harshita Mankar'
+  }, [])
+
+  /* hero fade-in */
+  useEffect(() => {
+    if (!heroRef.current) return
     const ctx = gsap.context(() => {
-      // Hero entrance
-      gsap.from(heroRef.current, { opacity: 0, y: 30, duration: 1, ease: 'power3.out' })
+      gsap.from('.avHeroIn', {
+        opacity: 0, y: 40, duration: 1.2, stagger: 0.18,
+        ease: 'power3.out', delay: 0.2,
+      })
+    }, heroRef)
+    return () => ctx.revert()
+  }, [])
 
-      // What is Aaryaveera
-      gsap.from(`#what-left`, { opacity: 0, x: -40, duration: 0.8, ease: 'power2.out',
-        scrollTrigger: { trigger: whatRef.current, start: 'top 80%' } })
-      gsap.from(`#what-right .${p.featureBox}`, { opacity: 0, y: 30, duration: 0.6, stagger: 0.15, ease: 'power2.out',
-        scrollTrigger: { trigger: whatRef.current, start: 'top 75%' } })
-
-      // Platform cards
-      gsap.from(`.${p.platformCard}`, { opacity: 0, y: 40, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-        scrollTrigger: { trigger: platformRef.current, start: 'top 80%' } })
-
-      // Pillars
-      gsap.from(`.${p.pillarCard}`, { opacity: 0, y: 40, duration: 0.7, stagger: 0.15, ease: 'power2.out',
-        scrollTrigger: { trigger: pillarsRef.current, start: 'top 78%' } })
-
-      // Assets checklist
-      gsap.from(`.${p.assetRow}`, { opacity: 0, x: -30, duration: 0.5, stagger: 0.1, ease: 'power2.out',
-        scrollTrigger: { trigger: assetsRef.current, start: 'top 80%' } })
-
-      // CTA
-      gsap.from(ctaRef.current, { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out',
-        scrollTrigger: { trigger: ctaRef.current, start: 'top 88%' } })
-    })
+  /* principles stagger */
+  useEffect(() => {
+    if (!principlesRef.current) return
+    const ctx = gsap.context(() => {
+      gsap.from('.avPCard', {
+        opacity: 0, y: 30, duration: 0.8, stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: principlesRef.current,
+          start: 'top 80%',
+        },
+      })
+    }, principlesRef)
     return () => ctx.revert()
   }, [])
 
   return (
-    <main className={p.page}>
-      {/* ── HERO BANNER ─────────────────────────────── */}
-      <div className={p.hero} ref={heroRef}>
-        <div className={p.heroInner}>
-          <Link to="/" className={s.back}>← Back to Home</Link>
-          <span className={p.eyebrow}>FOUNDER &amp; DIRECTOR · SHAKTI SABHA</span>
-          <div className={p.heroTitle}>
-            <h1 style={{ margin: 0, display: 'inline' }}>
-              <span className={p.heroEn}>AARYAVEERA</span>
-              <span className={p.heroDev}>आर्यवीरा</span>
-            </h1>
-          </div>
-          <p className={p.heroSub}>Harshita Mankar · Civilizational Strategist | Tactical Combat Instructor | Non-Verbal Behaviour Profiler</p>
-          <p className={p.heroMotto}>"We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically capable guardians of Indian civilization."</p>
+    <div className={p.page}>
 
-          {/* Animated Flame SVG */}
-          <div className={p.flameCont} aria-hidden="true">
-            <svg className={p.flame} viewBox="0 0 60 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M30 85C30 85 8 64 8 44C8 28 19 16 30 8C30 8 28 25 38 32C38 32 32 22 40 14C40 14 52 28 52 44C52 64 30 85 30 85Z" fill="url(#flameGrad)" />
-              <path d="M30 85C30 85 16 68 16 52C16 40 23 32 30 24C30 24 28 36 34 42C34 42 30 36 36 28C36 28 44 38 44 52C44 68 30 85 30 85Z" fill="url(#innerFlame)" opacity="0.8"/>
-              <circle cx="30" cy="62" r="6" fill="url(#lotus)" opacity="0.6"/>
-              <defs>
-                <linearGradient id="flameGrad" x1="30" y1="8" x2="30" y2="85" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#FFD700"/>
-                  <stop offset="0.5" stopColor="#DC143C"/>
-                  <stop offset="1" stopColor="#8B0000"/>
-                </linearGradient>
-                <linearGradient id="innerFlame" x1="30" y1="24" x2="30" y2="85" gradientUnits="userSpaceOnUse">
-                  <stop stopColor="#FFF3B0"/>
-                  <stop offset="1" stopColor="#C9A96E"/>
-                </linearGradient>
-                <radialGradient id="lotus" cx="50%" cy="50%" r="50%">
-                  <stop stopColor="#C9A96E"/>
-                  <stop offset="1" stopColor="#3D5A45" stopOpacity="0"/>
-                </radialGradient>
-              </defs>
-            </svg>
-          </div>
+      {/* ── 1. HERO ─────────────────────────────────────────────── */}
+      <section className={p.hero} ref={heroRef}>
+        {/* flame-lotus emblem (pure CSS / SVG inline) */}
+        <div className={p.heroEmblem} aria-hidden="true">
+          <svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" className={p.emblemSvg}>
+            {/* Flame */}
+            <path d="M60 10 C55 30 38 38 40 60 C42 80 55 88 60 100 C65 88 78 80 80 60 C82 38 65 30 60 10Z"
+              fill="#C2410C" opacity="0.85"/>
+            <path d="M60 25 C57 40 48 46 49 60 C50 74 57 80 60 90 C63 80 70 74 71 60 C72 46 63 40 60 25Z"
+              fill="#C9A96E" opacity="0.7"/>
+            {/* Lotus petals */}
+            <ellipse cx="60" cy="115" rx="8" ry="14" fill="#14532D" opacity="0.8" transform="rotate(-30 60 115) translate(-10,0)"/>
+            <ellipse cx="60" cy="115" rx="8" ry="14" fill="#14532D" opacity="0.9"/>
+            <ellipse cx="60" cy="115" rx="8" ry="14" fill="#14532D" opacity="0.8" transform="rotate(30 60 115) translate(10,0)"/>
+            <ellipse cx="60" cy="115" rx="6" ry="12" fill="#1a6535" opacity="0.6" transform="rotate(-55 60 115) translate(-16,2)"/>
+            <ellipse cx="60" cy="115" rx="6" ry="12" fill="#1a6535" opacity="0.6" transform="rotate(55 60 115) translate(16,2)"/>
+          </svg>
         </div>
-      </div>
 
-      {/* ── WHAT IS AARYAVEERA ──────────────────────── */}
-      <section className={p.whatSection} ref={whatRef}>
-        <div className={p.whatInner}>
-          <div className={p.whatLeft} id="what-left">
-            <span className={p.sectionEyebrow}>The Doctrine</span>
-            <h2 className={p.sectionH2}>What is Aaryaveera?</h2>
-            <p className={p.bodyText}>
-              Aaryaveera is more than a brand — it is a civilizational manifestation. Engineered by <strong>Harshita Mankar</strong> (Founder &amp; Director, Shakti Sabha), Aaryaveera unites the <strong>flame of tactical revolution</strong> (Mission Mardini) with the <strong>lotus of psychological sovereignty</strong> (Shakti Bhava) and intellectual armor (Shakti Varta).
-            </p>
-            <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              The name itself carries civilizational weight: <em>Aarya</em> — noble, cultured, dharmic; <em>Veera</em> — brave, courageous, tactically formidable. Together, they describe the highest aspiration: a sovereign guardian who is both intellectually fortified and physically capable.
-            </p>
-            <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              From 7–10 days intensive residential camps across high schools, colleges, and rural settlements to institutional white papers and digital fellowships, Aaryaveera creates a disciplined, coherent identity that rejects victimhood and restores Kshatra-Dharma.
-            </p>
-          </div>
-
-          <div className={p.whatRight} id="what-right">
-            {FEATURES.map((f, i) => (
-              <div key={i} className={p.featureBox}>
-                <div className={p.featureIconWrap}>
-                  <GoogleIcon name={f.icon} size={28} className={p.featureIcon} />
-                </div>
-                <div>
-                  <h3 className={p.featureTitle}>{f.title}</h3>
-                  <p className={p.featureText}>{f.text}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── PLATFORM INTEGRATION ────────────────────── */}
-      <section className={p.platformSection} ref={platformRef}>
-        <div className={p.platformInner}>
-          <span className={p.sectionEyebrow}>Operational Footprint</span>
-          <h2 className={p.sectionH2}>Core Operational Dimensions</h2>
-          <div className={p.platformGrid}>
-            {PLATFORM_CARDS.map((card, i) => (
-              <div key={i} className={p.platformCard}>
-                <span className={p.platformNum}>{String(i + 1).padStart(2, '0')}</span>
-                <h3 className={p.platformTitle}>{card.label}</h3>
-                <p className={p.platformDesc}>{card.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── THREE PILLARS ───────────────────────────── */}
-      <section className={p.pillarsSection} ref={pillarsRef}>
-        <div className={p.pillarsInner}>
-          <span className={p.sectionEyebrow}>Architecture</span>
-          <h2 className={p.sectionH2}>Our Three Streams</h2>
-          <div className={p.pillarsGrid}>
-            {PILLARS.map((pil) => (
-              <div key={pil.name} className={p.pillarCard} style={{ borderColor: pil.accent }}>
-                <div className={p.pillarBadge} style={{ background: pil.accentBg, color: pil.accent }}>
-                  {pil.tag}
-                </div>
-                <div className={p.pillarHeader}>
-                  <GoogleIcon name={pil.icon} size={24} style={{ color: pil.accent }} />
-                  <span className={p.pillarName}>{pil.name}</span>
-                  <span className={p.pillarDev}>{pil.dev}</span>
-                </div>
-                <p className={p.pillarDesc}>{pil.desc}</p>
-                <ul className={p.pillarList}>
-                  {pil.items.map((item, idx) => (
-                    <li key={idx}>
-                      <span className={p.checkMark} style={{ color: pil.accent }}>✓</span>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── BRAND ASSETS ────────────────────────────── */}
-      <section className={p.assetsSection} ref={assetsRef}>
-        <div className={p.assetsInner}>
-          <span className={p.sectionEyebrow}>Identity System</span>
-          <h2 className={p.sectionH2}>Aaryaveera Brand Assets</h2>
-          <div className={p.assetTable}>
-            {BRAND_ASSETS.map((row, i) => (
-              <div key={i} className={p.assetRow}>
-                <span className={p.assetItem}>{row.item}</span>
-                <span className={p.assetSpec}>{row.spec}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── CTA ─────────────────────────────────────── */}
-      <section className={p.ctaSection} ref={ctaRef}>
-        <div className={p.ctaInner}>
-          <h2 className={p.ctaHeading}>Step Into Sovereignty</h2>
-          <p className={p.ctaSub}>
-            Whether attending a 7–10 day Mardini camp or joining our Vedic Digital Fellowship — become a guardian of civilization.
+        <div className={p.heroContent}>
+          <p className={`${p.heroEyebrow} avHeroIn`}>The Philosophy &amp; Ideology of Harshita Mankar</p>
+          <h1 className={`${p.heroTitle} avHeroIn`}>AARYAVEERA</h1>
+          <p className={`${p.heroTagline} avHeroIn`}>
+            The Identity. The Philosophy. The Consciousness.
           </p>
-          <div className={p.ctaBtns}>
-            <Link to="/mardini" className={p.ctaPrimary}>
-              Explore Mission Mardini →
-            </Link>
-            <Link to="/about" className={p.ctaOutline}>
-              Read Founder Dossier
-            </Link>
+          <div className={`${p.heroDivider} avHeroIn`} aria-hidden="true" />
+          <p className={`${p.heroBody} avHeroIn`}>
+            Aaryaveera is the personal ideological identity and life philosophy of Harshita Mankar.
+            It represents a way of thinking and living shaped by courage, wisdom, discipline,
+            self-mastery, intellectual independence, and a deep sense of responsibility.
+          </p>
+          <p className={`${p.heroBody} avHeroIn`}>
+            It is a philosophy that believes in strength without arrogance, courage without hatred,
+            knowledge without blind submission, and freedom accompanied by responsibility.
+          </p>
+          <p className={`${p.heroMotto} avHeroIn`}>
+            "The Fire to Stand. The Wisdom to Rise."
+          </p>
+        </div>
+      </section>
+
+      {/* ── 2. WHAT IS AARYAVEERA ───────────────────────────────── */}
+      <section className={p.duality}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>More Than a Name</p>
+          <h2 className={p.sectionTitle}>A Way of Being</h2>
+          <p className={p.sectionIntro}>
+            Aaryaveera is the philosophical expression of Harshita Mankar's worldview.
+            It reflects her understanding of human strength, dignity, knowledge, courage,
+            and individual responsibility. The identity brings together two symbolic ideas.
+          </p>
+
+          <div className={p.dualityGrid}>
+            <div className={p.dualityCard}>
+              <span className={p.dualityLetter}>AARYA</span>
+              <p className={p.dualityMeaning}>
+                Nobility of thought, wisdom, discernment, dignity, ethical conduct,
+                and the pursuit of truth.
+              </p>
+            </div>
+            <div className={p.dualityPlus} aria-hidden="true">+</div>
+            <div className={p.dualityCard}>
+              <span className={p.dualityLetter}>VEERA</span>
+              <p className={p.dualityMeaning}>
+                Courage, determination, fearlessness, resilience, and the willingness
+                to stand for what is right.
+              </p>
+            </div>
+          </div>
+
+          <p className={p.dualityClose}>
+            Together, Aaryaveera represents an individual who does not surrender their judgement
+            to fear, social pressure, blind traditions, or popular opinion.
+            It is the pursuit of a life in which thought is independent, action is responsible,
+            strength is disciplined, and character remains grounded in ethical principles.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 3. PERSONAL PHILOSOPHY ──────────────────────────────── */}
+      <section className={p.philosophy}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>Harshita Mankar</p>
+          <h2 className={p.sectionTitle}>A Mind That Questions. A Spirit That Acts.</h2>
+          <div className={p.philosophyGrid}>
+            <div className={p.philosophyText}>
+              <p>
+                Harshita Mankar's philosophy emerges from a central conviction: human beings must
+                learn to become conscious participants in their own lives rather than passive
+                followers of external influence.
+              </p>
+              <p>
+                A person should not accept an idea merely because it is popular, traditional,
+                modern, religious, political, or presented by someone in authority.
+                Every idea deserves thoughtful examination. Every belief must be understood in
+                its context. Every action must be evaluated through reason, ethics, and
+                its consequences.
+              </p>
+              <p>
+                For Harshita, strength is not measured only through physical capability.
+                It is also reflected in the ability to remain composed under pressure,
+                recognise manipulation, question injustice, control one's reactions,
+                and make difficult decisions with clarity.
+              </p>
+              <p>
+                Her philosophy brings together physical discipline, intellectual independence,
+                emotional awareness, cultural understanding, and ethical responsibility.
+                It does not encourage hatred, isolation, superiority, or the rejection of
+                compassion. It asks, instead, for courage — the courage to think clearly,
+                act honestly, and take responsibility for one's own life.
+              </p>
+            </div>
+            <div className={p.philosophyQuote}>
+              <blockquote className={p.pullQuote}>
+                "Human beings must learn to become conscious participants in their own lives
+                rather than passive followers of external influence."
+              </blockquote>
+              <p className={p.pullAttrib}>— Harshita Mankar</p>
+            </div>
           </div>
         </div>
       </section>
-    </main>
+
+      {/* ── 4. PAURUSH & KSHATRA-DHARMA ─────────────────────────── */}
+      <section className={p.paurush}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>Civilisational Concept</p>
+          <h2 className={p.sectionTitle}>Paurush &amp; Kshatra-Dharma</h2>
+          <p className={p.sectionIntro}>
+            Aaryaveera draws upon the ancient Indian understanding of <em>Paurush</em> —
+            a quality of character that encompasses courage, discipline, moral strength,
+            and the capacity to act under pressure with clarity and restraint.
+            It is paired with <em>Kshatra-Dharma</em>: the responsibility to protect,
+            the courage to confront injustice, the discipline to exercise power responsibly,
+            and the wisdom to distinguish strength from aggression.
+          </p>
+          <div className={p.paurushGrid}>
+            {[
+              { icon: '⚔', label: 'Courage', desc: 'The willingness to face difficulty, danger, and moral challenge without retreat.' },
+              { icon: '⚖', label: 'Discipline', desc: 'Consistent practice, self-regulation, and alignment between values and daily conduct.' },
+              { icon: '🛡', label: 'Restraint', desc: 'The ability to hold power without misusing it. Strength that knows its boundaries.' },
+              { icon: '🤝', label: 'Responsibility', desc: 'Accepting accountability for one\'s actions and their impact on others.' },
+              { icon: '🔥', label: 'Protection', desc: 'The duty to protect those who are vulnerable — not as control, but as guardianship.' },
+              { icon: '🧘', label: 'Self-Mastery', desc: 'Governance of one\'s own mind and emotions before seeking to guide others.' },
+              { icon: '📿', label: 'Integrity', desc: 'Alignment between stated values and actual conduct — in public and in private.' },
+            ].map(item => (
+              <div key={item.label} className={p.paurushCard}>
+                <span className={p.paurushIcon}>{item.icon}</span>
+                <strong className={p.paurushLabel}>{item.label}</strong>
+                <p className={p.paurushDesc}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 5. FLAME & LOTUS SYMBOLISM ──────────────────────────── */}
+      <section className={p.symbolism}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>Visual Philosophy</p>
+          <h2 className={p.sectionTitle}>The Flame &amp; The Lotus</h2>
+          <p className={p.sectionIntro}>
+            The Aaryaveera emblem combines two ancient symbols: the flame and the lotus.
+            Together they represent the union of courageous action and disciplined wisdom.
+          </p>
+          <div className={p.symbolGrid}>
+            <div className={p.symbolCard}>
+              <div className={p.symbolIcon} style={{ color: '#C2410C' }}>🔥</div>
+              <h3 className={p.symbolName}>The Flame</h3>
+              <ul className={p.symbolList}>
+                <li>Courage and action</li>
+                <li>The refusal to remain passive in the face of injustice</li>
+                <li>Internal transformation through discipline</li>
+                <li>The burning away of false beliefs and conditioned fear</li>
+                <li>Protective fire — not destructive, but purifying</li>
+              </ul>
+            </div>
+            <div className={p.symbolCard}>
+              <div className={p.symbolIcon} style={{ color: '#14532D' }}>🪷</div>
+              <h3 className={p.symbolName}>The Lotus</h3>
+              <ul className={p.symbolList}>
+                <li>Wisdom rising through difficulty</li>
+                <li>The ability to remain rooted in values amid chaos</li>
+                <li>Beauty and grace cultivated through honest struggle</li>
+                <li>Spiritual and intellectual clarity</li>
+                <li>Non-attachment — strength without clinging to outcomes</li>
+              </ul>
+            </div>
+          </div>
+          <p className={p.symbolUnion}>
+            The union of these two symbols reflects the Aaryaveera philosophy itself:
+            the fire to stand for what is right, and the wisdom to understand what is truly right.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 6. 7 CORE PRINCIPLES ────────────────────────────────── */}
+      <section className={p.principles} ref={principlesRef}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>The Foundation</p>
+          <h2 className={p.sectionTitle}>Seven Core Principles</h2>
+          <div className={p.principlesGrid}>
+            {PRINCIPLES.map(pr => (
+              <div key={pr.num} className={`${p.principleCard} avPCard`}>
+                <span className={p.principleNum}>{pr.num}</span>
+                <h3 className={p.principleTitle}>{pr.title}</h3>
+                <p className={p.principleBody}>{pr.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 7. THE WORLDVIEW ────────────────────────────────────── */}
+      <section className={p.worldview}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>A Philosophical Orientation</p>
+          <h2 className={p.sectionTitle}>The Aaryaveera Worldview</h2>
+          <div className={p.worldviewGrid}>
+            {WORLDVIEW_PAIRS.map(([word, rest]) => (
+              <div key={word} className={p.worldviewRow}>
+                <span className={p.worldviewWord}>{word}</span>
+                <span className={p.worldviewRest}>{rest}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 8. AARYAVEERA & SHAKTI SABHA DISTINCTION ────────────── */}
+      <section className={p.distinction}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>Understanding the Relationship</p>
+          <h2 className={p.sectionTitle}>Aaryaveera and Shakti Sabha</h2>
+          <div className={p.distinctionGrid}>
+            <div className={p.distinctionBlock}>
+              <h3 className={p.distinctionLabel}>Aaryaveera</h3>
+              <p>
+                Aaryaveera is the <strong>personal philosophical identity</strong> of
+                Harshita Mankar. It is not an organisation, a programme, a course,
+                or a stream of work. It is her worldview — the lens through which she
+                thinks, makes decisions, and approaches her responsibilities.
+              </p>
+              <p>
+                It is not a fourth stream alongside Mission Mardini, Shakti Bhava,
+                and Shakti Varta. It is the underlying philosophy that informs all of them.
+              </p>
+            </div>
+            <div className={p.distinctionArrow} aria-hidden="true">→</div>
+            <div className={p.distinctionBlock}>
+              <h3 className={p.distinctionLabel}>Shakti Sabha</h3>
+              <p>
+                Shakti Sabha is the <strong>organisational platform</strong> through which
+                Harshita Mankar translates her philosophy into structured, public-facing
+                programmes and initiatives.
+              </p>
+              <p>
+                The three streams — Mission Mardini, Shakti Bhava, and Shakti Varta —
+                are the operational expressions of the Aaryaveera philosophy made
+                accessible to communities.
+              </p>
+            </div>
+          </div>
+          <p className={p.distinctionNote}>
+            Aaryaveera does not ask anyone to follow a personality blindly.
+            It encourages people to develop the ability to think, question, understand,
+            and take responsibility for their own choices.
+          </p>
+        </div>
+      </section>
+
+      {/* ── 9. A PHILOSOPHY THAT ENCOURAGES QUESTIONS ───────────── */}
+      <section className={p.questions}>
+        <div className={p.container}>
+          <p className={p.sectionEyebrow}>Self-Examination</p>
+          <h2 className={p.sectionTitle}>A Philosophy That Encourages Questions</h2>
+          <p className={p.sectionIntro}>
+            Aaryaveera does not present itself as a final answer. It is a philosophy that
+            invites the individual into an honest process of self-examination. These are
+            among the questions it encourages every person to consider:
+          </p>
+          <div className={p.questionsGrid}>
+            {SELF_QUESTIONS.map((q, i) => (
+              <div key={i} className={p.questionCard}>
+                <span className={p.questionMark}>&ldquo;</span>
+                <p className={p.questionText}>{q}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── 10. VISION & CLOSING ─────────────────────────────────── */}
+      <section className={p.closing}>
+        <div className={p.container}>
+          <div className={p.closingEmblem} aria-hidden="true">🔥🪷</div>
+          <h2 className={p.closingTitle}>The Fire to Stand.<br />The Wisdom to Rise.</h2>
+          <p className={p.closingBody}>
+            Aaryaveera is Harshita Mankar's vision of what a human being can become when
+            they choose to pursue strength with responsibility, courage with conscience,
+            and knowledge with honesty.
+          </p>
+          <p className={p.closingBody}>
+            It is not a destination. It is a direction — one that must be chosen again
+            each day, through every decision, in every act of integrity and every moment
+            of honest self-examination.
+          </p>
+          <div className={p.closingLinks}>
+            <Link to="/about" className={p.closingLink}>About Harshita Mankar</Link>
+            <Link to="/three-streams" className={p.closingLinkSec}>Explore Shakti Sabha's Work</Link>
+          </div>
+        </div>
+      </section>
+
+    </div>
   )
 }

@@ -1,495 +1,418 @@
-.hero {
-  background: linear-gradient(145deg, #1A050B 0%, #3D0914 45%, #7D0C1F 100%);
-  padding: calc(clamp(3.5rem, 6vw, 5.5rem) + 4.5rem) clamp(1.5rem, 4vw, 3rem) clamp(3.5rem, 6vw, 5.5rem);
-  color: #FFFFFF;
-  position: relative;
-  overflow: hidden;
+/* ================================================================
+   Events Page — Upcoming Deployments & Historical Archive
+   ================================================================ */
+
+.page {
+  background: #0a0a0c;
+  color: #e8dcc8;
+  min-height: 100vh;
 }
 
-.hero::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -20%;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(220, 20, 60, 0.25) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.heroInner {
-  max-width: 1280px;
+.container {
+  max-width: 1100px;
   margin: 0 auto;
-  position: relative;
-  z-index: 1;
+  padding: 0 1.5rem;
 }
 
-.backLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-  text-decoration: none;
-  margin-bottom: 1.5rem;
-  font-family: var(--ff-body, 'Outfit', sans-serif);
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-}
-
-.backLink:hover {
-  color: #FFFFFF;
-}
-
-.badge {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #FFB3BA;
-  background: rgba(255, 179, 186, 0.12);
-  border: 1px solid rgba(255, 179, 186, 0.28);
-  padding: 0.35rem 1.1rem;
-  border-radius: 9999px;
-  margin-bottom: 1.25rem;
-}
-
-.title {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(2.4rem, 5.5vw, 4.2rem);
-  font-weight: 700;
-  color: #FFFFFF;
-  line-height: 1.1;
-  margin-bottom: 0.5rem;
-}
-
-.hindiSubtitle {
-  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
-  font-size: 1.2rem;
-  color: #FFB3BA;
-  margin-bottom: 1rem;
-}
-
-.desc {
-  font-size: clamp(0.95rem, 1.25vw, 1.12rem);
-  color: rgba(255, 255, 255, 0.85);
-  max-width: 65ch;
-  line-height: 1.75;
-}
-
-/* Filter bar */
-.filterBar {
-  max-width: 1280px;
-  margin: 2.5rem auto 0;
-  padding: 0 clamp(1.5rem, 4vw, 3rem);
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.filterBtn {
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  border: 1px solid var(--border, #E5E7EB);
-  background: #FFFFFF;
-  color: #4B5563;
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.filterBtn:hover {
-  border-color: #DC143C;
-  color: #DC143C;
-}
-
-.filterBtnActive {
-  background: #DC143C;
-  color: #FFFFFF;
-  border-color: #DC143C;
-  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.25);
-}
-
-/* Event Grid */
-.eventsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.eventCard {
-  border: 1px solid var(--border, #E5E7EB);
-  border-radius: 14px;
-  overflow: hidden;
-  background: #FFFFFF;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  position: relative;
-}
-
-.eventCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-}
-
-.eventTopStrip {
-  height: 6px;
-  width: 100%;
-}
-
-.eventHeader {
-  padding: 1.5rem 1.75rem 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.eventTypeBadge {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 0.3rem 0.75rem;
-  border-radius: 6px;
-}
-
-.eventDateBox {
-  text-align: right;
-  line-height: 1.1;
-}
-
-.eventDateDay {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.eventDateMonth {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  font-weight: 600;
-  color: #6B7280;
-}
-
-.eventBody {
-  padding: 1rem 1.75rem 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  flex-grow: 1;
-}
-
-.eventTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1.3;
-}
-
-.eventMeta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  color: #4B5563;
-}
-
-.metaItem {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.eventDesc {
-  font-size: 0.88rem;
-  color: #6B7280;
-  line-height: 1.6;
-  margin-top: 0.25rem;
-}
-
-.eventFooter {
-  padding: 1.25rem 1.75rem;
-  background: #F9FAFB;
-  border-top: 1px solid var(--border, #F3F4F6);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.priceVal {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #111827;
-}
-
-.priceLabel {
-  font-size: 0.72rem;
-  color: #6B7280;
-  text-transform: uppercase;
-}
-
-.bookBtn {
-  background: #DC143C;
-  color: #FFFFFF;
-  border: none;
-  padding: 0.6rem 1.4rem;
-  border-radius: 9999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bookBtn:hover {
-  background: #B01030;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
-}
-
-/* Aaryaveera Camp Series Highlight (True Crimson Red Signature Card) */
-.campSeriesBox {
-  margin-top: 5rem;
-  background: linear-gradient(135deg, #9C0E28 0%, #DC143C 48%, #B81132 100%);
-  border: 2px solid rgba(255, 255, 255, 0.28);
-  border-radius: 20px;
-  padding: clamp(2.5rem, 5vw, 4rem);
-  color: #FFFFFF;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(220, 20, 60, 0.35), 0 0 35px rgba(220, 20, 60, 0.2);
-}
-
-.campSeriesBox::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.6) 0%, #FFFFFF 50%, rgba(255, 255, 255, 0.6) 100%);
-}
-
-.campEyebrow {
-  display: inline-block;
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #FFFFFF;
-  background: rgba(255, 255, 255, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  padding: 0.32rem 0.95rem;
-  border-radius: 9999px;
-  font-weight: 800;
-  margin-bottom: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.campTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: clamp(1.9rem, 3.6vw, 2.7rem);
-  color: #FFFFFF;
-  margin: 0.25rem 0 1rem;
-  font-weight: 700;
-  line-height: 1.2;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
-}
-
-.campDesc {
-  color: rgba(255, 255, 255, 0.95);
-  line-height: 1.7;
-  font-size: 0.96rem;
-  margin-bottom: 1.75rem;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-}
-
-.campCrimsonBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.95rem;
-  background: #FFFFFF;
-  color: #B01030;
-  border-radius: 9999px;
-  font-weight: 800;
-  font-size: 0.9rem;
-  text-decoration: none;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  transition: all 0.25s ease;
-  border: none;
-  cursor: pointer;
-}
-
-.campCrimsonBtn:hover {
-  background: #FFF1F2;
-  color: #8F0B25;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
-}
-
-.campOutlineBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.95rem;
-  background: rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
-  border: 1.5px solid rgba(255, 255, 255, 0.55);
-  border-radius: 9999px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  backdrop-filter: blur(8px);
-}
-
-.campOutlineBtn:hover {
-  background: rgba(255, 255, 255, 0.28);
-  border-color: #FFFFFF;
-  transform: translateY(-2px);
-}
-
-.campGrid {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 3rem;
-  align-items: center;
-}
-
-.campFeatures {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-}
-
-.featureCard {
-  background: rgba(0, 0, 0, 0.18);
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-radius: 14px;
-  padding: 1.4rem;
-  transition: all 0.25s ease;
-  display: flex;
-  flex-direction: column;
-  backdrop-filter: blur(10px);
-}
-
-.featureCard:hover {
-  background: rgba(0, 0, 0, 0.28);
-  border-color: #FFFFFF;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
-}
-
-.featureIcon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  background: #FFFFFF;
-  color: #DC143C;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.85rem;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-}
-
-.googleIcon {
-  font-family: 'Material Symbols Outlined', sans-serif;
-  font-weight: normal;
-  font-style: normal;
-  font-size: 26px;
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-}
-
-.featureTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.08rem;
-  color: #FFFFFF;
-  margin-bottom: 0.35rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.featureText {
-  font-size: 0.83rem;
-  color: rgba(255, 255, 255, 0.92);
-  line-height: 1.55;
-}
-
-/* Steps section */
-.stepsSection {
-  margin-top: 5rem;
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero {
+  background: radial-gradient(ellipse at 50% 0%, rgba(220,20,60,0.15) 0%, #050507 70%);
+  padding: 7rem 1.5rem 4rem;
   text-align: center;
 }
 
-.stepsGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  margin-top: 2.5rem;
-  text-align: left;
+.heroEyebrow {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  display: block;
+  margin-bottom: 1rem;
 }
 
-.stepCard {
-  padding: 2rem;
-  border-radius: 12px;
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-  position: relative;
-}
-
-.stepNum {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 2.5rem;
-  font-weight: 900;
-  color: rgba(220, 20, 60, 0.15);
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.stepTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.1rem;
+.heroTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 700;
-  color: #111827;
-  margin-bottom: 0.5rem;
+  color: #f5ead6;
+  margin: 0 0 1rem;
 }
 
-.stepText {
+.heroSub {
+  font-size: 1rem;
+  color: #a09070;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.8;
+}
+
+/* ── Tab Bar ──────────────────────────────────────────────────────── */
+.tabBar {
+  display: flex;
+  gap: 0;
+  background: #0d0d10;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 60px;
+  z-index: 10;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.1rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #a09070;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab:hover { color: #f5ead6; }
+
+.tabActive {
+  color: #C9A96E;
+  border-bottom-color: #C9A96E;
+}
+
+/* ── Section ──────────────────────────────────────────────────────── */
+.section {
+  padding: 3rem 0 5rem;
+}
+
+/* ── Upcoming events grid ─────────────────────────────────────────── */
+.eventsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.5rem;
+}
+
+.eventCard {
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: border-color 0.25s, transform 0.25s;
+  content-visibility: auto;
+  contain-intrinsic-size: 300px;
+}
+
+.eventCard:hover {
+  border-color: rgba(201,169,110,0.35);
+  transform: translateY(-2px);
+}
+
+.cardTop {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.streamBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.formatBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  color: #a09070;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cardDateRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.cardDay {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #C9A96E;
+}
+
+.cardYear {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.cardTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1rem;
+  color: #f5ead6;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.83rem;
+  color: #777;
+  margin: 0;
+}
+
+.cardDesc {
+  font-size: 0.87rem;
+  color: #a09070;
+  line-height: 1.65;
+  margin: 0;
+  flex: 1;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.cardPrice {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.85rem;
+  color: #C9A96E;
+}
+
+.cardSeats {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #DC143C;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.calBtn, .pdfBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.calBtn {
+  background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.3);
+  color: #C9A96E;
+}
+
+.calBtn:hover { background: rgba(201,169,110,0.2); }
+
+.pdfBtn {
+  background: rgba(220,20,60,0.1);
+  border: 1px solid rgba(220,20,60,0.3);
+  color: #DC143C;
+}
+
+.pdfBtn:hover { background: rgba(220,20,60,0.2); }
+
+/* ── Archive Banner ───────────────────────────────────────────────── */
+.archiveBanner {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  background: rgba(201,169,110,0.06);
+  border: 1px solid rgba(201,169,110,0.2);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.archiveBanner p {
+  font-size: 0.85rem;
+  color: #a09070;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Filters ──────────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.filterLabel {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.filterSelect {
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  color: #e8dcc8;
+  padding: 0.45rem 0.75rem;
   font-size: 0.88rem;
-  color: #6B7280;
-  line-height: 1.6;
+  cursor: pointer;
 }
 
-@media (max-width: 960px) {
-  .campGrid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-  .stepsGrid {
-    grid-template-columns: 1fr;
-  }
+.resultCount {
+  font-size: 0.82rem;
+  color: #555;
+  align-self: flex-end;
+  padding-bottom: 0.45rem;
 }
 
+/* ── Category legend chips ────────────────────────────────────────── */
+.categoryLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.legendChip {
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  border: 1px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.03em;
+}
+
+.legendChipActive { font-weight: 600; }
+
+/* ── Historical list ──────────────────────────────────────────────── */
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.historyCard {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 1.5rem;
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 1.5rem;
+  transition: border-color 0.2s;
+  content-visibility: auto;
+  contain-intrinsic-size: 120px;
+}
+
+.historyCard:hover { border-color: rgba(201,169,110,0.2); }
+
+.historyLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.historyYear {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #C9A96E;
+}
+
+.historyCat {
+  font-size: 0.68rem;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.historyContent {}
+
+.historyTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.97rem;
+  color: #f5ead6;
+  margin: 0 0 0.6rem;
+  line-height: 1.4;
+}
+
+.historyMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.6rem;
+}
+
+.historyMeta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.historyDesc {
+  font-size: 0.87rem;
+  color: #a09070;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Empty state ──────────────────────────────────────────────────── */
+.empty {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .campFeatures {
+  .historyCard {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .historyLeft {
+    flex-direction: row;
+    align-items: center;
   }
 }

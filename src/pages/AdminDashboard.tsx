@@ -58,7 +58,7 @@ function ShaktiLoader({ title, status, percent, filename }: LoaderProps) {
   )
 }
 
-type Section = 'overview' | 'founder' | 'articles' | 'gallery' | 'courses' | 'testimonials' | 'counselling'
+type Section = 'overview' | 'founder' | 'articles' | 'gallery' | 'courses' | 'testimonials' | 'counselling' | 'events'
 
 export default function AdminDashboard() {
   const { user, adminProfile, signOut, isAdmin, isLoading } = useAuth()
@@ -85,6 +85,7 @@ export default function AdminDashboard() {
     { key: 'courses',    icon: 'school', label: 'Courses' },
     { key: 'testimonials', icon: 'format_quote', label: 'Testimonials' },
     { key: 'counselling',icon: 'forum', label: 'Counselling' },
+    { key: 'events',       icon: 'event', label: 'Events & Calendar' },
   ]
 
   const sectionTitles: Record<Section, string> = {
@@ -95,6 +96,7 @@ export default function AdminDashboard() {
     courses: 'Course Management',
     testimonials: 'Testimonial Management',
     counselling: 'Counselling Requests',
+    events: 'Events & Calendar Management',
   }
 
   const handleLogout = async () => {
@@ -174,6 +176,7 @@ export default function AdminDashboard() {
           {section === 'courses'    && <CoursesSection />}
           {section === 'testimonials' && <TestimonialsSection />}
           {section === 'counselling'&& <CounsellingSection />}
+          {section === 'events'    && <EventsSection />}
         </div>
       </main>
     </div>
@@ -1879,6 +1882,369 @@ function FounderSection() {
           </button>
         </div>
       </div>
+    </>
+  )
+}
+
+
+/* ============================================================
+   EVENTS SECTION
+   ============================================================ */
+interface AdminEvent {
+  id: string
+  title: string
+  stream: 'mardini' | 'shakti-bhava' | 'shakti-varta' | 'general'
+  format: 'on-ground' | 'digital'
+  date: string
+  end_date?: string
+  location?: string
+  meeting_link?: string
+  pricing?: string
+  is_free: boolean
+  capacity?: number
+  registered_count: number
+  status: 'upcoming' | 'completed' | 'cancelled'
+  description?: string
+  curriculum_pdf_url?: string
+  theme_category?: string
+  region?: string
+  participant_count?: number
+  published: boolean
+  attribution?: string
+  created_at: string
+}
+
+const EMPTY_EVENT: Omit<AdminEvent, 'id' | 'created_at'> = {
+  title: '',
+  stream: 'general',
+  format: 'on-ground',
+  date: '',
+  is_free: true,
+  registered_count: 0,
+  status: 'upcoming',
+  published: true,
+}
+
+function loadAdminEvents(): AdminEvent[] {
+  try {
+    const raw = localStorage.getItem('shakti_events')
+    if (raw) return JSON.parse(raw) as AdminEvent[]
+  } catch { /**/ }
+  return []
+}
+
+function saveAdminEvents(evs: AdminEvent[]) {
+  localStorage.setItem('shakti_events', JSON.stringify(evs))
+  window.dispatchEvent(new Event('storage'))
+}
+
+function downloadCSV(evs: AdminEvent[]) {
+  const headers = ['ID', 'Title', 'Stream', 'Format', 'Date', 'Location', 'Status', 'Capacity', 'Registered', 'Participants', 'Attribution', 'Published']
+  const rows = evs.map(e => [
+    e.id, e.title, e.stream, e.format, e.date, e.location || '', e.status,
+    e.capacity || '', e.registered_count, e.participant_count || '', e.attribution || '', e.published ? 'Yes' : 'No',
+  ])
+  const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
+  const blob = new Blob([csv], { type: 'text/csv' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url; a.download = 'shakti_events.csv'; a.click()
+  URL.revokeObjectURL(url)
+}
+
+function EventsSection() {
+  const [events, setEvents] = useState<AdminEvent[]>([])
+  const [showModal, setShowModal] = useState(false)
+  const [editing, setEditing] = useState<AdminEvent | null>(null)
+  const [form, setForm] = useState<Omit<AdminEvent, 'id' | 'created_at'>>(EMPTY_EVENT)
+  const [filterStatus, setFilterStatus] = useState<'all' | 'upcoming' | 'completed' | 'cancelled'>('all')
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    setEvents(loadAdminEvents())
+    const onStorage = () => setEvents(loadAdminEvents())
+    window.addEventListener('storage', onStorage)
+    return () => window.removeEventListener('storage', onStorage)
+  }, [])
+
+  const openCreate = () => {
+    setEditing(null)
+    setForm({ ...EMPTY_EVENT })
+    setShowModal(true)
+  }
+
+  const openEdit = (ev: AdminEvent) => {
+    setEditing(ev)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, created_at, ...rest } = ev
+    setForm(rest)
+    setShowModal(true)
+  }
+
+  const handleSave = () => {
+    setSaving(true)
+    const all = loadAdminEvents()
+    if (editing) {
+      const updated = all.map(e => e.id === editing.id ? { ...editing, ...form } : e)
+      saveAdminEvents(updated)
+      setEvents(updated)
+    } else {
+      const newEv: AdminEvent = { ...form, id: `ev-${Date.now()}`, created_at: new Date().toISOString() }
+      const updated = [newEv, ...all]
+      saveAdminEvents(updated)
+      setEvents(updated)
+    }
+    setSaving(false)
+    setShowModal(false)
+  }
+
+  const handleDelete = (id: string) => {
+    if (!confirm('Delete this event?')) return
+    const updated = events.filter(e => e.id !== id)
+    saveAdminEvents(updated)
+    setEvents(updated)
+  }
+
+  const handleTogglePublish = (id: string) => {
+    const updated = events.map(e => e.id === id ? { ...e, published: !e.published } : e)
+    saveAdminEvents(updated)
+    setEvents(updated)
+  }
+
+  const handleAutoArchive = () => {
+    const today = new Date().toDateString()
+    const updated = events.map(e =>
+      e.status === 'upcoming' && new Date(e.date) < new Date(today) ? { ...e, status: 'completed' as const } : e
+    )
+    saveAdminEvents(updated)
+    setEvents(updated)
+  }
+
+  const filtered = events.filter(e => filterStatus === 'all' || e.status === filterStatus)
+
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {(['all', 'upcoming', 'completed', 'cancelled'] as const).map(st => (
+            <button key={st} onClick={() => setFilterStatus(st)}
+              style={{ padding: '0.35rem 0.85rem', borderRadius: 20, border: '1px solid',
+                borderColor: filterStatus === st ? '#C9A96E' : 'rgba(255,255,255,0.1)',
+                background: filterStatus === st ? 'rgba(201,169,110,0.12)' : 'transparent',
+                color: filterStatus === st ? '#C9A96E' : '#666', fontSize: '0.8rem', cursor: 'pointer' }}>
+              {st.charAt(0).toUpperCase() + st.slice(1)} ({st === 'all' ? events.length : events.filter(e => e.status === st).length})
+            </button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button className={s.btnSecondary} onClick={handleAutoArchive} style={{ fontSize: '0.82rem' }}>
+            <GoogleIcon name="auto_fix_high" size={16} /> Auto-Archive Past
+          </button>
+          <button className={s.btnSecondary} onClick={() => downloadCSV(events)} style={{ fontSize: '0.82rem' }}>
+            <GoogleIcon name="download" size={16} /> Export CSV
+          </button>
+          <button className={s.btnPrimary} onClick={openCreate}>
+            <GoogleIcon name="add" size={18} /> New Event
+          </button>
+        </div>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '3rem', color: '#555' }}>
+          <GoogleIcon name="event" size={48} style={{ display: 'block', margin: '0 auto 1rem', color: 'rgba(201,169,110,0.2)' }} />
+          <p>No events found. Create your first event or backfill historical records.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {filtered.map(ev => (
+            <div key={ev.id} style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '1.25rem 1.5rem', display: 'grid', gridTemplateColumns: '1fr auto', gap: '1rem', alignItems: 'center' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+                  <span style={{ padding: '0.15rem 0.55rem', borderRadius: 12, fontSize: '0.7rem', background: ev.status === 'upcoming' ? 'rgba(61,90,69,0.4)' : ev.status === 'completed' ? 'rgba(201,169,110,0.2)' : 'rgba(220,20,60,0.2)', color: ev.status === 'upcoming' ? '#3D8B5A' : ev.status === 'completed' ? '#C9A96E' : '#DC143C' }}>
+                    {ev.status}
+                  </span>
+                  <span style={{ fontSize: '0.75rem', color: '#555' }}>{ev.stream} · {ev.format}</span>
+                  {!ev.published && <span style={{ padding: '0.15rem 0.5rem', borderRadius: 12, fontSize: '0.7rem', background: 'rgba(255,255,255,0.05)', color: '#555' }}>Hidden</span>}
+                </div>
+                <p style={{ margin: '0 0 0.3rem', fontFamily: 'Cinzel, Georgia, serif', fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>
+                  {ev.date}{ev.end_date ? ` → ${ev.end_date}` : ''} · {ev.location || 'Location TBA'}
+                  {ev.participant_count ? ` · ~${ev.participant_count.toLocaleString()}+ participants` : ''}
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button onClick={() => handleTogglePublish(ev.id)} title={ev.published ? 'Hide' : 'Publish'}
+                  style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '0.4rem 0.6rem', cursor: 'pointer', color: ev.published ? '#3D8B5A' : '#555' }}>
+                  <GoogleIcon name={ev.published ? 'visibility' : 'visibility_off'} size={16} />
+                </button>
+                <button onClick={() => openEdit(ev)} title="Edit"
+                  style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '0.4rem 0.6rem', cursor: 'pointer', color: '#C9A96E' }}>
+                  <GoogleIcon name="edit" size={16} />
+                </button>
+                <button onClick={() => handleDelete(ev.id)} title="Delete"
+                  style={{ background: 'transparent', border: '1px solid rgba(220,20,60,0.2)', borderRadius: 8, padding: '0.4rem 0.6rem', cursor: 'pointer', color: '#DC143C' }}>
+                  <GoogleIcon name="delete" size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── Modal ── */}
+      {showModal && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} data-lenis-prevent="true">
+          <div style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '2rem', width: '100%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto' }} data-lenis-prevent="true">
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
+              <h3 style={{ margin: 0, fontFamily: 'Cinzel, Georgia, serif', color: '#f5ead6' }}>
+                {editing ? 'Edit Event' : 'Create Event'}
+              </h3>
+              <button onClick={() => setShowModal(false)} style={{ background: 'transparent', border: 'none', color: '#666', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
+            </div>
+
+            <div className={s.formGrid}>
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Event Title *</label>
+                <input className={s.input} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Full event name" />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Stream</label>
+                <select className={s.input} value={form.stream} onChange={e => setForm(f => ({ ...f, stream: e.target.value as AdminEvent['stream'] }))}>
+                  <option value="mardini">Mission Mardini</option>
+                  <option value="shakti-bhava">Shakti Bhava</option>
+                  <option value="shakti-varta">Shakti Varta</option>
+                  <option value="general">General</option>
+                </select>
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Format</label>
+                <select className={s.input} value={form.format} onChange={e => setForm(f => ({ ...f, format: e.target.value as AdminEvent['format'] }))}>
+                  <option value="on-ground">On-Ground</option>
+                  <option value="digital">Digital</option>
+                </select>
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Start Date *</label>
+                <input className={s.input} type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>End Date (optional)</label>
+                <input className={s.input} type="date" value={form.end_date || ''} onChange={e => setForm(f => ({ ...f, end_date: e.target.value }))} />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Status</label>
+                <select className={s.input} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value as AdminEvent['status'] }))}>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Theme Category</label>
+                <select className={s.input} value={form.theme_category || ''} onChange={e => setForm(f => ({ ...f, theme_category: e.target.value }))}>
+                  <option value="">None</option>
+                  <option value="national-symposia">National Symposia & Policy Forums</option>
+                  <option value="tactical-camps">Tactical & Somatic Camps / Mission Mardini</option>
+                  <option value="academic-deployments">Academic & Institutional Deployments</option>
+                  <option value="community-assemblies">Community Stabilisation & Civil Assemblies</option>
+                </select>
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Attribution Role</label>
+                <select className={s.input} value={form.attribution || ''} onChange={e => setForm(f => ({ ...f, attribution: e.target.value }))}>
+                  <option value="">Select role</option>
+                  <option value="Organised by Shakti Sabha">Organised by Shakti Sabha</option>
+                  <option value="Independent">Independent</option>
+                  <option value="Collaborative">Collaborative</option>
+                  <option value="Keynote Speaker">Keynote Speaker</option>
+                  <option value="Guest Speaker">Guest Speaker</option>
+                  <option value="Trainer">Trainer</option>
+                  <option value="Panelist">Panelist</option>
+                  <option value="Participant">Participant</option>
+                  <option value="Collaborator">Collaborator</option>
+                  <option value="Under another organisation">Under another organisation</option>
+                </select>
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Location</label>
+                <input className={s.input} value={form.location || ''} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} placeholder="City, State / Online" />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Region</label>
+                <input className={s.input} value={form.region || ''} onChange={e => setForm(f => ({ ...f, region: e.target.value }))} placeholder="e.g. Maharashtra" />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Approx. Participant Count</label>
+                <input className={s.input} type="number" value={form.participant_count || ''} onChange={e => setForm(f => ({ ...f, participant_count: parseInt(e.target.value) || undefined }))} placeholder="e.g. 500" />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Capacity (seats)</label>
+                <input className={s.input} type="number" value={form.capacity || ''} onChange={e => setForm(f => ({ ...f, capacity: parseInt(e.target.value) || undefined }))} />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Registered Count</label>
+                <input className={s.input} type="number" value={form.registered_count} onChange={e => setForm(f => ({ ...f, registered_count: parseInt(e.target.value) || 0 }))} />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Pricing</label>
+                <input className={s.input} value={form.pricing || ''} onChange={e => setForm(f => ({ ...f, pricing: e.target.value }))} placeholder="e.g. ₹2,500 or Free" />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Is Free?</label>
+                <select className={s.input} value={form.is_free ? 'yes' : 'no'} onChange={e => setForm(f => ({ ...f, is_free: e.target.value === 'yes' }))}>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Meeting Link (if digital)</label>
+                <input className={s.input} value={form.meeting_link || ''} onChange={e => setForm(f => ({ ...f, meeting_link: e.target.value }))} placeholder="https://..." />
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Curriculum PDF URL</label>
+                <input className={s.input} value={form.curriculum_pdf_url || ''} onChange={e => setForm(f => ({ ...f, curriculum_pdf_url: e.target.value }))} placeholder="https://..." />
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <label className={s.label}>Description</label>
+                <textarea className={s.textarea} style={{ minHeight: 80 }} value={form.description || ''} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="Short event description..." />
+              </div>
+
+              <div className={s.field}>
+                <label className={s.label}>Published (visible on site)</label>
+                <select className={s.input} value={form.published ? 'yes' : 'no'} onChange={e => setForm(f => ({ ...f, published: e.target.value === 'yes' }))}>
+                  <option value="yes">Yes</option>
+                  <option value="no">No (draft)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+              <button className={s.btnSecondary} onClick={() => setShowModal(false)}>Cancel</button>
+              <button className={s.btnPrimary} onClick={handleSave} disabled={saving || !form.title || !form.date}>
+                <GoogleIcon name="save" size={18} />
+                {saving ? 'Saving…' : (editing ? 'Save Changes' : 'Create Event')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
