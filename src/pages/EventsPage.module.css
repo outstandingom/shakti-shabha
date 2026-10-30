@@ -1,11 +1,10 @@
 /* ================================================================
    Events Page — Upcoming Deployments & Historical Archive
-   White Theme with Crimson Red (#DC143C) Accents
    ================================================================ */
 
 .page {
-  background: #FFFFFF;
-  color: #1F2937;
+  background: #0a0a0c;
+  color: #e8dcc8;
   min-height: 100vh;
 }
 
@@ -17,35 +16,33 @@
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
-  background: radial-gradient(ellipse at 50% 0%, rgba(220,20,60,0.08) 0%, #FAFAFA 85%);
-  border-bottom: 1px solid #F3F4F6;
+  background: radial-gradient(ellipse at 50% 0%, rgba(220,20,60,0.15) 0%, #050507 70%);
   padding: 7rem 1.5rem 4rem;
   text-align: center;
 }
 
 .heroEyebrow {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #DC143C;
-  font-weight: 700;
+  color: #C9A96E;
   display: block;
   margin-bottom: 1rem;
 }
 
 .heroTitle {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 700;
-  color: #111827;
+  color: #f5ead6;
   margin: 0 0 1rem;
 }
 
 .heroSub {
-  font-size: 1.05rem;
-  color: #4B5563;
-  max-width: 620px;
+  font-size: 1rem;
+  color: #a09070;
+  max-width: 600px;
   margin: 0 auto;
   line-height: 1.8;
 }
@@ -54,12 +51,11 @@
 .tabBar {
   display: flex;
   gap: 0;
-  background: #FFFFFF;
-  border-bottom: 1px solid #E5E7EB;
+  background: #0d0d10;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   position: sticky;
   top: 60px;
   z-index: 10;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
 .tab {
@@ -71,31 +67,25 @@
   padding: 1.1rem 1.5rem;
   background: transparent;
   border: none;
-  color: #6B7280;
+  color: #a09070;
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.84rem;
-  letter-spacing: 0.08em;
-  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
   cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.tab:hover {
-  color: #DC143C;
-  background: #FFF5F5;
-}
+.tab:hover { color: #f5ead6; }
 
 .tabActive {
-  color: #DC143C;
-  border-bottom-color: #DC143C;
-  background: #FFF1F2;
+  color: #C9A96E;
+  border-bottom-color: #C9A96E;
 }
 
 /* ── Section ──────────────────────────────────────────────────────── */
 .section {
   padding: 3rem 0 5rem;
-  background: #FFFFFF;
 }
 
 /* ── Upcoming events grid ─────────────────────────────────────────── */
@@ -106,41 +96,21 @@
 }
 
 .eventCard {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  gap: 0.75rem;
+  transition: border-color 0.25s, transform 0.25s;
   content-visibility: auto;
   contain-intrinsic-size: 300px;
-  position: relative;
-  overflow: hidden;
-}
-
-.eventCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #DC143C, #F43F5E);
-  opacity: 0;
-  transition: opacity 0.25s;
 }
 
 .eventCard:hover {
-  border-color: #DC143C;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(220,20,60,0.08);
-}
-
-.eventCard:hover::before {
-  opacity: 1;
+  border-color: rgba(201,169,110,0.35);
+  transform: translateY(-2px);
 }
 
 .cardTop {
@@ -152,26 +122,24 @@
 .streamBadge {
   display: inline-flex;
   align-items: center;
-  padding: 0.25rem 0.7rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 20px;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.06em;
   color: #fff;
-  background: #DC143C;
   text-transform: uppercase;
 }
 
 .formatBadge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.7rem;
+  gap: 0.2rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 20px;
   font-size: 0.7rem;
-  color: #4B5563;
-  border: 1px solid #E5E7EB;
-  background: #F9FAFB;
+  color: #a09070;
+  border: 1px solid rgba(255,255,255,0.1);
 }
 
 .cardDateRow {
@@ -184,19 +152,18 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #DC143C;
+  color: #C9A96E;
 }
 
 .cardYear {
   font-size: 0.85rem;
-  color: #6B7280;
+  color: #666;
 }
 
 .cardTitle {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #111827;
+  font-size: 1rem;
+  color: #f5ead6;
   margin: 0;
   line-height: 1.4;
 }
@@ -206,13 +173,13 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.83rem;
-  color: #6B7280;
+  color: #777;
   margin: 0;
 }
 
 .cardDesc {
-  font-size: 0.88rem;
-  color: #4B5563;
+  font-size: 0.87rem;
+  color: #a09070;
   line-height: 1.65;
   margin: 0;
   flex: 1;
@@ -222,15 +189,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 0.75rem;
-  border-top: 1px solid #F3F4F6;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
 }
 
 .cardPrice {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #DC143C;
+  font-size: 0.85rem;
+  color: #C9A96E;
 }
 
 .cardSeats {
@@ -239,7 +205,6 @@
   gap: 0.25rem;
   font-size: 0.8rem;
   color: #DC143C;
-  font-weight: 600;
 }
 
 .cardActions {
@@ -251,54 +216,46 @@
 .calBtn, .pdfBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   padding: 0.5rem 0.9rem;
   border-radius: 8px;
   font-size: 0.78rem;
-  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s;
   text-decoration: none;
 }
 
 .calBtn {
-  background: #FFF1F2;
-  border: 1px solid rgba(220,20,60,0.25);
+  background: rgba(201,169,110,0.12);
+  border: 1px solid rgba(201,169,110,0.3);
+  color: #C9A96E;
+}
+
+.calBtn:hover { background: rgba(201,169,110,0.2); }
+
+.pdfBtn {
+  background: rgba(220,20,60,0.1);
+  border: 1px solid rgba(220,20,60,0.3);
   color: #DC143C;
 }
 
-.calBtn:hover {
-  background: #FFE4E6;
-  border-color: #DC143C;
-}
-
-.pdfBtn {
-  background: #F3F4F6;
-  border: 1px solid #E5E7EB;
-  color: #374151;
-}
-
-.pdfBtn:hover {
-  background: #E5E7EB;
-  color: #111827;
-}
+.pdfBtn:hover { background: rgba(220,20,60,0.2); }
 
 /* ── Archive Banner ───────────────────────────────────────────────── */
 .archiveBanner {
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  background: #FFF1F2;
-  border: 1px solid rgba(220,20,60,0.25);
-  border-left: 4px solid #DC143C;
+  background: rgba(201,169,110,0.06);
+  border: 1px solid rgba(201,169,110,0.2);
   border-radius: 12px;
   padding: 1rem 1.25rem;
   margin-bottom: 2rem;
 }
 
 .archiveBanner p {
-  font-size: 0.88rem;
-  color: #7F1D1D;
+  font-size: 0.85rem;
+  color: #a09070;
   line-height: 1.65;
   margin: 0;
 }
@@ -315,38 +272,31 @@
 .filterGroup {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .filterLabel {
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #6B7280;
-  font-weight: 600;
+  color: #666;
 }
 
 .filterSelect {
-  background: #FFFFFF;
-  border: 1px solid #D1D5DB;
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 8px;
-  color: #111827;
-  padding: 0.5rem 0.85rem;
+  color: #e8dcc8;
+  padding: 0.45rem 0.75rem;
   font-size: 0.88rem;
   cursor: pointer;
-  transition: border-color 0.2s;
-}
-
-.filterSelect:focus {
-  outline: none;
-  border-color: #DC143C;
 }
 
 .resultCount {
   font-size: 0.82rem;
-  color: #6B7280;
+  color: #555;
   align-self: flex-end;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.45rem;
 }
 
 /* ── Category legend chips ────────────────────────────────────────── */
@@ -358,29 +308,16 @@
 }
 
 .legendChip {
-  padding: 0.35rem 0.8rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 20px;
   font-size: 0.75rem;
-  border: 1px solid #E5E7EB;
-  background: #FFFFFF;
-  color: #4B5563;
+  border: 1px solid;
   cursor: pointer;
   transition: all 0.2s;
   letter-spacing: 0.03em;
 }
 
-.legendChip:hover {
-  border-color: #DC143C;
-  color: #DC143C;
-  background: #FFF1F2;
-}
-
-.legendChipActive {
-  font-weight: 600;
-  border-color: #DC143C;
-  background: #DC143C !important;
-  color: #FFFFFF !important;
-}
+.legendChipActive { font-weight: 600; }
 
 /* ── Historical list ──────────────────────────────────────────────── */
 .historyList {
@@ -393,21 +330,16 @@
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 1.5rem;
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: #111115;
+  border: 1px solid rgba(255,255,255,0.07);
   border-radius: 14px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  transition: border-color 0.2s;
   content-visibility: auto;
   contain-intrinsic-size: 120px;
 }
 
-.historyCard:hover {
-  border-color: #DC143C;
-  box-shadow: 0 6px 18px rgba(220,20,60,0.06);
-  transform: translateY(-2px);
-}
+.historyCard:hover { border-color: rgba(201,169,110,0.2); }
 
 .historyLeft {
   display: flex;
@@ -420,17 +352,14 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #DC143C;
+  color: #C9A96E;
 }
 
 .historyCat {
   font-size: 0.68rem;
-  border: 1px solid rgba(220,20,60,0.3);
-  background: #FFF1F2;
-  color: #DC143C;
-  font-weight: 600;
+  border: 1px solid;
   border-radius: 4px;
-  padding: 0.18rem 0.45rem;
+  padding: 0.15rem 0.4rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   line-height: 1.4;
@@ -440,10 +369,9 @@
 
 .historyTitle {
   font-family: 'Cinzel', Georgia, serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #111827;
-  margin: 0 0 0.5rem;
+  font-size: 0.97rem;
+  color: #f5ead6;
+  margin: 0 0 0.6rem;
   line-height: 1.4;
 }
 
@@ -459,12 +387,12 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.8rem;
-  color: #6B7280;
+  color: #777;
 }
 
 .historyDesc {
-  font-size: 0.88rem;
-  color: #4B5563;
+  font-size: 0.87rem;
+  color: #a09070;
   line-height: 1.65;
   margin: 0;
 }
@@ -473,7 +401,7 @@
 .empty {
   text-align: center;
   padding: 4rem 1rem;
-  color: #6B7280;
+  color: #666;
   font-size: 0.95rem;
 }
 
