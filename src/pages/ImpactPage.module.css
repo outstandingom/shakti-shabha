@@ -1,12 +1,12 @@
 /* ================================================================
    Impact & Historical Archive Page — Curatorial Architecture
    Refined Academic & Institutional Theme
-   Palette: Deep Night #0A0A0C | Gold #C9A96E | Crimson #DC143C | Emerald #14532D
+   White Theme & Crimson Red Palette (#FFFFFF & #DC143C)
    ================================================================ */
 
 .page {
-  background: #070709;
-  color: #E5E7EB;
+  background: #FFFFFF;
+  color: #111827;
   min-height: 100vh;
   padding-bottom: 6rem;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -20,10 +20,10 @@
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
-  background: radial-gradient(ellipse at 50% 0%, rgba(201, 169, 110, 0.15) 0%, rgba(220, 20, 60, 0.08) 45%, #070709 80%);
+  background: linear-gradient(180deg, #FFF1F2 0%, #FFFFFF 100%);
   padding: 7.5rem 1.5rem 3.5rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .heroEyebrow {
@@ -34,26 +34,27 @@
   font-size: 0.72rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #C9A96E;
+  color: #DC143C;
   margin-bottom: 1rem;
   padding: 0.35rem 1rem;
-  background: rgba(201, 169, 110, 0.08);
-  border: 1px solid rgba(201, 169, 110, 0.25);
+  background: #FFFFFF;
+  border: 1px solid rgba(220, 20, 60, 0.3);
   border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(220, 20, 60, 0.08);
 }
 
 .heroTitle {
   font-family: 'Cinzel', Georgia, serif;
   font-size: clamp(2.4rem, 5.5vw, 4.4rem);
   font-weight: 800;
-  color: #F9FAFB;
+  color: #111827;
   line-height: 1.15;
   margin: 0 0 1.25rem;
   letter-spacing: -0.02em;
 }
 
 .heroTitleHighlight {
-  background: linear-gradient(135deg, #F9FAFB 0%, #C9A96E 50%, #DC143C 100%);
+  background: linear-gradient(135deg, #111827 0%, #DC143C 50%, #B01030 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -63,14 +64,14 @@
   max-width: 780px;
   margin: 0 auto 2rem;
   font-size: 1.05rem;
-  color: #9CA3AF;
+  color: #4B5563;
   line-height: 1.75;
 }
 
 /* ── Top Verified Impact Banner ───────────────────────────────────── */
 .verifiedBanner {
-  background: rgba(201, 169, 110, 0.05);
-  border: 1px solid rgba(201, 169, 110, 0.25);
+  background: #FFF1F2;
+  border: 1px solid rgba(220, 20, 60, 0.25);
   border-radius: 14px;
   padding: 1.25rem 1.75rem;
   margin-bottom: 3.5rem;
@@ -83,12 +84,12 @@
 .verifiedBanner p {
   margin: 0;
   font-size: 0.88rem;
-  color: #D1D5DB;
+  color: #1F2937;
   line-height: 1.65;
 }
 
 .verifiedBanner strong {
-  color: #C9A96E;
+  color: #DC143C;
 }
 
 /* ── 1. High-Level Impact Grid (4 Top Cards) ───────────────────────── */
@@ -100,15 +101,16 @@
 }
 
 .metricCard {
-  background: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  transition: transform 0.25s, border-color 0.25s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
 .metricCard::before {
@@ -117,20 +119,21 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: var(--card-accent, #C9A96E);
+  height: 4px;
+  background: var(--card-accent, #DC143C);
 }
 
 .metricCard:hover {
   transform: translateY(-3px);
-  border-color: rgba(201, 169, 110, 0.35);
+  border-color: #DC143C;
+  box-shadow: 0 10px 28px rgba(220, 20, 60, 0.1);
 }
 
 .metricVal {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 2.6rem;
   font-weight: 800;
-  color: #FFFFFF;
+  color: #111827;
   line-height: 1;
   margin-bottom: 0.5rem;
 }
@@ -138,7 +141,7 @@
 .metricLabel {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #C9A96E;
+  color: #DC143C;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   margin-bottom: 0.75rem;
@@ -146,7 +149,7 @@
 
 .metricDesc {
   font-size: 0.83rem;
-  color: #9CA3AF;
+  color: #4B5563;
   line-height: 1.6;
   margin: 0;
   flex: 1;
@@ -154,8 +157,8 @@
 
 /* ── 2. The 3-Depth Framework ─────────────────────────────────────── */
 .frameworkSection {
-  background: #0C0C0F;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FAFAFA;
+  border: 1px solid #E5E7EB;
   border-radius: 20px;
   padding: 3rem 2.5rem;
   margin-bottom: 4.5rem;
@@ -170,22 +173,23 @@
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #C9A96E;
+  color: #DC143C;
   margin-bottom: 0.5rem;
   display: block;
+  font-weight: 700;
 }
 
 .sectionTitle {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 2rem;
   font-weight: 700;
-  color: #F9FAFB;
+  color: #111827;
   margin: 0 0 0.5rem;
 }
 
 .sectionSubtitle {
   font-size: 0.95rem;
-  color: #9CA3AF;
+  color: #6B7280;
   margin: 0;
 }
 
@@ -196,12 +200,13 @@
 }
 
 .depthCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
   padding: 2rem 1.75rem;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .depthLevel {
@@ -210,7 +215,7 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--depth-color, #C9A96E);
+  color: var(--depth-color, #DC143C);
   margin-bottom: 0.35rem;
 }
 
@@ -218,27 +223,28 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   margin: 0 0 1rem;
 }
 
 .depthMetaRow {
-  background: rgba(255, 255, 255, 0.03);
+  background: #FFF1F2;
   border-radius: 8px;
   padding: 0.6rem 0.85rem;
   margin-bottom: 1.25rem;
   display: flex;
   justify-content: space-between;
   font-size: 0.82rem;
+  border: 1px solid rgba(220, 20, 60, 0.15);
 }
 
 .depthMetaLabel {
-  color: #9CA3AF;
+  color: #6B7280;
 }
 
 .depthMetaVal {
-  color: #F3F4F6;
-  font-weight: 600;
+  color: #111827;
+  font-weight: 700;
 }
 
 .depthList {
@@ -252,7 +258,7 @@
 
 .depthList li {
   font-size: 0.84rem;
-  color: #D1D5DB;
+  color: #374151;
   line-height: 1.6;
   position: relative;
   padding-left: 1.2rem;
@@ -262,7 +268,7 @@
   content: '•';
   position: absolute;
   left: 0;
-  color: var(--depth-color, #C9A96E);
+  color: var(--depth-color, #DC143C);
   font-size: 1.2rem;
   line-height: 1;
 }
@@ -276,15 +282,17 @@
 }
 
 .clusterCard {
-  background: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 2rem 1.75rem;
-  transition: border-color 0.25s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.25s, transform 0.25s;
 }
 
 .clusterCard:hover {
-  border-color: rgba(201, 169, 110, 0.3);
+  border-color: #DC143C;
+  transform: translateY(-2px);
 }
 
 .clusterBadge {
@@ -300,22 +308,23 @@
 .clusterTitle {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.15rem;
-  color: #F9FAFB;
+  color: #111827;
   margin: 0 0 0.5rem;
 }
 
 .clusterRegion {
   font-size: 0.82rem;
-  color: #C9A96E;
+  color: #DC143C;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.3rem;
+  font-weight: 600;
 }
 
 .clusterFocus {
   font-size: 0.86rem;
-  color: #9CA3AF;
+  color: #4B5563;
   line-height: 1.65;
   margin: 0;
 }
@@ -331,14 +340,14 @@
   overflow-x: auto;
   padding-bottom: 0.5rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .tabBtn {
   background: transparent;
   border: none;
   padding: 0.85rem 1.25rem;
-  color: #9CA3AF;
+  color: #6B7280;
   font-size: 0.85rem;
   font-weight: 600;
   border-bottom: 2px solid transparent;
@@ -351,13 +360,14 @@
 }
 
 .tabBtn:hover {
-  color: #F3F4F6;
+  color: #111827;
 }
 
 .tabBtnActive {
-  color: #C9A96E;
-  border-bottom-color: #C9A96E;
-  background: rgba(201, 169, 110, 0.05);
+  color: #DC143C;
+  border-bottom-color: #DC143C;
+  background: #FFF1F2;
+  border-radius: 8px 8px 0 0;
 }
 
 .filterBar {
@@ -377,11 +387,11 @@
 
 .searchInput {
   width: 100%;
-  background: #111115;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
   border-radius: 10px;
   padding: 0.65rem 1rem 0.65rem 2.4rem;
-  color: #FFFFFF;
+  color: #111827;
   font-size: 0.88rem;
 }
 
@@ -390,15 +400,15 @@
   left: 0.85rem;
   top: 50%;
   transform: translateY(-50%);
-  color: #6B7280;
+  color: #9CA3AF;
 }
 
 .regionSelect {
-  background: #111115;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
   border-radius: 10px;
   padding: 0.65rem 1.25rem;
-  color: #FFFFFF;
+  color: #111827;
   font-size: 0.88rem;
   cursor: pointer;
 }
@@ -414,13 +424,13 @@
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .verticalTitle {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.35rem;
-  color: #F9FAFB;
+  color: #111827;
   margin: 0;
 }
 
@@ -430,9 +440,9 @@
   text-transform: uppercase;
   padding: 0.2rem 0.6rem;
   border-radius: 9999px;
-  background: rgba(201, 169, 110, 0.12);
-  color: #C9A96E;
-  border: 1px solid rgba(201, 169, 110, 0.25);
+  background: #FFF1F2;
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.25);
 }
 
 .cardsList {
@@ -442,18 +452,21 @@
 }
 
 .archiveCard {
-  background: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
   padding: 1.75rem 2rem;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s, background 0.2s;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
 }
 
 .archiveCard:hover {
-  border-color: rgba(201, 169, 110, 0.25);
-  background: #131318;
+  border-color: #DC143C;
+  background: #FFFBFB;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.08);
 }
 
 .cardTopRow {
@@ -470,7 +483,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #C9A96E;
+  color: #DC143C;
   display: flex;
   align-items: center;
   gap: 0.35rem;
@@ -480,8 +493,8 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: #DC143C;
-  background: rgba(220, 20, 60, 0.1);
-  border: 1px solid rgba(220, 20, 60, 0.2);
+  background: #FFF1F2;
+  border: 1px solid rgba(220, 20, 60, 0.25);
   padding: 0.2rem 0.65rem;
   border-radius: 9999px;
 }
@@ -489,14 +502,14 @@
 .cardTitle {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.2rem;
-  color: #FFFFFF;
+  color: #111827;
   margin: 0 0 0.5rem;
   line-height: 1.4;
 }
 
 .cardTheme {
   font-size: 0.92rem;
-  color: #E5E7EB;
+  color: #374151;
   margin: 0 0 0.85rem;
   font-style: italic;
 }
@@ -512,7 +525,7 @@
 
 .cardBullets li {
   font-size: 0.85rem;
-  color: #9CA3AF;
+  color: #4B5563;
   line-height: 1.6;
   position: relative;
   padding-left: 1.2rem;
@@ -522,7 +535,7 @@
   content: '→';
   position: absolute;
   left: 0;
-  color: #C9A96E;
+  color: #DC143C;
 }
 
 .cardFooterMeta {
@@ -531,17 +544,18 @@
   font-size: 0.78rem;
   color: #6B7280;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid #F3F4F6;
   flex-wrap: wrap;
 }
 
 /* ── Structured Table: Academic Summary ───────────────────────────── */
 .tableWrap {
-  background: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
   overflow-x: auto;
   margin-top: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 }
 
 .academicTable {
@@ -552,18 +566,18 @@
 }
 
 .academicTable th {
-  background: rgba(255, 255, 255, 0.03);
-  color: #C9A96E;
+  background: #FFF1F2;
+  color: #DC143C;
   font-family: 'Cinzel', Georgia, serif;
   padding: 1rem 1.25rem;
   font-weight: 700;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .academicTable td {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  color: #D1D5DB;
+  border-bottom: 1px solid #F3F4F6;
+  color: #374151;
   line-height: 1.6;
 }
 
@@ -573,9 +587,9 @@
 
 /* ── Methodological Disclaimer ────────────────────────────────────── */
 .disclaimerBox {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 4px solid #C9A96E;
+  background: #FFF1F2;
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  border-left: 4px solid #DC143C;
   border-radius: 0 14px 14px 0;
   padding: 1.75rem 2rem;
   margin-top: 4rem;
@@ -586,7 +600,7 @@
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #C9A96E;
+  color: #DC143C;
   text-transform: uppercase;
   margin-bottom: 0.5rem;
 }
@@ -594,7 +608,7 @@
 .disclaimerText {
   margin: 0;
   font-size: 0.85rem;
-  color: #9CA3AF;
+  color: #4B5563;
   line-height: 1.75;
 }
 
