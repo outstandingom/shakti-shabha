@@ -257,7 +257,7 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.3rem, 2.5vw, 1.9rem);
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   line-height: 1.5;
   font-style: normal;
   margin-bottom: 1.25rem;

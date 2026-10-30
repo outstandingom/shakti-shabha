@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { getFounderData, FounderProfileData } from '../data/founderData'
+import { getFounderData, FounderProfileData, DEFAULT_FOUNDER_DATA } from '../data/founderData'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import p from './AboutPage.module.css'
@@ -211,33 +211,67 @@ export default function AboutPage() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       if (timelineRef.current) {
-        gsap.from(timelineRef.current.querySelectorAll(`.${p.timelineItem}`), {
-          scrollTrigger: { trigger: timelineRef.current, start: 'top 80%' },
-          opacity: 0,
-          x: -30,
-          stagger: 0.12,
-          duration: 0.6,
-          ease: 'power2.out',
-        })
+        const items = timelineRef.current.querySelectorAll(`.${p.timelineItem}`)
+        gsap.fromTo(
+          items,
+          { opacity: 0, x: -20 },
+          {
+            opacity: 1,
+            x: 0,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: timelineRef.current, start: 'top 85%', once: true },
+            onComplete: () => {
+              gsap.set(items, { clearProps: 'opacity,transform' })
+            }
+          }
+        )
       }
 
       if (valuesRef.current) {
-        gsap.from(valuesRef.current.querySelectorAll(`.${p.valueCard}`), {
-          scrollTrigger: { trigger: valuesRef.current, start: 'top 80%' },
-          opacity: 0,
-          scale: 0.95,
-          stagger: 0.1,
-          duration: 0.5,
-          ease: 'power2.out',
-        })
+        const cards = valuesRef.current.querySelectorAll(`.${p.valueCard}`)
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 20 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.08,
+            duration: 0.5,
+            ease: 'power2.out',
+            scrollTrigger: { trigger: valuesRef.current, start: 'top 85%', once: true },
+            onComplete: () => {
+              gsap.set(cards, { clearProps: 'opacity,transform' })
+            }
+          }
+        )
       }
     }, pageRef)
 
-    return () => ctx.revert()
+    // Ensure elements are never stuck hidden if ScrollTrigger recalculates
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 350)
+
+    return () => {
+      clearTimeout(timer)
+      ctx.revert()
+    }
   }, [])
 
+  const confidentialityText =
+    profile?.interventions?.confidentialityNotice ||
+    DEFAULT_FOUNDER_DATA.interventions.confidentialityNotice
+
+  const heroImgSrc = profile.heroImage
+    ? (profile.heroImage.startsWith('/') || profile.heroImage.startsWith('http')
+        ? profile.heroImage
+        : `/${profile.heroImage}`)
+    : "/harshitama'am.jpg"
+
   return (
-    <main className={s.page} ref={pageRef}>
+    <main className={`${p.page} ${s.page}`} ref={pageRef}>
       {/* ── HERO BANNER ────────────────────────────── */}
       <div className={p.hero}>
         <div className={p.heroInner}>
@@ -259,7 +293,7 @@ export default function AboutPage() {
           <div className={p.founderCard}>
             <div className={p.founderPortraitWrap}>
               <img
-                src={profile.heroImage || "/harshitama'am.jpg"}
+                src={heroImgSrc}
                 alt="Aaryaveera Harshita Mankar - Founder & Director, Shakti Sabha"
                 className={p.founderImg}
                 onError={(e) => {
@@ -305,7 +339,7 @@ export default function AboutPage() {
           {/* ── The Genesis ───────────────────────────── */}
           <div className={p.genesisBox}>
             <h3 className={p.genesisTitle}>
-              <GoogleIcon name="eco" size={24} style={{ color: '#34D399' }} />
+              <GoogleIcon name="eco" size={24} style={{ color: '#166534' }} />
               THE GENESIS: {profile.genesisLead}
             </h3>
             <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
@@ -318,16 +352,21 @@ export default function AboutPage() {
               {profile.genesisP3}
             </p>
             <div style={{
-              background: 'rgba(255, 255, 255, 0.04)',
-              borderLeft: '3px solid #DC143C',
-              padding: '1rem 1.25rem',
-              borderRadius: '0 8px 8px 0',
+              background: '#FFFFFF',
+              border: '1px solid #DCFCE7',
+              borderLeft: '4px solid #166534',
+              padding: '1.15rem 1.4rem',
+              borderRadius: '0 10px 10px 0',
               marginTop: '1.25rem',
               fontSize: '0.94rem',
               lineHeight: 1.65,
-              color: '#E5E7EB'
+              color: '#166534',
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)'
             }}>
-              <strong>The Principle of Kshatra-Dharma:</strong> {profile.kshatraDharmaText}
+              <strong style={{ color: '#14532D', display: 'block', marginBottom: '0.35rem' }}>
+                The Principle of Kshatra-Dharma:
+              </strong>
+              <span style={{ color: '#374151' }}>{profile.kshatraDharmaText}</span>
             </div>
           </div>
 
@@ -376,8 +415,8 @@ export default function AboutPage() {
               <GoogleIcon name="gavel" size={18} style={{ color: '#DC143C' }} />
               Institutional Note on Confidentiality &amp; Statutory Compliance
             </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#6B7280', lineHeight: 1.65 }}>
-              "{profile.interventions.confidentialityNotice}"
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#4B5563', lineHeight: 1.65 }}>
+              "{confidentialityText}"
             </p>
           </div>
 
@@ -408,28 +447,29 @@ export default function AboutPage() {
               ))}
             </div>
 
-            {/* Camps & Outreach Sub-section */}
+            {/* Camps & Outreach Sub-section (Clean white contrast card) */}
             <div style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 12,
-              padding: '1.5rem',
-              marginTop: '2rem'
+              background: '#FFFFFF',
+              border: '1px solid #E9D5FF',
+              borderRadius: 14,
+              padding: '1.75rem',
+              marginTop: '2rem',
+              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
             }}>
-              <h4 style={{ color: '#FFFFFF', margin: '0 0 0.75rem', fontSize: '1.1rem' }}>
+              <h4 style={{ color: '#111827', margin: '0 0 0.75rem', fontSize: '1.15rem', fontFamily: 'var(--font-display, "Cinzel", serif)', fontWeight: 700 }}>
                 Intensive 7–10 Day Mardini Camps &amp; Field Outreach
               </h4>
-              <p style={{ color: '#D1D5DB', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 1rem' }}>
+              <p style={{ color: '#4B5563', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
                 Mission Mardini organizes intensive training camps designed to develop physical confidence, mental resilience, discipline, and practical self-defense awareness. Activities include Karate and foundational combat, Lathi-Kaushal and traditional martial arts, situational awareness, psychological stress management, leadership, and practical safety simulations.
               </p>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <div style={{ flex: '1 1 250px', background: 'rgba(0,0,0,0.2)', padding: '0.85rem 1rem', borderRadius: 8 }}>
-                  <strong style={{ color: '#FFD700', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Institutional Collaborations</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem' }}>Collaborating with educational institutions and community organizations to expand training and awareness.</span>
+                <div style={{ flex: '1 1 250px', background: '#FFF5F5', border: '1px solid #FFE4E6', padding: '1rem 1.15rem', borderRadius: 10 }}>
+                  <strong style={{ color: '#DC143C', fontSize: '0.88rem', display: 'block', marginBottom: '0.35rem' }}>Institutional Collaborations</strong>
+                  <span style={{ color: '#4B5563', fontSize: '0.84rem', lineHeight: 1.5, display: 'block' }}>Collaborating with educational institutions and community organizations to expand training and awareness.</span>
                 </div>
-                <div style={{ flex: '1 1 250px', background: 'rgba(0,0,0,0.2)', padding: '0.85rem 1rem', borderRadius: 8 }}>
-                  <strong style={{ color: '#FFD700', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Tribal &amp; Rural Outreach</strong>
-                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem' }}>Making training, guidance, and support accessible to young girls in underserved areas beyond urban centers.</span>
+                <div style={{ flex: '1 1 250px', background: '#F0FDF4', border: '1px solid #DCFCE7', padding: '1rem 1.15rem', borderRadius: 10 }}>
+                  <strong style={{ color: '#166534', fontSize: '0.88rem', display: 'block', marginBottom: '0.35rem' }}>Tribal &amp; Rural Outreach</strong>
+                  <span style={{ color: '#4B5563', fontSize: '0.84rem', lineHeight: 1.5, display: 'block' }}>Making training, guidance, and support accessible to young girls in underserved areas beyond urban centers.</span>
                 </div>
               </div>
             </div>
