@@ -1,16 +1,14 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { supabase } from '../lib/supabase'
 import {
   fetchCategories,
   fetchAllPhotos,
-  getStoredCategories,
-  getStoredPhotos,
   GALLERY_UPDATE_EVENT,
   GalleryCategoryItem
 } from '../data/galleryStore'
 import DomeGallery, { DEFAULT_SHAKTI_IMAGES, type DomeGalleryImage } from '../components/DomeGallery/DomeGallery'
+import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import gp from './GalleryPage.module.css'
 
 const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
@@ -65,11 +63,16 @@ const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
 ]
 
 const ALL_IMAGES = [...DEFAULT_SHAKTI_IMAGES, ...EXTRA_GALLERY_IMAGES]
+const INITIAL_IMAGE_LIMIT = 10
+const VISIBLE_CATEGORY_COUNT = 3
 
 export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<string>('ALL')
   const [categories, setCategories] = useState<GalleryCategoryItem[]>([])
   const [dbImages, setDbImages] = useState<DomeGalleryImage[]>([])
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [imageLimit, setImageLimit] = useState(INITIAL_IMAGE_LIMIT)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   const loadMedia = () => {
     Promise.all([
@@ -105,14 +108,62 @@ export default function GalleryPage() {
     }
   }, [])
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false)
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener('mousedown', handleOutsideClick)
+    }
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [dropdownOpen])
+
+  // Reset image limit when changing category
+  const handleSelectCategory = (catName: string) => {
+    setActiveCategory(catName)
+    setImageLimit(INITIAL_IMAGE_LIMIT)
+    setDropdownOpen(false)
+  }
+
   const allGalleryImages = useMemo(() => {
     return [...dbImages, ...ALL_IMAGES]
   }, [dbImages])
 
-  const displayedImages = useMemo(() => {
+  // Filtered by current category
+  const filteredImages = useMemo(() => {
     if (activeCategory === 'ALL') return allGalleryImages
-    return allGalleryImages.filter(img => img.tag?.toLowerCase().includes(activeCategory.toLowerCase()))
+    return allGalleryImages.filter(img =>
+      img.tag?.toLowerCase().includes(activeCategory.toLowerCase())
+    )
   }, [activeCategory, allGalleryImages])
+
+  // On-demand limited images for performance
+  const displayedImages = useMemo(() => {
+    return filteredImages.slice(0, imageLimit)
+  }, [filteredImages, imageLimit])
+
+  const hasMoreImages = filteredImages.length > imageLimit
+
+  // Split categories: top 2-3 vs remaining
+  const visibleCategories = useMemo(() => {
+    return categories.slice(0, VISIBLE_CATEGORY_COUNT)
+  }, [categories])
+
+  const moreCategories = useMemo(() => {
+    return categories.slice(VISIBLE_CATEGORY_COUNT)
+  }, [categories])
+
+  // Check if active category is inside the "more" dropdown
+  const isMoreCategoryActive = useMemo(() => {
+    return moreCategories.some(c => c.name.toLowerCase() === activeCategory.toLowerCase())
+  }, [moreCategories, activeCategory])
+
+  const activeCategoryObj = useMemo(() => {
+    return moreCategories.find(c => c.name.toLowerCase() === activeCategory.toLowerCase())
+  }, [moreCategories, activeCategory])
 
   return (
     <div className={gp.pageContainer}>
@@ -144,28 +195,105 @@ export default function GalleryPage() {
           traditional Lathi-Kaushal combat, survivor circles, and village self-defense across Maharashtra.
         </p>
 
-        {/* Dynamic Filter Category Tabs */}
+        {/* Compact Category Filter: Show 2-3 + Dropdown for remaining */}
         <div className={gp.filterRow}>
+          {/* 1. All Media */}
           <button
-            onClick={() => setActiveCategory('ALL')}
+            onClick={() => handleSelectCategory('ALL')}
             className={`${gp.filterBtn} ${activeCategory === 'ALL' ? gp.filterBtnActive : ''}`}
           >
-            All Media Vault ({allGalleryImages.length})
+            All Media
+            <span className={gp.countPill}>{allGalleryImages.length}</span>
           </button>
-          {categories.map(cat => {
-            const tag = cat.name.toUpperCase()
-            const count = allGalleryImages.filter(img => img.tag?.toLowerCase().includes(cat.name.toLowerCase()) || img.tag?.toLowerCase().includes(cat.id.toLowerCase())).length
+
+          {/* 2. Top 2-3 Featured Categories */}
+          {visibleCategories.map(cat => {
+            const count = allGalleryImages.filter(img =>
+              img.tag?.toLowerCase().includes(cat.name.toLowerCase()) ||
+              img.tag?.toLowerCase().includes(cat.id.toLowerCase())
+            ).length
+            const isSelected = activeCategory === cat.name
             return (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.name)}
-                className={`${gp.filterBtn} ${activeCategory === cat.name ? gp.filterBtnActive : ''}`}
+                onClick={() => handleSelectCategory(cat.name)}
+                className={`${gp.filterBtn} ${isSelected ? gp.filterBtnActive : ''}`}
               >
-                {cat.name} {count > 0 ? `(${count})` : ''}
+                {cat.name}
+                {count > 0 && <span className={gp.countPill}>{count}</span>}
               </button>
             )
           })}
+
+          {/* 3. If a category from "more" is currently active, show it as an active pill */}
+          {isMoreCategoryActive && activeCategoryObj && (
+            <button
+              onClick={() => handleSelectCategory(activeCategoryObj.name)}
+              className={`${gp.filterBtn} ${gp.filterBtnActive}`}
+            >
+              {activeCategoryObj.name}
+              <span className={gp.countPill}>
+                {filteredImages.length}
+              </span>
+            </button>
+          )}
+
+          {/* 4. Dropdown for More Categories */}
+          {moreCategories.length > 0 && (
+            <div className={gp.dropdownWrapper} ref={dropdownRef}>
+              <button
+                type="button"
+                onClick={() => setDropdownOpen(o => !o)}
+                className={`${gp.dropdownToggle} ${dropdownOpen ? gp.dropdownToggleActive : ''}`}
+                aria-expanded={dropdownOpen}
+                aria-haspopup="true"
+              >
+                <span>
+                  {isMoreCategoryActive ? 'Switch Category' : `More Categories (${moreCategories.length})`}
+                </span>
+                <span className={`${gp.arrowIcon} ${dropdownOpen ? gp.arrowOpen : ''}`}>▼</span>
+              </button>
+
+              {dropdownOpen && (
+                <div className={gp.dropdownMenu} role="menu">
+                  {moreCategories.map(cat => {
+                    const count = allGalleryImages.filter(img =>
+                      img.tag?.toLowerCase().includes(cat.name.toLowerCase()) ||
+                      img.tag?.toLowerCase().includes(cat.id.toLowerCase())
+                    ).length
+                    const isSelected = activeCategory === cat.name
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => handleSelectCategory(cat.name)}
+                        className={`${gp.dropdownItem} ${isSelected ? gp.dropdownItemActive : ''}`}
+                        role="menuitem"
+                      >
+                        <span>{cat.name}</span>
+                        <span className={gp.countPill}>{count}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
+        {/* Load More Images Button (avoids loading all images upfront) */}
+        {hasMoreImages && (
+          <div className={gp.loadMoreBar}>
+            <button
+              type="button"
+              onClick={() => setImageLimit(prev => prev + 10)}
+              className={gp.loadMoreBtn}
+            >
+              <GoogleIcon name="add_photo_alternate" size={16} />
+              <span>Load More Photos ({filteredImages.length - imageLimit} remaining)</span>
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 3D Dome Gallery Sphere */}
@@ -177,7 +305,7 @@ export default function GalleryPage() {
           minRadius={460}
           maxRadius={1150}
           padFactor={0.2}
-          overlayBlurColor="#0D090B"
+          overlayBlurColor="#FFFFFF"
           maxVerticalRotationDeg={10}
           dragSensitivity={18}
           enlargeTransitionMs={320}
@@ -190,7 +318,8 @@ export default function GalleryPage() {
         />
 
         <div className={gp.interactiveHint}>
-          <span>✦</span> Drag or swipe in any direction to rotate the 3D sphere · Click any image to view details
+          <GoogleIcon name="touch_app" size={15} />
+          <span>Drag or swipe in any direction to rotate the 3D sphere · Click any image to view details</span>
         </div>
       </div>
 
