@@ -1,0 +1,622 @@
+/* ================================================================
+   Impact & Historical Archive Page — Curatorial Architecture
+   Refined Academic & Institutional Theme
+   Palette: Deep Night #0A0A0C | Gold #C9A96E | Crimson #DC143C | Emerald #14532D
+   ================================================================ */
+
+.page {
+  background: #070709;
+  color: #E5E7EB;
+  min-height: 100vh;
+  padding-bottom: 6rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Hero ─────────────────────────────────────────────────────────── */
+.hero {
+  background: radial-gradient(ellipse at 50% 0%, rgba(201, 169, 110, 0.15) 0%, rgba(220, 20, 60, 0.08) 45%, #070709 80%);
+  padding: 7.5rem 1.5rem 3.5rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  margin-bottom: 1rem;
+  padding: 0.35rem 1rem;
+  background: rgba(201, 169, 110, 0.08);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 9999px;
+}
+
+.heroTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+  font-weight: 800;
+  color: #F9FAFB;
+  line-height: 1.15;
+  margin: 0 0 1.25rem;
+  letter-spacing: -0.02em;
+}
+
+.heroTitleHighlight {
+  background: linear-gradient(135deg, #F9FAFB 0%, #C9A96E 50%, #DC143C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroDesc {
+  max-width: 780px;
+  margin: 0 auto 2rem;
+  font-size: 1.05rem;
+  color: #9CA3AF;
+  line-height: 1.75;
+}
+
+/* ── Top Verified Impact Banner ───────────────────────────────────── */
+.verifiedBanner {
+  background: rgba(201, 169, 110, 0.05);
+  border: 1px solid rgba(201, 169, 110, 0.25);
+  border-radius: 14px;
+  padding: 1.25rem 1.75rem;
+  margin-bottom: 3.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.verifiedBanner p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #D1D5DB;
+  line-height: 1.65;
+}
+
+.verifiedBanner strong {
+  color: #C9A96E;
+}
+
+/* ── 1. High-Level Impact Grid (4 Top Cards) ───────────────────────── */
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 4rem;
+}
+
+.metricCard {
+  background: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, border-color 0.25s;
+}
+
+.metricCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-accent, #C9A96E);
+}
+
+.metricCard:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 169, 110, 0.35);
+}
+
+.metricVal {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.metricLabel {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #C9A96E;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.metricDesc {
+  font-size: 0.83rem;
+  color: #9CA3AF;
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+/* ── 2. The 3-Depth Framework ─────────────────────────────────────── */
+.frameworkSection {
+  background: #0C0C0F;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.sectionHeader {
+  margin-bottom: 2.25rem;
+}
+
+.sectionEyebrow {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.sectionTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #F9FAFB;
+  margin: 0 0 0.5rem;
+}
+
+.sectionSubtitle {
+  font-size: 0.95rem;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+.depthGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.depthCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.depthLevel {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--depth-color, #C9A96E);
+  margin-bottom: 0.35rem;
+}
+
+.depthTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 1rem;
+}
+
+.depthMetaRow {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
+}
+
+.depthMetaLabel {
+  color: #9CA3AF;
+}
+
+.depthMetaVal {
+  color: #F3F4F6;
+  font-weight: 600;
+}
+
+.depthList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.depthList li {
+  font-size: 0.84rem;
+  color: #D1D5DB;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.depthList li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--depth-color, #C9A96E);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* ── 3. Regional Footprint Summary ────────────────────────────────── */
+.clustersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4.5rem;
+}
+
+.clusterCard {
+  background: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  padding: 2rem 1.75rem;
+  transition: border-color 0.25s;
+}
+
+.clusterCard:hover {
+  border-color: rgba(201, 169, 110, 0.3);
+}
+
+.clusterBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #DC143C;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.clusterTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.15rem;
+  color: #F9FAFB;
+  margin: 0 0 0.5rem;
+}
+
+.clusterRegion {
+  font-size: 0.82rem;
+  color: #C9A96E;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.clusterFocus {
+  font-size: 0.86rem;
+  color: #9CA3AF;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Filter & Navigation Bar ──────────────────────────────────────── */
+.taxonomySection {
+  margin-bottom: 4.5rem;
+}
+
+.tabControls {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  padding: 0.85rem 1.25rem;
+  color: #9CA3AF;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.tabBtn:hover {
+  color: #F3F4F6;
+}
+
+.tabBtnActive {
+  color: #C9A96E;
+  border-bottom-color: #C9A96E;
+  background: rgba(201, 169, 110, 0.05);
+}
+
+.filterBar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  background: #111115;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.65rem 1rem 0.65rem 2.4rem;
+  color: #FFFFFF;
+  font-size: 0.88rem;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6B7280;
+}
+
+.regionSelect {
+  background: #111115;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.65rem 1.25rem;
+  color: #FFFFFF;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+/* ── Verticals Content Cards ──────────────────────────────────────── */
+.verticalGroup {
+  margin-bottom: 3rem;
+}
+
+.verticalHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.verticalTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.35rem;
+  color: #F9FAFB;
+  margin: 0;
+}
+
+.verticalBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(201, 169, 110, 0.12);
+  color: #C9A96E;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.archiveCard {
+  background: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.archiveCard:hover {
+  border-color: rgba(201, 169, 110, 0.25);
+  background: #131318;
+}
+
+.cardTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.cardTag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #C9A96E;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cardScale {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.1);
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  padding: 0.2rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.cardTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 1.2rem;
+  color: #FFFFFF;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.cardTheme {
+  font-size: 0.92rem;
+  color: #E5E7EB;
+  margin: 0 0 0.85rem;
+  font-style: italic;
+}
+
+.cardBullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.cardBullets li {
+  font-size: 0.85rem;
+  color: #9CA3AF;
+  line-height: 1.6;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.cardBullets li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #C9A96E;
+}
+
+.cardFooterMeta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.78rem;
+  color: #6B7280;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  flex-wrap: wrap;
+}
+
+/* ── Structured Table: Academic Summary ───────────────────────────── */
+.tableWrap {
+  background: #101014;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow-x: auto;
+  margin-top: 1.5rem;
+}
+
+.academicTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+  text-align: left;
+}
+
+.academicTable th {
+  background: rgba(255, 255, 255, 0.03);
+  color: #C9A96E;
+  font-family: 'Cinzel', Georgia, serif;
+  padding: 1rem 1.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.academicTable td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #D1D5DB;
+  line-height: 1.6;
+}
+
+.academicTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Methodological Disclaimer ────────────────────────────────────── */
+.disclaimerBox {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 4px solid #C9A96E;
+  border-radius: 0 14px 14px 0;
+  padding: 1.75rem 2rem;
+  margin-top: 4rem;
+}
+
+.disclaimerTitle {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #C9A96E;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.disclaimerText {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #9CA3AF;
+  line-height: 1.75;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .metricsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .depthGrid,
+  .clustersGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .metricsGrid {
+    grid-template-columns: 1fr;
+  }
+  .frameworkSection {
+    padding: 2rem 1.25rem;
+  }
+  .archiveCard {
+    padding: 1.25rem 1rem;
+  }
+}

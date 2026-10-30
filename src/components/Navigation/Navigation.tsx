@@ -11,6 +11,7 @@ const LINKS = [
   { label: 'Gallery', to: '/gallery' },
   { label: 'Aaryaveera', to: '/aaryaveera' },
   { label: 'Social Work', to: '/social-work' },
+  { label: 'Impact', to: '/impact' },
   { label: 'Events', to: '/events' },
   { label: 'Courses', to: '/courses' },
   { label: 'Sahyog', to: '/sahyog' },

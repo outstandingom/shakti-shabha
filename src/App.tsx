@@ -11,6 +11,7 @@ import HomePage from './pages/HomePage'
 import AaryaveeraPage from './pages/AaryaveeraPage'
 import SocialWorkPage from './pages/SocialWorkPage'
 import EventsPage from './pages/EventsPage'
+import ImpactPage from './pages/ImpactPage'
 import SahyogPage from './pages/SahyogPage'
 import CoursesPage from './pages/CoursesPage'
 import HistoryPage from './pages/HistoryPage'
@@ -89,6 +90,8 @@ function LenisProvider() {
         <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
         <Route path="/social-work"          element={<SocialWorkPage />} />
         <Route path="/events"               element={<EventsPage />} />
+        <Route path="/impact"               element={<ImpactPage />} />
+        <Route path="/impact-archive"       element={<ImpactPage />} />
         <Route path="/sahyog"               element={<SahyogPage />} />
         <Route path="/courses"              element={<CoursesPage />} />
         <Route path="/history"              element={<HistoryPage />} />

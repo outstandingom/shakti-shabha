@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './PageLayout.module.css'
@@ -409,15 +410,36 @@ export default function EventsPage() {
       {tab === 'history' && (
         <section className={ep.section}>
           <div className={ep.container}>
-            {/* Archive disclaimer */}
-            <div className={ep.archiveBanner}>
-              <GoogleIcon name="info" size={18} style={{ color: '#C9A96E', flexShrink: 0 }} />
-              <p>
-                <strong>Impact Archive: 2021–2026 focus.</strong> Records document minimum confirmed
-                participant figures using &ldquo;Approximate&rdquo; estimates where exact counts are unavailable.
-                Attribution indicates role: Organised by / Keynote Speaker / Guest Speaker / Trainer /
-                Panelist / Collaborator. Not all lifetime engagements are included.
-              </p>
+            {/* Archive disclaimer & link to full Impact Taxonomy */}
+            <div className={ep.archiveBanner} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', flex: 1, minWidth: 280 }}>
+                <GoogleIcon name="shield" size={20} style={{ color: '#C9A96E', flexShrink: 0, marginTop: 2 }} />
+                <p style={{ margin: 0 }}>
+                  <strong>Curatorial &amp; Verified Impact Archive:</strong> Organized across 4 intellectual verticals:
+                  National Plenaries, Mission Mardini Tactical Camps, Academic Deployments, and Civic Guilds Assemblies.
+                  All figures follow our anti-inflation verification policy.
+                </p>
+              </div>
+              <Link
+                to="/impact"
+                style={{
+                  padding: '0.55rem 1.25rem',
+                  borderRadius: 9999,
+                  background: 'rgba(201,169,110,0.15)',
+                  border: '1px solid #C9A96E',
+                  color: '#F9FAFB',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  whiteSpace: 'nowrap',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}
+              >
+                <span>Full Impact &amp; 3-Depth Dossier</span>
+                <GoogleIcon name="arrow_forward" size={14} />
+              </Link>
             </div>
 
             {/* Filters */}
