@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
+import CategoryPhotoStrip from '../components/CategoryPhotoStrip/CategoryPhotoStrip'
 import b from './ShaktiBhavaPage.module.css'
 
 export default function ShaktiBhavaPage() {
@@ -150,6 +151,15 @@ export default function ShaktiBhavaPage() {
             "Shakti Sabha operates as a civil and community support initiative. Field interventions, crisis de-escalations, and family reconciliations are conducted with strict respect for the privacy, safety, and legal confidentiality of affected individuals and their guardians. All actions involving minors and high-risk statutory matters are routed through and coordinated with relevant administrative bodies, statutory commissions, and local authorities in accordance with applicable Indian laws."
           </p>
         </div>
+
+        
+        {/* Category Photo Vault */}
+        <CategoryPhotoStrip
+          categoryKeywords={['shakti-bhava', 'consciousness', 'survivor', 'healing']}
+          title="Shakti Bhava Consciousness & Interventions Visuals"
+          subtitle="Randomized authentic photography from emotional grounding circles, youth awakening discourses, and crisis mediations from the database."
+          accentColor="#3D5A45"
+        />
 
         {/* ── BOTTOM CTA ────────────────────────────────────────────── */}
         <div className={b.ctaCard}>

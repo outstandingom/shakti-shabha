@@ -7,6 +7,18 @@ import { useAuth } from '../lib/AuthContext'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AdminDashboard.module.css'
 import { compressImage } from '../lib/imageCompressor'
+import {
+  fetchCategories,
+  saveCategory,
+  deleteCategory as deleteGalleryCategory,
+  fetchPhotosForCategory,
+  saveUploadedPhotos,
+  deleteStoredPhoto,
+  getStoredCategories,
+  getStoredPhotos,
+  GalleryCategoryItem,
+  GalleryPhotoItem
+} from '../data/galleryStore'
 
 
 interface LoaderProps {
@@ -530,23 +542,44 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
    GALLERY SECTION
    ============================================================ */
 function GallerySection() {
-  const [categories, setCategories] = useState<GalleryCategory[]>([])
-  const [photos, setPhotos] = useState<GalleryPhoto[]>([])
+  const [categories, setCategories] = useState<GalleryCategoryItem[]>([])
+  const [photos, setPhotos] = useState<GalleryPhotoItem[]>([])
+  const [allPhotosCount, setAllPhotosCount] = useState<Record<string, number>>({})
   const [selectedCat, setSelectedCat] = useState<string | null>(null)
   const [showCatModal, setShowCatModal] = useState(false)
   const [catForm, setCatForm] = useState({ name: '', description: '' })
   const [uploading, setUploading] = useState(false)
+  const [directUrl, setDirectUrl] = useState('')
   const [alert, setAlert] = useState<{ type: 'error' | 'success'; msg: string } | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const loadCats = async () => {
-    const { data } = await supabase.from('gallery_categories').select('*').order('created_at', { ascending: false })
-    setCategories(data || [])
+    try {
+      const cats = await fetchCategories()
+      setCategories(cats)
+      if (cats.length > 0 && !selectedCat) {
+        setSelectedCat(cats[0].id)
+      }
+      
+      // Compute photo counts per category
+      const all = getStoredPhotos()
+      const counts: Record<string, number> = {}
+      all.forEach(p => {
+        counts[p.category_id] = (counts[p.category_id] || 0) + 1
+      })
+      setAllPhotosCount(counts)
+    } catch (e) {
+      console.warn('loadCats error:', e)
+    }
   }
 
   const loadPhotos = async (catId: string) => {
-    const { data } = await supabase.from('gallery_photos').select('*').eq('category_id', catId).order('created_at', { ascending: false })
-    setPhotos(data || [])
+    try {
+      const list = await fetchPhotosForCategory(catId)
+      setPhotos(list)
+    } catch (e) {
+      console.warn('loadPhotos error:', e)
+    }
   }
 
   useEffect(() => { loadCats() }, [])
@@ -554,20 +587,32 @@ function GallerySection() {
 
   const createCategory = async () => {
     if (!catForm.name.trim()) return
-    const { error } = await supabase.from('gallery_categories').insert([catForm])
-    if (error) { setAlert({ type: 'error', msg: error.message }); return }
-    setAlert({ type: 'success', msg: 'Category created!' })
-    setShowCatModal(false)
-    setCatForm({ name: '', description: '' })
-    loadCats()
+    try {
+      const created = await saveCategory(catForm)
+      setAlert({ type: 'success', msg: `Category "${created.name}" created successfully!` })
+      setShowCatModal(false)
+      setCatForm({ name: '', description: '' })
+      setSelectedCat(created.id)
+      await loadCats()
+    } catch (err: any) {
+      setAlert({ type: 'error', msg: err?.message || 'Failed to create category' })
+    }
   }
 
-  const deleteCategory = async (id: string) => {
-    if (!confirm('Delete this category and all its photos?')) return
-    await supabase.from('gallery_photos').delete().eq('category_id', id)
-    await supabase.from('gallery_categories').delete().eq('id', id)
-    if (selectedCat === id) setSelectedCat(null)
-    loadCats()
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (!confirm(`Delete category "${name}" and all its photos?`)) return
+    try {
+      await deleteGalleryCategory(id)
+      setAlert({ type: 'success', msg: `Category "${name}" deleted.` })
+      const remaining = categories.filter(c => c.id !== id)
+      setCategories(remaining)
+      if (selectedCat === id) {
+        setSelectedCat(remaining[0]?.id || null)
+      }
+      await loadCats()
+    } catch (err: any) {
+      setAlert({ type: 'error', msg: err?.message || 'Failed to delete category' })
+    }
   }
 
   const [uploadProgress, setUploadProgress] = useState<{
@@ -596,10 +641,9 @@ function GallerySection() {
     })
 
     let uploadedCount = 0
-    const newItems: any[] = []
+    const newItems: GalleryPhotoItem[] = []
     const BATCH_SIZE = 3
 
-    // Process in concurrent pools of 3 to speed up network throughput by ~3x
     for (let i = 0; i < fileList.length; i += BATCH_SIZE) {
       const batch = fileList.slice(i, i + BATCH_SIZE)
 
@@ -609,11 +653,11 @@ function GallerySection() {
           let photoUrl = ''
           let uploadFile = file
 
-          // 1. Client-side Canvas Compression (reduces 3-10MB mobile photos to ~80KB webp)
+          // 1. Client-side Canvas Compression to WebP
           try {
             const comp = await compressImage(file, { maxWidth: 1200, maxHeight: 1200, quality: 0.8 })
             uploadFile = comp.file
-            photoUrl = comp.dataUrl // instant compressed preview fallback
+            photoUrl = comp.dataUrl
           } catch (compErr) {
             console.warn('Compression fallback:', compErr)
           }
@@ -637,17 +681,17 @@ function GallerySection() {
             try {
               await supabase.from('gallery_photos').insert([{
                 url: photoUrl,
-                caption: file.name,
+                caption: file.name.replace(/\.[^/.]+$/, ''),
                 category_id: selectedCat
               }])
             } catch (dbErr) {
               console.warn('DB insert error:', dbErr)
             }
 
-            const item = {
+            const item: GalleryPhotoItem = {
               id: `photo_${Date.now()}_${index}_${Math.random().toString(36).slice(2, 6)}`,
               url: photoUrl,
-              caption: file.name,
+              caption: file.name.replace(/\.[^/.]+$/, ''),
               category_id: selectedCat,
               created_at: new Date().toISOString()
             }
@@ -667,33 +711,58 @@ function GallerySection() {
       )
     }
 
-    // Single atomic write to localStorage instead of K repeated disk operations (O(1) I/O)
+    // Atomic write to master & category localStorage store + dispatch event
     if (newItems.length > 0) {
-      try {
-        const localKey = `shakti_gallery_photos_${selectedCat}`
-        const existing = JSON.parse(localStorage.getItem(localKey) || '[]')
-        localStorage.setItem(localKey, JSON.stringify([...newItems, ...existing]))
-      } catch (localErr) {
-        console.warn('LocalStorage bulk write error:', localErr)
-      }
+      saveUploadedPhotos(newItems, selectedCat)
     }
 
     setUploadProgress({ active: false, current: fileList.length, total: fileList.length, percent: 100, currentFile: '' })
     setUploading(false)
-    setAlert({ type: 'success', msg: `Successfully uploaded ${uploadedCount} photo(s)!` })
-    loadPhotos(selectedCat)
+    setAlert({ type: 'success', msg: `Successfully uploaded ${uploadedCount} photo(s)! They will now be randomly featured across the website.` })
+    await loadPhotos(selectedCat)
+    await loadCats()
   }
 
-  const deletePhoto = async (id: string) => {
-    await supabase.from('gallery_photos').delete().eq('id', id)
-    if (selectedCat) loadPhotos(selectedCat)
+  const handleAddDirectUrl = async () => {
+    if (!directUrl.trim() || !selectedCat) return
+    const item: GalleryPhotoItem = {
+      id: `photo_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      url: directUrl.trim(),
+      caption: `Uploaded Photo - ${new Date().toLocaleDateString()}`,
+      category_id: selectedCat,
+      created_at: new Date().toISOString()
+    }
+    
+    try {
+      await supabase.from('gallery_photos').insert([{
+        url: item.url,
+        caption: item.caption,
+        category_id: selectedCat
+      }])
+    } catch (e) { /* ignore */ }
+
+    saveUploadedPhotos([item], selectedCat)
+    setDirectUrl('')
+    setAlert({ type: 'success', msg: 'Photo URL added to category successfully!' })
+    await loadPhotos(selectedCat)
+    await loadCats()
   }
+
+  const handleDeletePhoto = async (id: string) => {
+    if (!confirm('Remove this photo from the category?')) return
+    await deleteStoredPhoto(id, selectedCat || undefined)
+    setAlert({ type: 'success', msg: 'Photo removed.' })
+    if (selectedCat) await loadPhotos(selectedCat)
+    await loadCats()
+  }
+
+  const currentCatObj = categories.find(c => c.id === selectedCat)
 
   return (
     <>
       {uploadProgress.active && (
         <ShaktiLoader
-          title="Uploading Gallery Photos"
+          title="Uploading Category Photos"
           status={`Uploaded ${uploadProgress.current} of ${uploadProgress.total} photos (${uploadProgress.percent}%)`}
           percent={uploadProgress.percent}
           filename={uploadProgress.currentFile}
@@ -701,98 +770,168 @@ function GallerySection() {
       )}
       {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
 
+      <div style={{ background: 'rgba(201,169,110,0.06)', border: '1px solid rgba(201,169,110,0.2)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.5rem', display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <GoogleIcon name="auto_awesome" size={24} style={{ color: '#C9A96E', flexShrink: 0 }} />
+        <div style={{ fontSize: '0.86rem', color: '#b8a882', lineHeight: 1.5 }}>
+          <strong>Dynamic Website Image Engine:</strong> Photos uploaded to these categories are automatically randomized and rendered across the website (Home page, Mission Mardini, Shakti Bhava, Shakti Varta, Social Work, Profile &amp; Dome Gallery), replacing generic stock photos with your authentic field documentation!
+        </div>
+      </div>
+
       <div className={s.sectionHeader}>
-        <span className={s.sectionTitle}>Categories</span>
-        <button className={s.btnPrimary} onClick={() => setShowCatModal(true)}>+ New Category</button>
+        <div>
+          <span className={s.sectionTitle}>Photo Categories</span>
+          <p style={{ margin: '0.25rem 0 0', fontSize: '0.82rem', color: '#888' }}>Select a category to view or upload corresponding photos</p>
+        </div>
+        <button className={s.btnPrimary} onClick={() => setShowCatModal(true)}>
+          <GoogleIcon name="add" size={18} /> New Category
+        </button>
       </div>
 
       {/* Category chips */}
-      <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        {categories.map(cat => (
-          <div key={cat.id} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-            <button
-              className={`${s.btnSecondary} ${selectedCat === cat.id ? s.navItemActive : ''}`}
-              style={{ borderRadius: '9999px' }}
-              onClick={() => setSelectedCat(cat.id)}
-            >
-              <GoogleIcon name="folder" size={16} /> {cat.name}
-            </button>
-            <button className={s.btnDanger} style={{ borderRadius: '9999px', padding: '0.4rem 0.6rem' }} onClick={() => deleteCategory(cat.id)}>✕</button>
-          </div>
-        ))}
-        {categories.length === 0 && (
-          <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.88rem' }}>No categories yet. Create one first.</span>
-        )}
+      <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
+        {categories.map(cat => {
+          const count = allPhotosCount[cat.id] || 0
+          const isSelected = selectedCat === cat.id
+          return (
+            <div key={cat.id} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', background: isSelected ? 'rgba(220,20,60,0.15)' : 'rgba(255,255,255,0.04)', border: `1px solid ${isSelected ? '#DC143C' : 'rgba(255,255,255,0.1)'}`, borderRadius: 9999, padding: '0.2rem 0.4rem 0.2rem 0.75rem' }}>
+              <button
+                style={{ background: 'transparent', border: 'none', color: isSelected ? '#FFFFFF' : '#DDD', fontSize: '0.85rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.25rem 0' }}
+                onClick={() => setSelectedCat(cat.id)}
+              >
+                <GoogleIcon name="folder" size={16} style={{ color: isSelected ? '#DC143C' : '#C9A96E' }} />
+                <span>{cat.name}</span>
+                <span style={{ fontSize: '0.72rem', background: isSelected ? '#DC143C' : 'rgba(255,255,255,0.1)', color: '#fff', padding: '0.1rem 0.45rem', borderRadius: 10, fontWeight: 700 }}>
+                  {count}
+                </span>
+              </button>
+              <button
+                title="Delete category"
+                style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.3)', cursor: 'pointer', padding: '0.2rem 0.4rem', borderRadius: 999, display: 'flex', alignItems: 'center' }}
+                onClick={() => handleDeleteCategory(cat.id, cat.name)}
+              >
+                <GoogleIcon name="close" size={13} />
+              </button>
+            </div>
+          )
+        })}
       </div>
 
-      {/* Upload zone */}
+      {/* Active Category Header & Upload Zone */}
       {selectedCat && (
-        <>
-          <div
-            className={s.uploadZone}
-            style={{ marginBottom: '1.5rem' }}
-            onClick={() => fileRef.current?.click()}
-          >
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              multiple
-              style={{ display: 'none' }}
-              onChange={e => e.target.files && uploadPhotos(e.target.files)}
-            />
-            <div className={s.uploadIcon}><GoogleIcon name="add_a_photo" size={28} /></div>
-            <div className={s.uploadText}>{uploading ? 'Uploading photos...' : 'Click to upload photos'}</div>
-            <div className={s.uploadHint}>JPG, PNG, WEBP — multiple files supported</div>
+        <div style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', color: '#F9FAFB', fontFamily: 'Cinzel, Georgia, serif', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <GoogleIcon name="photo_library" size={20} style={{ color: '#DC143C' }} />
+                {currentCatObj?.name}
+              </h3>
+              {currentCatObj?.description && (
+                <p style={{ margin: '0.35rem 0 0', fontSize: '0.82rem', color: '#9CA3AF' }}>{currentCatObj.description}</p>
+              )}
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button className={s.btnPrimary} onClick={() => fileRef.current?.click()} disabled={uploading}>
+                <GoogleIcon name="add_a_photo" size={18} /> Upload Images
+              </button>
+            </div>
           </div>
 
+          {/* Hidden File Input */}
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: 'none' }}
+            onChange={e => e.target.files && uploadPhotos(e.target.files)}
+          />
+
+          {/* Drag & Drop / Click Zone */}
+          <div
+            className={s.uploadZone}
+            style={{ marginBottom: '1.5rem', cursor: 'pointer' }}
+            onClick={() => fileRef.current?.click()}
+          >
+            <div className={s.uploadIcon}><GoogleIcon name="cloud_upload" size={32} style={{ color: '#DC143C' }} /></div>
+            <div className={s.uploadText}>{uploading ? 'Processing & Compressing...' : 'Click to Upload Photos from Computer'}</div>
+            <div className={s.uploadHint}>Automatically converted &amp; compressed to high-speed WebP format</div>
+          </div>
+
+          {/* Quick Direct URL Form */}
+          <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+            <input
+              className={s.input}
+              placeholder="Or paste external image URL directly..."
+              value={directUrl}
+              onChange={e => setDirectUrl(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleAddDirectUrl()}
+            />
+            <button className={s.btnSecondary} onClick={handleAddDirectUrl} disabled={!directUrl.trim()}>
+              <GoogleIcon name="link" size={16} /> Add URL
+            </button>
+          </div>
+
+          {/* Photos Grid */}
           <div className={s.sectionHeader}>
             <span className={s.sectionTitle}>
-              Photos in "{categories.find(c => c.id === selectedCat)?.name}" ({photos.length})
+              Active Photos in this Category ({photos.length})
             </span>
           </div>
 
           <div className={s.photoGrid}>
             {photos.map(p => (
-              <div key={p.id} className={s.photoCard}>
-                <img src={p.url} alt={p.caption} loading="lazy" />
-                <div className={s.photoOverlay}>
-                  <button className={s.btnDanger} style={{ borderRadius: '50%', width: 36, height: 36, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={() => deletePhoto(p.id)}>✕</button>
+              <div key={p.id} className={s.photoCard} style={{ position: 'relative' }}>
+                <img src={p.url} alt={p.caption || 'Gallery photo'} loading="lazy" style={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 8 }} />
+                {p.caption && (
+                  <div style={{ padding: '0.4rem 0.5rem', fontSize: '0.75rem', color: '#DDD', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {p.caption}
+                  </div>
+                )}
+                <div className={s.photoOverlay} style={{ position: 'absolute', top: 6, right: 6 }}>
+                  <button
+                    className={s.btnDanger}
+                    style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    onClick={() => handleDeletePhoto(p.id)}
+                    title="Remove Photo"
+                  >
+                    <GoogleIcon name="delete" size={16} />
+                  </button>
                 </div>
               </div>
             ))}
+
             {photos.length === 0 && (
               <div style={{ gridColumn: '1/-1' }} className={s.empty}>
                 <div className={s.emptyIcon}>
-                  <GoogleIcon name="photo_library" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
+                  <GoogleIcon name="photo_camera" size={44} style={{ color: 'rgba(255,255,255,0.2)' }} />
                 </div>
-                <div className={s.emptyText}>No photos in this category</div>
-                <div className={s.emptyHint}>Upload photos using the zone above</div>
+                <div className={s.emptyText}>No photos uploaded in "{currentCatObj?.name}" yet</div>
+                <div className={s.emptyHint}>Upload your authentic camp or event photos to show them dynamically on the website</div>
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {/* Category Modal */}
       {showCatModal && (
         <div className={s.overlay} data-lenis-prevent="true" onClick={e => e.target === e.currentTarget && setShowCatModal(false)}>
           <div className={s.modal} data-lenis-prevent="true" style={{ maxWidth: 480 }}>
-            <h2 className={s.modalTitle}>New Gallery Category</h2>
+            <h2 className={s.modalTitle}>New Photo Category</h2>
             <button className={s.modalClose} onClick={() => setShowCatModal(false)}><GoogleIcon name="close" size={18} /></button>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div className={s.field}>
-                <label className={s.label}>Category Name</label>
-                <input className={s.input} value={catForm.name} onChange={e => setCatForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Aaryaveera Camp 2024" />
+                <label className={s.label}>Category Name *</label>
+                <input className={s.input} value={catForm.name} onChange={e => setCatForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. Lathi-Kaushal Camps 2024" />
               </div>
               <div className={s.field}>
                 <label className={s.label}>Description (optional)</label>
-                <textarea className={s.textarea} style={{ minHeight: 80 }} value={catForm.description} onChange={e => setCatForm(f => ({ ...f, description: e.target.value }))} placeholder="Brief description..." />
+                <textarea className={s.textarea} style={{ minHeight: 80 }} value={catForm.description} onChange={e => setCatForm(f => ({ ...f, description: e.target.value }))} placeholder="Where and when will this category photos appear?" />
               </div>
             </div>
             <div className={s.modalActions}>
               <button className={s.btnSecondary} onClick={() => setShowCatModal(false)}>Cancel</button>
-              <button className={s.btnPrimary} onClick={createCategory}>Create Category</button>
+              <button className={s.btnPrimary} onClick={createCategory} disabled={!catForm.name.trim()}>Create Category</button>
             </div>
           </div>
         </div>

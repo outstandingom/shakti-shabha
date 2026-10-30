@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getFounderData, FounderProfileData } from '../../data/founderData'
+import { useCategoryPhoto } from '../../data/galleryStore'
 import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import s from './Profile.module.css'
 
@@ -12,6 +13,14 @@ export default function Profile() {
   const secRef   = useRef<HTMLElement>(null)
   const photoRef = useRef<HTMLDivElement>(null)
   const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
+  const campPhoto = useCategoryPhoto(
+    ['mardini', 'camp', 'combat', 'martial'],
+    'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop'
+  )
+  const seminarPhoto = useCategoryPhoto(
+    ['shakti-varta', 'seminar', 'discourse', 'shakti-bhava'],
+    'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop'
+  )
 
   useEffect(() => {
     const handleUpdate = () => {
@@ -155,14 +164,14 @@ export default function Profile() {
           <div className={s.rightBottom}>
             <div data-p="subimg" className={s.subImg}>
               <img 
-                src="https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop" 
-                alt="Mission Mardini Camp" 
+                src={campPhoto.url} 
+                alt={campPhoto.caption || "Mission Mardini Camp"} 
               />
             </div>
             <div data-p="subimg" className={s.subImg}>
               <img 
-                src="https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop" 
-                alt="Youth Awakening Seminar" 
+                src={seminarPhoto.url} 
+                alt={seminarPhoto.caption || "Youth Awakening Seminar"} 
               />
             </div>
           </div>

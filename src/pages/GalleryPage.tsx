@@ -2,6 +2,14 @@ import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { supabase } from '../lib/supabase'
+import {
+  fetchCategories,
+  fetchAllPhotos,
+  getStoredCategories,
+  getStoredPhotos,
+  GALLERY_UPDATE_EVENT,
+  GalleryCategoryItem
+} from '../data/galleryStore'
 import DomeGallery, { DEFAULT_SHAKTI_IMAGES, type DomeGalleryImage } from '../components/DomeGallery/DomeGallery'
 import gp from './GalleryPage.module.css'
 
@@ -60,28 +68,41 @@ const ALL_IMAGES = [...DEFAULT_SHAKTI_IMAGES, ...EXTRA_GALLERY_IMAGES]
 
 export default function GalleryPage() {
   const [activeCategory, setActiveCategory] = useState<string>('ALL')
+  const [categories, setCategories] = useState<GalleryCategoryItem[]>([])
   const [dbImages, setDbImages] = useState<DomeGalleryImage[]>([])
 
-  useEffect(() => {
+  const loadMedia = () => {
     Promise.all([
-      supabase.from('gallery_photos').select('*').order('created_at', { ascending: false }),
-      supabase.from('gallery_categories').select('*'),
-    ]).then(([photosRes, catsRes]) => {
-      const photos = photosRes.data || []
-      const cats = catsRes.data || []
+      fetchAllPhotos(),
+      fetchCategories()
+    ]).then(([photos, cats]) => {
+      setCategories(cats)
       const catMap = new Map<string, string>()
-      cats.forEach((c: { id: string; name: string }) => catMap.set(c.id, c.name.toUpperCase()))
+      cats.forEach(c => catMap.set(c.id, c.name.toUpperCase()))
 
       if (photos.length > 0) {
-        const mapped: DomeGalleryImage[] = photos.map((p: { url: string; caption?: string; category_id?: string }) => ({
+        // Shuffle photos slightly so each visit is dynamic and fresh
+        const shuffled = [...photos].sort(() => Math.random() - 0.5)
+        const mapped: DomeGalleryImage[] = shuffled.map(p => ({
           src: p.url,
-          alt: p.caption || 'Shakti Sabha Gallery Photo',
+          alt: p.caption || 'Shakti Sabha Field Documentation',
           tag: p.category_id ? (catMap.get(p.category_id) || 'COMMUNITY') : 'COMMUNITY',
-          desc: p.caption || '',
+          desc: p.caption || 'Authentic on-ground field photograph',
         }))
         setDbImages(mapped)
       }
     }).catch(err => console.warn('Gallery photos fetch error:', err))
+  }
+
+  useEffect(() => {
+    loadMedia()
+    window.addEventListener(GALLERY_UPDATE_EVENT, loadMedia)
+    window.addEventListener('storage', loadMedia)
+
+    return () => {
+      window.removeEventListener(GALLERY_UPDATE_EVENT, loadMedia)
+      window.removeEventListener('storage', loadMedia)
+    }
   }, [])
 
   const allGalleryImages = useMemo(() => {
@@ -123,23 +144,27 @@ export default function GalleryPage() {
           traditional Lathi-Kaushal combat, survivor circles, and village self-defense across Maharashtra.
         </p>
 
-        {/* Filter Category Tabs */}
+        {/* Dynamic Filter Category Tabs */}
         <div className={gp.filterRow}>
-          {[
-            { id: 'ALL', label: 'All Media Vault' },
-            { id: 'LATHI', label: 'Lathi & Sword' },
-            { id: 'AARYAVEERA', label: 'Aaryaveera Camps' },
-            { id: 'SHAKTI BHAVA', label: 'Survivor Circles' },
-            { id: 'SCHOOL', label: 'School Outreach' },
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveCategory(tab.id)}
-              className={`${gp.filterBtn} ${activeCategory === tab.id ? gp.filterBtnActive : ''}`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          <button
+            onClick={() => setActiveCategory('ALL')}
+            className={`${gp.filterBtn} ${activeCategory === 'ALL' ? gp.filterBtnActive : ''}`}
+          >
+            All Media Vault ({allGalleryImages.length})
+          </button>
+          {categories.map(cat => {
+            const tag = cat.name.toUpperCase()
+            const count = allGalleryImages.filter(img => img.tag?.toLowerCase().includes(cat.name.toLowerCase()) || img.tag?.toLowerCase().includes(cat.id.toLowerCase())).length
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.name)}
+                className={`${gp.filterBtn} ${activeCategory === cat.name ? gp.filterBtnActive : ''}`}
+              >
+                {cat.name} {count > 0 ? `(${count})` : ''}
+              </button>
+            )
+          })}
         </div>
       </div>
 

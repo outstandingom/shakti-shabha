@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
+import CategoryPhotoStrip from '../components/CategoryPhotoStrip/CategoryPhotoStrip'
 import v from './ShaktiVartaPage.module.css'
 
 export default function ShaktiVartaPage() {
@@ -167,6 +168,15 @@ export default function ShaktiVartaPage() {
             </ul>
           </div>
         </div>
+
+        
+        {/* Category Photo Vault */}
+        <CategoryPhotoStrip
+          categoryKeywords={['shakti-varta', 'seminar', 'discourse', 'research']}
+          title="Shakti Varta Intellectual Discourses & Seminars"
+          subtitle="Randomized archival photography from public symposiums, academic ignite forums, and research circles loaded dynamically from the database."
+          accentColor="#C9A96E"
+        />
 
         {/* ── BOTTOM CTA ────────────────────────────────────────────── */}
         <div className={v.ctaCard}>

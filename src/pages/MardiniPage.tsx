@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
+import CategoryPhotoStrip from '../components/CategoryPhotoStrip/CategoryPhotoStrip'
 import m from './MardiniPage.module.css'
 
 export default function MardiniPage() {
@@ -192,6 +193,15 @@ export default function MardiniPage() {
             </ul>
           </div>
         </div>
+
+        
+        {/* Category Photo Vault */}
+        <CategoryPhotoStrip
+          categoryKeywords={['mardini', 'lathi', 'combat', 'martial']}
+          title="Mission Mardini Field & Training Visuals"
+          subtitle="Randomized authentic documentation of lathi-kaushal staff drills, biomechanical combat, and residential warrior camps fetched directly from the database."
+          accentColor="#DC143C"
+        />
 
         {/* ── BOTTOM CTA ────────────────────────────────────────────── */}
         <div className={m.ctaCard}>

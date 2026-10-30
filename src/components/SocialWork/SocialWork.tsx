@@ -1,4 +1,11 @@
-import { useEffect, useReducer, useRef } from 'react'
+import { useEffect, useReducer, useRef, useState } from 'react'
+import {
+  getStoredPhotos,
+  getStoredCategories,
+  getRandomCategoryPhoto,
+  fetchAllPhotos,
+  GALLERY_UPDATE_EVENT
+} from '../../data/galleryStore'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -18,6 +25,14 @@ interface SlideData {
   image: string
 }
 
+
+const SLIDE_CATEGORY_KEYWORDS: string[][] = [
+  ['mardini', 'lathi', 'defense', 'combat'],
+  ['shakti-bhava', 'consciousness', 'survivor', 'healing'],
+  ['shakti-varta', 'seminar', 'discourse', 'research'],
+  ['mardini', 'sword', 'martial', 'aaryaveera'],
+  ['community', 'tribal', 'outreach', 'youth']
+]
 const SLIDES: SlideData[] = [
   {
     title: 'Village Defense Camp',
@@ -204,7 +219,38 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
 
 export default function SocialWork() {
   const [state, dispatch] = useReducer(slidesReducer, initialState)
+  const [slides, setSlides] = useState<SlideData[]>(SLIDES)
   const secRef = useRef<HTMLElement>(null)
+
+  /* Dynamically load & randomize photos according to categories from Admin Dashboard / DB */
+  useEffect(() => {
+    const randomizeCategoryPhotos = () => {
+      const allPhotos = getStoredPhotos()
+      const categories = getStoredCategories()
+
+      setSlides(prev =>
+        SLIDES.map((slide, idx) => {
+          const kw = SLIDE_CATEGORY_KEYWORDS[idx] || ['all']
+          const randomPhoto = getRandomCategoryPhoto(kw, slide.image, allPhotos, categories)
+          return {
+            ...slide,
+            image: randomPhoto.url
+          }
+        })
+      )
+    }
+
+    randomizeCategoryPhotos()
+    fetchAllPhotos().then(() => randomizeCategoryPhotos()).catch(() => {})
+
+    window.addEventListener(GALLERY_UPDATE_EVENT, randomizeCategoryPhotos)
+    window.addEventListener('storage', randomizeCategoryPhotos)
+
+    return () => {
+      window.removeEventListener(GALLERY_UPDATE_EVENT, randomizeCategoryPhotos)
+      window.removeEventListener('storage', randomizeCategoryPhotos)
+    }
+  }, [])
 
   /* Intro GSAP scroll animations */
   useEffect(() => {
