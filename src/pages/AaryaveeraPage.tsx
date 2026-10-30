@@ -9,44 +9,44 @@ import p from './AaryaveeraPage.module.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const PLATFORM_CARDS = [
-  { label: 'Mission Mardini Camps', desc: '7–10 days intensive residential self-defense and martial readiness camps organized across institutional and rural corridors.' },
-  { label: 'Warrior Certification', desc: 'Physical and cognitive warrior certificate verifying empty-hand lethality, lathi-kaushal, and legal self-defense literacy.' },
-  { label: 'Course LMS Curriculum', desc: 'Asymmetric combat video modules, situational radar drills, and trauma-de-escalation coursework.' },
-  { label: 'Event Series & Seminars', desc: 'Keynotes, institutional assemblies, and student awakening sessions reaching 25,000+ youth.' },
+  { label: 'Mission Mardini Camps', desc: '7–10 days intensive residential self-defense and martial readiness camps organized across institutional, rural, and tribal corridors.' },
+  { label: 'Dual-Shield Doctrine', desc: 'Cognitive de-escalation, threat recognition, and managing the freeze response combined with bio-mechanical combat.' },
+  { label: 'Lathi-Kaushal & Karate', desc: 'Traditional staff training, martial arts discipline, and practical street-safety empty-hand defense.' },
+  { label: 'Event Series & Seminars', desc: 'Keynotes, institutional assemblies, and consciousness-building sessions reaching 25,000+ youth across India.' },
   { label: 'Aaryaveera Dialogues', desc: 'Civilizational podcast exploring Kshatra-Dharma, non-verbal psychology, and uncorrupted Vedic history.' },
-  { label: 'Warrior Merchandise', desc: 'Custom bamboo lathi staffs, combat training gear, and civilizational identity apparel.' },
+  { label: 'Frontline Safeguarding', desc: 'Vulnerability interception at transit nodes, pre-FIR family mediations, and somatic trauma de-escalation.' },
 ]
 
 const PILLARS = [
   {
     name: 'MARDINI',
     dev: 'मर्दिनी',
-    tag: 'Revolution & Combat',
+    tag: 'Physical Sovereignty & Tactical Preparedness',
     accent: '#DC143C',
     accentBg: 'rgba(220,20,60,0.08)',
     icon: 'swords',
-    desc: 'The fire that ignites tactical sovereignty. Spearheaded by Harshita Mankar (Black Belt in Karate), Mission Mardini builds physical and cognitive warriors through asymmetric street combat, traditional Lathi-Kaushal, and blade defense.',
-    items: ['2,000+ young women weaponized (armed & unarmed)', '7–10 days residential warrior camps with partner groups', 'Traditional Lathi-Kaushal, Sword parries & CQC mechanics'],
+    desc: 'Led by Aaryaveera (Black Belt in Karate), Mission Mardini challenges passive self-defense by developing mental composure, situational awareness, Karate empty-hand defense, and Lathi-Kaushal.',
+    items: ['2,000+ girls trained in armed and unarmed defense', '7–10 days intensive residential warrior camps', 'Tribal and rural outreach beyond urban centers'],
   },
   {
     name: 'SHAKTI BHAVA',
     dev: 'शक्ति भव',
-    tag: 'Psychological Sovereignty',
+    tag: 'Cognitive Awakening & Human Consciousness',
     accent: '#3D5A45',
     accentBg: 'rgba(61,90,69,0.08)',
     icon: 'spa',
-    desc: 'The shield of psychological fortitude. Somatic PTSD stabilization, non-verbal behavioral profiling, and confidential peer intervention. Directly executing frontline rescues of minors and neutralizing predatory grooming.',
-    items: ['Tactical rescue & safe reintegration of 13 minors', '250+ grooming & coercive exploitation cases handled', 'Non-verbal profiling & somatic PTSD stabilization'],
+    desc: 'Youth-awareness and consciousness initiative cultivating independent thinkers who examine narratives through reason. Direct crisis mediator handling complex vulnerability and family reconciliations.',
+    items: ['500+ institutional seminars reaching 25,000+ students', '13 minors safely reintegrated under statutory oversight', '50+ critical family mediations & somatic grounding'],
   },
   {
     name: 'SHAKTI VARTA',
     dev: 'शक्ति वार्ता',
-    tag: 'Intellectual Armor',
+    tag: 'Intellectual Sovereignty & Critical Inquiry',
     accent: '#C9A96E',
     accentBg: 'rgba(201,169,110,0.08)',
     icon: 'menu_book',
-    desc: 'The intellectual vanguard. Grounded in Vedic epistemology, archival forensics, and deconstructing western reductionist narratives. Equipping youth with the philosophical armor of Kshatra-Dharma.',
-    items: ['500+ keynotes & seminars reaching 25,000+ students', 'Shakti Varta Fellowship for classical texts & Vedic sciences', 'Independent archival research on forgotten Indian women warriors'],
+    desc: 'Research, mentorship, and public discourse platform equipping youth with research literacy, primary textual inquiry (Vedas, Gita, Satyarth Prakash), and media deconstruction tools.',
+    items: ['Vedic Digital Fellowship for classical texts & philosophy', 'Critical media analysis & algorithm deconstruction', 'Archival research on forgotten Indian women warriors'],
   },
 ]
 
@@ -61,8 +61,8 @@ const BRAND_ASSETS = [
 
 const FEATURES = [
   { icon: 'shield', title: 'The Dual-Shield Doctrine', text: 'Mental resilience before physical strike. Liberating the mind from fear and replacing the freeze-response with tactical awareness.' },
-  { icon: 'local_fire_department', title: 'Character & Kshatra-Dharma', text: 'Sovereign, fearless, dharmic. Training young girls so their hands, elbows, and cognitive agility function as an organic weapon system.' },
-  { icon: 'podcasts', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, geopolitical subversion, and what it means to be sovereign in contemporary India.' },
+  { icon: 'local_fire_department', title: 'Character & Kshatra-Dharma', text: 'The responsibility to protect, the courage to confront injustice, the discipline to exercise power responsibly, and the wisdom to distinguish strength from aggression.' },
+  { icon: 'podcasts', title: 'Civilizational Dialogue', text: 'Rigorous intellectual forums examining Vedic philosophy, narrative deconstruction, and sovereign human dignity.' },
 ]
 
 export default function AaryaveeraPage() {
@@ -110,13 +110,15 @@ export default function AaryaveeraPage() {
       <div className={p.hero} ref={heroRef}>
         <div className={p.heroInner}>
           <Link to="/" className={s.back}>← Back to Home</Link>
-          <span className={p.eyebrow}>Signature Initiative · Mission Mardini</span>
+          <span className={p.eyebrow}>FOUNDER &amp; DIRECTOR · SHAKTI SABHA</span>
           <div className={p.heroTitle}>
-            <span className={p.heroEn}>AARYAVEERA</span>
-            <span className={p.heroDev}>आर्यवीरा</span>
+            <h1 style={{ margin: 0, display: 'inline' }}>
+              <span className={p.heroEn}>AARYAVEERA</span>
+              <span className={p.heroDev}>आर्यवीरा</span>
+            </h1>
           </div>
-          <p className={p.heroSub}>The Warrior Spirit & Tactical Sovereignty</p>
-          <p className={p.heroMotto}>"Shakti Se Shanti — From Strength, Peace"</p>
+          <p className={p.heroSub}>Harshita Mankar · Civilizational Strategist | Tactical Combat Instructor | Non-Verbal Behaviour Profiler</p>
+          <p className={p.heroMotto}>"We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically capable guardians of Indian civilization."</p>
 
           {/* Animated Flame SVG */}
           <div className={p.flameCont} aria-hidden="true">
@@ -151,23 +153,24 @@ export default function AaryaveeraPage() {
             <span className={p.sectionEyebrow}>The Doctrine</span>
             <h2 className={p.sectionH2}>What is Aaryaveera?</h2>
             <p className={p.bodyText}>
-              Aaryaveera is more than a brand — it is a civilizational manifestation. Engineered by <strong>Harshita Mankar</strong> (Founder & Director, Shakti Sabha), Aaryaveera unites the <strong>flame of tactical revolution</strong> (Mission Mardini) with the <strong>lotus of psychological sovereignty</strong> (Shakti Bhava).
+              Aaryaveera is more than a brand — it is a civilizational manifestation. Engineered by <strong>Harshita Mankar</strong> (Founder &amp; Director, Shakti Sabha), Aaryaveera unites the <strong>flame of tactical revolution</strong> (Mission Mardini) with the <strong>lotus of psychological sovereignty</strong> (Shakti Bhava) and intellectual armor (Shakti Varta).
             </p>
             <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              The name itself carries civilizational weight: <em>Aarya</em> — noble, cultured, dharmic; <em>Veera</em> — brave, courageous, tactically formidable. Together, they describe the highest aspiration: a sovereign sentinel who is both intellectually fortified and physically invincible.
+              The name itself carries civilizational weight: <em>Aarya</em> — noble, cultured, dharmic; <em>Veera</em> — brave, courageous, tactically formidable. Together, they describe the highest aspiration: a sovereign guardian who is both intellectually fortified and physically capable.
             </p>
             <p className={p.bodyText} style={{ marginTop: '1rem' }}>
-              From 7–10 days intensive residential camps across high schools and rural settlements to institutional white papers and digital fellowships, Aaryaveera creates a disciplined, coherent identity that rejects victimhood and restores Kshatra-Dharma.
+              From 7–10 days intensive residential camps across high schools, colleges, and rural settlements to institutional white papers and digital fellowships, Aaryaveera creates a disciplined, coherent identity that rejects victimhood and restores Kshatra-Dharma.
             </p>
           </div>
+
           <div className={p.whatRight} id="what-right">
             {FEATURES.map((f, i) => (
               <div key={i} className={p.featureBox}>
-                <div className={p.featureIcon}>
-                  <GoogleIcon name={f.icon} size={28} style={{ color: '#DC143C' }} />
+                <div className={p.featureIconWrap}>
+                  <GoogleIcon name={f.icon} size={28} className={p.featureIcon} />
                 </div>
                 <div>
-                  <h4 className={p.featureTitle}>{f.title}</h4>
+                  <h3 className={p.featureTitle}>{f.title}</h3>
                   <p className={p.featureText}>{f.text}</p>
                 </div>
               </div>
@@ -177,44 +180,43 @@ export default function AaryaveeraPage() {
       </section>
 
       {/* ── PLATFORM INTEGRATION ────────────────────── */}
-      <section className={p.platformSection}>
+      <section className={p.platformSection} ref={platformRef}>
         <div className={p.platformInner}>
-          <span className={p.sectionEyebrow} style={{ color: '#C9A96E' }}>Brand & Operational Surfaces</span>
-          <h2 className={p.sectionH2Dark}>Platform Integration</h2>
-          <p className={p.platformDesc}>The Aaryaveera identity lives across every operational surface of Shakti Sabha's ecosystem.</p>
-        </div>
-        <div className={p.platformScroll} ref={platformRef}>
-          {PLATFORM_CARDS.map((c, i) => (
-            <div key={i} className={p.platformCard}>
-              <span className={p.platformNum}>0{i + 1}</span>
-              <h4 className={p.platformCardTitle}>{c.label}</h4>
-              <p className={p.platformCardDesc}>{c.desc}</p>
-            </div>
-          ))}
+          <span className={p.sectionEyebrow}>Operational Footprint</span>
+          <h2 className={p.sectionH2}>Core Operational Dimensions</h2>
+          <div className={p.platformGrid}>
+            {PLATFORM_CARDS.map((card, i) => (
+              <div key={i} className={p.platformCard}>
+                <span className={p.platformNum}>{String(i + 1).padStart(2, '0')}</span>
+                <h3 className={p.platformTitle}>{card.label}</h3>
+                <p className={p.platformDesc}>{card.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* ── THREE PILLARS ───────────────────────────── */}
       <section className={p.pillarsSection} ref={pillarsRef}>
         <div className={p.pillarsInner}>
-          <span className={p.sectionEyebrow}>The Architecture</span>
-          <h2 className={p.sectionH2Dark}>The Three Pillars</h2>
+          <span className={p.sectionEyebrow}>Architecture</span>
+          <h2 className={p.sectionH2}>Our Three Streams</h2>
           <div className={p.pillarsGrid}>
-            {PILLARS.map((pl) => (
-              <div key={pl.name} className={p.pillarCard} style={{ '--pillar-accent': pl.accent, '--pillar-bg': pl.accentBg } as React.CSSProperties}>
-                <div className={p.pillarTop}>
-                  <div className={p.pillarIcon}>
-                    <GoogleIcon name={pl.icon} size={28} style={{ color: pl.accent }} />
-                  </div>
-                  <span className={p.pillarTag} style={{ color: pl.accent, background: pl.accentBg, border: `1px solid ${pl.accent}44` }}>{pl.tag}</span>
+            {PILLARS.map((pil) => (
+              <div key={pil.name} className={p.pillarCard} style={{ borderColor: pil.accent }}>
+                <div className={p.pillarBadge} style={{ background: pil.accentBg, color: pil.accent }}>
+                  {pil.tag}
                 </div>
-                <h3 className={p.pillarName}>{pl.name}</h3>
-                <span className={p.pillarDev}>{pl.dev}</span>
-                <p className={p.pillarDesc}>{pl.desc}</p>
+                <div className={p.pillarHeader}>
+                  <GoogleIcon name={pil.icon} size={24} style={{ color: pil.accent }} />
+                  <span className={p.pillarName}>{pil.name}</span>
+                  <span className={p.pillarDev}>{pil.dev}</span>
+                </div>
+                <p className={p.pillarDesc}>{pil.desc}</p>
                 <ul className={p.pillarList}>
-                  {pl.items.map((item, idx) => (
-                    <li key={idx} className={p.pillarItem}>
-                      <span className={p.pillarBullet} style={{ background: pl.accent }} />
+                  {pil.items.map((item, idx) => (
+                    <li key={idx}>
+                      <span className={p.checkMark} style={{ color: pil.accent }}>✓</span>
                       {item}
                     </li>
                   ))}
@@ -228,36 +230,36 @@ export default function AaryaveeraPage() {
       {/* ── BRAND ASSETS ────────────────────────────── */}
       <section className={p.assetsSection} ref={assetsRef}>
         <div className={p.assetsInner}>
-          <span className={p.sectionEyebrow} style={{ color: '#C9A96E' }}>Deliverables</span>
-          <h2 className={p.sectionH2Dark}>Brand Assets & Deliverables</h2>
-          <p className={p.assetsDesc}>Every touchpoint of the Aaryaveera experience is rigorously crafted, consistent, and mission-ready.</p>
-          <div className={p.assetsList}>
-            {BRAND_ASSETS.map((a, i) => (
+          <span className={p.sectionEyebrow}>Identity System</span>
+          <h2 className={p.sectionH2}>Aaryaveera Brand Assets</h2>
+          <div className={p.assetTable}>
+            {BRAND_ASSETS.map((row, i) => (
               <div key={i} className={p.assetRow}>
-                <span className={p.assetCheck}>✓</span>
-                <div>
-                  <span className={p.assetItem}>{a.item}</span>
-                  <span className={p.assetSpec}>{a.spec}</span>
-                </div>
+                <span className={p.assetItem}>{row.item}</span>
+                <span className={p.assetSpec}>{row.spec}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA STRIP ───────────────────────────────── */}
-      <div className={p.ctaStrip} ref={ctaRef}>
+      {/* ── CTA ─────────────────────────────────────── */}
+      <section className={p.ctaSection} ref={ctaRef}>
         <div className={p.ctaInner}>
-          <div>
-            <h3 className={p.ctaTitle}>Begin the Warrior Journey</h3>
-            <p className={p.ctaSub}>Join thousands of young women who have claimed their physical and cognitive sovereignty.</p>
-          </div>
+          <h2 className={p.ctaHeading}>Step Into Sovereignty</h2>
+          <p className={p.ctaSub}>
+            Whether attending a 7–10 day Mardini camp or joining our Vedic Digital Fellowship — become a guardian of civilization.
+          </p>
           <div className={p.ctaBtns}>
-            <Link to="/courses" className={s.goldBtn}>Enroll in Aaryaveera Course</Link>
-            <Link to="/events" className={s.goldOutlineBtn}>Attend Mission Mardini Camp</Link>
+            <Link to="/mardini" className={p.ctaPrimary}>
+              Explore Mission Mardini →
+            </Link>
+            <Link to="/about" className={p.ctaOutline}>
+              Read Founder Dossier
+            </Link>
           </div>
         </div>
-      </div>
+      </section>
     </main>
   )
 }

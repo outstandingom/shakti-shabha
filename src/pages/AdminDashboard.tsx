@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase, Article, GalleryCategory, GalleryPhoto, Course, CounsellingRequest, Testimonial } from '../lib/supabase'
 import { DEFAULT_TESTIMONIALS } from '../components/Testimonials/testimonialsData'
+import { getFounderData, saveFounderData, FounderProfileData, DEFAULT_FOUNDER_DATA } from '../data/founderData'
 import { useAuth } from '../lib/AuthContext'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './AdminDashboard.module.css'
@@ -57,7 +58,7 @@ function ShaktiLoader({ title, status, percent, filename }: LoaderProps) {
   )
 }
 
-type Section = 'overview' | 'articles' | 'gallery' | 'courses' | 'counselling' | 'testimonials'
+type Section = 'overview' | 'founder' | 'articles' | 'gallery' | 'courses' | 'testimonials' | 'counselling'
 
 export default function AdminDashboard() {
   const { user, adminProfile, signOut, isAdmin, isLoading } = useAuth()
@@ -78,6 +79,7 @@ export default function AdminDashboard() {
 
   const navItems: { key: Section; icon: string; label: string }[] = [
     { key: 'overview',    icon: 'analytics', label: 'Overview' },
+    { key: 'founder',     icon: 'person', label: 'Founder & Info' },
     { key: 'articles',   icon: 'article', label: 'Articles' },
     { key: 'gallery',    icon: 'photo_library', label: 'Gallery' },
     { key: 'courses',    icon: 'school', label: 'Courses' },
@@ -87,6 +89,7 @@ export default function AdminDashboard() {
 
   const sectionTitles: Record<Section, string> = {
     overview: 'Dashboard Overview',
+    founder: 'Founder Dossier & Core Philosophy CMS',
     articles: 'Article Management',
     gallery: 'Gallery Management',
     courses: 'Course Management',
@@ -165,6 +168,7 @@ export default function AdminDashboard() {
 
         <div className={s.content}>
           {section === 'overview'    && <OverviewSection />}
+          {section === 'founder'     && <FounderSection />}
           {section === 'articles'   && <ArticlesSection />}
           {section === 'gallery'    && <GallerySection />}
           {section === 'courses'    && <CoursesSection />}
@@ -1670,6 +1674,211 @@ function TestimonialsSection() {
           </div>
         </div>
       )}
+    </>
+  )
+}
+
+/* ============================================================
+   FOUNDER & CIVILIZATIONAL DOSSIER SECTION
+   ============================================================ */
+function FounderSection() {
+  const [data, setData] = useState<FounderProfileData>(getFounderData())
+  const [alert, setAlert] = useState<{ type: 'error' | 'success'; msg: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const handleUploadPhoto = async (file: File) => {
+    setUploading(true)
+    try {
+      const comp = await compressImage(file, { maxWidth: 900, maxHeight: 1100, quality: 0.85 })
+      setData(d => ({ ...d, heroImage: comp.dataUrl }))
+
+      const ext = comp.file.name.split('.').pop()
+      const path = `founder/${Date.now()}.${ext}`
+      const { error } = await supabase.storage.from('media').upload(path, comp.file, { upsert: true })
+      if (!error) {
+        const { data: pubData } = supabase.storage.from('media').getPublicUrl(path)
+        if (pubData?.publicUrl) {
+          setData(d => ({ ...d, heroImage: pubData.publicUrl }))
+        }
+      }
+    } catch (e) {
+      console.warn('Founder image upload error:', e)
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleSave = () => {
+    saveFounderData(data)
+    setAlert({ type: 'success', msg: 'Founder Dossier & Civilizational Information successfully updated and broadcast to all pages!' })
+    setTimeout(() => setAlert(null), 4000)
+  }
+
+  const handleReset = () => {
+    if (confirm('Reset to standard civilizational information?')) {
+      setData(DEFAULT_FOUNDER_DATA)
+      saveFounderData(DEFAULT_FOUNDER_DATA)
+      setAlert({ type: 'success', msg: 'Reset to default institutional dossier.' })
+    }
+  }
+
+  return (
+    <>
+      {uploading && (
+        <ShaktiLoader
+          title="Updating Founder Photo"
+          status="Optimizing and uploading portrait..."
+        />
+      )}
+      {alert && <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`}>{alert.msg}</div>}
+
+      <div className={s.sectionHeader}>
+        <div>
+          <span className={s.sectionTitle}>Founder &amp; Director Information Desk</span>
+          <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.82rem', margin: '0.2rem 0 0' }}>
+            Updates apply instantly to the Home Profile, About Page, Mission Mardini, Shakti Bhava, and Shakti Varta.
+          </p>
+        </div>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          <button className={s.btnSecondary} onClick={handleReset}>Reset Defaults</button>
+          <button className={s.btnPrimary} onClick={handleSave}><GoogleIcon name="save" size={16} /> Save Changes</button>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+        {/* Basic Identity & Hero Card */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '1.75rem' }}>
+          <h3 style={{ color: '#F9FAFB', fontSize: '1.15rem', margin: '0 0 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <GoogleIcon name="badge" size={20} style={{ color: '#DC143C' }} />
+            Primary Identity &amp; Titles
+          </h3>
+
+          <div className={s.formGrid}>
+            <div className={s.field}>
+              <label className={s.label}>Full Name</label>
+              <input className={s.input} value={data.name} onChange={e => setData(d => ({ ...d, name: e.target.value }))} />
+            </div>
+            <div className={s.field}>
+              <label className={s.label}>Official Title</label>
+              <input className={s.input} value={data.title} onChange={e => setData(d => ({ ...d, title: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Specialist Sub-Title &amp; Accreditations</label>
+              <input className={s.input} value={data.subTitle} onChange={e => setData(d => ({ ...d, subTitle: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Hero Quote (Foundational Conviction)</label>
+              <textarea className={s.textarea} style={{ minHeight: 70 }} value={data.heroQuote} onChange={e => setData(d => ({ ...d, heroQuote: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Concise Biography (Home Page Bio)</label>
+              <textarea className={s.textarea} style={{ minHeight: 90 }} value={data.bio} onChange={e => setData(d => ({ ...d, bio: e.target.value }))} />
+            </div>
+
+            {/* Photo Upload */}
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Founder Portrait</label>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onChange={e => e.target.files?.[0] && handleUploadPhoto(e.target.files[0])}
+                />
+                <button
+                  type="button"
+                  className={s.btnSecondary}
+                  onClick={() => fileRef.current?.click()}
+                  disabled={uploading}
+                >
+                  <GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Choose New Photo
+                </button>
+                <input
+                  className={s.input}
+                  style={{ flex: 1, minWidth: 260 }}
+                  value={data.heroImage}
+                  onChange={e => setData(d => ({ ...d, heroImage: e.target.value }))}
+                  placeholder="Or enter image URL"
+                />
+              </div>
+              {data.heroImage && (
+                <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ width: 64, height: 75, borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.2)' }}>
+                    <img src={data.heroImage} alt="Portrait preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                  <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Portrait active</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* The Genesis & Kshatra-Dharma */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '1.75rem' }}>
+          <h3 style={{ color: '#F9FAFB', fontSize: '1.15rem', margin: '0 0 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <GoogleIcon name="history_edu" size={20} style={{ color: '#DC143C' }} />
+            The Genesis &amp; Civilizational Sovereignty
+          </h3>
+
+          <div className={s.formGrid}>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Genesis Section Headline</label>
+              <input className={s.input} value={data.genesisLead} onChange={e => setData(d => ({ ...d, genesisLead: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Genesis Paragraph 1 (Grassroots Beginnings)</label>
+              <textarea className={s.textarea} style={{ minHeight: 80 }} value={data.genesisP1} onChange={e => setData(d => ({ ...d, genesisP1: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Genesis Paragraph 2 (Beyond Vulnerability to Agency)</label>
+              <textarea className={s.textarea} style={{ minHeight: 90 }} value={data.genesisP2} onChange={e => setData(d => ({ ...d, genesisP2: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Genesis Paragraph 3 (Establishing Shakti Sabha)</label>
+              <textarea className={s.textarea} style={{ minHeight: 80 }} value={data.genesisP3} onChange={e => setData(d => ({ ...d, genesisP3: e.target.value }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>The Kshatra-Dharma Vision Text</label>
+              <textarea className={s.textarea} style={{ minHeight: 100 }} value={data.kshatraDharmaText} onChange={e => setData(d => ({ ...d, kshatraDharmaText: e.target.value }))} />
+            </div>
+          </div>
+        </div>
+
+        {/* Frontline Interventions & Statutory Disclaimer */}
+        <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14, padding: '1.75rem' }}>
+          <h3 style={{ color: '#F9FAFB', fontSize: '1.15rem', margin: '0 0 1.25rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <GoogleIcon name="gavel" size={20} style={{ color: '#DC143C' }} />
+            Statutory Safeguarding &amp; Confidentiality Compliance
+          </h3>
+
+          <div className={s.formGrid}>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Child Protection &amp; Transit Interception Footprint</label>
+              <textarea className={s.textarea} style={{ minHeight: 80 }} value={data.interventions.childProtectionText} onChange={e => setData(d => ({ ...d, interventions: { ...d.interventions, childProtectionText: e.target.value } }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Counter-Grooming &amp; Pre-FIR Mediation Footprint</label>
+              <textarea className={s.textarea} style={{ minHeight: 80 }} value={data.interventions.counterGroomingText} onChange={e => setData(d => ({ ...d, interventions: { ...d.interventions, counterGroomingText: e.target.value } }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Somatic Grounding &amp; Non-Verbal Support Methodology</label>
+              <textarea className={s.textarea} style={{ minHeight: 80 }} value={data.interventions.somaticSupportText} onChange={e => setData(d => ({ ...d, interventions: { ...d.interventions, somaticSupportText: e.target.value } }))} />
+            </div>
+            <div className={`${s.field} ${s.formFull}`}>
+              <label className={s.label}>Institutional Note on Statutory Compliance &amp; Legal Confidentiality</label>
+              <textarea className={s.textarea} style={{ minHeight: 90 }} value={data.interventions.confidentialityNotice} onChange={e => setData(d => ({ ...d, interventions: { ...d.interventions, confidentialityNotice: e.target.value } }))} />
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+          <button className={s.btnPrimary} onClick={handleSave} style={{ padding: '0.75rem 2rem' }}>
+            <GoogleIcon name="save" size={18} /> Save &amp; Publish Changes
+          </button>
+        </div>
+      </div>
     </>
   )
 }

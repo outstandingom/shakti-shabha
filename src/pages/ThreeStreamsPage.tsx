@@ -13,10 +13,10 @@ export default function ThreeStreamsPage() {
             Back to Home
           </Link>
           <span className={s.badge}>Architecture · The Tri-Stream Doctrine</span>
-          <h1 className={s.title}>The Union of Peace &amp; Revolution</h1>
+          <h1 className={s.title}>OUR THREE STREAMS. ONE VISION.</h1>
           <p className={s.hindiSubtitle}>शान्ति और क्रान्ति का संगम · त्रिवेणी दर्शन</p>
           <p className={s.desc}>
-            Everything Shakti Sabha builds lives within one of three streams — each distinct in method, unified in purpose: dignity, safety, and awakening for every woman who stands with us.
+            Together, these initiatives represent Shakti Sabha’s integrated approach to human development: strengthening the body, refining the mind, and awakening consciousness.
           </p>
 
           <div className={s.heroTags}>
@@ -38,45 +38,48 @@ export default function ThreeStreamsPage() {
         <div className={s.statsGrid}>
           <div className={s.statCard}>
             <div className={s.statNumber}>2,000+</div>
-            <div className={s.statLabel}>Girls Weaponized</div>
-            <div className={s.statDesc}>Trained in CQC, Lathi & empty-hand tactical combat.</div>
+            <div className={s.statLabel}>Girls Trained</div>
+            <div className={s.statDesc}>Armed and unarmed self-defense and practical street-safety awareness.</div>
           </div>
           <div className={s.statCard}>
             <div className={s.statNumber}>13</div>
-            <div className={s.statLabel}>Minors Rescued</div>
-            <div className={s.statDesc}>Tactical extractions from human-trafficking rings.</div>
+            <div className={s.statLabel}>Minors Reintegrated</div>
+            <div className={s.statDesc}>Timely safety interception, statutory handoff, and legal guardianship.</div>
           </div>
           <div className={s.statCard}>
             <div className={s.statNumber}>250+</div>
-            <div className={s.statLabel}>Crises Resolved</div>
-            <div className={s.statDesc}>High-stakes field rescues & coercive exploitation cases.</div>
+            <div className={s.statLabel}>Crises &amp; Consultations</div>
+            <div className={s.statDesc}>High-risk distress cases and 50+ critical family mediations.</div>
           </div>
           <div className={s.statCard}>
             <div className={s.statNumber}>500+</div>
-            <div className={s.statLabel}>Keynotes & Seminars</div>
-            <div className={s.statDesc}>Consciousness discourses & civilizational debriefs.</div>
+            <div className={s.statLabel}>Seminars &amp; Discourses</div>
+            <div className={s.statDesc}>Institutional sessions and consciousness-building assemblies.</div>
           </div>
           <div className={s.statCard}>
             <div className={s.statNumber}>25,000+</div>
             <div className={s.statLabel}>Students Reached</div>
-            <div className={s.statDesc}>Youth awakening workshops across Maharashtra.</div>
+            <div className={s.statDesc}>Youth awakening workshops across Maharashtra and beyond.</div>
           </div>
         </div>
 
-        {/* ── THE FOUNDATIONAL PHILOSOPHY ──────────────────────────── */}
+        {/* ── THE SHAKTI SABHA PHILOSOPHY ──────────────────────────── */}
         <div className={s.manifestoBox}>
-          <span className={s.eyebrow}>The Core Doctrine</span>
+          <span className={s.eyebrow}>THE SHAKTI SABHA PHILOSOPHY</span>
           <h2 className={s.heading}>
-            Why Neither Weapon Nor Wisdom Alone Is Sufficient
+            Strength Without Hatred. Knowledge Without Blindness. Power With Responsibility.
           </h2>
           <blockquote className={s.manifestoQuote}>
-            "We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically invincible sentinels of Indian civilization."
+            "We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically capable guardians of Indian civilization."
           </blockquote>
           <p className={s.manifestoText}>
-            Peace without tactical readiness is an illusion that invites subjugation. Revolution without intellectual discipline descends into chaos. Shakti Sabha operates on an unbroken continuum: when a woman's body is fortified, her psychological sovereignty awakens; when her mind is freed from trauma, she becomes capable of leading her community; and when she is anchored in civilizational truth, her voice becomes unshakeable.
+            Shakti Sabha believes that genuine empowerment must develop the whole human being. Physical strength without self-control can become aggression. Knowledge without critical inquiry can become dogma. Freedom without responsibility can become directionless. Peace without courage can become passive acceptance of injustice.
           </p>
           <p className={s.manifestoText}>
-            Under the frontline leadership of Founder Harshita Mankar, these three streams are not disjointed initiatives — they are an integrated operating system for total female autonomy.
+            Our work seeks to bring these dimensions together: We encourage women to recognize their strength without developing hostility towards men. We encourage young people to question ideas without becoming prisoners of cynicism. We promote cultural awareness without blind glorification and modern thinking without blind imitation.
+          </p>
+          <p className={s.manifestoText} style={{ fontWeight: 600, color: '#DC143C' }}>
+            "We do not seek to create followers. We seek to cultivate independent minds, responsible leaders, and conscious individuals."
           </p>
         </div>
 
@@ -96,22 +99,22 @@ export default function ThreeStreamsPage() {
               </span>
             </div>
             <h3 className={s.streamName}>Mardini</h3>
-            <div className={s.streamDev}>मर्दिनी · Physical Defense</div>
+            <div className={s.streamDev}>मर्दिनी · Physical Sovereignty &amp; Tactical Preparedness</div>
             <p className={s.streamSummary}>
-              Self-defense. Lathi-Kaushal. Sword training. Village camps across Maharashtra and beyond. The revolution that begins in the body and spreads to the spirit.
+              Challenges passive approaches to self-defense by integrating physical combat training with psychological preparedness, situational awareness, discipline, and decision-making under pressure.
             </p>
             <ul className={s.streamHighlights}>
               <li className={s.streamHighlightItem}>
                 <GoogleIcon name="sports_kabaddi" size={18} style={{ color: '#DC143C', flexShrink: 0 }} />
-                <span>Dual-Tier asymmetric combat matrix (CQC, bio-mechanical leverage)</span>
+                <span>Dual-Shield Doctrine (Cognitive De-escalation &amp; Physical Defense)</span>
               </li>
               <li className={s.streamHighlightItem}>
                 <GoogleIcon name="shield" size={18} style={{ color: '#DC143C', flexShrink: 0 }} />
-                <span>Lathi-Kaushal (traditional quarterstaff) and Talwar tactical mastery</span>
+                <span>Karate-based empty hand strikes, balance, and Lathi-Kaushal staff</span>
               </li>
               <li className={s.streamHighlightItem}>
-                <GoogleIcon name="campaign" size={18} style={{ color: '#DC143C', flexShrink: 0 }} />
-                <span>7–10 Day residential immersive warrior camps across districts</span>
+                <GoogleIcon name="holiday_village" size={18} style={{ color: '#DC143C', flexShrink: 0 }} />
+                <span>Intensive 7–10 day camps and tribal/rural grassroots outreach</span>
               </li>
             </ul>
             <Link to="/mardini" className={`${s.streamBtn} ${s.streamBtnMardini}`}>
@@ -125,26 +128,26 @@ export default function ThreeStreamsPage() {
             <div className={s.streamCardHead}>
               <span className={s.streamNum} style={{ color: '#166534' }}>02</span>
               <span className={s.streamBadge} style={{ background: 'rgba(22, 101, 52, 0.1)', color: '#166534' }}>
-                Healing
+                Consciousness
               </span>
             </div>
             <h3 className={s.streamName}>Shakti Bhava</h3>
-            <div className={s.streamDev}>शक्ति भव · Emotional Sovereignty</div>
+            <div className={s.streamDev}>शक्ति भव · Cognitive Awakening &amp; Human Consciousness</div>
             <p className={s.streamSummary}>
-              Counseling. Anonymized case studies. Breaking silence on trafficking, PTSD, puberty, and depression. The space where survivors become warriors.
+              Youth-awareness and consciousness-building initiative cultivating independent thinkers who examine social narratives and make decisions through reason.
             </p>
             <ul className={s.streamHighlights}>
               <li className={s.streamHighlightItem}>
-                <GoogleIcon name="emergency" size={18} style={{ color: '#166534', flexShrink: 0 }} />
-                <span>Tactical frontline extractions & anti-trafficking rescue operations</span>
+                <GoogleIcon name="psychology" size={18} style={{ color: '#166534', flexShrink: 0 }} />
+                <span>Intellectual independence, critical thinking &amp; narrative awareness</span>
               </li>
               <li className={s.streamHighlightItem}>
-                <GoogleIcon name="psychology" size={18} style={{ color: '#166534', flexShrink: 0 }} />
-                <span>Non-verbal behavioral profiling & micro-expression risk detection</span>
+                <GoogleIcon name="family_restroom" size={18} style={{ color: '#166534', flexShrink: 0 }} />
+                <span>50+ field family mediations and statutory child protection (CWC)</span>
               </li>
               <li className={s.streamHighlightItem}>
                 <GoogleIcon name="spa" size={18} style={{ color: '#166534', flexShrink: 0 }} />
-                <span>Somatic PTSD stabilization & post-extraction psychological reclamation</span>
+                <span>Non-verbal behavioral observation, de-escalation &amp; somatic support</span>
               </li>
             </ul>
             <Link to="/shakti-bhava" className={`${s.streamBtn} ${s.streamBtnBhava}`}>
@@ -162,22 +165,22 @@ export default function ThreeStreamsPage() {
               </span>
             </div>
             <h3 className={s.streamName}>Shakti Varta</h3>
-            <div className={s.streamDev}>शक्ति वार्ता · Intellectual Sovereignty</div>
+            <div className={s.streamDev}>शक्ति वार्ता · Intellectual Sovereignty &amp; Critical Inquiry</div>
             <p className={s.streamSummary}>
-              White papers. Research. Podcasts. Seminars. The intellectual engine that backs the revolution with verified knowledge and historical truth.
+              Research, mentorship, and public discourse platform equipping youth with research literacy and the confidence to question widely accepted narratives from primary sources.
             </p>
             <ul className={s.streamHighlights}>
               <li className={s.streamHighlightItem}>
-                <GoogleIcon name="history_edu" size={18} style={{ color: '#4338CA', flexShrink: 0 }} />
-                <span>De-colonizing feminine historiography & Veerangana archives</span>
-              </li>
-              <li className={s.streamHighlightItem}>
                 <GoogleIcon name="menu_book" size={18} style={{ color: '#4338CA', flexShrink: 0 }} />
-                <span>Epistemic research white papers on Kshatra-Dharma & cognitive sovereignty</span>
+                <span>Vedic Digital Fellowship (Vedas, Gita, Mahabharata, Satyarth Prakash)</span>
               </li>
               <li className={s.streamHighlightItem}>
-                <GoogleIcon name="mic" size={18} style={{ color: '#4338CA', flexShrink: 0 }} />
-                <span>500+ University keynotes & high-impact youth consciousness seminars</span>
+                <GoogleIcon name="analytics" size={18} style={{ color: '#4338CA', flexShrink: 0 }} />
+                <span>Critical media analysis, fact-checking &amp; narrative deconstruction</span>
+              </li>
+              <li className={s.streamHighlightItem}>
+                <GoogleIcon name="podcasts" size={18} style={{ color: '#4338CA', flexShrink: 0 }} />
+                <span>Open-house debates, forgotten women warriors &amp; digital podcast lectures</span>
               </li>
             </ul>
             <Link to="/shakti-varta" className={`${s.streamBtn} ${s.streamBtnVarta}`}>
@@ -187,62 +190,21 @@ export default function ThreeStreamsPage() {
           </div>
         </div>
 
-        {/* ── THE TRI-STREAM CONVERGENCE ────────────────────────────── */}
-        <div className={s.convergenceSection}>
-          <span className={s.eyebrow}>The Lifecycle of Sovereignty</span>
-          <h2 className={s.heading} style={{ marginBottom: '0.75rem' }}>
-            How The Three Streams Converge in Practice
-          </h2>
-          <p style={{ color: '#4B5563', fontSize: '0.95rem', maxWidth: '75ch', lineHeight: 1.65 }}>
-            A young woman entering Shakti Sabha does not experience isolated silos. She journeys through an integrated metamorphosis that transforms crisis into civilizational leadership:
-          </p>
-
-          <div className={s.convergenceGrid}>
-            <div className={s.convStep}>
-              <div className={s.convStepNum}>1</div>
-              <h4 className={s.convStepTitle}>Extraction & Safety (Shakti Bhava)</h4>
-              <p className={s.convStepDesc}>
-                Immediate physical de-escalation, rapid crisis response, non-verbal profiling, and stabilization from domestic or predatory coercive environments.
-              </p>
-            </div>
-            <div className={s.convStep}>
-              <div className={s.convStepNum}>2</div>
-              <h4 className={s.convStepTitle}>Combat Fortification (Mission Mardini)</h4>
-              <p className={s.convStepDesc}>
-                7–10 days of rigorous physical conditioning, mastering empty-hand leverage and weapons, overwriting biological freeze responses with decisive muscle memory.
-              </p>
-            </div>
-            <div className={s.convStep}>
-              <div className={s.convStepNum}>3</div>
-              <h4 className={s.convStepTitle}>Intellectual Sovereignty (Shakti Varta)</h4>
-              <p className={s.convStepDesc}>
-                Deep-rooted ideological grounding in Vedic philosophy, public advocacy training, and peer mentorship to defend and awaken subsequent generations.
-              </p>
-            </div>
+        {/* ── STATUTORY COMPLIANCE NOTE ─────────────────────────────── */}
+        <div style={{
+          background: '#F9FAFB',
+          border: '1px solid #E5E7EB',
+          borderRadius: 14,
+          padding: '1.5rem',
+          marginTop: '3.5rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', color: '#111827', fontWeight: 700, fontSize: '0.88rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            <GoogleIcon name="gavel" size={20} style={{ color: '#DC143C' }} />
+            Institutional Note on Confidentiality &amp; Statutory Compliance
           </div>
-        </div>
-
-        {/* ── BOTTOM CALL TO ACTION ────────────────────────────────── */}
-        <div className={s.bottomCta}>
-          <span className={s.eyebrow}>Join the Movement</span>
-          <h2 className={s.heading} style={{ marginBottom: '0.75rem' }}>
-            Stand with Shakti Sabha
-          </h2>
-          <p style={{ color: '#4B5563', fontSize: '0.95rem', maxWidth: '65ch', margin: '0 auto', lineHeight: 1.6 }}>
-            Whether you seek tactical training for your institution, crisis intervention guidance, or wish to contribute to civilizational research, our doors are open.
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#6B7280', lineHeight: 1.65 }}>
+            "Shakti Sabha operates as a civil and community support initiative. Field interventions, crisis de-escalations, and family reconciliations are conducted with strict respect for the privacy, safety, and legal confidentiality of affected individuals and their guardians. All actions involving minors and high-risk statutory matters are routed through and coordinated with relevant administrative bodies, statutory commissions, and local authorities in accordance with applicable Indian laws."
           </p>
-          <div className={s.ctaButtons}>
-            <Link to="/events" className={s.primaryBtn}>
-              <GoogleIcon name="event" size={18} />
-              View Upcoming Warrior Camps
-            </Link>
-            <Link to="/sahyog" className={s.secondaryBtn}>
-              Support Our Mission
-            </Link>
-            <Link to="/about" className={s.secondaryBtn}>
-              Read Founder Dossier
-            </Link>
-          </div>
         </div>
       </div>
     </main>

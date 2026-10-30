@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { getFounderData, FounderProfileData } from '../data/founderData'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import p from './AboutPage.module.css'
@@ -12,93 +13,119 @@ const FOUNDER_METRICS = [
   {
     icon: 'sports_martial_arts',
     title: 'Black Belt in Karate',
-    desc: 'Tactical Combat & Empty-Hand Mastery'
+    desc: 'Martial arts discipline, tactical combat training, and unarmed self-defense.'
   },
   {
     icon: 'swords',
-    title: '2,000+ Girls Weaponized',
-    desc: 'Armed & Unarmed Street Defense Readiness'
+    title: '2,000+ Girls Trained',
+    desc: 'Armed and unarmed self-defense awareness and practical street-safety training.'
   },
   {
     icon: 'record_voice_over',
-    title: '500+ Seminars Delivered',
-    desc: 'Reached 25,000+ students for youth awakening sessions'
+    title: '500+ Seminars & Discourses',
+    desc: 'Institutional seminars, youth awareness programmes, and consciousness-building sessions.'
+  },
+  {
+    icon: 'school',
+    title: '25,000+ Students Reached',
+    desc: 'Youth awakening sessions across educational and community platforms.'
   },
   {
     icon: 'holiday_village',
-    title: '7–10 Days Mission Mardini Camps',
-    desc: 'Organizing & collaborating with partner groups for camps'
+    title: 'Mission Mardini Camps',
+    desc: 'Organizing intensive 7–10 day self-defense and empowerment camps.'
   },
   {
     icon: 'nature_people',
-    title: 'Tribal Area Outreach',
-    desc: 'On-ground awareness and frontline support for young girls'
+    title: 'Tribal Outreach',
+    desc: 'Awareness, guidance, and support initiatives for young girls in tribal and underserved communities.'
   },
   {
-    icon: 'psychology',
-    title: 'Dual-Tier Curriculum',
-    desc: 'Cognitive De-escalation & High-Impact CQC'
+    icon: 'hub',
+    title: 'Collaborative Initiatives',
+    desc: 'Working with other organizations and community groups to expand training and awareness programmes.'
   }
 ]
 
 const TACTICAL_INTERVENTIONS = [
   {
-    icon: 'emergency',
-    title: 'Anti-Trafficking Extractions',
-    desc: 'Directly directed and executed the tactical rescue and safe reintegration of 13 minors from organized human-trafficking networks across high-risk jurisdictional corridors.'
+    icon: 'child_care',
+    title: '1. Vulnerability Interception & Child Protection Coordination',
+    desc: 'Interventions in this sphere address acute vulnerability, runaway minors at transit hubs, and distress situations where young girls face immediate risk of exploitation or informal cross-district trade.',
+    bullets: [
+      'Operational Methodology: Works directly at the grassroots and transit points (railway nodes, community perimeters) to intercept minors before predatory entrapment occurs.',
+      'Strict adherence to statutory child-protection frameworks facilitating immediate communication with statutory authorities, Child Welfare Committees (CWC), National/State Commission for Women, and authorized shelter networks.',
+      'Documented Footprint: Directly facilitated the timely safety interception, statutory handoff, and supervised reintegration of 13 vulnerable minors into verified legal guardianship and safe academic environments.'
+    ]
   },
   {
     icon: 'shield',
-    title: 'Grooming & Coercive Exploitation Mitigation',
-    desc: 'Handled 250+ documented crisis cases, executing 50+ high-stakes field rescues involving predatory exploitation and systematic psychological coercion.'
+    title: '2. Counter-Grooming, Coercive Entrapment & Pre-FIR Family Mediation',
+    desc: 'Handling complex community and campus scenarios involving identity deception, peer-driven entrapment, digital blackmail, and high-pressure interpersonal coercion.',
+    bullets: [
+      'Operational Methodology: Recognizing that families in over 80% of distress cases avoid formal litigation due to acute social vulnerability and fear of exposure, acts as a trusted community mediator.',
+      'Intervenes directly in campus and residential hostel settings to break cycles of digital coercion and isolation.',
+      'Conducts direct, non-adversarial dialogue with families and young women to resolve high-risk situations before irreversible harm occurs.',
+      'Coordinates with local civic leadership, community elders, and law-enforcement helplines to neutralize predatory pressure.',
+      'Documented Footprint: Handled over 250 reported distress and vulnerability consultations, actively conducting direct field-level safety mediations and pre-emptive family reintegrations in 50+ critical situations.'
+    ]
   },
   {
-    icon: 'biotech',
-    title: 'Psychological Reclamation & Specialized Trauma Profiling',
-    desc: 'Utilizing non-verbal behavioral profiling, micro-expression analysis, and somatic PTSD stabilization techniques, pioneered specialized post-extraction frameworks to de-escalate trauma and neutralize psychological conditioning in young survivors.'
+    icon: 'psychology',
+    title: '3. Trauma-Informed Somatic Support & Non-Verbal De-escalation',
+    desc: 'Supporting young girls and women dealing with deep psychological shock, learned helplessness, domestic distress, and street-level anxiety.',
+    bullets: [
+      'Non-verbal behavioral observation to detect acute panic, dissociation, and the biological "freeze" response.',
+      'Private, trauma-sensitive conversational de-escalation to relieve irrational guilt, internalized shame, and fear of judgment.',
+      'Facilitating safe academic relocation, educational sponsorship, and vocational anchoring where prolonged domestic friction prevents an immediate peaceful resolution at home.',
+      'Connecting survivors to certified clinical psychologists, healthcare professionals, and pro-bono legal advocates when specialized interventions are required.',
+      'Core Principle: "A crisis or traumatic event does not define a woman’s destiny. Our objective is to restore self-worth, emotional autonomy, and physical confidence so that every girl reclaims her sovereign agency in society."'
+    ]
   }
 ]
 
 const CURRICULUM_TIERS = [
   {
-    tier: 'Tier 1 · Mental Shield',
-    title: 'Psychological Inoculation & Situational Radar',
+    tier: 'Shield One · Cognitive & Mental Shield',
+    title: 'Cognitive De-escalation & Situational Awareness',
     items: [
       {
-        head: 'Pre-Attack Threat Recognition',
-        body: 'Training young girls to scan baseline human behavior, decode pre-violence cues (grooming, stalking, spatial encroachment), and react before a physical trap closes.'
+        head: 'Threat Recognition',
+        body: 'Participants learn to recognize potentially unsafe situations, identify concerning behavioural patterns, understand personal boundaries, and recognize warning signs associated with stalking, grooming, coercion, and unwanted physical proximity.'
       },
       {
-        head: 'Overcoming Freeze Response',
-        body: 'Using stress-inoculation drills to replace the biological "freeze" response with calculated tactical awareness, ensuring that sudden danger triggers clarity rather than panic.'
+        head: 'Situational Awareness',
+        body: 'Training develops environmental awareness, risk assessment, safe-distance management, and the ability to identify exit routes and seek assistance before a situation escalates.'
+      },
+      {
+        head: 'Managing the Freeze Response',
+        body: 'Participants learn practical techniques for managing fear and stress, improving their ability to think clearly, communicate boundaries, make decisions, and respond appropriately during threatening situations.'
+      },
+      {
+        head: 'Psychological Preparedness',
+        body: 'The objective is to replace helplessness with preparedness through guided exercises, scenario-based learning, and confidence-building activities.'
       }
     ]
   },
   {
-    tier: 'Tier 2 · Empty Hand',
-    title: 'Unarmed Lethality (Empty-Hand Combat)',
+    tier: 'Shield Two · Physical Defense & Tactical Combat',
+    title: 'Physical Defense & Tactical Combat Disciplines',
     items: [
       {
-        head: 'Body Mechanics & Leverage',
-        body: 'Rooted in her Karate discipline, girls are trained to use their natural body structure to overpower larger, heavier adversaries through targeted strikes to critical vulnerabilities (eyes, throat, groin, solar plexus).'
+        head: 'Empty-Hand Defense',
+        body: 'Participants learn foundational Karate-based defensive techniques, body mechanics, balance, movement, protective positioning, and practical responses to common physical threats.'
       },
       {
-        head: 'Improvised Defense',
-        body: 'Conditioning young women so that even in the complete absence of a tool or weapon, their hands, elbows, knees, and cognitive agility function as an organic weapon system.'
-      }
-    ]
-  },
-  {
-    tier: 'Tier 3 · Tactical Arms',
-    title: 'Weaponized Defense (Traditional Tactical Arms)',
-    items: [
-      {
-        head: 'Lathi-Kaushal (Tactical Stick Combat)',
-        body: 'Reviving the ancient Indian martial discipline of the staff/lathi, adapting it into an effective perimeter-defense and crowd-control weapon for young girls in rural and urban corridors.'
+        head: 'Lathi-Kaushal: Traditional Staff Training',
+        body: 'The programme introduces the Indian martial discipline of Lathi-Kaushal, adapting traditional staff techniques for personal protection, controlled movement, distance management, and defensive preparedness.'
       },
       {
-        head: 'Blade Warfare & Close-Quarter Combat (CQC)',
-        body: 'Handling and neutralizing edge-weapon threats, teaching grip retention, distance management, and defensive redirection under high-adrenaline contact scenarios.'
+        head: 'Traditional Weapon Awareness',
+        body: 'Where appropriate and permitted, participants receive supervised instruction in traditional martial arts equipment, safety practices, handling discipline, and defensive awareness.'
+      },
+      {
+        head: 'Close-Quarter Defense & Escape',
+        body: 'Participants develop foundational skills for responding to close-range physical threats, maintaining balance, creating distance, emergency communication, and swift access to support.'
       }
     ]
   }
@@ -108,66 +135,78 @@ const PILLARS_IN_ACTION = [
   {
     icon: 'swords',
     name: 'Mission Mardini',
-    sub: 'Physical Sovereignty & Tactical Defense',
+    sub: 'Physical Sovereignty & Tactical Preparedness',
     color: '#DC143C',
     dedicatedLink: '/mardini',
     dedicatedLabel: 'Explore Mission Mardini Page →',
-    desc: 'Rejecting passive self-defense models, Harshita engineered Mission Mardini — a battle-tested combat framework blending traditional Indian martial arts with modern defensive mechanics.',
+    desc: 'Led by Aaryaveera, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure.',
     bullets: [
-      'Trained 2,000+ young women across schools, colleges, and rural settlements in high-impact survival tactics.',
-      'Integrated tactical stick-combat (Lathi-Kaushal), traditional blade warfare, and modern Close-Quarter Combat (CQC) with situational peripheral awareness, training participants to neutralize physical threats within split-second windows.'
+      'Dual-Shield Doctrine: Cognitive De-escalation & Situational Awareness + Physical Defense & Tactical Combat.',
+      'Intensive 7–10 day residential warrior camps with martial discipline and scenario-based drills.',
+      'Frontline tribal and rural outreach making practical combat training accessible beyond urban institutions.'
     ]
   },
   {
     icon: 'spa',
     name: 'Shakti Bhava',
-    sub: 'Mass Awakening & Narrative Deconstruction',
+    sub: 'Cognitive Awakening, Consciousness & Civilizational Awareness',
     color: '#059669',
     dedicatedLink: '/shakti-bhava',
     dedicatedLabel: 'Explore Shakti Bhava Page →',
-    desc: 'Through Shakti Bhava, Harshita conducts large-scale intellectual and cognitive interventions to immunize youth against civilizational subversion and cognitive conditioning.',
+    desc: 'Cultivates individuals who can think independently, examine social narratives, understand their cultural and intellectual roots, and make decisions through reason rather than digital influence or social pressure.',
     bullets: [
-      'Convened 500+ keynotes, symposiums, and institutional seminars across schools, universities, residential hostels, and cultural forums.',
-      'Addresses root causes of systemic alienation by dismantling western reductionist narratives and hyper-consumerist paradigms.',
-      'Systematically reconstructs civilizational identity by anchoring youth in advanced Indian sciences, historical epistemology, and awakened human consciousness.'
+      '500+ seminars, institutional sessions, and consciousness discourses reaching 25,000+ students.',
+      'Key engagement in Narrative Awareness, Critical Thinking, Civilizational Literacy, and Human Consciousness.',
+      'Promotes mutual dignity, healthy boundaries, personal responsibility, and rejects hyper-consumerist polarization.'
     ]
   },
   {
     icon: 'menu_book',
-    name: 'Shakti Varta & Deep Research',
-    sub: 'Vedic Epistemology & Forgotten Warriors',
+    name: 'Shakti Varta',
+    sub: 'Intellectual Sovereignty, Critical Inquiry & Research-Based Dialogue',
     color: '#4338CA',
     dedicatedLink: '/shakti-varta',
     dedicatedLabel: 'Explore Shakti Varta Page →',
-    desc: 'Anchoring social transformation in rigorous textual analysis, Harshita leads continuous research into classical literature and forgotten historical archives.',
+    desc: 'A practical learning environment where youth are equipped with critical thinking, research literacy, and logical reasoning to investigate claims independently from primary sources.',
     bullets: [
-      'Shakti Varta Digital Fellowship: Curated an ongoing intellectual forum connecting 200+ young women to foundational texts — including the Bhagavad Gita, Maharshi Dayananda’s Satyarth Prakash, and original Vedic philosophies.',
-      'Historical Reclamation Project: Spearheading independent archival research documenting forgotten Indian women warriors, reconstructing uncensored historical narratives to counter distortion and inspire modern youth.',
-      'Digital Outreach: Synthesizes historical forensics, non-verbal psychology, and geopolitical analysis across short-form digital series, delivering civilizational discourse to thousands of youth globally.'
+      'Vedic Digital Fellowship: Engaging young women with the Vedas, Bhagavad Gita, Mahabharata, and Satyarth Prakash.',
+      'Critical Media Analysis: Source verification, identifying logical fallacies, and deconstructing manipulative algorithms.',
+      'Open-House Debates & Youth Ignite Forums: Rational philosophical dialogues, forgotten warrior queens, and digital public consciousness.'
     ]
   }
 ]
 
 const TIMELINE = [
-  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born with a vision to revive the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.' },
-  { year: '2014', title: 'First Mission Mardini Camp', desc: 'Inaugural residential camp blending Karate empty-hand combat with Lathi-Kaushal staff defense.' },
-  { year: '2016', title: '100+ Schools Reached', desc: 'Expanded across rural and urban corridors, training adolescent girls in situational radar and freeze-response elimination.' },
-  { year: '2018', title: 'Shakti Bhava & Trauma Profiling', desc: 'Somatic PTSD stabilization and non-verbal behavioral profiling frameworks formalized for crisis rescue.' },
+  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born with a vision to revive the civilizational paradigm of Kshatra-Dharma, tactical preparedness, and cognitive sovereignty.' },
+  { year: '2014', title: 'First Mission Mardini Camp', desc: 'Inaugural residential camp blending Karate empty-hand combat with Lathi-Kaushal staff defense and freeze-response elimination.' },
+  { year: '2016', title: '100+ Schools Reached', desc: 'Expanded across rural corridors, residential hostels, and colleges for situational awareness and boundary management.' },
+  { year: '2018', title: 'Frontline Interventions Formalized', desc: 'Somatic trauma de-escalation, non-verbal behavioral observation, and statutory child-protection coordination.' },
   { year: '2022', title: 'Aaryaveera Leadership Series', desc: 'Flagship residential leadership and train-the-trainer camp established for pan-India student sentinels.' },
-  { year: '2024', title: '25,000+ Students Awakened', desc: 'Over 500 seminars, 2,000+ weaponized young warriors, and active tribal outreach operations pan-India.' },
+  { year: '2024', title: '25,000+ Students Awakened', desc: 'Over 500 seminars, 2,000+ girls trained in self-defense, 13 minors safely reintegrated, and active tribal outreach operations.' },
 ]
 
 const VALUES = [
-  { icon: 'spa', name: 'Dignity', dev: 'सम्मान', desc: 'Every woman is sacred. Dignity is not earned — it is the sovereign birthright of every daughter of this civilization.' },
-  { icon: 'local_fire_department', name: 'Courage', dev: 'साहस', desc: 'Physical, moral, and cognitive courage — the trinity that transforms vulnerable targets into tactically invincible sentinels.' },
-  { icon: 'verified', name: 'Truth', dev: 'सत्य', desc: 'Uncompromising clarity — confronting predation, systemic coercion, and cultural conditioning with objective forensics.' },
-  { icon: 'balance', name: 'Dharma', dev: 'धर्म', desc: 'Rooted in timeless Vedic epistemology and Kshatra-Dharma. Duty, justice, and protection without ideological subversion.' },
+  { icon: 'balance', name: 'Kshatra-Dharma', dev: 'क्षात्र धर्म', desc: 'The responsibility to protect, the courage to confront injustice, the discipline to exercise power responsibly, and the wisdom to distinguish strength from aggression.' },
+  { icon: 'psychology', name: 'Intellectual Sovereignty', dev: 'बौद्धिक संप्रभुता', desc: 'Do not accept an idea merely because it is popular, traditional, or influential. Examine its evidence, reasoning, context, and implications.' },
+  { icon: 'shield', name: 'Physical Preparedness', dev: 'शारीरिक सामर्थ्य', desc: 'Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability.' },
+  { icon: 'spa', name: 'Human Consciousness', dev: 'आत्म चेतना', desc: 'Strength without hatred. Knowledge without blindness. Power with responsibility. Developing the whole human being.' },
 ]
 
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
+  const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
+
+  useEffect(() => {
+    const handleUpdate = () => setProfile(getFounderData())
+    window.addEventListener('founder_data_updated', handleUpdate)
+    window.addEventListener('storage', handleUpdate)
+    return () => {
+      window.removeEventListener('founder_data_updated', handleUpdate)
+      window.removeEventListener('storage', handleUpdate)
+    }
+  }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -203,12 +242,12 @@ export default function AboutPage() {
       <div className={p.hero}>
         <div className={p.heroInner}>
           <Link to="/" className={p.backLink}>← Back to Home</Link>
-          <span className={p.eyebrow}>Civilizational Leadership & Tactical Sovereignty</span>
+          <span className={p.eyebrow}>Civilizational Leadership &amp; Tactical Sovereignty</span>
           <h1 className={p.heroTitle}>About Shakti Sabha</h1>
-          <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul & Strategy of the Movement</p>
+          <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul &amp; Strategy of the Movement</p>
           <p className={p.heroDesc}>
             Reviving the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
-            From high-risk frontline rescues to residential combat camps, Shakti Sabha forges young women into intellectually fortified and tactically invincible sentinels.
+            From high-risk frontline rescues to residential combat camps, Shakti Sabha forges young women into intellectually fortified and tactically capable guardians.
           </p>
         </div>
       </div>
@@ -220,8 +259,8 @@ export default function AboutPage() {
           <div className={p.founderCard}>
             <div className={p.founderPortraitWrap}>
               <img
-                src="/harshitama'am.jpg"
-                alt="Harshita Mankar - Founder & Director, Shakti Sabha"
+                src={profile.heroImage || "/harshitama'am.jpg"}
+                alt="Aaryaveera Harshita Mankar - Founder & Director, Shakti Sabha"
                 className={p.founderImg}
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80'
@@ -229,22 +268,22 @@ export default function AboutPage() {
               />
               <div className={p.founderBadgePill}>
                 <GoogleIcon name="verified_user" size={16} style={{ marginRight: '6px' }} />
-                Verified Tactical Instructor & Non-Verbal Profiler
+                Civilizational Strategist &amp; Combat Instructor
               </div>
             </div>
 
             <div className={p.founderInfo}>
-              <span className={p.founderEyebrow}>Founder & Institutional Leadership</span>
-              <h2 className={p.founderName}>Harshita Mankar</h2>
-              <div className={p.founderTitle}>Founder & Director, Shakti Sabha</div>
+              <span className={p.founderEyebrow}>FOUNDER &amp; DIRECTOR · AARYAVEERA</span>
+              <h2 className={p.founderName}>{profile.name}</h2>
+              <div className={p.founderTitle}>{profile.title}</div>
               <div className={p.founderSpecialties}>
-                Civilizational Strategist | Tactical Combat Instructor | Non-Verbal Profiler & PTSD Counselor
+                {profile.subTitle}
               </div>
 
               {/* Hero Quote Directly Below Name and Title */}
               <div className={p.heroQuoteBox}>
                 <blockquote className={p.heroQuoteText}>
-                  "We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically invincible sentinels of Indian civilization.”
+                  "{profile.heroQuote}"
                 </blockquote>
               </div>
 
@@ -267,48 +306,90 @@ export default function AboutPage() {
           <div className={p.genesisBox}>
             <h3 className={p.genesisTitle}>
               <GoogleIcon name="eco" size={24} style={{ color: '#34D399' }} />
-              The Genesis: From Grassroots Activism to Strategic Sovereignty
+              THE GENESIS: {profile.genesisLead}
             </h3>
-            <p className={p.genesisText}>
-              Harshita Mankar’s journey began at an early age, working across diverse institutional ecosystems and cultural organizations to awaken youth consciousness. Over years of frontline exposure, she observed a critical limitation in conventional advocacy: modern socio-political frameworks often treat women as passive beneficiaries or perpetual victims, eroding their inherent psychological strength. Evolving through rigorous field realities, Harshita transitioned from collaborative activism to independent, institutional leadership establishing Shakti Sabha to revive the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
+            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
+              {profile.genesisP1}
             </p>
+            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
+              {profile.genesisP2}
+            </p>
+            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
+              {profile.genesisP3}
+            </p>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.04)',
+              borderLeft: '3px solid #DC143C',
+              padding: '1rem 1.25rem',
+              borderRadius: '0 8px 8px 0',
+              marginTop: '1.25rem',
+              fontSize: '0.94rem',
+              lineHeight: 1.65,
+              color: '#E5E7EB'
+            }}>
+              <strong>The Principle of Kshatra-Dharma:</strong> {profile.kshatraDharmaText}
+            </div>
           </div>
 
-          {/* ── Tactical Frontline Interventions & Crisis Rescue ── */}
-          <div style={{ marginBottom: '1.5rem' }}>
+          {/* ── Tactical Frontline Interventions & Survivor Support ── */}
+          <div style={{ marginBottom: '1.5rem', marginTop: '3.5rem' }}>
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Operational Interventions
+              Operational Interventions &amp; Safeguarding
             </span>
             <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1rem' }}>
-              Tactical Frontline Interventions & Crisis Rescue
+              Tactical Frontline Interventions &amp; Survivor Support
             </h3>
-            <p style={{ color: '#4B5563', fontSize: '0.92rem', maxWidth: '750px', marginBottom: '2rem' }}>
-              Operating in high-risk environments across rural heartlands, urban centers, and institutional corridors, Harshita has led frontline intervention and operational rescue missions where statutory systems faced jurisdictional limitations:
+            <p style={{ color: '#4B5563', fontSize: '0.94rem', maxWidth: '820px', lineHeight: 1.65, marginBottom: '2rem' }}>
+              Harshita’s grassroots work has included direct engagement with vulnerable individuals and families facing situations of exploitation, coercion, and personal crisis. Her intervention work has focused on safety, crisis response, coordination with relevant stakeholders, and supporting survivors through recovery and reintegration.
             </p>
           </div>
 
-          <div className={p.tacticalGrid}>
+          <div className={p.tacticalGrid} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
             {TACTICAL_INTERVENTIONS.map((item, idx) => (
-              <div key={idx} className={p.tacticalCard}>
-                <GoogleIcon name={item.icon} size={32} style={{ color: '#DC143C', marginBottom: '0.75rem' }} />
-                <h4 className={p.tacticalTitle}>{item.title}</h4>
-                <p className={p.tacticalDesc}>{item.desc}</p>
+              <div key={idx} className={p.tacticalCard} style={{ padding: '1.75rem', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 14 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.75rem' }}>
+                  <GoogleIcon name={item.icon} size={28} style={{ color: '#DC143C' }} />
+                  <h4 className={p.tacticalTitle} style={{ margin: 0, fontSize: '1.15rem' }}>{item.title}</h4>
+                </div>
+                <p className={p.tacticalDesc} style={{ fontSize: '0.92rem', color: '#4B5563', lineHeight: 1.6, marginBottom: '1rem' }}>
+                  {item.desc}
+                </p>
+                <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', fontSize: '0.88rem', lineHeight: 1.65, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {item.bullets.map((b, bIdx) => (
+                    <li key={bIdx}>{b}</li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
 
+          {/* Institutional Note on Confidentiality & Statutory Compliance */}
+          <div style={{
+            background: '#F9FAFB',
+            border: '1px solid #E5E7EB',
+            borderRadius: 12,
+            padding: '1.25rem 1.5rem',
+            marginTop: '2rem',
+            marginBottom: '3rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', color: '#111827', fontWeight: 700, fontSize: '0.88rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <GoogleIcon name="gavel" size={18} style={{ color: '#DC143C' }} />
+              Institutional Note on Confidentiality &amp; Statutory Compliance
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#6B7280', lineHeight: 1.65 }}>
+              "{profile.interventions.confidentialityNotice}"
+            </p>
+          </div>
+
           {/* ── Mission Mardini: Tactical Combat & Integrated Sovereignty ── */}
           <div className={p.doctrineBox}>
-            <div className={p.doctrineSubtitle}>The Dual-Shield Doctrine</div>
+            <div className={p.doctrineSubtitle}>Physical Sovereignty. Mental Resilience. Tactical Preparedness.</div>
             <h3 className={p.doctrineHeading}>
-              Mission Mardini: Tactical Combat & Integrated Sovereignty
+              Mission Mardini: The Dual-Shield Doctrine
             </h3>
             <p className={p.doctrinePremise}>
-              "Mental Resilience Before Physical Strike: The Dual-Shield Doctrine"<br />
-              Harshita Mankar holds a Black Belt in Karate, Expert in Lathi-Kaushal, Sword and serves as a tactical combat instructor who rejects conventional, passive self-defense models. Her core training doctrine is built on an inviolable premise: "Before the body can strike, the mind must be liberated from fear. True empowerment is not a slogan it is the simultaneous mastery of cognitive composure and physical capability."
-            </p>
-            <p style={{ color: '#374151', fontSize: '0.9rem', marginBottom: '2rem' }}>
-              Under Mission Mardini, she trains young women and teenage girls through an asymmetric combat curriculum designed to handle real-world street violence, ambushes, and coercive physical encounters:
+              "Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability."<br /><br />
+              Led by Aaryaveera, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure. It is designed for school students, teenage girls, university students, rural women, and participants from tribal and underserved communities.
             </p>
 
             <div className={p.curriculumGrid}>
@@ -326,15 +407,41 @@ export default function AboutPage() {
                 </div>
               ))}
             </div>
+
+            {/* Camps & Outreach Sub-section */}
+            <div style={{
+              background: 'rgba(255,255,255,0.05)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: 12,
+              padding: '1.5rem',
+              marginTop: '2rem'
+            }}>
+              <h4 style={{ color: '#FFFFFF', margin: '0 0 0.75rem', fontSize: '1.1rem' }}>
+                Intensive 7–10 Day Mardini Camps &amp; Field Outreach
+              </h4>
+              <p style={{ color: '#D1D5DB', fontSize: '0.88rem', lineHeight: 1.65, margin: '0 0 1rem' }}>
+                Mission Mardini organizes intensive training camps designed to develop physical confidence, mental resilience, discipline, and practical self-defense awareness. Activities include Karate and foundational combat, Lathi-Kaushal and traditional martial arts, situational awareness, psychological stress management, leadership, and practical safety simulations.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                <div style={{ flex: '1 1 250px', background: 'rgba(0,0,0,0.2)', padding: '0.85rem 1rem', borderRadius: 8 }}>
+                  <strong style={{ color: '#FFD700', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Institutional Collaborations</strong>
+                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem' }}>Collaborating with educational institutions and community organizations to expand training and awareness.</span>
+                </div>
+                <div style={{ flex: '1 1 250px', background: 'rgba(0,0,0,0.2)', padding: '0.85rem 1rem', borderRadius: 8 }}>
+                  <strong style={{ color: '#FFD700', fontSize: '0.85rem', display: 'block', marginBottom: '0.25rem' }}>Tribal &amp; Rural Outreach</strong>
+                  <span style={{ color: '#9CA3AF', fontSize: '0.82rem' }}>Making training, guidance, and support accessible to young girls in underserved areas beyond urban centers.</span>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* ── The Three Pillars in Action ──────────── */}
-          <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ marginBottom: '1.5rem', marginTop: '3.5rem' }}>
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Strategic Wings
+              OUR THREE STREAMS · ONE VISION
             </span>
             <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1.5rem' }}>
-              The Three Pillars in Action by Harshita Mankar
+              The Shakti Sabha Tri-Stream Architecture
             </h3>
           </div>
 
@@ -370,18 +477,24 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── BOLD MISSION STATEMENT ───────────────────── */}
+      {/* ── THE SHAKTI SABHA PHILOSOPHY ──────────────── */}
       <div className={p.quoteSection}>
-        <div className={p.quoteInner} style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
+        <div className={p.quoteInner} style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
           <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '1rem' }}>
-            Civilizational Conviction · Brand Ka Dil
+            THE SHAKTI SABHA PHILOSOPHY
           </span>
-          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.25rem, 2.3vw, 1.75rem)', lineHeight: 1.6, color: '#881337', fontStyle: 'italic', marginBottom: '1.25rem' }}>
-            "Sadiyaan beet gayi, Indian woman ki asli kahani dobara sunne ki. Woh sirf ghar nahi sambhalti thi — woh yuddh jeetti thi, darshan padhati thi, rajya chalati thi. Shakti Sabha usi sach ko wapas laane ke liye hai."
-          </blockquote>
-          <p style={{ color: '#4B5563', fontSize: '0.9rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            — Shakti Sabha Mission & Conviction
+          <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.6vw, 2rem)', color: '#881337', marginBottom: '1.25rem' }}>
+            Strength Without Hatred. Knowledge Without Blindness. Power With Responsibility.
+          </h3>
+          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
+            Shakti Sabha believes that genuine empowerment must develop the whole human being. Physical strength without self-control can become aggression. Knowledge without critical inquiry can become dogma. Freedom without responsibility can become directionless. Peace without courage can become passive acceptance of injustice.
           </p>
+          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
+            We encourage women to recognize their strength without developing hostility towards men. We encourage young people to question ideas without becoming prisoners of cynicism. We promote cultural awareness without blind glorification and modern thinking without blind imitation.
+          </p>
+          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', lineHeight: 1.6, color: '#DC143C', fontStyle: 'italic', margin: '0 0 1rem' }}>
+            "We do not seek to create followers. We seek to cultivate independent minds, responsible leaders, and conscious individuals."
+          </blockquote>
         </div>
       </div>
 
