@@ -3,24 +3,76 @@ import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { getFounderData, FounderProfileData } from '../../data/founderData'
-import { useCategoryPhoto } from '../../data/galleryStore'
+import { useCategoryPhotos } from '../../data/galleryStore'
 import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import s from './Profile.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const DEFAULT_FIELD_SLIDES = [
+  {
+    url: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=1200&auto=format&fit=crop',
+    caption: 'Mission Mardini — Tactical Self-Defense Camp & Lathi-Kaushal',
+    tag: 'Field Operations'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=1200&auto=format&fit=crop',
+    caption: 'Shakti Varta — National Symposium & Civilizational Discourse',
+    tag: 'Intellectual Discourse'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?q=80&w=1200&auto=format&fit=crop',
+    caption: 'Martial Preparedness — Traditional Weaponry & Combat Discipline',
+    tag: 'Kshatra-Dharma'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1200&auto=format&fit=crop',
+    caption: 'Shakti Bhava — Emotional Resilience & Survivor Healing Circle',
+    tag: 'Consciousness Space'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?q=80&w=1200&auto=format&fit=crop',
+    caption: 'Tribal & Rural Outreach — Grassroots Leadership Drives',
+    tag: 'Community Mission'
+  }
+]
+
 export default function Profile() {
   const secRef   = useRef<HTMLElement>(null)
   const photoRef = useRef<HTMLDivElement>(null)
   const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
-  const campPhoto = useCategoryPhoto(
-    ['mardini', 'camp', 'combat', 'martial'],
-    'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop'
+
+  const fallbackUrls = DEFAULT_FIELD_SLIDES.map(s => s.url)
+  const galleryPhotos = useCategoryPhotos(
+    ['mardini', 'camp', 'combat', 'seminar', 'shakti-varta', 'shakti-bhava', 'founder'],
+    5,
+    fallbackUrls
   )
-  const seminarPhoto = useCategoryPhoto(
-    ['shakti-varta', 'seminar', 'discourse', 'shakti-bhava'],
-    'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop'
-  )
+
+  const slides = galleryPhotos && galleryPhotos.length > 0
+    ? galleryPhotos.map((p, idx) => ({
+        url: p.url,
+        caption: p.caption || DEFAULT_FIELD_SLIDES[idx % DEFAULT_FIELD_SLIDES.length].caption,
+        tag: DEFAULT_FIELD_SLIDES[idx % DEFAULT_FIELD_SLIDES.length].tag
+      }))
+    : DEFAULT_FIELD_SLIDES
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  // Reduced speed: 6.5s per image transition for a calm, comfortable pace
+  useEffect(() => {
+    if (isPaused || slides.length <= 1) return
+    const SLIDE_DURATION = 6500
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % slides.length)
+    }, SLIDE_DURATION)
+    return () => clearInterval(timer)
+  }, [isPaused, slides.length])
+
+  const nextSlide = () => setCurrentSlide(prev => (prev + 1) % slides.length)
+  const prevSlide = () => setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length)
+  const goToSlide = (idx: number) => setCurrentSlide(idx)
 
   useEffect(() => {
     const handleUpdate = () => {
@@ -160,19 +212,76 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Bottom Right: Two Sub Images */}
+          {/* Bottom Right: Single Frame Changing Images Slideshow */}
           <div className={s.rightBottom}>
-            <div data-p="subimg" className={s.subImg}>
-              <img 
-                src={campPhoto.url} 
-                alt={campPhoto.caption || "Mission Mardini Camp"} 
-              />
-            </div>
-            <div data-p="subimg" className={s.subImg}>
-              <img 
-                src={seminarPhoto.url} 
-                alt={seminarPhoto.caption || "Youth Awakening Seminar"} 
-              />
+            <div 
+              data-p="subimg" 
+              className={s.slideshowFrame}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+            >
+              {/* Slides */}
+              {slides.map((slide, idx) => (
+                <div 
+                  key={idx} 
+                  className={`${s.slideItem} ${idx === currentSlide ? s.activeSlide : ''}`}
+                >
+                  <img 
+                    src={slide.url} 
+                    alt={slide.caption} 
+                    className={s.slideImg}
+                    loading={idx === 0 ? 'eager' : 'lazy'} 
+                  />
+                  <div className={s.slideOverlay}>
+                    <div className={s.slideMeta}>
+                      <span className={s.slideTag}>{slide.tag}</span>
+                      <p className={s.slideCaption}>{slide.caption}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Smooth Progress Bar */}
+              <div className={s.progressBarTrack}>
+                <div 
+                  key={currentSlide} 
+                  className={`${s.progressBarFill} ${isPaused ? s.paused : ''}`}
+                />
+              </div>
+
+              {/* Slideshow Top Controls */}
+              <div className={s.slideshowControls}>
+                <button 
+                  type="button" 
+                  onClick={prevSlide} 
+                  className={s.navBtn} 
+                  aria-label="Previous slide"
+                >
+                  ‹
+                </button>
+                <div className={s.dotsContainer}>
+                  {slides.map((_, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => goToSlide(idx)}
+                      className={`${s.dot} ${idx === currentSlide ? s.activeDot : ''}`}
+                      aria-label={`Slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+                <button 
+                  type="button" 
+                  onClick={nextSlide} 
+                  className={s.navBtn} 
+                  aria-label="Next slide"
+                >
+                  ›
+                </button>
+                <span className={s.counterBadge}>
+                  {String(currentSlide + 1).padStart(2, '0')} / {String(slides.length).padStart(2, '0')}
+                </span>
+              </div>
             </div>
           </div>
         </div>
