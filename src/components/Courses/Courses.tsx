@@ -8,7 +8,7 @@ import Testimonials from '../Testimonials/Testimonials'
 gsap.registerPlugin(ScrollTrigger)
 
 const COURSES = [
-  { badge:'Flagship · Aaryaveera', title:'Warrior Spirit Certification', detail:'The complete Aaryaveera journey — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.', modules:'12 Modules', duration:'8 Weeks', level:'All Levels', featured:true },
+  { badge:'Kshatra-Dharma · Shakti Sabha', title:'Warrior Spirit Certification', detail:'Guided by the Aaryaveera philosophy — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.', modules:'12 Modules', duration:'8 Weeks', level:'All Levels', featured:true },
   { badge:'Parenting', title:'Vedic Parenting in Modern India', detail:'Raising resilient, rooted children in a fractured world. Drawing on Vedic wisdom, modern psychology, and lived experience.', modules:'8 Modules', duration:'6 Weeks', level:'Parents', featured:false },
   { badge:'Discourse · Shakti Varta', title:'Understanding Paurush — True Masculinity', detail:'An honest inquiry into masculinity, Dharma, and the role of men in protecting and building a just society.', modules:'6 Modules', duration:'4 Weeks', level:'Open', featured:false },
   { badge:'Self-Defense', title:'Lathi-Kaushal for Women', detail:"The ancient Indian art of Lathi — practical, powerful, rooted. Taught by Shakti Sabha's field instructors.", modules:'10 Modules', duration:'6 Weeks', level:'Beginners', featured:false },

@@ -35,8 +35,8 @@ const CASE_STUDIES: CaseItem[] = [
     category: 'SELF-DEFENSE',
     readTime: '4 min read',
     date: 'Oct 2026',
-    excerpt: 'Facing repeated harassment on her commute from textile factory shifts, Kamla enrolled in our 3-day Aaryaveera self-defense camp. Two weeks later, she disarmed an aggressor using wrist leverage.',
-    fullStory: 'Rather than resigning from her livelihood, Kamla applied the Aaryaveera pivot-and-strike protocol when cornered at a bus depot. The aggressor fled, and her factory floor organized mandatory safety workshops for all 180 female shift workers.',
+    excerpt: 'Facing repeated harassment on her commute from textile factory shifts, Kamla enrolled in our 3-day Mission Mardini self-defense camp. Two weeks later, she disarmed an aggressor using wrist leverage.',
+    fullStory: 'Rather than resigning from her livelihood, Kamla applied the Mission Mardini pivot-and-strike protocol (guided by the Aaryaveera warrior philosophy) when cornered at a bus depot. The aggressor fled, and her factory floor organized mandatory safety workshops for all 180 female shift workers.',
     badgeColor: '#DC143C',
   },
   {

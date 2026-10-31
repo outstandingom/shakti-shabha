@@ -214,7 +214,7 @@ export default function CoursesPage() {
           <p className={cp.hindiSubtitle}>पाठ्यक्रम एवं ज्ञान मंच · Self-Defense &amp; Leadership</p>
           <p className={cp.desc}>
             Structured, high-definition online masterclasses protected by AWS CloudFront signed URLs to prevent unauthorized piracy.
-            Earn the prestigious Aaryaveera Warrior Certification and gain lifetime access to updates and private student forums.
+            Earn Shakti Sabha's Kshatra-Dharma Certification, rooted in the Aaryaveera philosophy, and gain lifetime access to updates and private student forums.
           </p>
         </div>
       </div>

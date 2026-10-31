@@ -5,11 +5,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './Events.module.css'
 
 const EVENTS = [
-  { day:'14', month:'Nov 2026', name:'Aaryaveera 3-Day Self-Defense Camp', meta:'Wardha, Maharashtra · Limited seats · ₹1,200', badge:'Camp' },
+  { day:'14', month:'Nov 2026', name:'Mission Mardini 3-Day Self-Defense Camp', meta:'Wardha, Maharashtra · Limited seats · ₹1,200', badge:'Camp' },
   { day:'22', month:'Nov 2026', name:'Shakti Varta Seminar — The Legal Collage', meta:'Online · IPC & BNS Analysis · Free for members', badge:'Webinar' },
   { day:'05', month:'Dec 2026', name:'Vedic Parenting in Modern India Workshop', meta:'Nagpur · Full-day session · ₹800', badge:'Workshop' },
   { day:'18', month:'Dec 2026', name:'Sponsor a Village Camp — CSR Drive', meta:'Multiple locations · Corporate & NGO collaboration', badge:'CSR' },
-  { day:'08', month:'Jan 2027', name:'Aaryaveera 7-Day Leadership Retreat', meta:'Pune Outskirts · Residential · ₹4,500', badge:'Retreat' },
+  { day:'08', month:'Jan 2027', name:'Kshatra-Dharma 7-Day Leadership Retreat', meta:'Pune Outskirts · Residential · ₹4,500', badge:'Retreat' },
 ]
 
 export default function Events() {

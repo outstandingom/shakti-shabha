@@ -293,11 +293,12 @@ export default function BrandPage() {
         <div className={p.sectionInner}>
           <div className={p.aaryaveeraCard}>
             <div className={p.aaryaveeraLeft}>
-              <span className={p.aaryaveeraEyebrow}>Sub-Brand</span>
+              <span className={p.aaryaveeraEyebrow}>फाउंडर दर्शन · Founder's Philosophical Identity</span>
               <h3 className={p.aaryaveeraTitle}>Aaryaveera</h3>
-              <p className={p.aaryaveeraHindi}>आर्यवीरा</p>
+              <p className={p.aaryaveeraHindi}>आर्यवीरा · The Founder's Philosophy</p>
               <p className={p.aaryaveeraDesc}>
-                Aaryaveera is Shakti Sabha's warrior sub-brand — carrying its own visual identity while remaining nested within the master brand. The Warrior Emblem (flame + lotus composite) is the hero mark. It uses a dedicated gold colour palette and Cinzel display type at maximum weight.
+                <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
+                {' '}Aaryaveera is not an operational event or program, but the personal ideological identity and worldview of founder Harshita Mankar. The Warrior Emblem (flame + lotus composite) is its philosophical emblem, using a dedicated matte brass gold palette and Cinzel display typography.
               </p>
               <div className={p.aaryaveeraColors}>
                 <div className={p.aColorChip} style={{ background: '#C9A96E' }}>

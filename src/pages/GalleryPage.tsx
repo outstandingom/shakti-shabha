@@ -27,8 +27,8 @@ const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
   {
     src: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
     alt: 'Joint-Lock & Escape Biomechanics',
-    tag: 'AARYAVEERA CAMPS',
-    desc: 'Intensive tactile counter-assault training during the 5-day residential Aaryaveera camp.'
+    tag: 'MISSION MARDINI',
+    desc: 'Intensive tactile counter-assault training during the 5-day residential Mission Mardini camp.'
   },
   {
     src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
@@ -44,8 +44,8 @@ const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
   },
   {
     src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
-    alt: 'Aaryaveera Warrior Batch Convocation',
-    tag: 'AARYAVEERA CAMPS',
+    alt: 'Mission Mardini Cadet Convocation',
+    tag: 'MISSION MARDINI',
     desc: 'Over 120 girls receiving their verified physical warrior certificates in Pune.'
   },
   {

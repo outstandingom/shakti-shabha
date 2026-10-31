@@ -139,7 +139,7 @@ const PILLARS_IN_ACTION = [
     color: '#DC143C',
     dedicatedLink: '/mardini',
     dedicatedLabel: 'Explore Mission Mardini Page →',
-    desc: 'Led by Aaryaveera, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure.',
+    desc: 'Guided by founder Harshita Mankar’s Aaryaveera philosophy, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure.',
     bullets: [
       'Dual-Shield Doctrine: Cognitive De-escalation & Situational Awareness + Physical Defense & Tactical Combat.',
       'Intensive 7–10 day residential warrior camps with martial discipline and scenario-based drills.',
@@ -181,7 +181,7 @@ const TIMELINE = [
   { year: '2014', title: 'First Mission Mardini Camp', desc: 'Inaugural residential camp blending Karate empty-hand combat with Lathi-Kaushal staff defense and freeze-response elimination.' },
   { year: '2016', title: '100+ Schools Reached', desc: 'Expanded across rural corridors, residential hostels, and colleges for situational awareness and boundary management.' },
   { year: '2018', title: 'Frontline Interventions Formalized', desc: 'Somatic trauma de-escalation, non-verbal behavioral observation, and statutory child-protection coordination.' },
-  { year: '2022', title: 'Aaryaveera Leadership Series', desc: 'Flagship residential leadership and train-the-trainer camp established for pan-India student sentinels.' },
+  { year: '2022', title: 'Aaryaveera Philosophy Codified', desc: 'The founder’s personal worldview (Aaryaveera) formally codified as the ideological foundation guiding all Shakti Sabha initiatives.' },
   { year: '2024', title: '25,000+ Students Awakened', desc: 'Over 500 seminars, 2,000+ girls trained in self-defense, 13 minors safely reintegrated, and active tribal outreach operations.' },
 ]
 
@@ -428,7 +428,7 @@ export default function AboutPage() {
             </h3>
             <p className={p.doctrinePremise}>
               "Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability."<br /><br />
-              Led by Aaryaveera, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure. It is designed for school students, teenage girls, university students, rural women, and participants from tribal and underserved communities.
+              Guided by founder Harshita Mankar’s Aaryaveera philosophy, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure. It is designed for school students, teenage girls, university students, rural women, and participants from tribal and underserved communities.
             </p>
 
             <div className={p.curriculumGrid}>

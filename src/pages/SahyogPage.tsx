@@ -75,7 +75,7 @@ export default function SahyogPage() {
             <div className={sh.colBody}>
               <div className={sh.featureItem}>
                 <div className={sh.featureDot} style={{ background: '#DC143C' }} />
-                <div><strong>Fund Village Camps:</strong> Directly sponsor 3-day, 5-day, or 7-day Aaryaveera self-defense camps for rural schools.</div>
+                <div><strong>Fund Village Camps:</strong> Directly sponsor 3-day, 5-day, or 7-day Mission Mardini self-defense camps (guided by Aaryaveera philosophy) for rural schools.</div>
               </div>
               <div className={sh.featureItem}>
                 <div className={sh.featureDot} style={{ background: '#DC143C' }} />

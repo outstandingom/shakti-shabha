@@ -67,7 +67,7 @@ export default function Footer() {
           <div className={s.colTitle}>Platform</div>
           <ul className={s.links}>
             <li><Link to="/about" className={s.link}>About Us</Link></li>
-            <li><Link to="/aaryaveera" className={s.link}>Aaryaveera Initiative</Link></li>
+            <li><Link to="/aaryaveera" className={s.link}>Aaryaveera (फाउंडर दर्शन)</Link></li>
             <li><Link to="/counselling" className={s.link}>Counselling Services</Link></li>
             <li><Link to="/sahyog" className={s.link}>Community Ecosystem</Link></li>
             <li><Link to="/courses" className={s.link}>Online Courses & LMS</Link></li>

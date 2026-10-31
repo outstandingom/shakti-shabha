@@ -138,9 +138,32 @@ export default function AaryaveeraPage() {
             The Identity. The Philosophy. The Consciousness.
           </p>
           <div className={`${p.heroDivider} avHeroIn`} aria-hidden="true" />
+
+          {/* Explicit Institutional Distinction Callout */}
+          <div className="avHeroIn" style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.85rem',
+            background: 'rgba(201, 169, 110, 0.1)',
+            border: '1px solid rgba(201, 169, 110, 0.3)',
+            borderRadius: '9999px',
+            padding: '0.5rem 1.4rem',
+            margin: '0.85rem 0 1.5rem',
+            fontSize: '0.88rem',
+            color: '#E8C98A',
+            flexWrap: 'wrap',
+            textAlign: 'center'
+          }}>
+            <span style={{ fontWeight: 700 }}>शक्ति सभा = संस्थागत ढांचा (Institutional Body)</span>
+            <span style={{ color: '#C2410C' }}>•</span>
+            <span style={{ fontWeight: 700 }}>आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन</span>
+          </div>
+
           <p className={`${p.heroBody} avHeroIn`}>
-            Aaryaveera is the personal ideological identity and life philosophy of Harshita Mankar.
-            It represents a way of thinking and living shaped by courage, wisdom, discipline,
+            <strong>Aaryaveera is the Founder</strong> — not an event, camp, or operational program.
+            It represents the personal ideological identity and life philosophy of Harshita Mankar:
+            a way of thinking and living shaped by courage, wisdom, discipline,
             self-mastery, intellectual independence, and a deep sense of responsibility.
           </p>
           <p className={`${p.heroBody} avHeroIn`}>
@@ -348,30 +371,30 @@ export default function AaryaveeraPage() {
           <h2 className={p.sectionTitle}>Aaryaveera and Shakti Sabha</h2>
           <div className={p.distinctionGrid}>
             <div className={p.distinctionBlock}>
-              <h3 className={p.distinctionLabel}>Aaryaveera</h3>
+              <h3 className={p.distinctionLabel}>आर्यवीरा (Aaryaveera) — फाउंडर दर्शन</h3>
               <p>
                 Aaryaveera is the <strong>personal philosophical identity</strong> of
-                Harshita Mankar. It is not an organisation, a programme, a course,
-                or a stream of work. It is her worldview — the lens through which she
-                thinks, makes decisions, and approaches her responsibilities.
+                founder Harshita Mankar. It is not an organisation, a programme, an event, a camp,
+                or a stream of work. It is her worldview — the foundational lens through which she
+                thinks, makes decisions, and approaches civilizational responsibility.
               </p>
               <p>
-                It is not a fourth stream alongside Mission Mardini, Shakti Bhava,
-                and Shakti Varta. It is the underlying philosophy that informs all of them.
+                It is not a separate operational stream alongside Mission Mardini, Shakti Bhava,
+                and Shakti Varta. It is the underlying philosophy that inspires all of them.
               </p>
             </div>
             <div className={p.distinctionArrow} aria-hidden="true">→</div>
             <div className={p.distinctionBlock}>
-              <h3 className={p.distinctionLabel}>Shakti Sabha</h3>
+              <h3 className={p.distinctionLabel}>शक्ति सभा (Shakti Sabha) — संस्थागत ढांचा</h3>
               <p>
-                Shakti Sabha is the <strong>organisational platform</strong> through which
+                Shakti Sabha is the <strong>institutional body (संस्थागत ढांचा)</strong> through which
                 Harshita Mankar translates her philosophy into structured, public-facing
-                programmes and initiatives.
+                programmes and community initiatives.
               </p>
               <p>
                 The three streams — Mission Mardini, Shakti Bhava, and Shakti Varta —
                 are the operational expressions of the Aaryaveera philosophy made
-                accessible to communities.
+                accessible to on-ground communities.
               </p>
             </div>
           </div>

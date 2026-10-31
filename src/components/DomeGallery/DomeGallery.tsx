@@ -48,7 +48,7 @@ export const DEFAULT_SHAKTI_IMAGES: DomeGalleryImage[] = [
   {
     src: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
     alt: 'Biomechanical Self-Defense Drill',
-    tag: 'AARYAVEERA',
+    tag: 'MISSION MARDINI',
     desc: 'Escapes from rear chokeholds, wrist locks, and emergency voice projection.'
   },
   {
@@ -67,7 +67,7 @@ export const DEFAULT_SHAKTI_IMAGES: DomeGalleryImage[] = [
     src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
     alt: 'Youth Warrior Leadership Graduation',
     tag: 'LEADERSHIP',
-    desc: 'High school girls completing the 6-week Aaryaveera character and fitness certification.'
+    desc: 'High school girls completing the 6-week Shakti Sabha character and fitness certification.'
   },
   {
     src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',

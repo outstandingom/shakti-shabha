@@ -9,9 +9,9 @@ import s from './Aaryaveera.module.css'
 gsap.registerPlugin(ScrollTrigger, Physics2DPlugin)
 
 const CARDS = [
-  { icon: 'sports_martial_arts',  title: 'Self-Defense & Training',  text: 'Aaryaveera Camps and Warrior Certification. The trained body is the first declaration of freedom.' },
-  { icon: 'local_fire_department', title: 'Character & Leadership',    text: 'Courses that build the Aaryaveera spirit — noble, fearless, anchored in Dharma and cultural roots.' },
-  { icon: 'podcasts',  title: 'Dialogue & Research',       text: '"Aaryaveera Dialogues" under Shakti Varta — honest discourse on true masculinity, Paurush, and Dharma.' },
+  { icon: 'sports_martial_arts',  title: 'Self-Mastery & Kshatra-Dharma', text: 'Rooted in the Aaryaveera philosophy, Shakti Sabha conducts Mission Mardini tactical self-defense camps — building fearlessness and physical sovereignty.' },
+  { icon: 'local_fire_department', title: 'Moral Autonomy & Character',   text: 'The founder’s worldview cultivates inner mastery, ethical courage, and personal responsibility without falling into victimhood.' },
+  { icon: 'podcasts',             title: 'Epistemic & Civilizational Dialogue', text: 'Powering Shakti Varta’s intellectual inquiries — uncompromising civilizational discourse on noble masculinity (Paurush) and Dharma.' },
 ]
 
 const COLORS = ['#CC230C','#E0550D','#C8433E','#FA9417','#F7A958','#F4BEA2','#D57A84']
@@ -195,25 +195,23 @@ export default function Aaryaveera() {
       <div className={s.inner}>
         {/* LEFT: text + cards */}
         <div className={s.left}>
-          <span data-av="eyebrow" className={s.eyebrow}>Signature Initiative · Aaryaveera</span>
+          <span data-av="eyebrow" className={s.eyebrow}>फाउंडर दर्शन · The Founder's Ideology</span>
           <div className={s.titleClip}>
             <span data-av="title" className={s.title}>AARYAVEERA</span>
           </div>
-          <span data-av="sub"   className={s.sub}>आर्यवीरा · The Warrior Spirit</span>
+          <span data-av="sub"   className={s.sub}>आर्यवीरा · Ideological Identity of Founder Harshita Mankar</span>
           <span data-av="motto" className={s.motto}>"Shakti Se Shanti — From Strength, Peace"</span>
           <div data-av="identity" className={s.identity}>
             <p className={s.identityLead}>
-              Aaryaveera is the flagship identity of Shakti Sabha&apos;s revolutionary spirit —
-              representing the awakened warrior within every woman and the noble masculinity
-              (Paurush) that protects Dharma. It is the unifying symbol that bridges <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
+              <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
+              {' '}Aaryaveera is not an operational event or program, but the personal philosophical identity of founder Harshita Mankar. It provides the ideological bedrock that guides Shakti Sabha&apos;s three institutional streams: <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
             </p>
             <ul className={s.identityList}>
-              <li><strong>Symbolism:</strong> The flame of revolution + the lotus of peace</li>
-              <li><strong>Motto:</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
-              <li><strong>Manifestation:</strong> Self-defense training, character building, cultural awakening</li>
+              <li><strong>संस्था (Institution):</strong> Shakti Sabha (The institutional platform and executive machinery)</li>
+              <li><strong>दर्शन (Philosophy):</strong> Aaryaveera (The founder's personal worldview: flame of revolution + lotus of peace)</li>
+              <li><strong>ध्येय (Motto):</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
             </ul>
           </div>
-          <p className={s.poweredBy}>Powered by Shakti Shabha</p>
 
           <div className={s.grid}>
             {CARDS.map(c => (
@@ -226,8 +224,8 @@ export default function Aaryaveera() {
           </div>
 
           <div data-av="cta" className={s.cta}>
-            <Link to="/aaryaveera" className={s.btnWarriorGold}>Full Aaryaveera Programme</Link>
-            <Link to="/courses"    className={s.btnWarriorOutline}>Enroll in a Course</Link>
+            <Link to="/aaryaveera" className={s.btnWarriorGold}>Explore Aaryaveera Philosophy →</Link>
+            <Link to="/about#founder" className={s.btnWarriorOutline}>Founder Profile &amp; Bio</Link>
           </div>
         </div>
 

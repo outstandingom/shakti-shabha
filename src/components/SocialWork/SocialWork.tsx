@@ -65,7 +65,7 @@ const SLIDES: SlideData[] = [
   {
     title: 'Youth Leadership',
     subtitle: 'Yavatmal, Maharashtra',
-    description: 'Aaryaveera character certification and leadership academy for girls 14–20.',
+    description: 'Shakti Sabha character and leadership academy for girls 14–20, guided by the Aaryaveera worldview.',
     stat: '15,000+ Cadets',
     image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&auto=format&fit=crop&q=80',
   },
