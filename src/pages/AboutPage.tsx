@@ -192,11 +192,171 @@ const VALUES = [
   { icon: 'spa', name: 'Human Consciousness', dev: 'आत्म चेतना', desc: 'Strength without hatred. Knowledge without blindness. Power with responsibility. Developing the whole human being.' },
 ]
 
+export interface SocialChannel {
+  id: string
+  platform: 'YouTube' | 'Instagram' | 'Facebook' | 'Website' | 'Pinterest' | 'Twitter'
+  entity: string
+  entityHi: string
+  entityType: 'aaryaveera' | 'shaktisabha'
+  handle: string
+  url: string
+  domain: string
+  desc: string
+  googleIcon: string
+  accentColor: string
+  softBg: string
+  actionLabel: string
+}
+
+const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
+  {
+    id: 'yt-aaryaveera',
+    platform: 'YouTube',
+    entity: 'Aaryaveera',
+    entityHi: 'आर्यवीरा यूट्यूब',
+    entityType: 'aaryaveera',
+    handle: '@aaryaveeraa',
+    url: 'https://youtube.com/@aaryaveeraa?si=',
+    domain: 'youtube.com',
+    desc: 'Official video discourses, self-defense masterclasses, and ideological youth awakening series.',
+    googleIcon: 'smart_display',
+    accentColor: '#FF0000',
+    softBg: 'rgba(255, 0, 0, 0.08)',
+    actionLabel: 'Watch & Subscribe'
+  },
+  {
+    id: 'ig-aaryaveera',
+    platform: 'Instagram',
+    entity: 'Aaryaveera',
+    entityHi: 'आर्यवीरा इंस्टाग्राम',
+    entityType: 'aaryaveera',
+    handle: '@aaryaveera',
+    url: 'https://www.instagram.com/aaryaveera?exln=dTB1MXQ3eWF5NGl6',
+    domain: 'instagram.com',
+    desc: 'Founder Aaryaveera Harshita Mankar’s official reflections, ideological doctrine, and live updates.',
+    googleIcon: 'photo_camera',
+    accentColor: '#E1306C',
+    softBg: 'rgba(225, 48, 108, 0.08)',
+    actionLabel: 'Follow @aaryaveera'
+  },
+  {
+    id: 'ig-theaaryaveera',
+    platform: 'Instagram',
+    entity: 'The Aaryaveera',
+    entityHi: 'द आर्यवीरा कैडर',
+    entityType: 'aaryaveera',
+    handle: '@theaaryaveera',
+    url: 'https://www.instagram.com/theaaryaveera?mdxt=c25ybWV4bzkzNXZr',
+    domain: 'instagram.com',
+    desc: 'Warrior cadre demonstrations, camp chronicles, martial training drills, and field highlights.',
+    googleIcon: 'photo_camera',
+    accentColor: '#E1306C',
+    softBg: 'rgba(225, 48, 108, 0.08)',
+    actionLabel: 'Follow @theaaryaveera'
+  },
+  {
+    id: 'ig-shaktisabha',
+    platform: 'Instagram',
+    entity: 'Shakti Sabha',
+    entityHi: 'शक्ति सभा संस्थागत',
+    entityType: 'shaktisabha',
+    handle: '@shaktisabha',
+    url: 'https://www.instagram.com/shaktisabha?exln=MWhtaWwwZDZmamI5',
+    domain: 'instagram.com',
+    desc: 'Institutional announcements, rural school drives, Mission Mardini camps, and community initiatives.',
+    googleIcon: 'photo_camera',
+    accentColor: '#DC143C',
+    softBg: 'rgba(220, 20, 60, 0.08)',
+    actionLabel: 'Follow @shaktisabha'
+  },
+  {
+    id: 'fb-shaktisabha',
+    platform: 'Facebook',
+    entity: 'Shakti Sabha',
+    entityHi: 'शक्ति सभा फेसबुक',
+    entityType: 'shaktisabha',
+    handle: 'Shakti Sabha Page',
+    url: 'https://www.facebook.com/share/1CbJnBXKHQ/',
+    domain: 'facebook.com',
+    desc: 'Official institutional community page, public awareness campaigns, and grassroots family outreach.',
+    googleIcon: 'groups',
+    accentColor: '#1877F2',
+    softBg: 'rgba(24, 119, 242, 0.08)',
+    actionLabel: 'Connect on Facebook'
+  },
+  {
+    id: 'fb-aaryaveera',
+    platform: 'Facebook',
+    entity: 'Aaryaveera',
+    entityHi: 'आर्यवीरा फेसबुक',
+    entityType: 'aaryaveera',
+    handle: 'Aaryaveera Page',
+    url: 'https://www.facebook.com/share/14qXzYydVzv/',
+    domain: 'facebook.com',
+    desc: 'Movement ideology, discussions on Kshatra-Dharma, and national convention announcements.',
+    googleIcon: 'share',
+    accentColor: '#1877F2',
+    softBg: 'rgba(24, 119, 242, 0.08)',
+    actionLabel: 'Follow on Facebook'
+  },
+  {
+    id: 'web-aaryaveera',
+    platform: 'Website',
+    entity: 'Aaryaveera',
+    entityHi: 'आधिकारिक वेबसाइट',
+    entityType: 'aaryaveera',
+    handle: 'www.aaryaveera.com',
+    url: 'https://www.aaryaveera.com',
+    domain: 'aaryaveera.com',
+    desc: 'Founder portal detailing the Aaryaveera civilizational vision, publications, and worldview.',
+    googleIcon: 'language',
+    accentColor: '#B45309',
+    softBg: 'rgba(180, 83, 9, 0.08)',
+    actionLabel: 'Visit aaryaveera.com'
+  },
+  {
+    id: 'pin-aaryaveera',
+    platform: 'Pinterest',
+    entity: 'Aaryaveera & Shakti Sabha',
+    entityHi: 'पिंटरेस्ट आर्काइव',
+    entityType: 'aaryaveera',
+    handle: 'pin.it/5DFgIhdKj',
+    url: 'https://pin.it/5DFgIhdKj',
+    domain: 'pinterest.com',
+    desc: 'Visual archives, martial arts graphics, educational posters, and photo documentation.',
+    googleIcon: 'push_pin',
+    accentColor: '#E60023',
+    softBg: 'rgba(230, 0, 35, 0.08)',
+    actionLabel: 'View on Pinterest'
+  },
+  {
+    id: 'tw-theaaryaveera',
+    platform: 'Twitter',
+    entity: 'The Aaryaveera',
+    entityHi: 'द आर्यवीरा एक्स / ट्विटर',
+    entityType: 'aaryaveera',
+    handle: '@TheAaryaveera',
+    url: 'https://x.com/TheAaryaveera?s=20',
+    domain: 'x.com',
+    desc: 'Timely thought leadership, cultural discourse, and movement alerts on Twitter (X).',
+    googleIcon: 'tag',
+    accentColor: '#111827',
+    softBg: 'rgba(17, 24, 39, 0.07)',
+    actionLabel: 'Follow on X'
+  }
+]
+
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
+  const [socialFilter, setSocialFilter] = useState<'all' | 'aaryaveera' | 'shaktisabha'>('all')
+
+  const filteredChannels = OFFICIAL_SOCIAL_CHANNELS.filter((ch) => {
+    if (socialFilter === 'all') return true
+    return ch.entityType === socialFilter
+  })
 
   useEffect(() => {
     const handleUpdate = () => setProfile(getFounderData())
@@ -332,6 +492,26 @@ export default function AboutPage() {
                     <p className={p.metricBadgeDesc}>{m.desc}</p>
                   </div>
                 ))}
+              </div>
+
+              {/* Founder Verified Social Quick Handles */}
+              <div className={p.founderSocialRow}>
+                <a href="https://youtube.com/@aaryaveeraa?si=" target="_blank" rel="noopener noreferrer" className={p.founderSocialPill} title="Aaryaveera YouTube">
+                  <GoogleIcon name="smart_display" size={16} style={{ color: '#FF0000' }} />
+                  <span>YouTube @aaryaveeraa</span>
+                </a>
+                <a href="https://www.instagram.com/aaryaveera?exln=dTB1MXQ3eWF5NGl6" target="_blank" rel="noopener noreferrer" className={p.founderSocialPill} title="Aaryaveera Instagram">
+                  <GoogleIcon name="photo_camera" size={16} style={{ color: '#E1306C' }} />
+                  <span>Instagram @aaryaveera</span>
+                </a>
+                <a href="https://x.com/TheAaryaveera?s=20" target="_blank" rel="noopener noreferrer" className={p.founderSocialPill} title="The Aaryaveera on X">
+                  <GoogleIcon name="tag" size={16} style={{ color: '#111827' }} />
+                  <span>X @TheAaryaveera</span>
+                </a>
+                <a href="https://www.aaryaveera.com" target="_blank" rel="noopener noreferrer" className={p.founderSocialPill} title="Aaryaveera Official Portal">
+                  <GoogleIcon name="language" size={16} style={{ color: '#B45309' }} />
+                  <span>aaryaveera.com</span>
+                </a>
               </div>
             </div>
           </div>
@@ -576,6 +756,92 @@ export default function AboutPage() {
                 <span className={p.valueDev}>{v.dev}</span>
                 <p className={p.valueDesc}>{v.desc}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── OFFICIAL DIGITAL SOVEREIGNTY & SOCIAL MEDIA CHANNELS ── */}
+      <section className={p.socialSection} id="social-channels">
+        <div className={p.sectionInner}>
+          <div className={p.socialHeader}>
+            <span className={p.socialEyebrow}>
+              <GoogleIcon name="public" size={16} />
+              Digital Sovereignty · आधिकारिक सोशल मीडिया
+            </span>
+            <h2 className={p.socialTitle}>Connect With Our Movement</h2>
+            <div className={p.socialHindi}>शक्ति सभा एवं आर्यवीरा के आधिकारिक सोशल मीडिया मंच</div>
+            <p className={p.socialSubtitle}>
+              Stay anchored with verified field reports, self-defense masterclasses, philosophical discourses, and live camp announcements across our verified digital handles.
+            </p>
+
+            {/* Entity Filter Bar */}
+            <div className={p.socialFilterBar}>
+              <button
+                type="button"
+                className={`${p.socialFilterBtn} ${socialFilter === 'all' ? p.socialFilterBtnActive : ''}`}
+                onClick={() => setSocialFilter('all')}
+              >
+                All Handles ({OFFICIAL_SOCIAL_CHANNELS.length})
+              </button>
+              <button
+                type="button"
+                className={`${p.socialFilterBtn} ${socialFilter === 'aaryaveera' ? p.socialFilterBtnActive : ''}`}
+                onClick={() => setSocialFilter('aaryaveera')}
+              >
+                Aaryaveera (Founder &amp; Philosophy)
+              </button>
+              <button
+                type="button"
+                className={`${p.socialFilterBtn} ${socialFilter === 'shaktisabha' ? p.socialFilterBtnActive : ''}`}
+                onClick={() => setSocialFilter('shaktisabha')}
+              >
+                Shakti Sabha (Institutional Body)
+              </button>
+            </div>
+          </div>
+
+          <div className={p.socialGrid}>
+            {filteredChannels.map((item) => (
+              <a
+                key={item.id}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={p.socialCard}
+                style={{
+                  '--card-accent': item.accentColor,
+                  '--card-soft-bg': item.softBg
+                } as React.CSSProperties}
+              >
+                <div>
+                  <div className={p.socialCardTop}>
+                    <div className={p.socialIconWrap}>
+                      <GoogleIcon name={item.googleIcon} size={24} />
+                    </div>
+                    <span className={p.socialPlatformBadge}>{item.platform}</span>
+                  </div>
+
+                  <div className={p.socialCardBody}>
+                    <h3 className={p.socialEntityName}>
+                      {item.entity}
+                    </h3>
+                    <div className={p.socialHandleWrap}>
+                      <GoogleIcon name="alternate_email" size={13} />
+                      <span>{item.handle}</span>
+                    </div>
+                    <p className={p.socialCardDesc}>{item.desc}</p>
+                  </div>
+                </div>
+
+                <div className={p.socialCardFooter}>
+                  <span className={p.socialCardAction}>
+                    <span>{item.actionLabel}</span>
+                    <GoogleIcon name="arrow_outward" size={14} />
+                  </span>
+                  <span className={p.socialCardDomain}>{item.domain}</span>
+                </div>
+              </a>
             ))}
           </div>
         </div>

@@ -28,15 +28,24 @@ export default function Footer() {
             Indian women ke liye ek aisa platform jahan roots milti hain, strength milti hai, aur ek aisi community milti hai jo tumhari taraf hai. Ancient roots. Modern strength.
           </p>
 
-          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Instagram">
-              <GoogleIcon name="photo_camera" size={17} />
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="YouTube">
+          <div style={{ display: 'flex', gap: '0.65rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+            <a href="https://youtube.com/@aaryaveeraa?si=" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="YouTube (@aaryaveeraa)">
               <GoogleIcon name="smart_display" size={17} />
             </a>
-            <a href="https://t.me" target="_blank" rel="noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Telegram">
-              <GoogleIcon name="send" size={17} />
+            <a href="https://www.instagram.com/shaktisabha?exln=MWhtaWwwZDZmamI5" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Instagram (@shaktisabha)">
+              <GoogleIcon name="photo_camera" size={17} />
+            </a>
+            <a href="https://www.facebook.com/share/1CbJnBXKHQ/" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Facebook (Shakti Sabha)">
+              <GoogleIcon name="groups" size={17} />
+            </a>
+            <a href="https://x.com/TheAaryaveera?s=20" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Twitter / X (@TheAaryaveera)">
+              <GoogleIcon name="tag" size={17} />
+            </a>
+            <a href="https://pin.it/5DFgIhdKj" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Pinterest (Aaryaveera / Shakti Sabha)">
+              <GoogleIcon name="push_pin" size={17} />
+            </a>
+            <a href="https://www.aaryaveera.com" target="_blank" rel="noopener noreferrer" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Website (aaryaveera.com)">
+              <GoogleIcon name="language" size={17} />
             </a>
             <a href="mailto:contact@shaktisabha.com" style={{ width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.85rem' }} title="Email">
               <GoogleIcon name="mail" size={17} />
