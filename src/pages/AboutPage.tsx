@@ -352,6 +352,9 @@ export default function AboutPage() {
   const valuesRef = useRef<HTMLDivElement>(null)
   const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
   const [socialFilter, setSocialFilter] = useState<'all' | 'aaryaveera' | 'shaktisabha'>('all')
+  const [activeBlueprintTab, setActiveBlueprintTab] = useState<'genesis' | 'interventions' | 'doctrine' | 'pillars'>('genesis')
+  const [activeInterventionIdx, setActiveInterventionIdx] = useState<number>(0)
+  const [activeShieldTab, setActiveShieldTab] = useState<'shield1' | 'shield2'>('shield1')
 
   const filteredChannels = OFFICIAL_SOCIAL_CHANNELS.filter((ch) => {
     if (socialFilter === 'all') return true
@@ -481,12 +484,12 @@ export default function AboutPage() {
                 </blockquote>
               </div>
 
-              {/* Key Metric Badges */}
+              {/* Executive Metric Badges */}
               <div className={p.metricBadgesGrid}>
-                {FOUNDER_METRICS.map((m, idx) => (
+                {FOUNDER_METRICS.slice(0, 6).map((m, idx) => (
                   <div key={idx} className={p.metricBadgeCard}>
                     <div className={p.metricBadgeHeader}>
-                      <GoogleIcon name={m.icon} size={22} className={p.metricBadgeIcon} style={{ color: '#DC143C' }} />
+                      <GoogleIcon name={m.icon} size={18} className={p.metricBadgeIcon} style={{ color: '#DC143C' }} />
                       <span className={p.metricBadgeTitle}>{m.title}</span>
                     </div>
                     <p className={p.metricBadgeDesc}>{m.desc}</p>
@@ -516,183 +519,255 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* ── The Genesis ───────────────────────────── */}
-          <div className={p.genesisBox}>
-            <h3 className={p.genesisTitle}>
-              <GoogleIcon name="eco" size={24} style={{ color: '#166534' }} />
-              THE GENESIS: {profile.genesisLead}
-            </h3>
-            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
-              {profile.genesisP1}
-            </p>
-            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
-              {profile.genesisP2}
-            </p>
-            <p className={p.genesisText} style={{ marginBottom: '1rem' }}>
-              {profile.genesisP3}
-            </p>
-            <div style={{
-              background: '#FFFFFF',
-              border: '1px solid #DCFCE7',
-              borderLeft: '4px solid #166534',
-              padding: '1.15rem 1.4rem',
-              borderRadius: '0 10px 10px 0',
-              marginTop: '1.25rem',
-              fontSize: '0.94rem',
-              lineHeight: 1.65,
-              color: '#166534',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)'
-            }}>
-              <strong style={{ color: '#14532D', display: 'block', marginBottom: '0.35rem' }}>
-                The Principle of Kshatra-Dharma:
-              </strong>
-              <span style={{ color: '#374151' }}>{profile.kshatraDharmaText}</span>
-            </div>
-          </div>
-
-          {/* ── Tactical Frontline Interventions & Survivor Support ── */}
-          <div style={{ marginBottom: '1.5rem', marginTop: '3.5rem' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              Operational Interventions &amp; Safeguarding
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1rem' }}>
-              Tactical Frontline Interventions &amp; Survivor Support
-            </h3>
-            <p style={{ color: '#4B5563', fontSize: '0.94rem', maxWidth: '820px', lineHeight: 1.65, marginBottom: '2rem' }}>
-              Harshita’s grassroots work has included direct engagement with vulnerable individuals and families facing situations of exploitation, coercion, and personal crisis. Her intervention work has focused on safety, crisis response, coordination with relevant stakeholders, and supporting survivors through recovery and reintegration.
-            </p>
-          </div>
-
-          <div className={p.tacticalGrid} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.5rem' }}>
-            {TACTICAL_INTERVENTIONS.map((item, idx) => (
-              <div key={idx} className={p.tacticalCard} style={{ padding: '1.75rem', background: '#FFFFFF', border: '1px solid #E5E7EB', borderRadius: 14 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.75rem' }}>
-                  <GoogleIcon name={item.icon} size={28} style={{ color: '#DC143C' }} />
-                  <h4 className={p.tacticalTitle} style={{ margin: 0, fontSize: '1.15rem' }}>{item.title}</h4>
-                </div>
-                <p className={p.tacticalDesc} style={{ fontSize: '0.92rem', color: '#4B5563', lineHeight: 1.6, marginBottom: '1rem' }}>
-                  {item.desc}
-                </p>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem', color: '#374151', fontSize: '0.88rem', lineHeight: 1.65, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  {item.bullets.map((b, bIdx) => (
-                    <li key={bIdx}>{b}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-
-          {/* Institutional Note on Confidentiality & Statutory Compliance */}
-          <div style={{
-            background: '#F9FAFB',
-            border: '1px solid #E5E7EB',
-            borderRadius: 12,
-            padding: '1.25rem 1.5rem',
-            marginTop: '2rem',
-            marginBottom: '3rem'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', color: '#111827', fontWeight: 700, fontSize: '0.88rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              <GoogleIcon name="gavel" size={18} style={{ color: '#DC143C' }} />
-              Institutional Note on Confidentiality &amp; Statutory Compliance
-            </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#4B5563', lineHeight: 1.65 }}>
-              "{confidentialityText}"
-            </p>
-          </div>
-
-          {/* ── Mission Mardini: Tactical Combat & Integrated Sovereignty ── */}
-          <div className={p.doctrineBox}>
-            <div className={p.doctrineSubtitle}>Physical Sovereignty. Mental Resilience. Tactical Preparedness.</div>
-            <h3 className={p.doctrineHeading}>
-              Mission Mardini: The Dual-Shield Doctrine
-            </h3>
-            <p className={p.doctrinePremise}>
-              "Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability."<br /><br />
-              Guided by founder Harshita Mankar’s Aaryaveera philosophy, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure. It is designed for school students, teenage girls, university students, rural women, and participants from tribal and underserved communities.
-            </p>
-
-            <div className={p.curriculumGrid}>
-              {CURRICULUM_TIERS.map((tier, idx) => (
-                <div key={idx} className={p.curriculumCard}>
-                  <span className={p.curriculumNumber}>{tier.tier}</span>
-                  <h4 className={p.curriculumTitle}>{tier.title}</h4>
-                  <ul className={p.curriculumList}>
-                    {tier.items.map((item, iIdx) => (
-                      <li key={iIdx} className={p.curriculumItem}>
-                        <strong>{item.head}:</strong> {item.body}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-
-            {/* Camps & Outreach Sub-section (Clean white contrast card) */}
-            <div style={{
-              background: '#FFFFFF',
-              border: '1px solid #E9D5FF',
-              borderRadius: 14,
-              padding: '1.75rem',
-              marginTop: '2rem',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
-            }}>
-              <h4 style={{ color: '#111827', margin: '0 0 0.75rem', fontSize: '1.15rem', fontFamily: 'var(--font-display, "Cinzel", serif)', fontWeight: 700 }}>
-                Intensive 7–10 Day Mardini Camps &amp; Field Outreach
-              </h4>
-              <p style={{ color: '#4B5563', fontSize: '0.92rem', lineHeight: 1.65, margin: '0 0 1.25rem' }}>
-                Mission Mardini organizes intensive training camps designed to develop physical confidence, mental resilience, discipline, and practical self-defense awareness. Activities include Karate and foundational combat, Lathi-Kaushal and traditional martial arts, situational awareness, psychological stress management, leadership, and practical safety simulations.
+          {/* ── CREATIVE INTERACTIVE BLUEPRINT CONSOLE ──────── */}
+          <div className={p.blueprintSection}>
+            <div className={p.blueprintHeader}>
+              <span className={p.blueprintEyebrow}>
+                <GoogleIcon name="architecture" size={16} />
+                STRATEGIC BLUEPRINT · रणनीतिक कार्यप्रणाली
+              </span>
+              <h3 className={p.blueprintMainTitle}>The Architecture of Sovereignty</h3>
+              <p className={p.blueprintSubtitle}>
+                Explore the foundational philosophy, frontline rescue operations, tactical combat curriculum, and institutional tri-stream framework.
               </p>
-              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                <div style={{ flex: '1 1 250px', background: '#FFF5F5', border: '1px solid #FFE4E6', padding: '1rem 1.15rem', borderRadius: 10 }}>
-                  <strong style={{ color: '#DC143C', fontSize: '0.88rem', display: 'block', marginBottom: '0.35rem' }}>Institutional Collaborations</strong>
-                  <span style={{ color: '#4B5563', fontSize: '0.84rem', lineHeight: 1.5, display: 'block' }}>Collaborating with educational institutions and community organizations to expand training and awareness.</span>
-                </div>
-                <div style={{ flex: '1 1 250px', background: '#F0FDF4', border: '1px solid #DCFCE7', padding: '1rem 1.15rem', borderRadius: 10 }}>
-                  <strong style={{ color: '#166534', fontSize: '0.88rem', display: 'block', marginBottom: '0.35rem' }}>Tribal &amp; Rural Outreach</strong>
-                  <span style={{ color: '#4B5563', fontSize: '0.84rem', lineHeight: 1.5, display: 'block' }}>Making training, guidance, and support accessible to young girls in underserved areas beyond urban centers.</span>
-                </div>
+
+              {/* Interactive Tab Navigation Bar */}
+              <div className={p.blueprintNavBar}>
+                <button
+                  type="button"
+                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'genesis' ? p.blueprintTabBtnActive : ''}`}
+                  onClick={() => setActiveBlueprintTab('genesis')}
+                >
+                  <GoogleIcon name="eco" size={16} />
+                  <span>01 · The Genesis</span>
+                </button>
+                <button
+                  type="button"
+                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'interventions' ? p.blueprintTabBtnActive : ''}`}
+                  onClick={() => setActiveBlueprintTab('interventions')}
+                >
+                  <GoogleIcon name="shield" size={16} />
+                  <span>02 · Tactical Interventions</span>
+                </button>
+                <button
+                  type="button"
+                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'doctrine' ? p.blueprintTabBtnActive : ''}`}
+                  onClick={() => setActiveBlueprintTab('doctrine')}
+                >
+                  <GoogleIcon name="swords" size={16} />
+                  <span>03 · Mission Mardini</span>
+                </button>
+                <button
+                  type="button"
+                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'pillars' ? p.blueprintTabBtnActive : ''}`}
+                  onClick={() => setActiveBlueprintTab('pillars')}
+                >
+                  <GoogleIcon name="hub" size={16} />
+                  <span>04 · The Three Streams</span>
+                </button>
               </div>
             </div>
-          </div>
 
-          {/* ── The Three Pillars in Action ──────────── */}
-          <div style={{ marginBottom: '1.5rem', marginTop: '3.5rem' }}>
-            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
-              OUR THREE STREAMS · ONE VISION
-            </span>
-            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.5rem, 2.8vw, 2.2rem)', color: '#111827', margin: '0.35rem 0 1.5rem' }}>
-              The Shakti Sabha Tri-Stream Architecture
-            </h3>
-          </div>
+            {/* TAB CONTENT CONTAINER */}
+            <div className={p.blueprintContainerCard}>
+              {/* TAB 1: THE GENESIS & KSHATRA-DHARMA */}
+              {activeBlueprintTab === 'genesis' && (
+                <div className={p.genesisGrid}>
+                  <div className={p.genesisLeft}>
+                    <h4 className={p.genesisTitle}>
+                      <GoogleIcon name="military_tech" size={26} style={{ color: '#166534' }} />
+                      Genesis: {profile.genesisLead}
+                    </h4>
+                    <p className={p.genesisText}>{profile.genesisP1}</p>
+                    <p className={p.genesisText}>{profile.genesisP2}</p>
+                    <p className={p.genesisText}>{profile.genesisP3}</p>
+                  </div>
 
-          <div className={p.actionPillarsGrid}>
-            {PILLARS_IN_ACTION.map((pillar, idx) => (
-              <div
-                key={idx}
-                className={p.actionPillarCard}
-                style={{ '--pill-color': pillar.color } as React.CSSProperties}
-              >
-                <div className={p.actionPillarHeader}>
-                  <GoogleIcon name={pillar.icon} size={28} style={{ color: pillar.color }} />
-                  <span className={p.actionPillarName}>{pillar.name}</span>
+                  <div className={p.genesisRightParchment}>
+                    <div className={p.parchmentHeader}>
+                      <GoogleIcon name="balance" size={24} style={{ color: '#166534' }} />
+                      <h5 className={p.parchmentTitle}>The Principle of Kshatra-Dharma</h5>
+                    </div>
+                    <p className={p.parchmentBody}>{profile.kshatraDharmaText}</p>
+
+                    <div className={p.genesisMilestonesMini}>
+                      <div className={p.miniMilestoneItem}>
+                        <span className={p.miniMilestoneBadge}>2012</span>
+                        <span>Shakti Sabha Founded in Pune</span>
+                      </div>
+                      <div className={p.miniMilestoneItem}>
+                        <span className={p.miniMilestoneBadge}>2014</span>
+                        <span>First Mission Mardini Residential Camp</span>
+                      </div>
+                      <div className={p.miniMilestoneItem}>
+                        <span className={p.miniMilestoneBadge}>2022</span>
+                        <span>Aaryaveera Movement Codified Pan-India</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className={p.actionPillarSub}>{pillar.sub}</div>
-                <p className={p.actionPillarDesc}>{pillar.desc}</p>
-                <ul className={p.actionPillarBullets}>
-                  {pillar.bullets.map((b, bIdx) => (
-                    <li key={bIdx} className={p.actionPillarBullet}>
-                      <span style={{ color: pillar.color }}>●</span>
-                      <div>{b}</div>
-                    </li>
-                  ))}
-                </ul>
+              )}
 
-                <Link to={pillar.dedicatedLink} className={p.actionPillarLink}>
-                  <span>{pillar.dedicatedLabel}</span>
-                  <GoogleIcon name="arrow_forward" size={15} />
-                </Link>
-              </div>
-            ))}
+              {/* TAB 2: TACTICAL SAFEGUARDING & FRONTLINE INTERVENTIONS */}
+              {activeBlueprintTab === 'interventions' && (
+                <div className={p.interventionsHub}>
+                  {/* 3 Interactive Selector Cards */}
+                  <div className={p.interventionsNavList}>
+                    {TACTICAL_INTERVENTIONS.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className={`${p.interventionNavCard} ${activeInterventionIdx === idx ? p.interventionNavCardActive : ''}`}
+                        onClick={() => setActiveInterventionIdx(idx)}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                          <GoogleIcon name={item.icon} size={22} style={{ color: activeInterventionIdx === idx ? '#DC143C' : '#6B7280' }} />
+                          <span className={p.interventionCardPill}>
+                            {idx === 0 ? '13 Minors Reintegrated' : idx === 1 ? '250+ Family Mediations' : 'Trauma Recovery'}
+                          </span>
+                        </div>
+                        <h5 className={p.interventionCardTitle}>{item.title}</h5>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Active Detailed Display */}
+                  <div className={p.interventionDetailDisplay}>
+                    <div className={p.interventionDetailHeader}>
+                      <div className={p.interventionIconWrap}>
+                        <GoogleIcon name={TACTICAL_INTERVENTIONS[activeInterventionIdx].icon} size={26} />
+                      </div>
+                      <div>
+                        <h4 className={p.interventionDetailTitle}>
+                          {TACTICAL_INTERVENTIONS[activeInterventionIdx].title}
+                        </h4>
+                      </div>
+                    </div>
+
+                    <p className={p.interventionDetailDesc}>
+                      {TACTICAL_INTERVENTIONS[activeInterventionIdx].desc}
+                    </p>
+
+                    <ul className={p.interventionBulletsList}>
+                      {TACTICAL_INTERVENTIONS[activeInterventionIdx].bullets.map((bullet, bIdx) => (
+                        <li key={bIdx} className={p.interventionBulletItem}>
+                          <span className={p.bulletDot}>●</span>
+                          <span>{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Statutory & Confidentiality Seal */}
+                  <div className={p.confidentialityBanner}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', color: '#111827', fontWeight: 700, fontSize: '0.84rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                      <GoogleIcon name="gavel" size={17} style={{ color: '#DC143C' }} />
+                      Institutional Note on Confidentiality &amp; Statutory Compliance
+                    </div>
+                    <p style={{ margin: 0, fontSize: '0.84rem', color: '#4B5563', lineHeight: 1.6 }}>
+                      "{confidentialityText}"
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 3: MISSION MARDINI DUAL-SHIELD DOCTRINE */}
+              {activeBlueprintTab === 'doctrine' && (
+                <div className={p.mardiniConsole}>
+                  <div className={p.doctrinePremiseBar}>
+                    "Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability."
+                  </div>
+
+                  {/* Shield Switcher Buttons */}
+                  <div className={p.shieldSwitcher}>
+                    <button
+                      type="button"
+                      className={`${p.shieldSwitchBtn} ${activeShieldTab === 'shield1' ? p.shieldSwitchBtnActive : ''}`}
+                      onClick={() => setActiveShieldTab('shield1')}
+                    >
+                      <GoogleIcon name="psychology" size={16} />
+                      <span>Shield One · Cognitive &amp; Situational Awareness</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`${p.shieldSwitchBtn} ${activeShieldTab === 'shield2' ? p.shieldSwitchBtnActive : ''}`}
+                      onClick={() => setActiveShieldTab('shield2')}
+                    >
+                      <GoogleIcon name="sports_martial_arts" size={16} />
+                      <span>Shield Two · Physical Defense &amp; Combat Disciplines</span>
+                    </button>
+                  </div>
+
+                  {/* Shield Items Grid */}
+                  <div className={p.shieldCardsGrid}>
+                    {(activeShieldTab === 'shield1' ? CURRICULUM_TIERS[0] : CURRICULUM_TIERS[1]).items.map((item, iIdx) => (
+                      <div key={iIdx} className={p.shieldItemCard}>
+                        <h5 className={p.shieldItemHead}>
+                          <GoogleIcon name="verified" size={16} style={{ color: '#DC143C' }} />
+                          {item.head}
+                        </h5>
+                        <p className={p.shieldItemBody}>{item.body}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Camps & Outreach Banner */}
+                  <div className={p.campsOutreachBanner}>
+                    <div>
+                      <h5 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', color: '#111827', margin: '0 0 0.5rem', fontWeight: 700 }}>
+                        Intensive 7–10 Day Residential Mardini Camps
+                      </h5>
+                      <p style={{ margin: 0, fontSize: '0.88rem', color: '#4B5563', lineHeight: 1.6 }}>
+                        Full immersion in traditional Lathi-Kaushal, Karate combat, freeze-response elimination, and tactical simulations.
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                      <div style={{ flex: '1 1 120px', background: '#FFFFFF', border: '1px solid #FECDD3', padding: '0.75rem', borderRadius: 8 }}>
+                        <div style={{ color: '#DC143C', fontWeight: 800, fontSize: '1.1rem' }}>2,000+</div>
+                        <div style={{ color: '#6B7280', fontSize: '0.72rem' }}>Graduated Cadre</div>
+                      </div>
+                      <div style={{ flex: '1 1 120px', background: '#FFFFFF', border: '1px solid #DCFCE7', padding: '0.75rem', borderRadius: 8 }}>
+                        <div style={{ color: '#166534', fontWeight: 800, fontSize: '1.1rem' }}>Tribal &amp; Rural</div>
+                        <div style={{ color: '#6B7280', fontSize: '0.72rem' }}>Corridor Outreach</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* TAB 4: THE THREE STREAMS ARCHITECTURE */}
+              {activeBlueprintTab === 'pillars' && (
+                <div className={p.triStreamGrid}>
+                  {PILLARS_IN_ACTION.map((pillar, idx) => (
+                    <div
+                      key={idx}
+                      className={p.streamCardCreative}
+                      style={{ '--stream-color': pillar.color } as React.CSSProperties}
+                    >
+                      <div className={p.streamCardHeader}>
+                        <GoogleIcon name={pillar.icon} size={26} style={{ color: pillar.color }} />
+                        <h4 className={p.streamCardName}>{pillar.name}</h4>
+                      </div>
+                      <div className={p.streamCardSub}>{pillar.sub}</div>
+                      <p className={p.streamCardDesc}>{pillar.desc}</p>
+
+                      <ul className={p.streamBullets}>
+                        {pillar.bullets.map((b, bIdx) => (
+                          <li key={bIdx} className={p.streamBulletItem}>
+                            <span style={{ color: pillar.color }}>●</span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <Link to={pillar.dedicatedLink} className={p.streamCardLink}>
+                        <span>{pillar.dedicatedLabel}</span>
+                        <GoogleIcon name="arrow_forward" size={14} />
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
