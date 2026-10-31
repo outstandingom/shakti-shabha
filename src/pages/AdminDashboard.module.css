@@ -420,32 +420,63 @@
 
 .input,
 .select,
-.textarea {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+.textarea,
+.statusSelect {
+  background-color: #1A1A22 !important;
+  border: 1px solid rgba(255,255,255,0.18) !important;
   border-radius: 8px;
   padding: 0.7rem 1rem;
-  color: #FFFFFF;
+  color: #FFFFFF !important;
   font-size: 0.9rem;
   font-family: 'Poppins', sans-serif;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
   outline: none;
   width: 100%;
 }
 
+select.input,
+.select,
+.statusSelect {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23DC143C' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.85rem center !important;
+  padding-right: 2.5rem !important;
+  cursor: pointer;
+}
+
 .input:focus,
 .select:focus,
-.textarea:focus {
-  border-color: #DC143C;
+.textarea:focus,
+.statusSelect:focus {
+  border-color: #DC143C !important;
+  box-shadow: 0 0 0 3px rgba(220, 20, 60, 0.2);
 }
 
 .input::placeholder,
 .textarea::placeholder {
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.35);
 }
 
-.select option {
-  background: #111115;
+/* Force dropdown options to have high-contrast readable white text on dark background across all OSes/browsers */
+select option,
+.select option,
+.input option,
+.statusSelect option,
+optgroup {
+  background-color: #16161D !important;
+  color: #FFFFFF !important;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+select option:checked,
+.select option:checked,
+.input option:checked {
+  background-color: #DC143C !important;
+  color: #FFFFFF !important;
 }
 
 .textarea {
@@ -632,6 +663,266 @@
 
 .photoCard:hover .photoOverlay {
   opacity: 1;
+}
+
+/* ── Folder-Like Gallery System ── */
+.folderBreadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.85rem 1.25rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.88rem;
+  flex-wrap: wrap;
+}
+
+.breadcrumbLink {
+  background: transparent;
+  border: none;
+  color: #DC143C;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  transition: all 0.2s;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.86rem;
+}
+
+.breadcrumbLink:hover {
+  background: rgba(220, 20, 60, 0.12);
+  color: #FF6B80;
+}
+
+.breadcrumbSeparator {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.8rem;
+}
+
+.breadcrumbCurrent {
+  color: #FFFFFF;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.foldersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.folderCard {
+  background: linear-gradient(145deg, #16161D 0%, #111115 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.folderCard:hover {
+  border-color: rgba(220, 20, 60, 0.45);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45), 0 0 20px rgba(220, 20, 60, 0.1);
+}
+
+.folderCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.folderIconBadge {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(220, 20, 60, 0.12);
+  border: 1px solid rgba(220, 20, 60, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #DC143C;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.folderCard:hover .folderIconBadge {
+  background: #DC143C;
+  color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.folderCountBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.folderTitle {
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.folderDesc {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 1rem 0;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.25rem;
+}
+
+.folderPreviewCollage {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.4rem;
+  height: 68px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.25);
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.folderThumbMini {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.folderEmptyPreview {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.72rem;
+}
+
+.folderFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  margin-top: auto;
+}
+
+.folderOpenBtn {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #DC143C;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: transform 0.2s;
+}
+
+.folderCard:hover .folderOpenBtn {
+  transform: translateX(4px);
+  color: #FF6B80;
+}
+
+.folderDeleteBtn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  padding: 0.35rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.folderDeleteBtn:hover {
+  background: rgba(220, 20, 60, 0.15);
+  color: #FF6B80;
+}
+
+.newFolderCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 1.75rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+}
+
+.newFolderCard:hover {
+  border-color: #DC143C;
+  background: rgba(220, 20, 60, 0.04);
+  transform: translateY(-4px);
+}
+
+.newFolderIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #DC143C;
+  margin-bottom: 0.85rem;
+  transition: all 0.2s;
+}
+
+.newFolderCard:hover .newFolderIcon {
+  background: #DC143C;
+  color: #FFFFFF;
+  border-style: solid;
+  transform: scale(1.08);
+}
+
+.newFolderTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 0.35rem;
+}
+
+.newFolderHint {
+  font-size: 0.76rem;
+  color: rgba(255, 255, 255, 0.45);
+  max-width: 200px;
 }
 
 /* ── Upload Area ── */

@@ -30,6 +30,11 @@ interface Milestone {
   quoteHi: string
   descEn: string
   descHi: string
+  stats: {
+    value: string
+    labelEn: string
+    labelHi: string
+  }[]
   dossierEn: {
     context: string
     tactics: string
@@ -61,6 +66,11 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'पुणे, महाराष्ट्र में जन्म — भारत भर में नारी शक्ति को एकजुट करने के पावन संकल्प के साथ।',
     descEn: 'Born in Pune, Maharashtra — with a vision to unite the strength of women across India. Grounded in timeless civilizational roots and modern psychological support.',
     descHi: 'पुणे, महाराष्ट्र में जन्म — भारत भर में नारी शक्ति को एकजुट करने के पावन संकल्प के साथ। प्राचीन गौरव एवं आधुनिक मनोवैज्ञानिक संबल की नींव रखी गई।',
+    stats: [
+      { value: '1st', labelEn: 'Center (Pune)', labelHi: 'प्रथम केंद्र (पुणे)' },
+      { value: '12', labelEn: 'Founders', labelHi: 'संस्थापक' },
+      { value: '1', labelEn: 'Charter', labelHi: 'मूल संकल्प' }
+    ],
     dossierEn: {
       context: 'Founded in Pune by dedicated social visionaries to create a pan-India platform for women’s psychological, physical, and historical empowerment.',
       tactics: 'Community-led grassroots circles, cultural awakening lectures, and safe neighborhood support pods.',
@@ -90,6 +100,11 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'ग्रामीण पुणे जिले में प्रथम आत्मरक्षा शिविर का आयोजन, जिसमें २०० महिलाओं व बालिकाओं ने भाग लिया।',
     descEn: 'The inaugural self-defense camp reached 200 women across rural Pune district — laying down practical martial arts, lathi training, and psychological fearlessness.',
     descHi: 'ग्रामीण पुणे जिले में प्रथम आत्मरक्षा शिविर का आयोजन, जिसमें २०० महिलाओं व बालिकाओं ने भाग लिया — पारंपरिक लाठी कौशल एवं भयमुक्त मानसिक दृढ़ता का प्रशिक्षण।',
+    stats: [
+      { value: '200+', labelEn: 'Girls Trained', labelHi: 'बालिकाएं प्रशिक्षित' },
+      { value: '1st', labelEn: 'Rural Camp', labelHi: 'ग्रामीण शिविर' },
+      { value: '100%', labelEn: 'Lathi Prepared', labelHi: 'लट्ठ-कौशल' }
+    ],
     dossierEn: {
       context: 'Launched in rural outskirts of Pune to equip young girls with physical courage for daily travel.',
       tactics: 'Traditional Bharatiya martial defense combined with rapid situational awareness drills.',
@@ -119,6 +134,11 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'मिशन मर्दिनी १०० विद्यालयों तक विस्तृत — युवा छात्राओं को आत्मरक्षा एवं चारित्रिक शिक्षण प्रदान किया।',
     descEn: 'Mardini expanded to 100 schools — bringing self-defense and character education to young girls. Building resilience, self-worth, and proactive safety instincts.',
     descHi: 'मिशन मर्दिनी १०० विद्यालयों तक विस्तृत — युवा छात्राओं को आत्मरक्षा एवं चारित्रिक शिक्षण प्रदान किया। आत्मसम्मान और सजगता को दैनिक जीवन का हिस्सा बनाया।',
+    stats: [
+      { value: '100', labelEn: 'Schools Covered', labelHi: 'विद्यालय सहभागिता' },
+      { value: '35,000+', labelEn: 'Students', labelHi: 'छात्राएं' },
+      { value: '5', labelEn: 'Districts', labelHi: 'जिले सम्मिलित' }
+    ],
     dossierEn: {
       context: 'Institutionalized in school curriculums across primary and secondary schools.',
       tactics: 'Weekly martial arts periods, anti-bullying workshops, and physical fitness certification.',
@@ -148,6 +168,11 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'संबल एवं परामर्श कार्यक्रमों की औपचारिक शुरुआत — हिंसा व मानसिक आघात पर मौन तोड़ा।',
     descEn: 'Survivor support and counseling programs formalized — breaking the silence on gender-based trauma. Offering unconditional empathy and confidential psychological care.',
     descHi: 'संबल एवं परामर्श कार्यक्रमों की औपचारिक शुरुआत — हिंसा व मानसिक आघात पर मौन तोड़ा। महिलाओं के लिए सुरक्षित, गोपनीय एवं निःशुल्क परामर्श मंच स्थापित।',
+    stats: [
+      { value: '1,200+', labelEn: 'Counseling Pods', labelHi: 'परामर्श सत्र' },
+      { value: '24/7', labelEn: 'Crisis Helpline', labelHi: 'संबल प्रकोष्ठ' },
+      { value: '100%', labelEn: 'Confidential', labelHi: 'पूर्ण गोपनीयता' }
+    ],
     dossierEn: {
       context: 'Created to provide safe, stigma-free counseling for women confronting domestic distress, grief, and societal pressure.',
       tactics: 'Certified female clinical psychologists, toll-free discreet helpline, and peer support recovery circles.',
@@ -177,6 +202,11 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'संपूर्ण शक्ति आंदोलन की पहचान के रूप में प्रमुख वीरांगना ब्रांड \u2018आर्यवीरा\u2019 का प्राकट्य।',
     descEn: 'The flagship warrior brand — Aaryaveera — born as a unified identity for the whole movement. Combining ancient warrior heritage with modern discipline.',
     descHi: 'संपूर्ण शक्ति आंदोलन की पहचान के रूप में प्रमुख वीरांगना ब्रांड \u2018आर्यवीरा\u2019 का प्राकट्य। प्राचीन शौर्य परंपरा और आधुनिक अनुशासन का अप्रतिम समन्वय।',
+    stats: [
+      { value: '100K+', labelEn: 'Aaryaveera Cadre', labelHi: 'आर्यवीरा वीरांगनाएं' },
+      { value: '15+', labelEn: 'Regional Wings', labelHi: 'प्रांतीय प्रभाग' },
+      { value: 'Dharma', labelEn: 'Worldview', labelHi: 'क्षात्र-धर्म' }
+    ],
     dossierEn: {
       context: 'Unifying disparate martial and community chapters under one proud, evocative national banner.',
       tactics: 'Uniform warrior curriculum, state leadership councils, and regional martial demonstrations.',
@@ -206,19 +236,24 @@ const TIMELINE_MILESTONES: Milestone[] = [
     quoteHi: 'ग्रामीण शिविरों से लेकर राष्ट्रीय पहचान तक — शक्ति सभा भारत के महिला सशक्तिकरण के केंद्र में।',
     descEn: 'From village camps to national recognition — Shakti Sabha stands at the heart of India\'s women\'s movement. Operating in 400+ schools and impacting lakhs of lives nationwide.',
     descHi: 'ग्रामीण शिविरों से लेकर राष्ट्रीय पहचान तक — शक्ति सभा भारत के महिला सशक्तिकरण के केंद्र में। ४०० से अधिक विद्यालयों में सक्रिय और लाखों बहनों के जीवन में सकारात्मक परिवर्तन।',
+    stats: [
+      { value: '400+', labelEn: 'Schools Active', labelHi: 'सक्रिय विद्यालय' },
+      { value: '50,000+', labelEn: 'Trained Girls', labelHi: 'प्रशिक्षित वीरांगनाएं' },
+      { value: '28', labelEn: 'Cities in India', labelHi: 'भारतीय नगर' }
+    ],
     dossierEn: {
-      context: 'Recognized nationally as an indispensable pillar of self-defense, psychological counseling, and historical education.',
-      tactics: 'Pan-India digital lms courses, state-level summits, and integrated women safety ecosystems.',
-      legacy: 'A sustainable, self-reliant movement for female civilizational strength.',
-      citation: 'Shakti Sabha Decadal National Report 2024.'
+      context: 'Expanding the model across hundreds of institutions with formal accredited training modules.',
+      tactics: 'Standardized martial arts syllabus, self-defense masterclasses, and certified female trainers.',
+      legacy: 'Directly reached 400+ schools with 50,000+ girls equipped with tangible defense competencies.',
+      citation: 'Annual Report 2024; State Education Ministry commendation archives.'
     },
     dossierHi: {
-      context: 'आत्मरक्षा, मनोवैज्ञानिक परामर्श एवं ऐतिहासिक स्वाभिमान के राष्ट्रीय स्तंभ के रूप में स्थापित।',
-      tactics: 'डिजिटल पाठ्यक्रम, राज्य स्तरीय सम्मेलन एवं समेकित महिला सुरक्षा तंत्र।',
-      legacy: 'नारी स्वाभिमान एवं आत्मरक्षा का आत्मनिर्भर और स्थायी जन-आंदोलन।',
-      citation: 'शक्ति सभा राष्ट्रीय प्रभाव प्रतिवेदन २०२४।'
+      context: 'मान्यता प्राप्त प्रशिक्षण मॉड्यूल के साथ सैकड़ों शैक्षणिक संस्थानों तक इस अभियान का प्रसार।',
+      tactics: 'मानकीकृत आत्मरक्षा पाठ्यक्रम, मास्टरक्लास एवं महिला प्रशिक्षिकाओं का प्रमाणीकरण।',
+      legacy: '४०० से अधिक विद्यालयों तक सीधी पहुंच और ५०,००० से अधिक बेटियों को व्यावहारिक सुरक्षा कौशल।',
+      citation: 'वार्षिक प्रतिवेदन २०२४; शिक्षा मंत्रालय सहभागिता अभिलेख।'
     },
-    image: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80'
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80'
   }
 ];
 
@@ -543,6 +578,15 @@ export default function HistoryPage() {
                             {lang === 'en' ? item.descEn : item.descHi}
                           </p>
 
+                          {/* Year-wise stats badges */}
+                          <div className={h.timelineStatBadges}>
+                            {item.stats.map((st, sIdx) => (
+                              <span key={sIdx} className={h.timelineStatItem}>
+                                <strong>{st.value}</strong> {lang === 'en' ? st.labelEn : st.labelHi}
+                              </span>
+                            ))}
+                          </div>
+
                           <button
                             type="button"
                             className={h.dossierBtn}
@@ -622,6 +666,18 @@ export default function HistoryPage() {
                 </div>
                 <div className={h.chartCardEpoch}>
                   {lang === 'en' ? item.epochEn : item.epochHi}
+                </div>
+
+                {/* Milestone Year-wise Stats */}
+                <div className={h.cardYearStats}>
+                  {item.stats.map((st, sIdx) => (
+                    <div key={sIdx} className={h.cardStatPill}>
+                      <span className={h.cardStatVal}>{st.value}</span>
+                      <span className={h.cardStatLbl}>
+                        {lang === 'en' ? st.labelEn : st.labelHi}
+                      </span>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Hover Details Flyout as requested */}

@@ -711,6 +711,68 @@
   color: #6B7280;
 }
 
+/* Year-wise stats inside each card */
+.cardYearStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.35rem;
+  background: #FFF5F6;
+  border: 1px solid rgba(220, 20, 60, 0.18);
+  border-radius: 8px;
+  padding: 0.5rem 0.35rem;
+  margin-top: 0.45rem;
+  text-align: center;
+}
+
+.cardStatPill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardStatVal {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #DC143C;
+  line-height: 1.1;
+  font-family: var(--font-display, 'Cinzel', serif);
+}
+
+.cardStatLbl {
+  font-size: 0.62rem;
+  color: #4B5563;
+  line-height: 1.2;
+  margin-top: 0.15rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.timelineStatBadges {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.6rem 0 0.35rem;
+}
+
+.timelineStatItem {
+  font-size: 0.72rem;
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  color: #DC143C;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.timelineStatItem strong {
+  font-weight: 800;
+  color: #991B1B;
+}
+
 /* Horizontal Chronological Chart Grid */
 .chartGrid {
   display: grid;
