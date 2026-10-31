@@ -2,194 +2,88 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { getFounderData, FounderProfileData, DEFAULT_FOUNDER_DATA } from '../data/founderData'
+import { getFounderData, FounderProfileData } from '../data/founderData'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
 import p from './AboutPage.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const FOUNDER_METRICS = [
+// ============================================================
+// 1. SIMPLE & CLEAR DATA STRUCTURES
+// ============================================================
+
+const KEY_METRICS = [
+  { icon: 'sports_martial_arts', value: 'Black Belt', label: 'Karate & Combat', hi: 'कराटे एवं आत्मरक्षा' },
+  { icon: 'shield', value: '2,000+', label: 'Girls Trained', hi: 'बहनें प्रशिक्षित' },
+  { icon: 'record_voice_over', value: '500+', label: 'Seminars Held', hi: 'सेमिनार एवं सत्र' },
+  { icon: 'school', value: '25,000+', label: 'Students Reached', hi: 'विद्यार्थी जुड़े' },
+  { icon: 'volunteer_activism', value: '13', label: 'Minors Safeguarded', hi: 'बेटियों को संबल' },
+  { icon: 'nature_people', value: 'Tribal', label: 'Rural Outreach', hi: 'ग्रामीण व आदिवासी क्षेत्र' }
+]
+
+const THREE_PILLARS = [
   {
-    icon: 'sports_martial_arts',
-    title: 'Black Belt in Karate',
-    desc: 'Martial arts discipline, tactical combat training, and unarmed self-defense.'
-  },
-  {
+    id: 'mardini',
     icon: 'swords',
-    title: '2,000+ Girls Trained',
-    desc: 'Armed and unarmed self-defense awareness and practical street-safety training.'
-  },
-  {
-    icon: 'record_voice_over',
-    title: '500+ Seminars & Discourses',
-    desc: 'Institutional seminars, youth awareness programmes, and consciousness-building sessions.'
-  },
-  {
-    icon: 'school',
-    title: '25,000+ Students Reached',
-    desc: 'Youth awakening sessions across educational and community platforms.'
-  },
-  {
-    icon: 'holiday_village',
-    title: 'Mission Mardini Camps',
-    desc: 'Organizing intensive 7–10 day self-defense and empowerment camps.'
-  },
-  {
-    icon: 'nature_people',
-    title: 'Tribal Outreach',
-    desc: 'Awareness, guidance, and support initiatives for young girls in tribal and underserved communities.'
-  },
-  {
-    icon: 'hub',
-    title: 'Collaborative Initiatives',
-    desc: 'Working with other organizations and community groups to expand training and awareness programmes.'
-  }
-]
-
-const TACTICAL_INTERVENTIONS = [
-  {
-    icon: 'child_care',
-    title: '1. Vulnerability Interception & Child Protection Coordination',
-    desc: 'Interventions in this sphere address acute vulnerability, runaway minors at transit hubs, and distress situations where young girls face immediate risk of exploitation or informal cross-district trade.',
-    bullets: [
-      'Operational Methodology: Works directly at the grassroots and transit points (railway nodes, community perimeters) to intercept minors before predatory entrapment occurs.',
-      'Strict adherence to statutory child-protection frameworks facilitating immediate communication with statutory authorities, Child Welfare Committees (CWC), National/State Commission for Women, and authorized shelter networks.',
-      'Documented Footprint: Directly facilitated the timely safety interception, statutory handoff, and supervised reintegration of 13 vulnerable minors into verified legal guardianship and safe academic environments.'
-    ]
-  },
-  {
-    icon: 'shield',
-    title: '2. Counter-Grooming, Coercive Entrapment & Pre-FIR Family Mediation',
-    desc: 'Handling complex community and campus scenarios involving identity deception, peer-driven entrapment, digital blackmail, and high-pressure interpersonal coercion.',
-    bullets: [
-      'Operational Methodology: Recognizing that families in over 80% of distress cases avoid formal litigation due to acute social vulnerability and fear of exposure, acts as a trusted community mediator.',
-      'Intervenes directly in campus and residential hostel settings to break cycles of digital coercion and isolation.',
-      'Conducts direct, non-adversarial dialogue with families and young women to resolve high-risk situations before irreversible harm occurs.',
-      'Coordinates with local civic leadership, community elders, and law-enforcement helplines to neutralize predatory pressure.',
-      'Documented Footprint: Handled over 250 reported distress and vulnerability consultations, actively conducting direct field-level safety mediations and pre-emptive family reintegrations in 50+ critical situations.'
-    ]
-  },
-  {
-    icon: 'psychology',
-    title: '3. Trauma-Informed Somatic Support & Non-Verbal De-escalation',
-    desc: 'Supporting young girls and women dealing with deep psychological shock, learned helplessness, domestic distress, and street-level anxiety.',
-    bullets: [
-      'Non-verbal behavioral observation to detect acute panic, dissociation, and the biological "freeze" response.',
-      'Private, trauma-sensitive conversational de-escalation to relieve irrational guilt, internalized shame, and fear of judgment.',
-      'Facilitating safe academic relocation, educational sponsorship, and vocational anchoring where prolonged domestic friction prevents an immediate peaceful resolution at home.',
-      'Connecting survivors to certified clinical psychologists, healthcare professionals, and pro-bono legal advocates when specialized interventions are required.',
-      'Core Principle: "A crisis or traumatic event does not define a woman’s destiny. Our objective is to restore self-worth, emotional autonomy, and physical confidence so that every girl reclaims her sovereign agency in society."'
-    ]
-  }
-]
-
-const CURRICULUM_TIERS = [
-  {
-    tier: 'Shield One · Cognitive & Mental Shield',
-    title: 'Cognitive De-escalation & Situational Awareness',
-    items: [
-      {
-        head: 'Threat Recognition',
-        body: 'Participants learn to recognize potentially unsafe situations, identify concerning behavioural patterns, understand personal boundaries, and recognize warning signs associated with stalking, grooming, coercion, and unwanted physical proximity.'
-      },
-      {
-        head: 'Situational Awareness',
-        body: 'Training develops environmental awareness, risk assessment, safe-distance management, and the ability to identify exit routes and seek assistance before a situation escalates.'
-      },
-      {
-        head: 'Managing the Freeze Response',
-        body: 'Participants learn practical techniques for managing fear and stress, improving their ability to think clearly, communicate boundaries, make decisions, and respond appropriately during threatening situations.'
-      },
-      {
-        head: 'Psychological Preparedness',
-        body: 'The objective is to replace helplessness with preparedness through guided exercises, scenario-based learning, and confidence-building activities.'
-      }
-    ]
-  },
-  {
-    tier: 'Shield Two · Physical Defense & Tactical Combat',
-    title: 'Physical Defense & Tactical Combat Disciplines',
-    items: [
-      {
-        head: 'Empty-Hand Defense',
-        body: 'Participants learn foundational Karate-based defensive techniques, body mechanics, balance, movement, protective positioning, and practical responses to common physical threats.'
-      },
-      {
-        head: 'Lathi-Kaushal: Traditional Staff Training',
-        body: 'The programme introduces the Indian martial discipline of Lathi-Kaushal, adapting traditional staff techniques for personal protection, controlled movement, distance management, and defensive preparedness.'
-      },
-      {
-        head: 'Traditional Weapon Awareness',
-        body: 'Where appropriate and permitted, participants receive supervised instruction in traditional martial arts equipment, safety practices, handling discipline, and defensive awareness.'
-      },
-      {
-        head: 'Close-Quarter Defense & Escape',
-        body: 'Participants develop foundational skills for responding to close-range physical threats, maintaining balance, creating distance, emergency communication, and swift access to support.'
-      }
-    ]
-  }
-]
-
-const PILLARS_IN_ACTION = [
-  {
-    icon: 'swords',
-    name: 'Mission Mardini',
-    sub: 'Physical Sovereignty & Tactical Preparedness',
+    title: 'Mission Mardini',
+    titleHi: 'मिशन मार्दिनी · आत्मरक्षा व शौर्य',
+    tagline: 'Physical Sovereignty & Self-Defense',
     color: '#DC143C',
-    dedicatedLink: '/mardini',
-    dedicatedLabel: 'Explore Mission Mardini Page →',
-    desc: 'Guided by founder Harshita Mankar’s Aaryaveera philosophy, the programme challenges passive approaches to self-defense by integrating physical training with psychological preparedness, situational awareness, discipline, and decision-making under pressure.',
-    bullets: [
-      'Dual-Shield Doctrine: Cognitive De-escalation & Situational Awareness + Physical Defense & Tactical Combat.',
-      'Intensive 7–10 day residential warrior camps with martial discipline and scenario-based drills.',
-      'Frontline tribal and rural outreach making practical combat training accessible beyond urban institutions.'
+    link: '/mardini',
+    linkText: 'Explore Mission Mardini →',
+    points: [
+      'पारंपरिक लट्ठ-कौशल एवं कराटे पर आधारित व्यावहारिक आत्मरक्षा।',
+      'डर और घबराहट पर नियंत्रण के लिए सिमुलेशन अभ्यास।',
+      '7 से 10 दिवसीय गहन आवासीय प्रशिक्षण शिविर एवं ग्रामीण आउटरीच।'
     ]
   },
   {
-    icon: 'spa',
-    name: 'Shakti Bhava',
-    sub: 'Cognitive Awakening, Consciousness & Civilizational Awareness',
+    id: 'support',
+    icon: 'health_and_safety',
+    title: 'Ground Safety & Support',
+    titleHi: 'धरातलीय सुरक्षा एवं संबल',
+    tagline: 'Crisis Intervention & Guidance',
     color: '#059669',
-    dedicatedLink: '/shakti-bhava',
-    dedicatedLabel: 'Explore Shakti Bhava Page →',
-    desc: 'Cultivates individuals who can think independently, examine social narratives, understand their cultural and intellectual roots, and make decisions through reason rather than digital influence or social pressure.',
-    bullets: [
-      '500+ seminars, institutional sessions, and consciousness discourses reaching 25,000+ students.',
-      'Key engagement in Narrative Awareness, Critical Thinking, Civilizational Literacy, and Human Consciousness.',
-      'Promotes mutual dignity, healthy boundaries, personal responsibility, and rejects hyper-consumerist polarization.'
+    link: '/counselling',
+    linkText: 'Learn About Support →',
+    points: [
+      'संकट के समय बहनों और परिवारों को सही सलाह व मार्गदर्शन।',
+      'कानूनी संस्थाओं (CWC) और विधिक सहायकों के साथ समन्वय।',
+      '13 नाबालिग बेटियों का सुरक्षित पुनर्वास और 250+ संकट परामर्श।'
     ]
   },
   {
-    icon: 'menu_book',
-    name: 'Shakti Varta',
-    sub: 'Intellectual Sovereignty, Critical Inquiry & Research-Based Dialogue',
+    id: 'varta',
+    icon: 'psychology',
+    title: 'Shakti Bhava & Varta',
+    titleHi: 'शक्ति भाव एवं वार्ता · विचार व संस्कार',
+    tagline: 'Consciousness & Independent Thinking',
     color: '#4338CA',
-    dedicatedLink: '/shakti-varta',
-    dedicatedLabel: 'Explore Shakti Varta Page →',
-    desc: 'A practical learning environment where youth are equipped with critical thinking, research literacy, and logical reasoning to investigate claims independently from primary sources.',
-    bullets: [
-      'Vedic Digital Fellowship: Engaging young women with the Vedas, Bhagavad Gita, Mahabharata, and Satyarth Prakash.',
-      'Critical Media Analysis: Source verification, identifying logical fallacies, and deconstructing manipulative algorithms.',
-      'Open-House Debates & Youth Ignite Forums: Rational philosophical dialogues, forgotten warrior queens, and digital public consciousness.'
+    link: '/three-streams',
+    linkText: 'Discover Three Streams →',
+    points: [
+      'भारतीय संस्कृति, क्षात्र-धर्म और ऐतिहासिक वीरांगनाओं का परिचय।',
+      'युवाओं में स्वतंत्र सोच, तार्किक समझ और डिजिटल जागरूकता।',
+      'कॉलेज और स्कूलों में प्रेरणादायी सेमिनार और संवाद सत्र।'
     ]
   }
 ]
 
 const TIMELINE = [
-  { year: '2012', title: 'Shakti Sabha Founded', desc: 'Born with a vision to revive the civilizational paradigm of Kshatra-Dharma, tactical preparedness, and cognitive sovereignty.' },
-  { year: '2014', title: 'First Mission Mardini Camp', desc: 'Inaugural residential camp blending Karate empty-hand combat with Lathi-Kaushal staff defense and freeze-response elimination.' },
-  { year: '2016', title: '100+ Schools Reached', desc: 'Expanded across rural corridors, residential hostels, and colleges for situational awareness and boundary management.' },
-  { year: '2018', title: 'Frontline Interventions Formalized', desc: 'Somatic trauma de-escalation, non-verbal behavioral observation, and statutory child-protection coordination.' },
-  { year: '2022', title: 'Aaryaveera Philosophy Codified', desc: 'The founder’s personal worldview (Aaryaveera) formally codified as the ideological foundation guiding all Shakti Sabha initiatives.' },
-  { year: '2024', title: '25,000+ Students Awakened', desc: 'Over 500 seminars, 2,000+ girls trained in self-defense, 13 minors safely reintegrated, and active tribal outreach operations.' },
+  { year: '2012', title: 'Shakti Sabha Founded', titleHi: 'शक्ति सभा की स्थापना', desc: 'पुणे में युवाओं और महिलाओं को सशक्त बनाने के संकल्प के साथ शुरुआत।' },
+  { year: '2014', title: 'First Mission Mardini Camp', titleHi: 'प्रथम मार्दिनी शिविर', desc: 'लट्ठ-कौशल और आत्मरक्षा का पहला 7-दिवसीय आवासीय प्रशिक्षण शिविर।' },
+  { year: '2016', title: '100+ Schools Reached', titleHi: '१००+ विद्यालयों में विस्तार', desc: 'स्कूलों और कॉलेजों में आत्मरक्षा जागरूकता कार्यशालाओं का प्रसार।' },
+  { year: '2018', title: 'Crisis Support Initiated', titleHi: 'संकट सहायता की शुरुआत', desc: 'कठिन परिस्थितियों में बहनों और परिवारों को विधिक व मानसिक संबल।' },
+  { year: '2022', title: 'Aaryaveera Codified', titleHi: 'आर्यवीरा दर्शन का विस्तार', desc: 'फाउंडर की विचारधारा को एक राष्ट्रीय आंदोलन के रूप में मान्यता।' },
+  { year: '2024', title: '25,000+ Students Impacted', titleHi: '२५,०००+ विद्यार्थियों तक पहुंच', desc: 'पूरे भारत में 500+ सेमिनार और 2,000+ प्रशिक्षित वीरांगनाएं।' }
 ]
 
 const VALUES = [
-  { icon: 'balance', name: 'Kshatra-Dharma', dev: 'क्षात्र धर्म', desc: 'The responsibility to protect, the courage to confront injustice, the discipline to exercise power responsibly, and the wisdom to distinguish strength from aggression.' },
-  { icon: 'psychology', name: 'Intellectual Sovereignty', dev: 'बौद्धिक संप्रभुता', desc: 'Do not accept an idea merely because it is popular, traditional, or influential. Examine its evidence, reasoning, context, and implications.' },
-  { icon: 'shield', name: 'Physical Preparedness', dev: 'शारीरिक सामर्थ्य', desc: 'Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability.' },
-  { icon: 'spa', name: 'Human Consciousness', dev: 'आत्म चेतना', desc: 'Strength without hatred. Knowledge without blindness. Power with responsibility. Developing the whole human being.' },
+  { icon: 'balance', name: 'Kshatra-Dharma', dev: 'क्षात्र धर्म', desc: 'अन्याय के विरुद्ध खड़े होने का साहस, शक्ति का मर्यादित उपयोग और समाज की रक्षा का संकल्प।' },
+  { icon: 'shield', name: 'Physical Preparedness', dev: 'शारीरिक सामर्थ्य', desc: 'भयमुक्त जीवन के लिए आत्मरक्षा का व्यावहारिक ज्ञान और शारीरिक मजबूती।' },
+  { icon: 'psychology', name: 'Independent Thinking', dev: 'स्वतंत्र सोच', desc: 'बिना किसी पूर्वाग्रह या दबाव के सही और गलत को समझने का तार्किक विवेक।' },
+  { icon: 'spa', name: 'Human Consciousness', dev: 'आत्म चेतना', desc: 'शक्ति बिना अहंकार के, ज्ञान बिना अंधविश्वास के और अधिकार दायित्व के साथ।' }
 ]
 
 export interface SocialChannel {
@@ -218,7 +112,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: '@aaryaveeraa',
     url: 'https://youtube.com/@aaryaveeraa?si=',
     domain: 'youtube.com',
-    desc: 'Official video discourses, self-defense masterclasses, and ideological youth awakening series.',
+    desc: 'Official video discourses, self-defense masterclasses, and youth awakening series.',
     googleIcon: 'smart_display',
     accentColor: '#FF0000',
     softBg: 'rgba(255, 0, 0, 0.08)',
@@ -233,7 +127,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: '@aaryaveera',
     url: 'https://www.instagram.com/aaryaveera?exln=dTB1MXQ3eWF5NGl6',
     domain: 'instagram.com',
-    desc: 'Founder Aaryaveera Harshita Mankar’s official reflections, ideological doctrine, and live updates.',
+    desc: 'Founder Aaryaveera Harshita Mankar’s official reflections and updates.',
     googleIcon: 'photo_camera',
     accentColor: '#E1306C',
     softBg: 'rgba(225, 48, 108, 0.08)',
@@ -248,7 +142,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: '@theaaryaveera',
     url: 'https://www.instagram.com/theaaryaveera?mdxt=c25ybWV4bzkzNXZr',
     domain: 'instagram.com',
-    desc: 'Warrior cadre demonstrations, camp chronicles, martial training drills, and field highlights.',
+    desc: 'Warrior cadre demonstrations, camp highlights, and training drills.',
     googleIcon: 'photo_camera',
     accentColor: '#E1306C',
     softBg: 'rgba(225, 48, 108, 0.08)',
@@ -263,7 +157,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: '@shaktisabha',
     url: 'https://www.instagram.com/shaktisabha?exln=MWhtaWwwZDZmamI5',
     domain: 'instagram.com',
-    desc: 'Institutional announcements, rural school drives, Mission Mardini camps, and community initiatives.',
+    desc: 'Official institutional announcements, camps, and community initiatives.',
     googleIcon: 'photo_camera',
     accentColor: '#DC143C',
     softBg: 'rgba(220, 20, 60, 0.08)',
@@ -278,7 +172,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: 'Shakti Sabha Page',
     url: 'https://www.facebook.com/share/1CbJnBXKHQ/',
     domain: 'facebook.com',
-    desc: 'Official institutional community page, public awareness campaigns, and grassroots family outreach.',
+    desc: 'Official institutional community page and grassroots family outreach.',
     googleIcon: 'groups',
     accentColor: '#1877F2',
     softBg: 'rgba(24, 119, 242, 0.08)',
@@ -293,7 +187,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: 'Aaryaveera Page',
     url: 'https://www.facebook.com/share/14qXzYydVzv/',
     domain: 'facebook.com',
-    desc: 'Movement ideology, discussions on Kshatra-Dharma, and national convention announcements.',
+    desc: 'Movement ideology, discussions on Kshatra-Dharma, and national events.',
     googleIcon: 'share',
     accentColor: '#1877F2',
     softBg: 'rgba(24, 119, 242, 0.08)',
@@ -308,7 +202,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: 'www.aaryaveera.com',
     url: 'https://www.aaryaveera.com',
     domain: 'aaryaveera.com',
-    desc: 'Founder portal detailing the Aaryaveera civilizational vision, publications, and worldview.',
+    desc: 'Founder portal detailing the Aaryaveera civilizational vision and writings.',
     googleIcon: 'language',
     accentColor: '#B45309',
     softBg: 'rgba(180, 83, 9, 0.08)',
@@ -323,7 +217,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: 'pin.it/5DFgIhdKj',
     url: 'https://pin.it/5DFgIhdKj',
     domain: 'pinterest.com',
-    desc: 'Visual archives, martial arts graphics, educational posters, and photo documentation.',
+    desc: 'Visual archives, martial arts graphics, posters, and photo documentation.',
     googleIcon: 'push_pin',
     accentColor: '#E60023',
     softBg: 'rgba(230, 0, 35, 0.08)',
@@ -338,7 +232,7 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
     handle: '@TheAaryaveera',
     url: 'https://x.com/TheAaryaveera?s=20',
     domain: 'x.com',
-    desc: 'Timely thought leadership, cultural discourse, and movement alerts on Twitter (X).',
+    desc: 'Cultural discourse and live updates on Twitter (X).',
     googleIcon: 'tag',
     accentColor: '#111827',
     softBg: 'rgba(17, 24, 39, 0.07)',
@@ -346,15 +240,16 @@ const OFFICIAL_SOCIAL_CHANNELS: SocialChannel[] = [
   }
 ]
 
+// ============================================================
+// 2. MAIN ABOUT PAGE COMPONENT
+// ============================================================
+
 export default function AboutPage() {
   const pageRef = useRef<HTMLDivElement>(null)
   const timelineRef = useRef<HTMLDivElement>(null)
   const valuesRef = useRef<HTMLDivElement>(null)
   const [profile, setProfile] = useState<FounderProfileData>(getFounderData())
   const [socialFilter, setSocialFilter] = useState<'all' | 'aaryaveera' | 'shaktisabha'>('all')
-  const [activeBlueprintTab, setActiveBlueprintTab] = useState<'genesis' | 'interventions' | 'doctrine' | 'pillars'>('genesis')
-  const [activeInterventionIdx, setActiveInterventionIdx] = useState<number>(0)
-  const [activeShieldTab, setActiveShieldTab] = useState<'shield1' | 'shield2'>('shield1')
 
   const filteredChannels = OFFICIAL_SOCIAL_CHANNELS.filter((ch) => {
     if (socialFilter === 'all') return true
@@ -412,7 +307,6 @@ export default function AboutPage() {
       }
     }, pageRef)
 
-    // Ensure elements are never stuck hidden if ScrollTrigger recalculates
     const timer = setTimeout(() => {
       ScrollTrigger.refresh()
     }, 350)
@@ -423,10 +317,6 @@ export default function AboutPage() {
     }
   }, [])
 
-  const confidentialityText =
-    profile?.interventions?.confidentialityNotice ||
-    DEFAULT_FOUNDER_DATA.interventions.confidentialityNotice
-
   const heroImgSrc = profile.heroImage
     ? (profile.heroImage.startsWith('/') || profile.heroImage.startsWith('http')
         ? profile.heroImage
@@ -435,23 +325,24 @@ export default function AboutPage() {
 
   return (
     <main className={`${p.page} ${s.page}`} ref={pageRef}>
-      {/* ── HERO BANNER ────────────────────────────── */}
+      {/* ── 1. HERO BANNER ─────────────────────────── */}
       <div className={p.hero}>
         <div className={p.heroInner}>
           <Link to="/" className={p.backLink}>← Back to Home</Link>
-          <span className={p.eyebrow}>Civilizational Leadership &amp; Tactical Sovereignty</span>
+          <span className={p.eyebrow}>Civilizational Movement · 12 Years of Impact</span>
           <h1 className={p.heroTitle}>About Shakti Sabha</h1>
-          <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul &amp; Strategy of the Movement</p>
+          <p className={p.heroHindi}>शांति और क्रांति का संगम · Ancient Roots. Modern Strength.</p>
           <p className={p.heroDesc}>
-            Reviving the civilizational paradigm of Kshatra-Dharma and cognitive sovereignty.
-            From high-risk frontline rescues to residential combat camps, Shakti Sabha forges young women into intellectually fortified and tactically capable guardians.
+            शक्ति सभा भारतीय महिलाओं और युवाओं के स्वाभिमान, आत्मरक्षा और मानसिक संबल का एक सशक्त मंच है। 
+            हम खोखले नारों के बजाय धरातलीय प्रशिक्षण और संस्कारों के माध्यम से समाज को निर्भीक और जिम्मेदार बनाते हैं।
           </p>
         </div>
       </div>
 
-      {/* ── FOUNDER DOSSIER & STRATEGIC BLUEPRINT ──── */}
+      {/* ── 2. FOUNDER DOSSIER & CLEAR DISTINCTION ─── */}
       <section className={p.founderSection} id="founder">
         <div className={p.founderInner}>
+          
           {/* Main Founder Card */}
           <div className={p.founderCard}>
             <div className={p.founderPortraitWrap}>
@@ -465,7 +356,7 @@ export default function AboutPage() {
               />
               <div className={p.founderBadgePill}>
                 <GoogleIcon name="verified_user" size={16} style={{ marginRight: '6px' }} />
-                Civilizational Strategist &amp; Combat Instructor
+                Black Belt · Martial Arts Instructor
               </div>
             </div>
 
@@ -473,26 +364,47 @@ export default function AboutPage() {
               <span className={p.founderEyebrow}>FOUNDER &amp; DIRECTOR · AARYAVEERA</span>
               <h2 className={p.founderName}>{profile.name}</h2>
               <div className={p.founderTitle}>{profile.title}</div>
-              <div className={p.founderSpecialties}>
-                {profile.subTitle}
+              <div className={p.founderSpecialties}>{profile.subTitle}</div>
+
+              {/* Clear Distinction Banner (Institutional vs Philosophy) */}
+              <div style={{
+                background: '#F0FDF4',
+                border: '1px solid #DCFCE7',
+                borderLeft: '4px solid #166534',
+                borderRadius: '0 10px 10px 0',
+                padding: '0.85rem 1.15rem',
+                margin: '0.75rem 0 1.25rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.35rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.86rem', color: '#166534', fontWeight: 700 }}>
+                  <GoogleIcon name="info" size={17} />
+                  <span>मूल अवधारणा (Core Clarity):</span>
+                </div>
+                <div style={{ fontSize: '0.85rem', color: '#374151', lineHeight: 1.5 }}>
+                  <strong style={{ color: '#DC143C' }}>शक्ति सभा</strong> = संस्थागत ढांचा (Institutional Body).<br />
+                  <strong style={{ color: '#166534' }}>आर्यवीरा</strong> = फाउंडर की व्यक्तिगत विचारधारा और दर्शन (Founder's Personal Worldview).
+                </div>
               </div>
 
-              {/* Hero Quote Directly Below Name and Title */}
+              {/* Hero Quote */}
               <div className={p.heroQuoteBox}>
                 <blockquote className={p.heroQuoteText}>
                   "{profile.heroQuote}"
                 </blockquote>
               </div>
 
-              {/* Executive Metric Badges */}
+              {/* Compact 6-Metric Stat Grid */}
               <div className={p.metricBadgesGrid}>
-                {FOUNDER_METRICS.slice(0, 6).map((m, idx) => (
+                {KEY_METRICS.map((m, idx) => (
                   <div key={idx} className={p.metricBadgeCard}>
                     <div className={p.metricBadgeHeader}>
                       <GoogleIcon name={m.icon} size={18} className={p.metricBadgeIcon} style={{ color: '#DC143C' }} />
-                      <span className={p.metricBadgeTitle}>{m.title}</span>
+                      <span className={p.metricBadgeTitle}>{m.value}</span>
                     </div>
-                    <p className={p.metricBadgeDesc}>{m.desc}</p>
+                    <div style={{ fontSize: '0.74rem', fontWeight: 600, color: '#111827' }}>{m.label}</div>
+                    <div style={{ fontSize: '0.68rem', color: '#6B7280' }}>{m.hi}</div>
                   </div>
                 ))}
               </div>
@@ -519,285 +431,96 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* ── CREATIVE INTERACTIVE BLUEPRINT CONSOLE ──────── */}
-          <div className={p.blueprintSection}>
-            <div className={p.blueprintHeader}>
-              <span className={p.blueprintEyebrow}>
-                <GoogleIcon name="architecture" size={16} />
-                STRATEGIC BLUEPRINT · रणनीतिक कार्यप्रणाली
-              </span>
-              <h3 className={p.blueprintMainTitle}>The Architecture of Sovereignty</h3>
-              <p className={p.blueprintSubtitle}>
-                Explore the foundational philosophy, frontline rescue operations, tactical combat curriculum, and institutional tri-stream framework.
-              </p>
-
-              {/* Interactive Tab Navigation Bar */}
-              <div className={p.blueprintNavBar}>
-                <button
-                  type="button"
-                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'genesis' ? p.blueprintTabBtnActive : ''}`}
-                  onClick={() => setActiveBlueprintTab('genesis')}
-                >
-                  <GoogleIcon name="eco" size={16} />
-                  <span>01 · The Genesis</span>
-                </button>
-                <button
-                  type="button"
-                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'interventions' ? p.blueprintTabBtnActive : ''}`}
-                  onClick={() => setActiveBlueprintTab('interventions')}
-                >
-                  <GoogleIcon name="shield" size={16} />
-                  <span>02 · Tactical Interventions</span>
-                </button>
-                <button
-                  type="button"
-                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'doctrine' ? p.blueprintTabBtnActive : ''}`}
-                  onClick={() => setActiveBlueprintTab('doctrine')}
-                >
-                  <GoogleIcon name="swords" size={16} />
-                  <span>03 · Mission Mardini</span>
-                </button>
-                <button
-                  type="button"
-                  className={`${p.blueprintTabBtn} ${activeBlueprintTab === 'pillars' ? p.blueprintTabBtnActive : ''}`}
-                  onClick={() => setActiveBlueprintTab('pillars')}
-                >
-                  <GoogleIcon name="hub" size={16} />
-                  <span>04 · The Three Streams</span>
-                </button>
-              </div>
-            </div>
-
-            {/* TAB CONTENT CONTAINER */}
-            <div className={p.blueprintContainerCard}>
-              {/* TAB 1: THE GENESIS & KSHATRA-DHARMA */}
-              {activeBlueprintTab === 'genesis' && (
-                <div className={p.genesisGrid}>
-                  <div className={p.genesisLeft}>
-                    <h4 className={p.genesisTitle}>
-                      <GoogleIcon name="military_tech" size={26} style={{ color: '#166534' }} />
-                      Genesis: {profile.genesisLead}
-                    </h4>
-                    <p className={p.genesisText}>{profile.genesisP1}</p>
-                    <p className={p.genesisText}>{profile.genesisP2}</p>
-                    <p className={p.genesisText}>{profile.genesisP3}</p>
-                  </div>
-
-                  <div className={p.genesisRightParchment}>
-                    <div className={p.parchmentHeader}>
-                      <GoogleIcon name="balance" size={24} style={{ color: '#166534' }} />
-                      <h5 className={p.parchmentTitle}>The Principle of Kshatra-Dharma</h5>
-                    </div>
-                    <p className={p.parchmentBody}>{profile.kshatraDharmaText}</p>
-
-                    <div className={p.genesisMilestonesMini}>
-                      <div className={p.miniMilestoneItem}>
-                        <span className={p.miniMilestoneBadge}>2012</span>
-                        <span>Shakti Sabha Founded in Pune</span>
-                      </div>
-                      <div className={p.miniMilestoneItem}>
-                        <span className={p.miniMilestoneBadge}>2014</span>
-                        <span>First Mission Mardini Residential Camp</span>
-                      </div>
-                      <div className={p.miniMilestoneItem}>
-                        <span className={p.miniMilestoneBadge}>2022</span>
-                        <span>Aaryaveera Movement Codified Pan-India</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 2: TACTICAL SAFEGUARDING & FRONTLINE INTERVENTIONS */}
-              {activeBlueprintTab === 'interventions' && (
-                <div className={p.interventionsHub}>
-                  {/* 3 Interactive Selector Cards */}
-                  <div className={p.interventionsNavList}>
-                    {TACTICAL_INTERVENTIONS.map((item, idx) => (
-                      <div
-                        key={idx}
-                        className={`${p.interventionNavCard} ${activeInterventionIdx === idx ? p.interventionNavCardActive : ''}`}
-                        onClick={() => setActiveInterventionIdx(idx)}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                          <GoogleIcon name={item.icon} size={22} style={{ color: activeInterventionIdx === idx ? '#DC143C' : '#6B7280' }} />
-                          <span className={p.interventionCardPill}>
-                            {idx === 0 ? '13 Minors Reintegrated' : idx === 1 ? '250+ Family Mediations' : 'Trauma Recovery'}
-                          </span>
-                        </div>
-                        <h5 className={p.interventionCardTitle}>{item.title}</h5>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Active Detailed Display */}
-                  <div className={p.interventionDetailDisplay}>
-                    <div className={p.interventionDetailHeader}>
-                      <div className={p.interventionIconWrap}>
-                        <GoogleIcon name={TACTICAL_INTERVENTIONS[activeInterventionIdx].icon} size={26} />
-                      </div>
-                      <div>
-                        <h4 className={p.interventionDetailTitle}>
-                          {TACTICAL_INTERVENTIONS[activeInterventionIdx].title}
-                        </h4>
-                      </div>
-                    </div>
-
-                    <p className={p.interventionDetailDesc}>
-                      {TACTICAL_INTERVENTIONS[activeInterventionIdx].desc}
-                    </p>
-
-                    <ul className={p.interventionBulletsList}>
-                      {TACTICAL_INTERVENTIONS[activeInterventionIdx].bullets.map((bullet, bIdx) => (
-                        <li key={bIdx} className={p.interventionBulletItem}>
-                          <span className={p.bulletDot}>●</span>
-                          <span>{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Statutory & Confidentiality Seal */}
-                  <div className={p.confidentialityBanner}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.35rem', color: '#111827', fontWeight: 700, fontSize: '0.84rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                      <GoogleIcon name="gavel" size={17} style={{ color: '#DC143C' }} />
-                      Institutional Note on Confidentiality &amp; Statutory Compliance
-                    </div>
-                    <p style={{ margin: 0, fontSize: '0.84rem', color: '#4B5563', lineHeight: 1.6 }}>
-                      "{confidentialityText}"
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 3: MISSION MARDINI DUAL-SHIELD DOCTRINE */}
-              {activeBlueprintTab === 'doctrine' && (
-                <div className={p.mardiniConsole}>
-                  <div className={p.doctrinePremiseBar}>
-                    "Before the body can respond, the mind must overcome fear. True empowerment requires the development of both mental composure and physical capability."
-                  </div>
-
-                  {/* Shield Switcher Buttons */}
-                  <div className={p.shieldSwitcher}>
-                    <button
-                      type="button"
-                      className={`${p.shieldSwitchBtn} ${activeShieldTab === 'shield1' ? p.shieldSwitchBtnActive : ''}`}
-                      onClick={() => setActiveShieldTab('shield1')}
-                    >
-                      <GoogleIcon name="psychology" size={16} />
-                      <span>Shield One · Cognitive &amp; Situational Awareness</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`${p.shieldSwitchBtn} ${activeShieldTab === 'shield2' ? p.shieldSwitchBtnActive : ''}`}
-                      onClick={() => setActiveShieldTab('shield2')}
-                    >
-                      <GoogleIcon name="sports_martial_arts" size={16} />
-                      <span>Shield Two · Physical Defense &amp; Combat Disciplines</span>
-                    </button>
-                  </div>
-
-                  {/* Shield Items Grid */}
-                  <div className={p.shieldCardsGrid}>
-                    {(activeShieldTab === 'shield1' ? CURRICULUM_TIERS[0] : CURRICULUM_TIERS[1]).items.map((item, iIdx) => (
-                      <div key={iIdx} className={p.shieldItemCard}>
-                        <h5 className={p.shieldItemHead}>
-                          <GoogleIcon name="verified" size={16} style={{ color: '#DC143C' }} />
-                          {item.head}
-                        </h5>
-                        <p className={p.shieldItemBody}>{item.body}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Camps & Outreach Banner */}
-                  <div className={p.campsOutreachBanner}>
-                    <div>
-                      <h5 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', color: '#111827', margin: '0 0 0.5rem', fontWeight: 700 }}>
-                        Intensive 7–10 Day Residential Mardini Camps
-                      </h5>
-                      <p style={{ margin: 0, fontSize: '0.88rem', color: '#4B5563', lineHeight: 1.6 }}>
-                        Full immersion in traditional Lathi-Kaushal, Karate combat, freeze-response elimination, and tactical simulations.
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                      <div style={{ flex: '1 1 120px', background: '#FFFFFF', border: '1px solid #FECDD3', padding: '0.75rem', borderRadius: 8 }}>
-                        <div style={{ color: '#DC143C', fontWeight: 800, fontSize: '1.1rem' }}>2,000+</div>
-                        <div style={{ color: '#6B7280', fontSize: '0.72rem' }}>Graduated Cadre</div>
-                      </div>
-                      <div style={{ flex: '1 1 120px', background: '#FFFFFF', border: '1px solid #DCFCE7', padding: '0.75rem', borderRadius: 8 }}>
-                        <div style={{ color: '#166534', fontWeight: 800, fontSize: '1.1rem' }}>Tribal &amp; Rural</div>
-                        <div style={{ color: '#6B7280', fontSize: '0.72rem' }}>Corridor Outreach</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* TAB 4: THE THREE STREAMS ARCHITECTURE */}
-              {activeBlueprintTab === 'pillars' && (
-                <div className={p.triStreamGrid}>
-                  {PILLARS_IN_ACTION.map((pillar, idx) => (
-                    <div
-                      key={idx}
-                      className={p.streamCardCreative}
-                      style={{ '--stream-color': pillar.color } as React.CSSProperties}
-                    >
-                      <div className={p.streamCardHeader}>
-                        <GoogleIcon name={pillar.icon} size={26} style={{ color: pillar.color }} />
-                        <h4 className={p.streamCardName}>{pillar.name}</h4>
-                      </div>
-                      <div className={p.streamCardSub}>{pillar.sub}</div>
-                      <p className={p.streamCardDesc}>{pillar.desc}</p>
-
-                      <ul className={p.streamBullets}>
-                        {pillar.bullets.map((b, bIdx) => (
-                          <li key={bIdx} className={p.streamBulletItem}>
-                            <span style={{ color: pillar.color }}>●</span>
-                            <span>{b}</span>
-                          </li>
-                        ))}
-                      </ul>
-
-                      <Link to={pillar.dedicatedLink} className={p.streamCardLink}>
-                        <span>{pillar.dedicatedLabel}</span>
-                        <GoogleIcon name="arrow_forward" size={14} />
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* ── 3. THREE CORE PILLARS OF WORK (CLEAN 3-CARD GRID) ── */}
+          <div style={{ marginTop: '3.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+            <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#DC143C', fontWeight: 700, textTransform: 'uppercase' }}>
+              OUR GROUND WORK · हमारा धरातलीय कार्य
+            </span>
+            <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', color: '#111827', margin: '0.4rem 0 0.5rem' }}>
+              How We Create Real Impact
+            </h3>
+            <p style={{ color: '#4B5563', fontSize: '0.94rem', maxWidth: '650px', margin: '0 auto', lineHeight: 1.6 }}>
+              शारीरिक आत्मरक्षा, मानसिक संबल और वैचारिक जागरण — तीनों का संतुलित समन्वय।
+            </p>
           </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
+            {THREE_PILLARS.map((pillar) => (
+              <div
+                key={pillar.id}
+                style={{
+                  background: '#FFFFFF',
+                  border: '1px solid #E5E7EB',
+                  borderTop: `4px solid ${pillar.color}`,
+                  borderRadius: 14,
+                  padding: '1.75rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+                  <GoogleIcon name={pillar.icon} size={26} style={{ color: pillar.color }} />
+                  <h4 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', color: '#111827', margin: 0 }}>
+                    {pillar.title}
+                  </h4>
+                </div>
+                <div style={{ fontSize: '0.82rem', color: pillar.color, fontWeight: 700, marginBottom: '0.75rem' }}>
+                  {pillar.titleHi}
+                </div>
+                <ul style={{ margin: '0 0 1.25rem', paddingLeft: '1.25rem', color: '#4B5563', fontSize: '0.88rem', lineHeight: 1.65, display: 'flex', flexDirection: 'column', gap: '0.5rem', flexGrow: 1 }}>
+                  {pillar.points.map((pt, pIdx) => (
+                    <li key={pIdx}>{pt}</li>
+                  ))}
+                </ul>
+                <Link
+                  to={pillar.link}
+                  style={{
+                    color: pillar.color,
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    textDecoration: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    marginTop: 'auto'
+                  }}
+                >
+                  <span>{pillar.linkText}</span>
+                  <GoogleIcon name="arrow_forward" size={14} />
+                </Link>
+              </div>
+            ))}
+          </div>
+
         </div>
       </section>
 
-      {/* ── THE SHAKTI SABHA PHILOSOPHY ──────────────── */}
+      {/* ── 4. THE SHAKTI SABHA PHILOSOPHY ──────────── */}
       <div className={p.quoteSection}>
-        <div className={p.quoteInner} style={{ maxWidth: '900px', margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '1rem' }}>
-            THE SHAKTI SABHA PHILOSOPHY
+        <div className={p.quoteInner} style={{ maxWidth: '850px', margin: '0 auto', textAlign: 'center' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '0.75rem' }}>
+            THE SHAKTI SABHA PHILOSOPHY · हमारा मूल दर्शन
           </span>
-          <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.6vw, 2rem)', color: '#881337', marginBottom: '1.25rem' }}>
+          <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)', color: '#881337', marginBottom: '1rem' }}>
             Strength Without Hatred. Knowledge Without Blindness. Power With Responsibility.
           </h3>
-          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
-            Shakti Sabha believes that genuine empowerment must develop the whole human being. Physical strength without self-control can become aggression. Knowledge without critical inquiry can become dogma. Freedom without responsibility can become directionless. Peace without courage can become passive acceptance of injustice.
+          <p style={{ color: '#374151', fontSize: '0.94rem', lineHeight: 1.7, marginBottom: '1.25rem' }}>
+            सच्चा सशक्तिकरण वही है जो व्यक्ति के भीतर शक्ति और संयम दोनों का विकास करे। 
+            हम बेटियों को अपनी ताकत पहचानना सिखाते हैं, बिना किसी कटुता या घृणा के। 
+            हम आधुनिक सोच को अपनाते हैं, अपनी सांस्कृतिक जड़ों को भूले बिना।
           </p>
-          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
-            We encourage women to recognize their strength without developing hostility towards men. We encourage young people to question ideas without becoming prisoners of cynicism. We promote cultural awareness without blind glorification and modern thinking without blind imitation.
-          </p>
-          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', lineHeight: 1.6, color: '#DC143C', fontStyle: 'italic', margin: '0 0 1rem' }}>
-            "We do not seek to create followers. We seek to cultivate independent minds, responsible leaders, and conscious individuals."
+          <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.1rem', lineHeight: 1.55, color: '#DC143C', fontStyle: 'italic', margin: 0 }}>
+            "हम अनुयायी नहीं बनाते, हम स्वतंत्र, निर्भीक और जिम्मेदार नेतृत्व तैयार करते हैं।"
           </blockquote>
         </div>
       </div>
 
-      {/* ── TIMELINE ────────────────────────────────── */}
+      {/* ── 5. TIMELINE: 12 YEARS OF IMPACT ─────────── */}
       <section className={p.timelineSection} ref={timelineRef}>
         <div className={p.sectionInner}>
           <span className={p.sectionEyebrow}>Our Journey</span>
-          <h2 className={p.sectionTitle}>12 Years of Impact</h2>
+          <h2 className={p.sectionTitle}>12 Years of Ground Impact</h2>
           <div className={p.timeline}>
             {TIMELINE.map((t, i) => (
               <div key={i} className={p.timelineItem}>
@@ -809,7 +532,7 @@ export default function AboutPage() {
                   {i < TIMELINE.length - 1 && <div className={p.timelineLine} />}
                 </div>
                 <div className={p.timelineRight}>
-                  <h4 className={p.timelineTitle}>{t.title}</h4>
+                  <h4 className={p.timelineTitle}>{t.title} · <span style={{ color: '#DC143C', fontSize: '0.88rem' }}>{t.titleHi}</span></h4>
                   <p className={p.timelineDesc}>{t.desc}</p>
                 </div>
               </div>
@@ -818,7 +541,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── VALUES GRID ─────────────────────────────── */}
+      {/* ── 6. VALUES GRID ──────────────────────────── */}
       <section className={p.valuesSection} ref={valuesRef}>
         <div className={p.sectionInner}>
           <span className={p.sectionEyebrow}>What We Stand For</span>
@@ -836,7 +559,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── OFFICIAL DIGITAL SOVEREIGNTY & SOCIAL MEDIA CHANNELS ── */}
+      {/* ── 7. OFFICIAL DIGITAL CHANNELS (FILTERED) ─── */}
       <section className={p.socialSection} id="social-channels">
         <div className={p.sectionInner}>
           <div className={p.socialHeader}>
@@ -922,11 +645,13 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CTA ─────────────────────────────────────── */}
+      {/* ── 8. CALL TO ACTION ───────────────────────── */}
       <div className={p.ctaSection}>
         <div className={p.ctaInner}>
           <h3 className={p.ctaTitle}>Join the Revolution</h3>
-          <p className={p.ctaDesc}>Whether you request an institutional camp, seek confidential psychological support, or join our fellowship — your sovereignty starts here.</p>
+          <p className={p.ctaDesc}>
+            Whether you want to organize a self-defense camp, seek guidance, or join our community — your journey begins here.
+          </p>
           <div className={p.ctaBtns}>
             <Link to="/sahyog" className={p.ctaPrimary}>Sabha Join Karein →</Link>
             <Link to="/events" className={p.ctaOutline}>Attend Mission Mardini Camp</Link>
