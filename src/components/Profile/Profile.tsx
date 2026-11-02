@@ -206,7 +206,7 @@ export default function Profile() {
               <Link to="/about" data-p="btn" className={s.ctaBtn}>
                 Full Biography &amp; Genesis →
               </Link>
-              <Link to="/three-streams" className={s.ctaBtnGhost}>
+              <Link to="/three-streams" data-p="btn" className={s.ctaBtnGhost}>
                 The Three Streams →
               </Link>
             </div>
