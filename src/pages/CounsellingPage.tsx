@@ -353,14 +353,30 @@ export default function CounsellingPage() {
                     e.preventDefault()
                     setSubmitting(true)
                     try {
-                      await supabase.from('counselling_requests').insert([{
+                      const originTag = `[Origin: ${formData.city.trim() || 'N/A'}, ${formData.state.trim() || 'N/A'}, ${formData.country || 'India'}]`
+                      const finalMsg = `${originTag} ${formData.message ? `Notes: ${formData.message}` : ''}`.trim()
+                      
+                      const reqPayload = {
                         name: formData.name,
                         concern: formData.concern,
                         email: formData.email,
                         phone: formData.phone,
-                        message: formData.message || '',
+                        city: formData.city,
+                        state: formData.state,
+                        country: formData.country,
+                        message: finalMsg,
                         status: 'pending'
-                      }])
+                      }
+
+                      await supabase.from('counselling_requests').insert([reqPayload])
+
+                      try {
+                        const localKey = 'shakti_counselling_requests'
+                        const existing = JSON.parse(localStorage.getItem(localKey) || '[]')
+                        localStorage.setItem(localKey, JSON.stringify([{ id: 'local_' + Date.now(), ...reqPayload, created_at: new Date().toISOString() }, ...existing]))
+                      } catch (e) {
+                        // ignore local backup error
+                      }
                     } catch (err) {
                       console.warn('Counselling submission error:', err)
                     } finally {
@@ -418,6 +434,48 @@ export default function CounsellingPage() {
                         value={formData.phone}
                         onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                         style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Location Inputs (Country, State, City) */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Country</label>
+                      <select
+                        value={formData.country}
+                        onChange={e => setFormData(prev => ({ ...prev, country: e.target.value }))}
+                        style={{ width: '100%', padding: '0.75rem 0.65rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.86rem', background: '#FFFFFF' }}
+                      >
+                        <option value="India">India</option>
+                        <option value="United States">United States</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Australia">Australia</option>
+                        <option value="UAE">UAE</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>State / Province *</label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="e.g. Maharashtra"
+                        value={formData.state}
+                        onChange={e => setFormData(prev => ({ ...prev, state: e.target.value }))}
+                        style={{ width: '100%', padding: '0.75rem 0.85rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.86rem' }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>City / District *</label>
+                      <input
+                        required
+                        type="text"
+                        placeholder="e.g. Nagpur"
+                        value={formData.city}
+                        onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                        style={{ width: '100%', padding: '0.75rem 0.85rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.86rem' }}
                       />
                     </div>
                   </div>

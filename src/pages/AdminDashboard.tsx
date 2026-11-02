@@ -656,7 +656,12 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
         </div>
 
         <div className={`${s.field} ${s.formFull}`}>
-          <label className={s.label}>Cover Image</label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <label className={s.label} style={{ margin: 0 }}>Cover Image</label>
+                <span style={{ fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.15rem 0.55rem', borderRadius: 6, fontWeight: 600 }}>
+                  Aspect Ratio: 16:9 Landscape (1200 × 675 px) • Max 2MB
+                </span>
+              </div>
           {form.cover_image_url && (
             <img src={form.cover_image_url} alt="Cover" style={{ height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
           )}
@@ -700,6 +705,7 @@ function GallerySection() {
 
   const [catPreviews, setCatPreviews] = useState<Record<string, string[]>>({})
   const [folderSearch, setFolderSearch] = useState('')
+  const [photoSearch, setPhotoSearch] = useState('')
 
   // ── Multi-Folder Select, Rename & Merge State ──
   const [selectedFolderIds, setSelectedFolderIds] = useState<string[]>([])
@@ -761,7 +767,7 @@ function GallerySection() {
     if (!catForm.name.trim()) return
     try {
       const created = await saveCategory(catForm)
-      setAlert({ type: 'success', msg: `Folder "${created.name}" created successfully!` })
+      setAlert({ type: 'success', msg: `Folder "${created.name}" created successfully! Click upload below to stage photos.` })
       setShowCatModal(false)
       setCatForm({ name: '', description: '' })
       setSelectedCat(created.id)
@@ -1387,6 +1393,9 @@ function GallerySection() {
             <div className={s.uploadIcon}><GoogleIcon name="cloud_upload" size={32} style={{ color: '#DC143C' }} /></div>
             <div className={s.uploadText}>{uploading ? 'Processing & Compressing...' : `Click to Select Photos for "${currentCatObj.name}"`}</div>
             <div className={s.uploadHint}>Select multiple files • Requires confirmation before saving to database</div>
+            <div style={{ marginTop: '0.5rem', display: 'inline-block', fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.2rem 0.65rem', borderRadius: 6, fontWeight: 600 }}>
+              Guidance: 16:9 / 4:3 Landscape or 3:4 Portrait • Max 5MB per photo
+            </div>
           </div>
 
           {/* Quick Direct URL Form */}
@@ -2870,7 +2879,12 @@ function TestimonialsSection() {
 
               {/* Photo Upload with Instant Preview */}
               <div className={`${s.field} ${s.formFull}`}>
-                <label className={s.label}>Person's Photo</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <label className={s.label} style={{ margin: 0 }}>Person's Photo</label>
+                <span style={{ fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.15rem 0.55rem', borderRadius: 6, fontWeight: 600 }}>
+                  Aspect Ratio: 1:1 Square (400 × 400 px) • Max 1MB
+                </span>
+              </div>
                 <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'center', flexWrap: 'wrap' }}>
                   <input
                     ref={fileRef}
@@ -3069,7 +3083,12 @@ function FounderSection() {
 
             {/* Photo Upload */}
             <div className={`${s.field} ${s.formFull}`}>
-              <label className={s.label}>Founder Portrait</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                <label className={s.label} style={{ margin: 0 }}>Founder Portrait</label>
+                <span style={{ fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.15rem 0.55rem', borderRadius: 6, fontWeight: 600 }}>
+                  Aspect Ratio: 4:5 Portrait or 1:1 Square (800 × 1000 px) • Max 2MB
+                </span>
+              </div>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <input
                   ref={fileRef}

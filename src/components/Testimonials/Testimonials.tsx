@@ -9,11 +9,7 @@ export default function Testimonials() {
   const [isPaused, setIsPaused] = useState(false)
   const [isManual, setIsManual] = useState(false)
   const [manualIndex, setManualIndex] = useState(0)
-  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
-
-  const toggleExpand = (id: string) => {
-    setExpandedIds(prev => ({ ...prev, [id]: !prev[id] }))
-  }
+  const [selectedStory, setSelectedStory] = useState<Testimonial | null>(null)
 
   useEffect(() => {
     let isMounted = true
@@ -43,7 +39,6 @@ export default function Testimonials() {
           const localParsed: Testimonial[] = JSON.parse(local)
           const publishedLocal = localParsed.filter(t => t.published !== false)
 
-          // Deduplicate by ID
           const existingIds = new Set(remoteList.map(t => t.id))
           const uniqueLocal = publishedLocal.filter(t => !existingIds.has(t.id))
           remoteList = [...uniqueLocal, ...remoteList]
@@ -56,7 +51,6 @@ export default function Testimonials() {
       if (remoteList.length === 0) {
         remoteList = DEFAULT_TESTIMONIALS
       } else {
-        // If there are only 1 or 2, mix in defaults so marquee fills out nicely
         const existingQuotes = new Set(remoteList.map(t => t.quote.trim().toLowerCase()))
         const extraDefaults = DEFAULT_TESTIMONIALS.filter(d => !existingQuotes.has(d.quote.trim().toLowerCase()))
         remoteList = [...remoteList, ...extraDefaults]
@@ -69,7 +63,6 @@ export default function Testimonials() {
 
     loadTestimonials()
 
-    // Listen for custom event when admin publishes/updates testimonials in another tab or component
     const handleStorageChange = () => {
       loadTestimonials()
     }
@@ -88,13 +81,22 @@ export default function Testimonials() {
     setIsManual(true)
     setIsPaused(true)
     setManualIndex(prev => {
-      const max = Math.max(0, testimonials.length - 1)
+      const max = Math.max(0, marqueeItems.length - 1)
       if (direction === 'left') {
-        return prev <= 0 ? max : prev - 1
+        return prev <= 0 ? 0 : prev - 1
       } else {
         return prev >= max ? 0 : prev + 1
       }
     })
+  }
+
+  const togglePlayPause = () => {
+    if (isManual) {
+      setIsManual(false)
+      setIsPaused(false)
+    } else {
+      setIsPaused(p => !p)
+    }
   }
 
   return (
@@ -116,7 +118,9 @@ export default function Testimonials() {
               title="Previous testimonial"
               aria-label="Previous"
             >
-              ←
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
             </button>
             <button
               className={s.navBtn}
@@ -124,16 +128,26 @@ export default function Testimonials() {
               title="Next testimonial"
               aria-label="Next"
             >
-              →
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
             </button>
             <button
               className={s.navBtn}
-              onClick={() => { if (isManual) { setIsManual(false); setIsPaused(false); } else { setIsPaused(p => !p); } }}
+              onClick={togglePlayPause}
               title={isPaused ? 'Resume auto scroll' : 'Pause auto scroll'}
               aria-label={isPaused ? 'Play' : 'Pause'}
-              style={{ fontSize: '0.9rem' }}
             >
-              {isPaused ? '▶' : '❚❚'}
+              {isPaused ? (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="6" y="4" width="4" height="16" />
+                  <rect x="14" y="4" width="4" height="16" />
+                </svg>
+              )}
             </button>
           </div>
         </div>
@@ -143,94 +157,161 @@ export default function Testimonials() {
       <div
         className={s.marqueeOuter}
         onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
+        onMouseLeave={() => !isManual && setIsPaused(false)}
         onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
+        onTouchEnd={() => !isManual && setIsPaused(false)}
       >
         <div
           ref={trackRef}
           className={s.marqueeTrack}
           style={isManual ? {
             animation: 'none',
-            transform: `translateX(-${manualIndex * 410}px)`,
+            transform: `translateX(-${manualIndex * 428}px)`,
             transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
           } : {
             animationPlayState: isPaused ? 'paused' : 'running'
           }}
         >
-          {marqueeItems.map((item, idx) => (
-            <article key={`${item.id}-${idx}`} className={s.card}>
-              <div className={s.cardTop}>
-                <div className={s.stars} aria-label={`${item.rating || 5} out of 5 stars`}>
-                  {Array.from({ length: item.rating || 5 }).map((_, i) => (
-                    <span key={i}>★</span>
-                  ))}
-                </div>
-                <span className={s.quoteIcon} aria-hidden="true">“</span>
-              </div>
-
-              <blockquote className={s.quoteText}>
-                "{item.quote.length > 130 && !expandedIds[item.id] ? item.quote.slice(0, 130) + '...' : item.quote}"
-              </blockquote>
-              {item.quote.length > 130 && (
-                <button
-                  type="button"
-                  className={s.readMoreBtn}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleExpand(item.id)
-                  }}
-                  aria-expanded={Boolean(expandedIds[item.id])}
-                >
-                  {expandedIds[item.id] ? 'Read less ↑' : 'Read more ↓'}
-                </button>
-              )}
-
-              <div className={s.authorBlock}>
-                <div className={s.avatarWrap}>
-                  {item.image_url ? (
-                    <img
-                      src={item.image_url}
-                      alt={item.name}
-                      className={s.avatarImg}
-                      loading="lazy"
-                      onError={(e) => {
-                        // Fallback to initials if image link breaks
-                        const target = e.currentTarget
-                        target.style.display = 'none'
-                        if (target.parentElement) {
-                          const fallback = document.createElement('span')
-                          fallback.className = s.avatarInitial
-                          fallback.textContent = item.name.charAt(0).toUpperCase()
-                          target.parentElement.appendChild(fallback)
-                        }
-                      }}
-                    />
-                  ) : (
-                    <span className={s.avatarInitial}>
-                      {item.name.charAt(0).toUpperCase()}
-                    </span>
-                  )}
+          {marqueeItems.map((item, idx) => {
+            const isLong = item.quote.length > 170
+            return (
+              <article key={`${item.id}-${idx}`} className={s.card}>
+                <div className={s.cardTop}>
+                  <div className={s.stars} aria-label={`${item.rating || 5} out of 5 stars`}>
+                    {Array.from({ length: item.rating || 5 }).map((_, i) => (
+                      <span key={i}>★</span>
+                    ))}
+                  </div>
+                  <span className={s.quoteIcon} aria-hidden="true">“</span>
                 </div>
 
-                <div className={s.authorInfo}>
-                  <h3 className={s.authorName}>{item.name}</h3>
-                  <div className={s.authorRole}>
-                    <span>{item.role}</span>
-                    {item.location && (
-                      <span className={s.authorLocation}>{item.location}</span>
+                <blockquote className={s.quoteText}>
+                  "{item.quote}"
+                </blockquote>
+
+                {isLong && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStory(item)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#DC143C',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      padding: '0.25rem 0',
+                      textAlign: 'left',
+                      marginTop: '0.35rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}
+                  >
+                    Read full experience →
+                  </button>
+                )}
+
+                <div className={s.authorBlock}>
+                  <div className={s.avatarWrap}>
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className={s.avatarImg}
+                        loading="lazy"
+                        onError={(e) => {
+                          const target = e.currentTarget
+                          target.style.display = 'none'
+                          if (target.parentElement) {
+                            const fallback = document.createElement('span')
+                            fallback.className = s.avatarInitial
+                            fallback.textContent = item.name.charAt(0).toUpperCase()
+                            target.parentElement.appendChild(fallback)
+                          }
+                        }}
+                      />
+                    ) : (
+                      <span className={s.avatarInitial}>
+                        {item.name.charAt(0).toUpperCase()}
+                      </span>
                     )}
                   </div>
+
+                  <div className={s.authorInfo}>
+                    <h3 className={s.authorName}>{item.name}</h3>
+                    <div className={s.authorRole}>
+                      <span>{item.role}</span>
+                      {item.location && (
+                        <span className={s.authorLocation}>{item.location}</span>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
+              </article>
+            )
+          })}
         </div>
       </div>
 
       <div className={s.scrollHint}>
         <span>Hover or touch cards to pause marquee • Continuous auto-scrolling</span>
       </div>
+
+      {/* Full Testimonial Modal Dialog */}
+      {selectedStory && (
+        <div className={s.modalOverlay} onClick={() => setSelectedStory(null)}>
+          <div className={s.modalContent} onClick={e => e.stopPropagation()}>
+            <button className={s.modalClose} onClick={() => setSelectedStory(null)} aria-label="Close story">
+              ✕
+            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem' }}>
+              <div className={s.avatarWrap} style={{ width: 60, height: 60 }}>
+                {selectedStory.image_url ? (
+                  <img src={selectedStory.image_url} alt={selectedStory.name} className={s.avatarImg} />
+                ) : (
+                  <span className={s.avatarInitial}>{selectedStory.name.charAt(0).toUpperCase()}</span>
+                )}
+              </div>
+              <div>
+                <h3 style={{ margin: '0 0 0.25rem', color: '#111827', fontSize: '1.2rem', fontWeight: 700 }}>
+                  {selectedStory.name}
+                </h3>
+                <div style={{ color: '#6B7280', fontSize: '0.85rem' }}>
+                  {selectedStory.role} {selectedStory.location ? `• ${selectedStory.location}` : ''}
+                </div>
+              </div>
+            </div>
+
+            <div className={s.stars} style={{ marginBottom: '1rem' }}>
+              {Array.from({ length: selectedStory.rating || 5 }).map((_, i) => (
+                <span key={i}>★</span>
+              ))}
+            </div>
+
+            <p className={s.fullQuote}>
+              "{selectedStory.quote}"
+            </p>
+
+            <button
+              onClick={() => setSelectedStory(null)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                background: '#DC143C',
+                color: '#FFFFFF',
+                border: 'none',
+                borderRadius: '9999px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontSize: '0.9rem'
+              }}
+            >
+              Close Story
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
