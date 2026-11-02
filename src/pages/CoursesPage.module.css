@@ -643,3 +643,67 @@
   flex-shrink: 0;
   width: 80px;
 }
+
+.moreDetailsBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0.2rem 0 0.8rem;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #DC143C;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  align-self: flex-start;
+}
+
+.moreDetailsBtn:hover {
+  color: #B01030;
+  transform: translateX(3px);
+}
+
+.priceCol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.discountRow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.1rem;
+}
+
+.originalPrice {
+  font-size: 0.82rem;
+  color: #9CA3AF;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.discountTag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #166534;
+  background: #DCFCE7;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+.eventTag {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #B45309;
+  background: #FEF3C7;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}

@@ -216,8 +216,10 @@ export default function Aaryaveera() {
           <div className={s.grid}>
             {CARDS.map(c => (
               <div key={c.title} data-av="card" className={s.card}>
-                <div className={s.icon}><GoogleIcon name={c.icon} size={28} /></div>
-                <div className={s.cardTitle}>{c.title}</div>
+                <div className={s.cardHeader}>
+                  <div className={s.icon}><GoogleIcon name={c.icon} size={20} /></div>
+                  <h3 className={s.cardTitle}>{c.title}</h3>
+                </div>
                 <p className={s.cardText}>{c.text}</p>
               </div>
             ))}

@@ -1933,3 +1933,277 @@
   transform: translateY(-1px);
 }
 
+
+/* ============================================================
+   Official Social Media Bar & Multi-Account Grid
+   ============================================================ */
+.socialSection {
+  padding: 5.5rem 0 6rem;
+  background: #FCFCFD;
+  border-top: 1px solid #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
+  position: relative;
+}
+
+.socialHeader {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 3rem;
+}
+
+.socialEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.18);
+  padding: 0.35rem 0.95rem;
+  border-radius: 9999px;
+  margin-bottom: 0.85rem;
+}
+
+.socialTitle {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+.socialSubtitle {
+  font-size: 0.95rem;
+  color: #4B5563;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ── Platform Bar ── */
+.platformBarWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.platformBar {
+  display: inline-flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 9999px;
+  padding: 0.4rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  gap: 0.35rem;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.platformTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.15rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #4B5563;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  white-space: nowrap;
+}
+
+.platformTab:hover {
+  background: #F9FAFB;
+  color: #111827;
+}
+
+.platformTabActive {
+  background: #111827 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.platformTabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.platformTabTitle {
+  letter-spacing: 0.02em;
+}
+
+.platformTabCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+}
+
+.platformTab:not(.platformTabActive) .platformTabCount {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+/* ── Drawer & Account Cards ── */
+.accountsDrawerWrapper {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  padding: 2.25rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.drawerHeader {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.activePlatformIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activePlatformName {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.activePlatformSub {
+  font-size: 0.82rem;
+  color: #6B7280;
+  margin: 0.2rem 0 0;
+}
+
+.accountsCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.accountCard {
+  background: #FAFAFA;
+  border: 1px solid #E5E7EB;
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.accountCard:hover {
+  background: #FFFFFF;
+  border-color: var(--brand-accent, #DC143C);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.accountCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.accountIconBox {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.accountTagBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #4B5563;
+  background: #F3F4F6;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+.accountDetails {
+  margin-bottom: 1.5rem;
+}
+
+.accountTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.accountHandle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.accountActionLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.65rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  color: #111827;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.accountCard:hover .accountActionLink {
+  background: #111827;
+  color: #FFFFFF;
+  border-color: #111827;
+}
+
+@media (max-width: 768px) {
+  .platformBar {
+    border-radius: 12px;
+    padding: 0.3rem;
+  }
+  .platformTab {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.78rem;
+  }
+  .accountsDrawerWrapper {
+    padding: 1.5rem 1.25rem;
+  }
+}

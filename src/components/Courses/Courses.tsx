@@ -151,12 +151,12 @@ export default function Courses() {
             <div className={s.cardBadge}>{c.badge}</div>
             <div className={s.cardTitle}>{c.title}</div>
             <p className={s.cardDetail}>{c.detail}</p>
-            <div className={s.cardMeta}>
-              <div className={s.cardMetaItem}><strong>{c.modules}</strong>Content</div>
-              <div className={s.cardMetaItem}><strong>{c.duration}</strong>Duration</div>
-              <div className={s.cardMetaItem}><strong>{c.level}</strong>Level</div>
+            <div className={s.cardFooter}>
+              <div className={s.priceWrapper}>
+                <span className={s.priceText}>{c.price || '₹1,800'}</span>
+              </div>
+              <Link to="/courses" className={s.enroll}>Enroll Now →</Link>
             </div>
-            <Link to="/courses" className={s.enroll}>Enroll Now →</Link>
           </div>
         ))}
       </div>

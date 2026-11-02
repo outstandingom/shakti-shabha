@@ -277,6 +277,8 @@ function ArticlesSection() {
   const [showPreview, setShowPreview] = useState(false)
   const [previewLang, setPreviewLang] = useState<'en' | 'hi'>('en')
   const [alert, setAlert] = useState<{ type: 'error' | 'success'; msg: string } | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const defaultForm = {
     title_en: '', title_hi: '', content_en: '', content_hi: '',
@@ -284,9 +286,6 @@ function ArticlesSection() {
     tags: '', author_name: '', published: false
   }
   const [form, setForm] = useState(defaultForm)
-  const [uploading, setUploading] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
-
   const load = async () => {
     setLoading(true)
     const { data } = await supabase.from('articles').select('*').order('created_at', { ascending: false })
@@ -1638,6 +1637,64 @@ function GallerySection() {
   )
 }
 
+
+/* ============================================================
+   CANVAS 16:9 IMAGE CROP & DIMENSION HELPER
+   ============================================================ */
+const cropImageTo16_9 = (imgSrc: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const targetW = 1200
+      const targetH = 675
+      const targetRatio = targetW / targetH
+      const srcRatio = img.naturalWidth / img.naturalHeight
+
+      let cropX = 0
+      let cropY = 0
+      let cropW = img.naturalWidth
+      let cropH = img.naturalHeight
+
+      if (srcRatio > targetRatio) {
+        cropW = img.naturalHeight * targetRatio
+        cropX = (img.naturalWidth - cropW) / 2
+      } else {
+        cropH = img.naturalWidth / targetRatio
+        cropY = (img.naturalHeight - cropH) / 2
+      }
+
+      const canvas = document.createElement('canvas')
+      canvas.width = targetW
+      canvas.height = targetH
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(imgSrc)
+        return
+      }
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+      ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH)
+      resolve(canvas.toDataURL('image/jpeg', 0.88))
+    }
+    img.onerror = () => reject(new Error('Failed to load image for cropping'))
+    img.src = imgSrc
+  })
+}
+
+const getImageDimensions = (url: string): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve) => {
+    if (!url) {
+      resolve({ width: 0, height: 0 })
+      return
+    }
+    const img = new Image()
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    img.onerror = () => resolve({ width: 0, height: 0 })
+    img.src = url
+  })
+}
+
 /* ============================================================
    COURSES SECTION
    ============================================================ */
@@ -1651,11 +1708,21 @@ function CoursesSection() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   const defaultForm = {
-    title: '', description: '', price: 0, duration: '', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
+    title: '', description: '', price: 0, original_price: 0, discount_percent: 0, discount_tag: '', duration: '', level: 'beginner' as 'beginner' | 'intermediate' | 'advanced',
     cover_image_url: '', instructor: '', published: false,
     syllabus: [{ week: 'Week 1', topic: '' }]
   }
   const [form, setForm] = useState(defaultForm)
+  const [imageDim, setImageDim] = useState<{ width: number; height: number } | null>(null)
+  const [cropping, setCropping] = useState(false)
+
+  useEffect(() => {
+    if (form.cover_image_url) {
+      getImageDimensions(form.cover_image_url).then(setImageDim)
+    } else {
+      setImageDim(null)
+    }
+  }, [form.cover_image_url])
 
   const load = async () => {
     setLoading(true)
@@ -1703,6 +1770,9 @@ function CoursesSection() {
     setEditing(c)
     setForm({
       title: c.title, description: c.description, price: c.price,
+      original_price: c.original_price || c.price || 0,
+      discount_percent: c.discount_percent || 0,
+      discount_tag: c.discount_tag || '',
       duration: c.duration, level: c.level, cover_image_url: c.cover_image_url,
       instructor: c.instructor, published: c.published,
       syllabus: c.syllabus?.length ? c.syllabus : [{ week: 'Week 1', topic: '' }]
@@ -1740,10 +1810,17 @@ function CoursesSection() {
       return
     }
 
+    const origPrice = Number(form.original_price) || Number(form.price) || 0
+    const discPct = Number(form.discount_percent) || 0
+    const finalPrice = Number(form.price) || (discPct > 0 ? Math.round(origPrice * (1 - discPct / 100)) : origPrice)
+
     const payload = {
       title: form.title.trim(),
       description: form.description.trim(),
-      price: Number(form.price) || 0,
+      price: finalPrice,
+      original_price: origPrice > 0 ? origPrice : finalPrice,
+      discount_percent: discPct,
+      discount_tag: form.discount_tag?.trim() || '',
       duration: form.duration.trim() || '4 Weeks',
       level: form.level,
       instructor: form.instructor.trim() || 'Shakti Sabha Faculty',
@@ -1857,13 +1934,42 @@ function CoursesSection() {
         ) : (
           <table className={s.table}>
             <thead>
-              <tr><th>Course</th><th>Price</th><th>Level</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
+              <tr><th>Course</th><th>Price & Discount</th><th>Level</th><th>Duration</th><th>Status</th><th>Actions</th></tr>
             </thead>
             <tbody>
               {courses.map(c => (
                 <tr key={c.id}>
-                  <td>{c.title}</td>
-                  <td>₹{c.price.toLocaleString()}</td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      {c.cover_image_url ? (
+                        <img src={c.cover_image_url} alt="" style={{ width: 48, height: 32, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }} />
+                      ) : (
+                        <div style={{ width: 48, height: 32, background: 'rgba(255,255,255,0.06)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <GoogleIcon name="school" size={16} style={{ color: '#888' }} />
+                        </div>
+                      )}
+                      <div>
+                        <div style={{ fontWeight: 600 }}>{c.title}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#888' }}>{c.instructor}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ fontWeight: 600 }}>₹{c.price.toLocaleString()}</div>
+                    {c.discount_percent && c.discount_percent > 0 ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginTop: '0.2rem', flexWrap: 'wrap' }}>
+                        <span style={{ fontSize: '0.72rem', color: '#888', textDecoration: 'line-through' }}>
+                          ₹{(c.original_price || c.price).toLocaleString()}
+                        </span>
+                        <span style={{ fontSize: '0.65rem', background: '#065F46', color: '#34D399', padding: '0.1rem 0.4rem', borderRadius: 4, fontWeight: 700 }}>
+                          {c.discount_percent}% OFF
+                        </span>
+                        {c.discount_tag && (
+                          <span style={{ fontSize: '0.65rem', color: '#F59E0B' }}>• {c.discount_tag}</span>
+                        )}
+                      </div>
+                    ) : null}
+                  </td>
                   <td><span className={`${s.badge} ${s.badgeGray}`}>{c.level}</span></td>
                   <td style={{ fontSize: '0.82rem' }}>{c.duration}</td>
                   <td><span className={`${s.badge} ${c.published ? s.badgeGreen : s.badgeGray}`}>{c.published ? 'Published' : 'Draft'}</span></td>
@@ -1895,9 +2001,102 @@ function CoursesSection() {
                 <label className={s.label}>Description</label>
                 <textarea className={s.textarea} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} placeholder="What will students learn?" />
               </div>
-              <div className={s.field}>
-                <label className={s.label}>Price (₹)</label>
-                <input className={s.input} type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))} placeholder="4999" />
+              <div className={`${s.field} ${s.formFull}`} style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: 8, border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ fontWeight: 600, color: '#C9A96E', fontSize: '0.88rem', marginBottom: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <GoogleIcon name="local_offer" size={17} /> Pricing & Special Event Discount Management
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))', gap: '0.85rem' }}>
+                  <div>
+                    <label className={s.label}>Base / Original Price (₹)</label>
+                    <input
+                      className={s.input}
+                      type="number"
+                      value={form.original_price || form.price || ''}
+                      onChange={e => {
+                        const base = Number(e.target.value) || 0
+                        const pct = form.discount_percent || 0
+                        const payable = pct > 0 ? Math.round(base * (1 - pct / 100)) : base
+                        setForm(f => ({ ...f, original_price: base, price: payable }))
+                      }}
+                      placeholder="e.g. 2500"
+                    />
+                  </div>
+                  <div>
+                    <label className={s.label}>Event Discount (%)</label>
+                    <input
+                      className={s.input}
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={form.discount_percent || ''}
+                      onChange={e => {
+                        const pct = Math.min(100, Math.max(0, Number(e.target.value) || 0))
+                        const base = form.original_price || form.price || 0
+                        const payable = pct > 0 ? Math.round(base * (1 - pct / 100)) : base
+                        setForm(f => ({ ...f, discount_percent: pct, price: payable }))
+                      }}
+                      placeholder="e.g. 20"
+                    />
+                  </div>
+                  <div>
+                    <label className={s.label}>Special Event / Offer Tag</label>
+                    <input
+                      className={s.input}
+                      value={form.discount_tag || ''}
+                      onChange={e => setForm(f => ({ ...f, discount_tag: e.target.value }))}
+                      placeholder="e.g. 20% Navratri Special"
+                    />
+                  </div>
+                  <div>
+                    <label className={s.label}>Final Payable Price (₹)</label>
+                    <input
+                      className={s.input}
+                      type="number"
+                      value={form.price || ''}
+                      onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))}
+                      placeholder="Calculated price"
+                      style={{ fontWeight: 700, color: '#10B981' }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#888' }}>Quick Discount Presets:</span>
+                  {[0, 10, 15, 20, 25, 30, 50].map(pct => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => {
+                        const base = form.original_price || form.price || 0
+                        const payable = pct > 0 ? Math.round(base * (1 - pct / 100)) : base
+                        setForm(f => ({
+                          ...f,
+                          discount_percent: pct,
+                          price: payable,
+                          discount_tag: pct > 0 ? `${pct}% Special Event Discount` : ''
+                        }))
+                      }}
+                      style={{
+                        padding: '0.2rem 0.55rem',
+                        fontSize: '0.72rem',
+                        borderRadius: 4,
+                        border: '1px solid',
+                        borderColor: form.discount_percent === pct ? '#C9A96E' : 'rgba(255,255,255,0.15)',
+                        background: form.discount_percent === pct ? 'rgba(201,169,110,0.2)' : 'rgba(255,255,255,0.04)',
+                        color: form.discount_percent === pct ? '#E8C98A' : '#bbb',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {pct === 0 ? 'No Discount' : `${pct}% OFF`}
+                    </button>
+                  ))}
+                </div>
+                {form.discount_percent > 0 && (
+                  <div style={{ marginTop: '0.6rem', fontSize: '0.8rem', color: '#10B981', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <GoogleIcon name="savings" size={16} />
+                    <span>Applied {form.discount_percent}% off: Students pay ₹{form.price.toLocaleString()} (saves ₹{((form.original_price || form.price) - form.price).toLocaleString()})</span>
+                  </div>
+                )}
               </div>
               <div className={s.field}>
                 <label className={s.label}>Duration</label>
@@ -1917,7 +2116,43 @@ function CoursesSection() {
               </div>
 
               <div className={`${s.field} ${s.formFull}`}>
-                <label className={s.label}>Course Cover Image</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+                  <label className={s.label} style={{ margin: 0 }}>Course Cover Image</label>
+                  <div style={{ fontSize: '0.75rem', color: '#C9A96E', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <GoogleIcon name="aspect_ratio" size={15} />
+                    <span>📐 Recommended: 1200 × 675 px (16:9 ratio) • Max 2MB</span>
+                  </div>
+                </div>
+
+                {imageDim && (imageDim.width > 1200 || imageDim.height > 675 || Math.abs((imageDim.width / imageDim.height) - (16/9)) > 0.05) && (
+                  <div style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.35)', padding: '0.5rem 0.85rem', borderRadius: 6, marginBottom: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#FCD34D' }}>
+                      ⚠️ Dimensions: <strong>{imageDim.width} × {imageDim.height} px</strong> (Exceeds recommended 1200 × 675 px or non-16:9 ratio).
+                    </span>
+                    <button
+                      type="button"
+                      className={s.btnSecondary}
+                      style={{ fontSize: '0.72rem', padding: '0.25rem 0.65rem', borderColor: '#F59E0B', color: '#FCD34D', cursor: 'pointer' }}
+                      disabled={cropping}
+                      onClick={async () => {
+                        if (!form.cover_image_url) return
+                        setCropping(true)
+                        try {
+                          const cropped = await cropImageTo16_9(form.cover_image_url)
+                          setForm(f => ({ ...f, cover_image_url: cropped }))
+                          setImageDim({ width: 1200, height: 675 })
+                        } catch (e) {
+                          console.error('Crop failed', e)
+                        } finally {
+                          setCropping(false)
+                        }
+                      }}
+                    >
+                      {cropping ? 'Cropping…' : '✂️ Auto-Crop & Optimize to 16:9 (1200×675)'}
+                    </button>
+                  </div>
+                )}
+
                 {form.cover_image_url ? (
                   <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
                     <img
@@ -2976,6 +3211,7 @@ function FounderSection() {
 interface AdminEvent {
   id: string
   title: string
+  cover_image_url?: string
   stream: 'mardini' | 'shakti-bhava' | 'shakti-varta' | 'general'
   format: 'on-ground' | 'digital'
   date: string
@@ -2999,6 +3235,7 @@ interface AdminEvent {
 
 const EMPTY_EVENT: Omit<AdminEvent, 'id' | 'created_at'> = {
   title: '',
+  cover_image_url: '',
   stream: 'general',
   format: 'on-ground',
   date: '',
@@ -3042,6 +3279,17 @@ function EventsSection() {
   const [form, setForm] = useState<Omit<AdminEvent, 'id' | 'created_at'>>(EMPTY_EVENT)
   const [filterStatus, setFilterStatus] = useState<'all' | 'upcoming' | 'completed' | 'cancelled'>('all')
   const [saving, setSaving] = useState(false)
+  const [eventImageDim, setEventImageDim] = useState<{ width: number; height: number } | null>(null)
+  const [eventCropping, setEventCropping] = useState(false)
+  const eventFileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (form.cover_image_url) {
+      getImageDimensions(form.cover_image_url).then(setEventImageDim)
+    } else {
+      setEventImageDim(null)
+    }
+  }, [form.cover_image_url])
 
   useEffect(() => {
     setEvents(loadAdminEvents())
@@ -3149,7 +3397,12 @@ function EventsSection() {
                   <span style={{ fontSize: '0.75rem', color: '#555' }}>{ev.stream} · {ev.format}</span>
                   {!ev.published && <span style={{ padding: '0.15rem 0.5rem', borderRadius: 12, fontSize: '0.7rem', background: 'rgba(255,255,255,0.05)', color: '#555' }}>Hidden</span>}
                 </div>
-                <p style={{ margin: '0 0 0.3rem', fontFamily: 'Cinzel, Georgia, serif', fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.3rem' }}>
+                    {ev.cover_image_url && (
+                      <img src={ev.cover_image_url} alt="" style={{ width: 44, height: 28, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }} />
+                    )}
+                    <p style={{ margin: 0, fontFamily: 'Cinzel, Georgia, serif', fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
+                  </div>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>
                   {ev.date}{ev.end_date ? ` → ${ev.end_date}` : ''} · {ev.location || 'Location TBA'}
                   {ev.participant_count ? ` · ~${ev.participant_count.toLocaleString()}+ participants` : ''}
@@ -3189,6 +3442,101 @@ function EventsSection() {
               <div className={`${s.field} ${s.formFull}`}>
                 <label className={s.label}>Event Title *</label>
                 <input className={s.input} value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="Full event name" />
+              </div>
+
+              <div className={`${s.field} ${s.formFull}`}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+                  <label className={s.label} style={{ margin: 0 }}>Event Cover Image</label>
+                  <div style={{ fontSize: '0.75rem', color: '#C9A96E', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                    <GoogleIcon name="aspect_ratio" size={15} />
+                    <span>📐 Recommended: 1200 × 675 px (16:9 ratio) • Max 2MB</span>
+                  </div>
+                </div>
+
+                {eventImageDim && (eventImageDim.width > 1200 || eventImageDim.height > 675 || Math.abs((eventImageDim.width / eventImageDim.height) - (16/9)) > 0.05) && (
+                  <div style={{ background: 'rgba(245, 158, 11, 0.12)', border: '1px solid rgba(245, 158, 11, 0.35)', padding: '0.5rem 0.85rem', borderRadius: 6, marginBottom: '0.6rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.78rem', color: '#FCD34D' }}>
+                      ⚠️ Dimensions: <strong>{eventImageDim.width} × {eventImageDim.height} px</strong> (Exceeds recommended 1200 × 675 px or non-16:9 ratio).
+                    </span>
+                    <button
+                      type="button"
+                      className={s.btnSecondary}
+                      style={{ fontSize: '0.72rem', padding: '0.25rem 0.65rem', borderColor: '#F59E0B', color: '#FCD34D', cursor: 'pointer' }}
+                      disabled={eventCropping}
+                      onClick={async () => {
+                        if (!form.cover_image_url) return
+                        setEventCropping(true)
+                        try {
+                          const cropped = await cropImageTo16_9(form.cover_image_url)
+                          setForm(f => ({ ...f, cover_image_url: cropped }))
+                          setEventImageDim({ width: 1200, height: 675 })
+                        } catch (e) {
+                          console.error('Event crop failed', e)
+                        } finally {
+                          setEventCropping(false)
+                        }
+                      }}
+                    >
+                      {eventCropping ? 'Cropping…' : '✂️ Auto-Crop & Optimize to 16:9 (1200×675)'}
+                    </button>
+                  </div>
+                )}
+
+                {form.cover_image_url ? (
+                  <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
+                    <img
+                      src={form.cover_image_url}
+                      alt="Event Cover Preview"
+                      style={{ height: 130, maxWidth: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, cover_image_url: '' }))}
+                      className={s.btnDanger}
+                      style={{ position: 'absolute', top: 6, right: 6, borderRadius: '50%', width: 26, height: 26, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      title="Remove image"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>
+                    No event cover image set. Upload an image file or paste an image URL below.
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <input
+                    ref={eventFileRef}
+                    type="file"
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    onChange={async e => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      try {
+                        const comp = await compressImage(file, { maxWidth: 1200, maxHeight: 1200, quality: 0.85 })
+                        setForm(f => ({ ...f, cover_image_url: comp.dataUrl }))
+                      } catch (err) {
+                        console.error('Event image compress error', err)
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    className={s.btnSecondary}
+                    onClick={() => eventFileRef.current?.click()}
+                  >
+                    <GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Choose Event Image
+                  </button>
+                  <input
+                    className={s.input}
+                    style={{ flex: 1, minWidth: 220 }}
+                    value={form.cover_image_url || ''}
+                    onChange={e => setForm(f => ({ ...f, cover_image_url: e.target.value }))}
+                    placeholder="Or paste direct event image URL (https://...)"
+                  />
+                </div>
               </div>
 
               <div className={s.field}>

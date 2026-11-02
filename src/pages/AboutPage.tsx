@@ -912,148 +912,90 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── INTERACTIVE CASE STUDY SHOWCASE FOR SOCIAL ACCOUNTS ── */}
-      <section
-        ref={showcaseRef}
-        className={`${p.showcaseSection} ${socialThemeLight ? p.showcaseSectionLight : ''}`}
-        id="social-accounts"
-        onMouseMove={(e) => {
-          if (!showcaseRef.current) return
-          const rect = showcaseRef.current.getBoundingClientRect()
-          setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-        }}
-        onMouseEnter={() => setCursorVisible(true)}
-        onMouseLeave={() => {
-          setCursorVisible(false)
-          setCursorHover(false)
-        }}
-      >
-        {/* Custom Scoped Cursors */}
-        {cursorVisible && (
-          <>
-            <div
-              className={p.showcaseCursor}
-              style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
-            />
-            <div
-              className={`${p.showcaseCursor2} ${cursorHover ? p.showcaseCursorHover : ''}`}
-              style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
-            />
-            <div
-              className={`${p.showcaseCursor3} ${cursorHover ? p.showcaseCursorHover : ''}`}
-              style={{ left: `${cursorPos.x}px`, top: `${cursorPos.y}px` }}
-            />
-          </>
-        )}
+      {/* ── OFFICIAL SOCIAL MEDIA PLATFORMS BAR & MULTI-ACCOUNT DRAWER ── */}
+      <section className={p.socialSection} id="social-accounts">
+        <div className={p.container}>
+          {/* Section Header */}
+          <div className={p.socialHeader}>
+            <span className={p.socialEyebrow}>
+              <GoogleIcon name="public" size={15} />
+              आधिकारिक सोशल मीडिया · Digital Vanguard
+            </span>
+            <h2 className={p.socialTitle}>Official Movement Portals &amp; Channels</h2>
+            <p className={p.socialSubtitle}>
+              Select any platform from the bar below to view and access verified accounts of Shakti Sabha and Founder Harshita Mankar.
+            </p>
+          </div>
 
-        {/* Section Header */}
-        <div className={p.showcaseHeader}>
-          <span className={p.showcaseEyebrow}>
-            <GoogleIcon name="public" size={15} />
-            Digital Sovereignty · आधिकारिक सोशल मीडिया
-          </span>
-          <h2 className={p.showcaseTitle}>Social Channels &amp; Field Portals</h2>
-          <div className={p.showcaseHindi}>शक्ति सभा एवं आर्यवीरा के आधिकारिक सोशल मीडिया मंच</div>
-          <p className={p.showcaseDesc}>
-            Hover any platform below to inspect on-ground archives and connect directly with verified movement handles.
-          </p>
-        </div>
-
-        {/* Central Platform Names (Case Study Style) */}
-        <ul className={p.caseStudyWrapper}>
-          {SOCIAL_SHOWCASE_CATEGORIES.map((cat, idx) => {
-            const isActive = activeSocialIndex === idx
-            return (
-              <li
-                key={cat.id}
-                className={`${p.caseStudyName} ${isActive ? p.caseStudyActive : ''}`}
-                onMouseEnter={() => {
-                  setActiveSocialIndex(idx)
-                  setCursorHover(true)
-                }}
-                onMouseLeave={() => setCursorHover(false)}
-              >
-                <button
-                  type="button"
-                  className={p.caseStudyLink}
-                  style={{
-                    '--underline-grad': cat.gradient
-                  } as React.CSSProperties}
-                  onClick={() => setActiveSocialIndex(idx)}
-                >
-                  <span>{cat.title}</span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
-
-        {/* Background Images Layer, Watermark Numbers & Indicators */}
-        <ul className={p.caseStudyImages}>
-          {SOCIAL_SHOWCASE_CATEGORIES.map((cat, idx) => {
-            const isShow = activeSocialIndex === idx
-            return (
-              <li
-                key={cat.id}
-                className={`${p.caseStudySlide} ${isShow ? p.caseStudySlideShow : ''}`}
-              >
-                <div className={p.imgHeroBackground}>
-                  {cat.images.map((imgSrc, iIdx) => (
-                    <span key={iIdx}>
-                      <img src={imgSrc} alt={`${cat.title} archive ${iIdx + 1}`} />
+          {/* Clean Platform Navigation Bar */}
+          <div className={p.platformBarWrapper}>
+            <div className={p.platformBar}>
+              {SOCIAL_SHOWCASE_CATEGORIES.map((cat, idx) => {
+                const isActive = activeSocialIndex === idx
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`${p.platformTab} ${isActive ? p.platformTabActive : ''}`}
+                    onClick={() => setActiveSocialIndex(idx)}
+                  >
+                    <span className={p.platformTabIcon}>
+                      {renderSocialIcon(cat.accounts[0]?.iconType || 'website', 18)}
                     </span>
-                  ))}
-                </div>
-                <div className={p.heroNumberBack}>{cat.num}</div>
-                <div className={p.heroNumber}>{cat.num}</div>
-                <div className={p.heroNumberFixed}>
-                  {String(SOCIAL_SHOWCASE_CATEGORIES.length).padStart(2, '0')}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+                    <span className={p.platformTabTitle}>{cat.title}</span>
+                    <span className={p.platformTabCount}>
+                      {cat.accounts.length}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-        {/* Active Accounts Drawer with Real Official Icons */}
-        <div className={p.activeAccountsDrawer}>
-          {currentCategory.accounts.map((acc, aIdx) => (
-            <a
-              key={aIdx}
-              href={acc.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={p.accountActionCard}
-              style={{
-                '--card-brand-color': acc.color
-              } as React.CSSProperties}
-              onMouseEnter={() => setCursorHover(true)}
-              onMouseLeave={() => setCursorHover(false)}
-            >
-              <span className={p.accountIconWrapper}>
-                {renderSocialIcon(acc.iconType, 18)}
-              </span>
-              <span>{acc.name}</span>
-              <span style={{ opacity: 0.6 }}>·</span>
-              <span style={{ color: acc.color }}>{acc.handle}</span>
-              <span className={p.accountTag}>({acc.tag})</span>
-              <GoogleIcon name="arrow_outward" size={14} style={{ opacity: 0.7 }} />
-            </a>
-          ))}
-        </div>
+          {/* Multi-Account Cards Drawer for the Active Platform */}
+          <div className={p.accountsDrawerWrapper}>
+            <div className={p.drawerHeader}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <span className={p.activePlatformIcon}>
+                  {renderSocialIcon(currentCategory.accounts[0]?.iconType || 'website', 22)}
+                </span>
+                <div>
+                  <h3 className={p.activePlatformName}>{currentCategory.title} Accounts</h3>
+                  <p className={p.activePlatformSub}>{currentCategory.subtitle} • {currentCategory.accounts.length} verified handle(s)</p>
+                </div>
+              </div>
+            </div>
 
-        {/* Dark / Light Mode Switch */}
-        <div className={p.showcaseSwitchWrap}>
-          <span className={p.showcaseSwitchLabel}>
-            {socialThemeLight ? 'Light' : 'Dark'}
-          </span>
-          <div
-            className={`${p.showcaseSwitch} ${socialThemeLight ? p.showcaseSwitchActive : ''}`}
-            onClick={() => setSocialThemeLight(!socialThemeLight)}
-            onMouseEnter={() => setCursorHover(true)}
-            onMouseLeave={() => setCursorHover(false)}
-            title="Toggle Showcase Dark / Light Mode"
-          >
-            <div className={p.showcaseCircle} />
+            <div className={p.accountsCardsGrid}>
+              {currentCategory.accounts.map((acc, aIdx) => (
+                <div key={aIdx} className={p.accountCard} style={{ '--brand-accent': acc.color } as React.CSSProperties}>
+                  <div className={p.accountCardTop}>
+                    <div className={p.accountIconBox}>
+                      {renderSocialIcon(acc.iconType, 24)}
+                    </div>
+                    <span className={p.accountTagBadge}>{acc.tag}</span>
+                  </div>
+
+                  <div className={p.accountDetails}>
+                    <h4 className={p.accountTitle}>
+                      {acc.name}
+                      <GoogleIcon name="verified" size={17} style={{ color: '#10B981', marginLeft: 5 }} />
+                    </h4>
+                    <span className={p.accountHandle} style={{ color: acc.color }}>{acc.handle}</span>
+                  </div>
+
+                  <a
+                    href={acc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={p.accountActionLink}
+                  >
+                    <span>Connect on {currentCategory.title}</span>
+                    <GoogleIcon name="arrow_outward" size={15} />
+                  </a>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

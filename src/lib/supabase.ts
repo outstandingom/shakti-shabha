@@ -51,6 +51,9 @@ export type Course = {
   title: string
   description: string
   price: number
+  original_price?: number
+  discount_percent?: number
+  discount_tag?: string
   duration: string
   level: 'beginner' | 'intermediate' | 'advanced'
   cover_image_url: string

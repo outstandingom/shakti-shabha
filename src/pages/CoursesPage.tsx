@@ -13,6 +13,9 @@ interface CourseItem {
   duration: string
   modules: string
   price: string
+  original_price?: string
+  discount_percent?: number
+  discount_tag?: string
   desc: string
   image: string
   syllabus?: { week: string; topic: string }[]
@@ -253,6 +256,14 @@ export default function CoursesPage() {
                   {course.title}
                 </h3>
                 <p className={cp.descText}>{course.desc}</p>
+                <button
+                  type="button"
+                  onClick={() => setDetailCourse(course)}
+                  className={cp.moreDetailsBtn}
+                  title="View full syllabus and details"
+                >
+                  More Details & Syllabus →
+                </button>
 
                 <div className={cp.metaGrid}>
                   <div className={cp.metaItem}>
@@ -266,27 +277,23 @@ export default function CoursesPage() {
                 </div>
 
                 <div className={cp.cardFooter}>
-                  <div>
-                    <span style={{ fontSize: '0.72rem', color: '#6B7280', textTransform: 'uppercase', display: 'block' }}>One-time Fee</span>
+                  <div className={cp.priceCol}>
+                    {course.original_price && course.discount_percent && course.discount_percent > 0 ? (
+                      <div className={cp.discountRow}>
+                        <span className={cp.originalPrice}>{course.original_price}</span>
+                        <span className={cp.discountTag}>{course.discount_percent}% OFF</span>
+                        {course.discount_tag && <span className={cp.eventTag}>{course.discount_tag}</span>}
+                      </div>
+                    ) : null}
                     <span className={cp.priceText}>{course.price}</span>
                   </div>
-                  <div className={cp.cardActions}>
-                    <button
-                      type="button"
-                      onClick={() => setDetailCourse(course)}
-                      className={cp.viewBtn}
-                      title="View full syllabus and details"
-                    >
-                      Details &amp; Syllabus
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCourse(course.title)}
-                      className={cp.enrollBtn}
-                    >
-                      Enroll Now →
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedCourse(course.title)}
+                    className={cp.enrollBtn}
+                  >
+                    Enroll Now →
+                  </button>
                 </div>
               </div>
             </div>
