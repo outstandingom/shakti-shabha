@@ -77,9 +77,10 @@
 
 .articlesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
   gap: 2rem;
   margin-top: 2.5rem;
+  align-items: stretch;
 }
 
 .articleCard {
@@ -89,56 +90,151 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  min-height: 480px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .articleCard:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+  border-color: rgba(220, 20, 60, 0.35);
 }
 
 .cardImg {
-  height: 190px;
+  height: 195px;
+  min-height: 195px;
+  max-height: 195px;
+  width: 100%;
   overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  background: #F3F4F6;
 }
 
 .cardImg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s ease;
 }
 
 .articleCard:hover .cardImg img {
   transform: scale(1.06);
 }
 
+.cardTagBadge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(17, 24, 39, 0.82);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.22rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 .cardBody {
-  padding: 1.5rem 1.5rem 1.25rem;
+  padding: 1.35rem 1.5rem 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  flex-grow: 1;
+  flex: 1 1 auto;
+}
+
+.cardMetaTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
 }
 
 .cardTag {
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #DC143C;
 }
 
+.cardReadTime {
+  font-size: 0.72rem;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .cardTitle {
-  font-family: var(--font-display, 'Cinzel', serif);
-  font-size: 1.15rem;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 1.05rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.35;
+  margin: 0.2rem 0 0.3rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.85rem;
+}
+
+.cardHindiTitle {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #DC143C;
+  margin: 0 0 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardExcerpt {
+  font-size: 0.85rem;
+  color: #4B5563;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}
+
+.readMoreBtn {
+  align-self: flex-start;
+  margin-top: auto;
+  margin-bottom: 0.25rem;
+  background: none;
+  border: none;
+  color: #DC143C;
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.readMoreBtn:hover {
+  color: #B01030;
+  transform: translateX(3px);
 }
 
 .cardFooter {
-  padding: 1rem 1.5rem;
+  padding: 0.9rem 1.5rem;
   background: #F9FAFB;
   border-top: 1px solid #F3F4F6;
   display: flex;
@@ -146,6 +242,30 @@
   align-items: center;
   font-size: 0.78rem;
   color: #6B7280;
+  margin-top: auto;
+}
+
+.authorText {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 65%;
+}
+
+.ratingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 700;
+  color: #1F2937;
+  background: #FEF3C7;
+  padding: 0.15rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.74rem;
 }
 
 .dispatchBox {

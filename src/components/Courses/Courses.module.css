@@ -97,6 +97,7 @@
    property so the browser never fights the animation.       */
 .track {
   display: flex;
+  align-items: stretch;
   gap: 1.5rem;
   padding: 0.5rem clamp(1.5rem, 4vw, 3.5rem) 1.5rem;
   /* No overflow — section's overflow:hidden clips off-screen cards */
@@ -106,6 +107,8 @@
 /* ── Card ─────────────────────────────────────────────────── */
 .card {
   flex: 0 0 320px;
+  min-height: 440px;
+  height: 100%;
   padding: 2.25rem 2rem;
   border: 1px solid var(--border);
   background: #FFFFFF;
@@ -167,6 +170,10 @@
   line-height: 1.65;
   margin-bottom: 1.5rem;
   flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .cardMeta {

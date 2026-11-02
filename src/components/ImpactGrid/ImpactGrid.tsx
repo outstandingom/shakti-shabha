@@ -80,7 +80,7 @@ export default function ImpactGrid() {
           </Link>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem', alignItems: 'stretch' }}>
           {PILLARS.map((p, idx) => (
             <div
               key={idx}
@@ -94,6 +94,7 @@ export default function ImpactGrid() {
                 boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
                 display: 'flex',
                 flexDirection: 'column',
+                height: '100%',
                 transition: 'transform 0.25s ease, box-shadow 0.25s ease'
               }}
             >

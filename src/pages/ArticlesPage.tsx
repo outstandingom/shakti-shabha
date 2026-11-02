@@ -482,7 +482,7 @@ export default function ArticlesPage() {
           </div>
 
           <div className={ap.articlesGrid}>
-            {allArticles.map((article, index) => (
+            {allArticles.map((article) => (
               <div
                 key={article.id}
                 className={ap.articleCard}
@@ -492,34 +492,44 @@ export default function ArticlesPage() {
                 style={{ cursor: 'pointer' }}
               >
                 <div className={ap.cardImg}>
-                  <img src={article.image} alt={article.title} />
+                  <img src={article.image} alt={article.title} loading="lazy" />
+                  <span className={ap.cardTagBadge}>{article.tag}</span>
                 </div>
                 <div className={ap.cardBody}>
-                  <div className={ap.cardTag}>● {article.tag}</div>
-                  <h3 className={ap.cardTitle}>{article.title}</h3>
-                  <p style={{ fontSize: '0.85rem', color: '#4B5563', lineHeight: 1.6, marginTop: '0.25rem' }}>
+                  <div className={ap.cardMetaTop}>
+                    <span className={ap.cardTag}>● {article.tag}</span>
+                    <span className={ap.cardReadTime}>
+                      <GoogleIcon name="schedule" size={13} /> {article.readTime}
+                    </span>
+                  </div>
+                  <h3 className={ap.cardTitle} title={article.title}>{article.title}</h3>
+                  {article.hindiTitle && (
+                    <h4 className={ap.cardHindiTitle}>{article.hindiTitle}</h4>
+                  )}
+                  <p className={ap.cardExcerpt}>
                     {article.excerpt}
                   </p>
-                </div>
-                <div className={ap.cardFooter}>
-                  <span>{article.author.split('(')[0]}</span>
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation()
                       setActiveModalArticle(article)
                     }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#DC143C',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      fontSize: '0.82rem',
-                    }}
+                    className={ap.readMoreBtn}
+                    title="Read complete article and key findings"
                   >
-                    Read →
+                    Read More →
                   </button>
+                </div>
+                <div className={ap.cardFooter}>
+                  <span className={ap.authorText}>
+                    <GoogleIcon name="person" size={14} style={{ color: '#9CA3AF' }} />
+                    {article.author.split('(')[0]}
+                  </span>
+                  <span className={ap.ratingBadge}>
+                    <GoogleIcon name="star" size={13} filled style={{ color: '#F59E0B' }} />
+                    {article.rating}
+                  </span>
                 </div>
               </div>
             ))}
