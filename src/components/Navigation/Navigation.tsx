@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { MouseEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import gsap from 'gsap'
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 import s from './Navigation.module.css'
 
 const LINKS = [
@@ -119,18 +120,24 @@ export default function Navigation() {
               {l.label}
             </NavLink>
           ))}
+          <div className={s.mobileLangWrapper}>
+            <LanguageSwitcher className={s.navLangMobile} />
+          </div>
         </div>
       </div>
 
-      <Link
-        to="/sahyog"
-        ref={ctaRef}
-        className={s.cta}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-      >
-        Join Sabha →
-      </Link>
+      <div className={s.navActions}>
+        <LanguageSwitcher className={s.navLangDesktop} />
+        <Link
+          to="/sahyog"
+          ref={ctaRef}
+          className={s.cta}
+          onMouseMove={onMove}
+          onMouseLeave={onLeave}
+        >
+          Join Sabha →
+        </Link>
+      </div>
 
       <button
         className={s.hamburger}

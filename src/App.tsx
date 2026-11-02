@@ -8,7 +8,6 @@ import FireCursor from './components/FireCursor/FireCursor'
 import FallingLeaves from './components/FallingLeaves/FallingLeaves'
 import { AuthProvider } from './lib/AuthContext'
 import { LanguageProvider } from './lib/LanguageContext'
-import LanguageSwitcher from './components/LanguageSwitcher/LanguageSwitcher'
 import HomePage from './pages/HomePage'
 import AaryaveeraPage from './pages/AaryaveeraPage'
 import SocialWorkPage from './pages/SocialWorkPage'
@@ -83,8 +82,6 @@ function LenisProvider() {
       {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
       <FallingLeaves />
       <Navigation />
-      {/* Global Quick Language Toggle */}
-      <LanguageSwitcher floating />
       <Routes>
         <Route path="/"                     element={<HomePage />} />
         <Route path="/aaryaveera"           element={<AaryaveeraPage />} />

@@ -1,10 +1,10 @@
 /* ================================================================
-   Events Page — Upcoming Deployments & Historical Archive
+   Events Page — White Theme Aesthetics
    ================================================================ */
 
 .page {
-  background: #0a0a0c;
-  color: #e8dcc8;
+  background: #FFFFFF;
+  color: #111827;
   min-height: 100vh;
 }
 
@@ -16,9 +16,10 @@
 
 /* ── Hero ─────────────────────────────────────────────────────────── */
 .hero {
-  background: radial-gradient(ellipse at 50% 0%, rgba(220,20,60,0.15) 0%, #050507 70%);
+  background: radial-gradient(ellipse at 50% 0%, rgba(220,20,60,0.08) 0%, #FFFFFF 70%);
   padding: 7rem 1.5rem 4rem;
   text-align: center;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .heroEyebrow {
@@ -26,7 +27,7 @@
   font-size: 0.7rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: #C9A96E;
+  color: #DC143C;
   display: block;
   margin-bottom: 1rem;
 }
@@ -35,13 +36,13 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 700;
-  color: #f5ead6;
+  color: #111827;
   margin: 0 0 1rem;
 }
 
 .heroSub {
   font-size: 1rem;
-  color: #a09070;
+  color: #4B5563;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.8;
@@ -51,8 +52,8 @@
 .tabBar {
   display: flex;
   gap: 0;
-  background: #0d0d10;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
   position: sticky;
   top: 60px;
   z-index: 10;
@@ -67,7 +68,7 @@
   padding: 1.1rem 1.5rem;
   background: transparent;
   border: none;
-  color: #a09070;
+  color: #6B7280;
   font-family: 'Cinzel', Georgia, serif;
   font-size: 0.82rem;
   letter-spacing: 0.1em;
@@ -76,16 +77,18 @@
   transition: color 0.2s, border-color 0.2s;
 }
 
-.tab:hover { color: #f5ead6; }
+.tab:hover { color: #111827; }
 
 .tabActive {
-  color: #C9A96E;
-  border-bottom-color: #C9A96E;
+  color: #DC143C;
+  border-bottom-color: #DC143C;
+  font-weight: 700;
 }
 
 /* ── Section ──────────────────────────────────────────────────────── */
 .section {
   padding: 3rem 0 5rem;
+  background: #FFFFFF;
 }
 
 /* ── Upcoming events grid ─────────────────────────────────────────── */
@@ -96,20 +99,22 @@
 }
 
 .eventCard {
-  background: #111115;
-  border: 1px solid rgba(255,255,255,0.08);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 16px;
   padding: 1.75rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  transition: border-color 0.25s, transform 0.25s;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
   content-visibility: auto;
   contain-intrinsic-size: 300px;
 }
 
 .eventCard:hover {
-  border-color: rgba(201,169,110,0.35);
+  border-color: #DC143C;
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.12);
   transform: translateY(-2px);
 }
 
@@ -138,8 +143,9 @@
   padding: 0.2rem 0.65rem;
   border-radius: 20px;
   font-size: 0.7rem;
-  color: #a09070;
-  border: 1px solid rgba(255,255,255,0.1);
+  color: #4B5563;
+  border: 1px solid #E5E7EB;
+  background: #F9FAFB;
 }
 
 .cardDateRow {
@@ -152,18 +158,19 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #C9A96E;
+  color: #DC143C;
 }
 
 .cardYear {
   font-size: 0.85rem;
-  color: #666;
+  color: #6B7280;
 }
 
 .cardTitle {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 1rem;
-  color: #f5ead6;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
   margin: 0;
   line-height: 1.4;
 }
@@ -173,13 +180,13 @@
   align-items: center;
   gap: 0.35rem;
   font-size: 0.83rem;
-  color: #777;
+  color: #6B7280;
   margin: 0;
 }
 
 .cardDesc {
   font-size: 0.87rem;
-  color: #a09070;
+  color: #4B5563;
   line-height: 1.65;
   margin: 0;
   flex: 1;
@@ -190,13 +197,14 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 0.5rem;
-  border-top: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid #F3F4F6;
 }
 
 .cardPrice {
   font-family: 'Cinzel', Georgia, serif;
   font-size: 0.85rem;
-  color: #C9A96E;
+  color: #854D0E;
+  font-weight: 600;
 }
 
 .cardSeats {
@@ -221,33 +229,39 @@
   border-radius: 8px;
   font-size: 0.78rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
   text-decoration: none;
 }
 
 .calBtn {
-  background: rgba(201,169,110,0.12);
-  border: 1px solid rgba(201,169,110,0.3);
-  color: #C9A96E;
+  background: rgba(220,20,60,0.06);
+  border: 1px solid rgba(220,20,60,0.25);
+  color: #DC143C;
 }
 
-.calBtn:hover { background: rgba(201,169,110,0.2); }
+.calBtn:hover {
+  background: #DC143C;
+  color: #FFFFFF;
+}
 
 .pdfBtn {
-  background: rgba(220,20,60,0.1);
+  background: rgba(220,20,60,0.08);
   border: 1px solid rgba(220,20,60,0.3);
   color: #DC143C;
 }
 
-.pdfBtn:hover { background: rgba(220,20,60,0.2); }
+.pdfBtn:hover {
+  background: #DC143C;
+  color: #FFFFFF;
+}
 
 /* ── Archive Banner ───────────────────────────────────────────────── */
 .archiveBanner {
   display: flex;
   gap: 0.75rem;
   align-items: flex-start;
-  background: rgba(201,169,110,0.06);
-  border: 1px solid rgba(201,169,110,0.2);
+  background: #FFFBEB;
+  border: 1px solid #FEF3C7;
   border-radius: 12px;
   padding: 1rem 1.25rem;
   margin-bottom: 2rem;
@@ -255,7 +269,7 @@
 
 .archiveBanner p {
   font-size: 0.85rem;
-  color: #a09070;
+  color: #92400E;
   line-height: 1.65;
   margin: 0;
 }
@@ -279,14 +293,15 @@
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #666;
+  color: #4B5563;
+  font-weight: 600;
 }
 
 .filterSelect {
-  background: #111115;
-  border: 1px solid rgba(255,255,255,0.12);
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
   border-radius: 8px;
-  color: #e8dcc8;
+  color: #111827;
   padding: 0.45rem 0.75rem;
   font-size: 0.88rem;
   cursor: pointer;
@@ -294,7 +309,7 @@
 
 .resultCount {
   font-size: 0.82rem;
-  color: #555;
+  color: #6B7280;
   align-self: flex-end;
   padding-bottom: 0.45rem;
 }
@@ -330,16 +345,20 @@
   display: grid;
   grid-template-columns: 120px 1fr;
   gap: 1.5rem;
-  background: #111115;
-  border: 1px solid rgba(255,255,255,0.07);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
   padding: 1.5rem;
-  transition: border-color 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s, box-shadow 0.2s;
   content-visibility: auto;
   contain-intrinsic-size: 120px;
 }
 
-.historyCard:hover { border-color: rgba(201,169,110,0.2); }
+.historyCard:hover {
+  border-color: #DC143C;
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.08);
+}
 
 .historyLeft {
   display: flex;
@@ -352,7 +371,7 @@
   font-family: 'Cinzel', Georgia, serif;
   font-size: 1.4rem;
   font-weight: 700;
-  color: #C9A96E;
+  color: #DC143C;
 }
 
 .historyCat {
@@ -368,9 +387,10 @@
 .historyContent {}
 
 .historyTitle {
-  font-family: 'Cinzel', Georgia, serif;
-  font-size: 0.97rem;
-  color: #f5ead6;
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
   margin: 0 0 0.6rem;
   line-height: 1.4;
 }
@@ -387,12 +407,12 @@
   align-items: center;
   gap: 0.25rem;
   font-size: 0.8rem;
-  color: #777;
+  color: #6B7280;
 }
 
 .historyDesc {
   font-size: 0.87rem;
-  color: #a09070;
+  color: #4B5563;
   line-height: 1.65;
   margin: 0;
 }
@@ -401,7 +421,7 @@
 .empty {
   text-align: center;
   padding: 4rem 1rem;
-  color: #666;
+  color: #6B7280;
   font-size: 0.95rem;
 }
 

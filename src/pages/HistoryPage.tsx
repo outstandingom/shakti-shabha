@@ -262,7 +262,6 @@ export default function HistoryPage() {
   const [activeDossier, setActiveDossier] = useState<Milestone | null>(null)
   const [activeMilestoneId, setActiveMilestoneId] = useState<string>('m2012')
   const [maxReachedIndex, setMaxReachedIndex] = useState<number>(0)
-  const [hoveredChartItem, setHoveredChartItem] = useState<Milestone | null>(null)
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({})
   const [scrollProgress, setScrollProgress] = useState(0)
   const [lineLeft, setLineLeft] = useState(0)
@@ -609,94 +608,6 @@ export default function HistoryPage() {
               })}
             </ul>
           </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-          END OF JOURNEY: COMPLETE CHRONOLOGICAL CHART OVERVIEW (2014-2026)
-          "when he reach to end we need to show the simple chart with the date and heading
-           and when the user hover the image we need to show more details"
-          ============================================================ */}
-      <section className={h.endSummarySection}>
-        <div className={h.endHeader}>
-          <span className={h.endHeaderBadge}>
-            {lang === 'en' ? 'Milestone Trajectory (2012–2024)' : 'कालक्रम सारणी (२०१२–२०२४)'}
-          </span>
-          <h2 className={h.endHeaderTitle}>
-            {lang === 'en' ? 'Shakti Sabha Milestone Matrix' : 'शक्ति सभा ऐतिहासिक मील के पत्थर'}
-          </h2>
-          <p className={h.endHeaderSubtitle}>
-            {lang === 'en'
-              ? 'Hover any milestone to reveal verified on-ground achievements and impact records.'
-              : 'किसी भी कालखंड के चित्र पर कर्सर ले जाकर उसके धरातलीय परिणाम एवं अभिलेख देखें।'}
-          </p>
-        </div>
-
-        <div className={h.chartGrid}>
-          {TIMELINE_MILESTONES.map((item) => {
-            const isHovered = hoveredChartItem?.id === item.id
-            const isActive = activeMilestoneId === item.id
-
-            return (
-              <div
-                key={item.id}
-                className={`${h.chartCard} ${isActive ? h.chartCardActive : ''}`}
-                onMouseEnter={() => setHoveredChartItem(item)}
-                onMouseLeave={() => setHoveredChartItem(null)}
-                onClick={() => setActiveDossier(item)}
-              >
-                <div className={h.chartCardTop}>
-                  <span className={h.chartDateBadge}>
-                    {lang === 'en' ? item.dateDisplayEn.split('·')[0].trim() : item.dateDisplayHi.split('·')[0].trim()}
-                  </span>
-                  <div className={h.chartThumbnail}>
-                    <img
-                      src={item.image}
-                      alt={lang === 'en' ? item.nameEn : item.nameHi}
-                      onLoad={() => handleImageLoad(item.image)}
-                      style={{
-                        opacity: loadedImages[item.image] ? 1 : 0
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className={h.chartCardHeading}>
-                  {lang === 'en' ? item.nameEn : item.nameHi}
-                </div>
-                <div className={h.chartCardEpoch}>
-                  {lang === 'en' ? item.epochEn : item.epochHi}
-                </div>
-
-                {/* Milestone Year-wise Stats */}
-                <div className={h.cardYearStats}>
-                  {item.stats.map((st, sIdx) => (
-                    <div key={sIdx} className={h.cardStatPill}>
-                      <span className={h.cardStatVal}>{st.value}</span>
-                      <span className={h.cardStatLbl}>
-                        {lang === 'en' ? st.labelEn : st.labelHi}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Hover Details Flyout as requested */}
-                {isHovered && (
-                  <div className={h.chartHoverDetails}>
-                    <strong style={{ color: '#DC143C', display: 'block', marginBottom: '0.2rem' }}>
-                      {lang === 'en' ? 'Impact & Legacy:' : 'धरातलीय प्रभाव:'}
-                    </strong>
-                    <p style={{ margin: 0 }}>
-                      {lang === 'en' ? item.dossierEn.legacy : item.dossierHi.legacy}
-                    </p>
-                    <span style={{ fontSize: '0.7rem', color: '#111827', fontWeight: 700, marginTop: '0.35rem', display: 'inline-block' }}>
-                      {lang === 'en' ? 'Click to inspect full dossier →' : 'विस्तृत अभिलेख देखें →'}
-                    </span>
-                  </div>
-                )}
-              </div>
-            )
-          })}
         </div>
       </section>
 

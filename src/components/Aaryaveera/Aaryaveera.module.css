@@ -77,7 +77,7 @@
 }
 
 .titleClip {
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 0.6rem;
 }
 
@@ -86,8 +86,8 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-weight: 900;
   font-size: clamp(1.9rem, 8.5vw, 3rem);
-  letter-spacing: 0.1em;
-  line-height: 1.05;
+  letter-spacing: 0.05em;
+  line-height: 1.25;
   color: #E8C98A;
   text-shadow: 0 4px 30px rgba(232, 201, 138, 0.25);
 }

@@ -106,6 +106,9 @@ export default function CounsellingPage() {
     concern: 'Anxiety, Stress & Overthinking',
     email: '',
     phone: '',
+    country: 'India',
+    state: '',
+    city: '',
     message: ''
   })
   const [submitting, setSubmitting] = useState(false)
@@ -340,7 +343,7 @@ export default function CounsellingPage() {
                   <p style={{ fontSize: '0.88rem', color: '#047857' }}>
                     A counselor coordinator will reach out to you discreetly via your preferred contact mode within 24 hours.
                   </p>
-                  <button onClick={() => { setFormDone(false); setFormData({ name: '', concern: 'Anxiety, Stress & Overthinking', email: '', phone: '', message: '' }) }} style={{ marginTop: '1.25rem', padding: '0.45rem 1.25rem', background: '#059669', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontSize: '0.8rem', cursor: 'pointer' }}>
+                  <button onClick={() => { setFormDone(false); setFormData({ name: '', concern: 'Anxiety, Stress & Overthinking', email: '', phone: '', country: 'India', state: '', city: '', message: '' }) }} style={{ marginTop: '1.25rem', padding: '0.45rem 1.25rem', background: '#059669', color: '#FFFFFF', border: 'none', borderRadius: '9999px', fontSize: '0.8rem', cursor: 'pointer' }}>
                     Submit Another
                   </button>
                 </div>

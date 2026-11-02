@@ -7,6 +7,13 @@ export default function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(DEFAULT_TESTIMONIALS)
   const trackRef = useRef<HTMLDivElement>(null)
   const [isPaused, setIsPaused] = useState(false)
+  const [isManual, setIsManual] = useState(false)
+  const [manualIndex, setManualIndex] = useState(0)
+  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds(prev => ({ ...prev, [id]: !prev[id] }))
+  }
 
   useEffect(() => {
     let isMounted = true
@@ -78,9 +85,16 @@ export default function Testimonials() {
   const marqueeItems = [...testimonials, ...testimonials]
 
   const nudge = (direction: 'left' | 'right') => {
-    if (!trackRef.current) return
-    const offset = direction === 'left' ? -350 : 350
-    trackRef.current.scrollBy({ left: offset, behavior: 'smooth' })
+    setIsManual(true)
+    setIsPaused(true)
+    setManualIndex(prev => {
+      const max = Math.max(0, testimonials.length - 1)
+      if (direction === 'left') {
+        return prev <= 0 ? max : prev - 1
+      } else {
+        return prev >= max ? 0 : prev + 1
+      }
+    })
   }
 
   return (
@@ -114,7 +128,7 @@ export default function Testimonials() {
             </button>
             <button
               className={s.navBtn}
-              onClick={() => setIsPaused(p => !p)}
+              onClick={() => { if (isManual) { setIsManual(false); setIsPaused(false); } else { setIsPaused(p => !p); } }}
               title={isPaused ? 'Resume auto scroll' : 'Pause auto scroll'}
               aria-label={isPaused ? 'Play' : 'Pause'}
               style={{ fontSize: '0.9rem' }}
@@ -136,7 +150,13 @@ export default function Testimonials() {
         <div
           ref={trackRef}
           className={s.marqueeTrack}
-          style={{ animationPlayState: isPaused ? 'paused' : 'running' }}
+          style={isManual ? {
+            animation: 'none',
+            transform: `translateX(-${manualIndex * 410}px)`,
+            transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+          } : {
+            animationPlayState: isPaused ? 'paused' : 'running'
+          }}
         >
           {marqueeItems.map((item, idx) => (
             <article key={`${item.id}-${idx}`} className={s.card}>
@@ -150,8 +170,21 @@ export default function Testimonials() {
               </div>
 
               <blockquote className={s.quoteText}>
-                "{item.quote}"
+                "{item.quote.length > 130 && !expandedIds[item.id] ? item.quote.slice(0, 130) + '...' : item.quote}"
               </blockquote>
+              {item.quote.length > 130 && (
+                <button
+                  type="button"
+                  className={s.readMoreBtn}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleExpand(item.id)
+                  }}
+                  aria-expanded={Boolean(expandedIds[item.id])}
+                >
+                  {expandedIds[item.id] ? 'Read less ↑' : 'Read more ↓'}
+                </button>
+              )}
 
               <div className={s.authorBlock}>
                 <div className={s.avatarWrap}>

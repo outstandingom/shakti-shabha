@@ -145,13 +145,13 @@ export default function AaryaveeraPage() {
             alignItems: 'center',
             justifyContent: 'center',
             gap: '0.85rem',
-            background: 'rgba(201, 169, 110, 0.1)',
-            border: '1px solid rgba(201, 169, 110, 0.3)',
+            background: 'rgba(194, 65, 12, 0.06)',
+            border: '1px solid rgba(194, 65, 12, 0.25)',
             borderRadius: '9999px',
             padding: '0.5rem 1.4rem',
             margin: '0.85rem 0 1.5rem',
             fontSize: '0.88rem',
-            color: '#E8C98A',
+            color: '#92400E',
             flexWrap: 'wrap',
             textAlign: 'center'
           }}>

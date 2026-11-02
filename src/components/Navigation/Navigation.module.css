@@ -128,7 +128,32 @@
 }
 .linkActive::after { transform: scaleX(1) !important; }
 
-/* ---------- CTA ---------- */
+/* ---------- CTA & Language Actions ---------- */
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.navLangDesktop {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #FFFFFF !important;
+}
+
+.navLangDesktop:hover {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.mobileLangWrapper {
+  display: none;
+  width: 100%;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
 
 .cta {
   font-size: 0.78rem;
@@ -206,6 +231,15 @@
     align-items: flex-start;
     gap: 1rem;
     width: 100%;
+  }
+
+  .navLangDesktop {
+    display: none;
+  }
+
+  .mobileLangWrapper {
+    display: flex;
+    justify-content: flex-start;
   }
 
   .hamburger { display: flex; }

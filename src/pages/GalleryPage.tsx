@@ -305,7 +305,7 @@ export default function GalleryPage() {
           minRadius={460}
           maxRadius={1150}
           padFactor={0.2}
-          overlayBlurColor="#0D090B"
+          overlayBlurColor="#FFFFFF"
           maxVerticalRotationDeg={10}
           dragSensitivity={18}
           enlargeTransitionMs={320}

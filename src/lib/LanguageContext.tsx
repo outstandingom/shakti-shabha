@@ -73,7 +73,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       document.body.appendChild(script)
     }
 
-    // Inject CSS to hide Google banner/frames for seamless look
+    // Inject CSS to hide Google banner/frames for seamless look & ensure Hindi font styling
     if (!document.getElementById('google-translate-custom-styles')) {
       const style = document.createElement('style')
       style.id = 'google-translate-custom-styles'
@@ -102,6 +102,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         .skiptranslate iframe {
           display: none !important;
         }
+
+        /* Prevent Hindi translation clipping or font transparency bugs */
+        html.translated-ltr, html.translated-rtl {
+          font-family: 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        html.translated-ltr font, html.translated-rtl font {
+          font-family: inherit !important;
+          color: inherit !important;
+          -webkit-text-fill-color: currentColor !important;
+          vertical-align: baseline !important;
+        }
+        /* Ensure translated headings and titles don't overflow or clip */
+        html.translated-ltr [class*="title"],
+        html.translated-ltr [class*="heading"],
+        html.translated-ltr h1,
+        html.translated-ltr h2,
+        html.translated-ltr h3 {
+          line-height: 1.25 !important;
+          overflow: visible !important;
+        }
       `
       document.head.appendChild(style)
     }
@@ -110,35 +130,58 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const applyTranslation = (lang: Language) => {
     setIsTranslating(true)
 
-    // Set cookie for Google translate
     const hostname = window.location.hostname
-    const cookieVal = lang === 'hi' ? '/en/hi' : '/en/en'
-    document.cookie = `googtrans=${cookieVal}; path=/;`
-    document.cookie = `googtrans=${cookieVal}; path=/; domain=${hostname}`
-    document.cookie = `googtrans=${cookieVal}; path=/; domain=.${hostname}`
-
-    try {
-      const select = document.querySelector<HTMLSelectElement>('.goog-te-combo')
-      if (select) {
-        select.value = lang
-        select.dispatchEvent(new Event('change'))
-      } else {
-        // Fallback: If combo is not ready yet, re-attempt in 300ms
-        setTimeout(() => {
-          const s = document.querySelector<HTMLSelectElement>('.goog-te-combo')
-          if (s) {
-            s.value = lang
-            s.dispatchEvent(new Event('change'))
-          }
-        }, 400)
-      }
-    } catch (e) {
-      console.warn('Google translation trigger warning:', e)
+    if (lang === 'hi') {
+      const cookieVal = '/en/hi'
+      document.cookie = `googtrans=${cookieVal}; path=/;`
+      document.cookie = `googtrans=${cookieVal}; path=/; domain=${hostname}`
+      document.cookie = `googtrans=${cookieVal}; path=/; domain=.${hostname}`
+    } else {
+      // Reverting to English
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname}`
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
+      document.cookie = `googtrans=/en/en; path=/;`
+      document.cookie = `googtrans=/en/en; path=/; domain=${hostname}`
+      document.cookie = `googtrans=/en/en; path=/; domain=.${hostname}`
     }
 
-    setTimeout(() => {
-      setIsTranslating(false)
-    }, 600)
+    const triggerCombo = () => {
+      try {
+        const select = document.querySelector<HTMLSelectElement>('.goog-te-combo')
+        if (select) {
+          const options = Array.from(select.options)
+          let targetVal = lang
+          if (lang === 'en') {
+            // Source language option might be empty string or 'en'
+            const hasEn = options.some(o => o.value === 'en')
+            targetVal = hasEn ? 'en' : ('' as any)
+          }
+          select.value = targetVal
+          select.dispatchEvent(new Event('change', { bubbles: true }))
+          select.dispatchEvent(new Event('input', { bubbles: true }))
+          if (typeof (select as any).onchange === 'function') {
+            (select as any).onchange(new Event('change'))
+          }
+          return true
+        }
+      } catch (e) {
+        console.warn('Google translation trigger warning:', e)
+      }
+      return false
+    }
+
+    // Try immediately, or retry if widget is still initializing
+    let attempts = 0
+    const interval = setInterval(() => {
+      attempts++
+      const success = triggerCombo()
+      if (success || attempts >= 8) {
+        clearInterval(interval)
+        setIsTranslating(false)
+        window.dispatchEvent(new CustomEvent('shakti_language_changed', { detail: { language: lang } }))
+      }
+    }, 150)
   }
 
   const setLanguage = (lang: Language) => {

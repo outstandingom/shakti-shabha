@@ -224,6 +224,12 @@ export default function ArticlesPage() {
   const [activeModalArticle, setActiveModalArticle] = useState<ArticleItem | null>(null)
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
+  const [expandedCardIds, setExpandedCardIds] = useState<Record<string, boolean>>({})
+
+  const toggleCardExpand = (id: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpandedCardIds(prev => ({ ...prev, [id]: !prev[id] }))
+  }
 
 
   useEffect(() => {
