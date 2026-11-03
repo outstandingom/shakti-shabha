@@ -176,7 +176,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const interval = setInterval(() => {
       attempts++
       const success = triggerCombo()
-      if (success || attempts >= 8) {
+      if (success || attempts >= 15) {
         clearInterval(interval)
         setIsTranslating(false)
         window.dispatchEvent(new CustomEvent('shakti_language_changed', { detail: { language: lang } }))
@@ -185,11 +185,30 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }
 
   const setLanguage = (lang: Language) => {
+    if (lang === language) return
+
     setLanguageState(lang)
     try {
       localStorage.setItem('shakti_selected_lang', lang)
     } catch { /* ignore */ }
-    applyTranslation(lang)
+
+    const hostname = window.location.hostname
+    if (lang === 'hi') {
+      const cookieVal = '/en/hi'
+      document.cookie = `googtrans=${cookieVal}; path=/;`
+      document.cookie = `googtrans=${cookieVal}; path=/; domain=${hostname}`
+      document.cookie = `googtrans=${cookieVal}; path=/; domain=.${hostname}`
+    } else {
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${hostname}`
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${hostname}`
+      document.cookie = `googtrans=/en/en; path=/;`
+      document.cookie = `googtrans=/en/en; path=/; domain=${hostname}`
+      document.cookie = `googtrans=/en/en; path=/; domain=.${hostname}`
+    }
+
+    // Automatically reload so all text nodes re-evaluate and render in Hindi/English
+    window.location.reload()
   }
 
   const toggleLanguage = () => {

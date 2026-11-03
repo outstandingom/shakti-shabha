@@ -9,13 +9,13 @@ interface LanguageSwitcherProps {
 }
 
 export default function LanguageSwitcher({ floating = false, className = '' }: LanguageSwitcherProps) {
-  const { language, setLanguage, isTranslating } = useLanguage()
+  const { language, setLanguage, toggleLanguage, isTranslating } = useLanguage()
 
   const content = (
     <div className={`${s.switcher} ${isTranslating ? s.translating : ''} ${className}`} title="Translate website between English and Hindi">
-      <div className={s.iconWrap}>
+      <button type="button" className={s.iconWrap} onClick={toggleLanguage} title="Toggle language translation" aria-label="Toggle between English and Hindi">
         <GoogleIcon name="translate" size={15} />
-      </div>
+      </button>
       <button
         type="button"
         className={`${s.btn} ${language === 'en' ? s.btnActive : ''}`}

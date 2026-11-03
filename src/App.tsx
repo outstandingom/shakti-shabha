@@ -4,6 +4,7 @@ import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from './components/Navigation/Navigation'
+import LanguageSwitcher from './components/LanguageSwitcher/LanguageSwitcher'
 import FallingLeaves from './components/FallingLeaves/FallingLeaves'
 import { AuthProvider } from './lib/AuthContext'
 import { LanguageProvider } from './lib/LanguageContext'
@@ -33,6 +34,12 @@ import ThreeStreamsPage from './pages/ThreeStreamsPage'
 gsap.registerPlugin(ScrollTrigger)
 
 const LenisContext = createContext<Lenis | null>(null)
+
+function FloatingSwitcher() {
+  const { pathname } = useLocation()
+  if (pathname.startsWith('/admin')) return null
+  return <FloatingSwitcher />
+}
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -79,6 +86,7 @@ function LenisProvider() {
       {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
       <FallingLeaves />
       <Navigation />
+      <LanguageSwitcher floating />
       <Routes>
         <Route path="/"                     element={<HomePage />} />
         <Route path="/aaryaveera"           element={<AaryaveeraPage />} />

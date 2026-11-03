@@ -21,6 +21,15 @@
   justify-content: center;
   padding: 0 6px 0 8px;
   color: #C9A96E;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.iconWrap:hover {
+  color: #DC143C;
+  transform: scale(1.1);
 }
 
 .btn {
