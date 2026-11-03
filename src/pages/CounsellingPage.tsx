@@ -350,6 +350,11 @@ export default function CounsellingPage() {
                 <form
                   onSubmit={async e => {
                     e.preventDefault()
+                    const cleanPhone = formData.phone.replace(/[^0-9]/g, '')
+                    if (cleanPhone.length < 10) {
+                      alert('Validation Error: Please enter a valid 10-digit mobile number (e.g. 9876543210). Letters and special characters are not allowed.')
+                      return
+                    }
                     setSubmitting(true)
                     try {
                       const originTag = `[Origin: ${formData.city.trim() || 'N/A'}, ${formData.state.trim() || 'N/A'}, ${formData.country || 'India'}]`
@@ -429,9 +434,14 @@ export default function CounsellingPage() {
                       <input
                         required
                         type="tel"
-                        placeholder="+91..."
+                        placeholder="10-digit mobile number"
+                        pattern="^[0-9+\s-]{10,15}$"
+                        title="Please enter a valid 10-digit mobile number"
                         value={formData.phone}
-                        onChange={e => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                        onChange={e => {
+                          const val = e.target.value.replace(/[^0-9+\s-]/g, '')
+                          setFormData(prev => ({ ...prev, phone: val }))
+                        }}
                         style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
                       />
                     </div>

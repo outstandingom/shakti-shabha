@@ -338,10 +338,12 @@ function ArticlesSection() {
     if (!form.content_hi?.trim()) missing.push('Hindi Content (सामग्री)')
 
     if (missing.length > 0) {
+      const errorMsg = `Validation Alert: The website requires bilingual content. Missing: ${missing.join(', ')}. Please fill both English and Hindi tabs.`
       setAlert({
         type: 'error',
-        msg: `Validation Alert: The website requires bilingual content. Missing: ${missing.join(', ')}. Please fill both English and Hindi tabs.`
+        msg: errorMsg
       })
+      window.alert(errorMsg)
       return
     }
 
@@ -436,6 +438,12 @@ function ArticlesSection() {
           <div className={s.modal} data-lenis-prevent="true">
             <h2 className={s.modalTitle}>{editing ? 'Edit Article' : 'New Article'}</h2>
             <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
+
+            {alert && (
+              <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`} style={{ marginBottom: '1rem' }}>
+                {alert.msg}
+              </div>
+            )}
 
             <div className={s.tabs}>
               <LangTab />
@@ -1936,11 +1944,19 @@ function CoursesSection() {
 
   const save = async () => {
     if (!form.title.trim()) {
-      setAlert({ type: 'error', msg: 'Please enter a course title.' })
+      const msg = 'Validation Alert: Please enter a course title.'
+      setAlert({ type: 'error', msg })
+      window.alert(msg)
       return
     }
 
     const origPrice = Number(form.original_price) || Number(form.price) || 0
+    if (isNaN(origPrice) || origPrice <= 0) {
+      const msg = 'Validation Alert: Please enter a valid positive base price (e.g. 2500). Non-numeric text is not allowed.'
+      setAlert({ type: 'error', msg })
+      window.alert(msg)
+      return
+    }
     const discPct = Number(form.discount_percent) || 0
     const finalPrice = Number(form.price) || (discPct > 0 ? Math.round(origPrice * (1 - discPct / 100)) : origPrice)
 
@@ -2124,6 +2140,12 @@ function CoursesSection() {
             <h2 className={s.modalTitle}>{editing ? 'Edit Course' : 'New Course'}</h2>
             <button className={s.modalClose} onClick={() => setShowModal(false)}><GoogleIcon name="close" size={18} /></button>
 
+            {alert && (
+              <div className={`${s.alert} ${alert.type === 'error' ? s.alertError : s.alertSuccess}`} style={{ marginBottom: '1rem' }}>
+                {alert.msg}
+              </div>
+            )}
+
             <div className={s.formGrid}>
               <div className={`${s.field} ${s.formFull}`}>
                 <label className={s.label}>Course Title</label>
@@ -2143,6 +2165,8 @@ function CoursesSection() {
                     <input
                       className={s.input}
                       type="number"
+                      min="0"
+                      onKeyDown={e => { if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault() }}
                       value={form.original_price || form.price || ''}
                       onChange={e => {
                         const base = Number(e.target.value) || 0

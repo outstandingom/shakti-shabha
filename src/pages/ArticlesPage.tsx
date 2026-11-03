@@ -268,7 +268,7 @@ export default function ArticlesPage() {
     loadArticles()
   }, [])
 
-  const allArticles = [...dbArticles, ...ARTICLES_LIST]
+  const allArticles = dbArticles.length > 0 ? dbArticles : ARTICLES_LIST
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()

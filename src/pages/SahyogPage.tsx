@@ -251,7 +251,19 @@ export default function SahyogPage() {
                     </div>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Phone Number</label>
-                      <input required type="tel" placeholder="+91..." style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }} />
+                      <input
+                        required
+                        type="tel"
+                        pattern="^[0-9+\\s-]{10,15}$"
+                        placeholder="10-digit mobile number"
+                        title="Please enter a valid 10-digit mobile number"
+                        onKeyDown={e => {
+                          if (!/[0-9+\\s-]|Backspace|Delete|ArrowLeft|ArrowRight|Tab/.test(e.key) && !e.ctrlKey) {
+                            e.preventDefault()
+                          }
+                        }}
+                        style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem' }}
+                      />
                     </div>
                   </div>
 

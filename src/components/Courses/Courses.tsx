@@ -99,16 +99,7 @@ const getInitialCourses = () => {
         }
       })
       if (published.length > 0) {
-        const titleSet = new Set<string>()
-        const merged: any[] = []
-        for (const item of [...published, ...COURSES]) {
-          const key = item.title.trim().toLowerCase()
-          if (!titleSet.has(key)) {
-            titleSet.add(key)
-            merged.push(item)
-          }
-        }
-        return merged
+        return published
       }
     }
   } catch (e) {
@@ -220,7 +211,7 @@ export default function Courses() {
 
       {/* GSAP translates this element — no native overflow scroll */}
       <div ref={trackRef} className={s.track}>
-        {coursesList.map(c => (
+        {coursesList.map((c: any) => (
           <div key={c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
             {c.image && (
               <div className={s.cardImgWrap}>

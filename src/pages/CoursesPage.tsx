@@ -229,7 +229,8 @@ export default function CoursesPage() {
   // Deduplicate all courses strictly by title so duplicates are never rendered
   const titleSet = new Set<string>()
   const allCourses: CourseItem[] = []
-  for (const c of [...dbCourses, ...COURSES_DATA]) {
+  const sourceCourses = dbCourses.length > 0 ? dbCourses : COURSES_DATA
+  for (const c of sourceCourses) {
     const key = c.title.trim().toLowerCase()
     if (!titleSet.has(key)) {
       titleSet.add(key)
@@ -469,10 +470,21 @@ export default function CoursesPage() {
                 <p style={{ fontSize: '0.88rem', color: '#4B5563', marginTop: '0.25rem' }}>{selectedCourse}</p>
               </div>
 
-              <form onSubmit={(e) => { e.preventDefault(); alert('Redirecting to secure payment gateway...'); setSelectedCourse(null) }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <form onSubmit={(e) => {
+                e.preventDefault()
+                const formEl = e.currentTarget as HTMLFormElement
+                const phoneInput = formEl.elements.namedItem('phone') as HTMLInputElement
+                const cleanPhone = phoneInput?.value.replace(/[^0-9]/g, '') || ''
+                if (cleanPhone.length < 10) {
+                  alert('Validation Alert: Please enter a valid 10-digit mobile number (numbers only).')
+                  return
+                }
+                alert('Redirecting to secure payment gateway...')
+                setSelectedCourse(null)
+              }} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>Full Name</label>
-                  <input required type="text" placeholder="Your name as it should appear on certificate" style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
+                  <input required minLength={2} type="text" placeholder="Your name as it should appear on certificate" style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>Email Address (LMS Login)</label>
@@ -480,7 +492,20 @@ export default function CoursesPage() {
                 </div>
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#374151', marginBottom: '0.25rem' }}>WhatsApp / Mobile</label>
-                  <input required type="tel" placeholder="+91..." style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }} />
+                  <input
+                    name="phone"
+                    required
+                    type="tel"
+                    pattern="^[0-9+\\s-]{10,15}$"
+                    placeholder="10-digit mobile number"
+                    title="Please enter a valid 10-digit mobile number"
+                    onKeyDown={e => {
+                      if (!/[0-9+\s-]|Backspace|Delete|ArrowLeft|ArrowRight|Tab/.test(e.key) && !e.ctrlKey) {
+                        e.preventDefault()
+                      }
+                    }}
+                    style={{ width: '100%', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid #D1D5DB', fontSize: '0.88rem' }}
+                  />
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
