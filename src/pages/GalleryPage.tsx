@@ -15,49 +15,49 @@ const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
   {
     src: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
     alt: 'Lathi-Kaushal Dual Staff Defense',
-    tag: 'LATHI & SWORD',
+    tag: 'MISSION MARDINI CAMPS',
     desc: 'Demonstration of two-handed defensive staff circular sweeps at the Wardha district camp.'
   },
   {
     src: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
     alt: 'Traditional Maratha Talwar Parries',
-    tag: 'LATHI & SWORD',
+    tag: 'MISSION MARDINI CAMPS',
     desc: 'Practicing ancient sword stances, balance shifts, and rapid diagonal strikes.'
   },
   {
     src: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
     alt: 'Joint-Lock & Escape Biomechanics',
-    tag: 'MISSION MARDINI',
+    tag: 'MISSION MARDINI CAMPS',
     desc: 'Intensive tactile counter-assault training during the 5-day residential Mission Mardini camp.'
   },
   {
     src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
     alt: 'Trauma Release & Peer Healing Circle',
-    tag: 'SHAKTI BHAVA',
+    tag: 'COMMUNITY & SAHYOG',
     desc: 'Guided somatic therapy and group affirmation circles for domestic abuse survivors.'
   },
   {
     src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
     alt: 'School Campus Street-Smart Training',
-    tag: 'SCHOOL OUTREACH',
+    tag: 'AARYAVEERA LEADERSHIP',
     desc: 'Empowering adolescent students with situational danger reflexes and confidence.'
   },
   {
     src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
     alt: 'Mission Mardini Cadet Convocation',
-    tag: 'MISSION MARDINI',
+    tag: 'MISSION MARDINI CAMPS',
     desc: 'Over 120 girls receiving their verified physical warrior certificates in Pune.'
   },
   {
     src: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&auto=format&fit=crop&q=80',
     alt: 'Confidential Survivor Listening Circle',
-    tag: 'SHAKTI BHAVA',
+    tag: 'COMMUNITY & SAHYOG',
     desc: 'Safe, empathetic space where women share personal journeys and receive emotional anchoring.'
   },
   {
     src: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
     alt: 'High School Legal Literacy Assembly',
-    tag: 'SCHOOL OUTREACH',
+    tag: 'AARYAVEERA LEADERSHIP',
     desc: 'Instructing female students on self-defense rights, emergency helplines, and legal remedies.'
   },
 ]

@@ -27,42 +27,36 @@ export interface GalleryCategoryItem {
 
 export const DEFAULT_GALLERY_CATEGORIES: GalleryCategoryItem[] = [
   {
-    id: 'cat-mardini',
-    name: 'Mission Mardini & Lathi-Kaushal',
-    description: 'Martial arts, tactical self-defense, bamboo lathi combat, and residential camps.',
-    created_at: '2023-01-01T00:00:00.000Z'
+    id: 'cat-mardini-camps',
+    name: 'Mission Mardini Camps',
+    description: 'Ground combat and lathi self-defense training across schools.',
+    cover_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=80',
+    created_at: '2026-01-01T00:00:00.000Z'
   },
   {
-    id: 'cat-shakti-bhava',
-    name: 'Shakti Bhava & Consciousness',
-    description: 'Youth awakening, emotional resilience, survivor support circles, and crisis interventions.',
-    created_at: '2023-01-02T00:00:00.000Z'
+    id: 'cat-aaryaveera-leadership',
+    name: 'Aaryaveera Leadership',
+    description: 'Youth character building and civilizational seminars.',
+    cover_url: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
+    created_at: '2026-01-02T00:00:00.000Z'
   },
   {
-    id: 'cat-shakti-varta',
-    name: 'Shakti Varta & Seminars',
-    description: 'Intellectual discourses, academic symposiums, research forums, and Vedic dialogues.',
-    created_at: '2023-01-03T00:00:00.000Z'
-  },
-  {
-    id: 'cat-community',
-    name: 'Tribal Outreach & Community Assemblies',
-    description: 'Grassroots interventions, rural adolescent drives, and community stabilization.',
-    created_at: '2023-01-04T00:00:00.000Z'
-  },
-  {
-    id: 'cat-events',
-    name: 'National Symposia & Public Events',
-    description: 'Keynotes, large-scale civil assemblies (CIDCO, Lata Mangeshkar Auditorium, Ratlam).',
-    created_at: '2023-01-05T00:00:00.000Z'
-  },
-  {
-    id: 'cat-founder',
-    name: 'Aaryaveera & Training Frontline',
-    description: 'Tactical demonstrations, Karate drills, non-verbal profiling, and field leadership.',
-    created_at: '2023-01-06T00:00:00.000Z'
+    id: 'cat-community-sahyog',
+    name: 'Community & Sahyog',
+    description: 'On-ground rural assistance and counseling outreach.',
+    cover_url: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+    created_at: '2026-01-03T00:00:00.000Z'
   }
 ]
+
+const LEGACY_OLD_NAMES = new Set([
+  'Mission Mardini & Lathi-Kaushal',
+  'Shakti Bhava & Consciousness',
+  'Shakti Varta & Seminars',
+  'Tribal Outreach & Community Assemblies',
+  'National Symposia & Public Events',
+  'Aaryaveera & Training Frontline'
+])
 
 const STORAGE_KEY_CATEGORIES = 'shakti_gallery_categories'
 const STORAGE_KEY_ALL_PHOTOS = 'shakti_gallery_photos'
