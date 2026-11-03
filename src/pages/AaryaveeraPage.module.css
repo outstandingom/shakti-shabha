@@ -372,12 +372,13 @@
   transform: translateY(-2px);
 }
 
+/* ── FIX: number now fully visible in crimson red ── */
 .principleNum {
   display: block;
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: 2rem;
   font-weight: 900;
-  color: rgba(194,65,12,0.18);
+  color: #C2410C;
   line-height: 1.25;
   margin-bottom: 0.75rem;
 }
