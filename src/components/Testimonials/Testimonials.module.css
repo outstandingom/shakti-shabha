@@ -90,7 +90,7 @@
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   overflow: hidden;
-  padding: 1rem 0;
+  padding: 1.5rem 0 2.25rem;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -133,21 +133,29 @@
 
 .card {
   width: 400px;
-  height: 310px;
+  height: 355px;
+  min-height: 355px;
   max-width: 85vw;
   flex-shrink: 0;
   background: #FFFFFF;
   border: 1px solid var(--border, #E5E7EB);
   border-radius: 18px;
-  padding: 1.75rem 2rem;
+  padding: 1.65rem 1.85rem 1.65rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
   cursor: default;
   position: relative;
-  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .card:hover {
@@ -179,13 +187,12 @@
 
 .quoteText {
   font-size: 0.94rem;
-  line-height: 1.6;
+  line-height: 1.55;
   color: #374151;
   font-style: italic;
   margin: 0;
-  flex-grow: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -195,8 +202,10 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding-top: 1.25rem;
+  padding-top: 1rem;
   border-top: 1px solid #F3F4F6;
+  margin-top: auto;
+  flex-shrink: 0;
 }
 
 .avatarWrap {
@@ -280,10 +289,14 @@
   }
   .card {
     width: 310px;
-    padding: 1.5rem 1.6rem;
+    height: 350px;
+    min-height: 350px;
+    padding: 1.35rem 1.4rem 1.4rem;
   }
   .quoteText {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    -webkit-line-clamp: 3;
   }
 }
 
@@ -291,16 +304,15 @@
   background: none;
   border: none;
   color: #DC143C;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   font-weight: 700;
   cursor: pointer;
-  padding: 0;
-  margin-top: -1.2rem;
-  margin-bottom: 1.25rem;
+  padding: 0.4rem 0 0;
+  margin: 0;
   text-align: left;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   transition: color 0.2s;
   width: fit-content;
 }

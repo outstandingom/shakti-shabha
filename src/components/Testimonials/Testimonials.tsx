@@ -173,44 +173,33 @@ export default function Testimonials() {
           }}
         >
           {marqueeItems.map((item, idx) => {
-            const isLong = item.quote.length > 170
+            const isLong = item.quote.length > 135
             return (
               <article key={`${item.id}-${idx}`} className={s.card}>
-                <div className={s.cardTop}>
-                  <div className={s.stars} aria-label={`${item.rating || 5} out of 5 stars`}>
-                    {Array.from({ length: item.rating || 5 }).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
+                <div className={s.cardBody}>
+                  <div className={s.cardTop}>
+                    <div className={s.stars} aria-label={`${item.rating || 5} out of 5 stars`}>
+                      {Array.from({ length: item.rating || 5 }).map((_, i) => (
+                        <span key={i}>★</span>
+                      ))}
+                    </div>
+                    <span className={s.quoteIcon} aria-hidden="true">“</span>
                   </div>
-                  <span className={s.quoteIcon} aria-hidden="true">“</span>
+
+                  <blockquote className={s.quoteText}>
+                    "{item.quote}"
+                  </blockquote>
+
+                  {isLong && (
+                    <button
+                      type="button"
+                      className={s.readMoreBtn}
+                      onClick={() => setSelectedStory(item)}
+                    >
+                      Read full experience →
+                    </button>
+                  )}
                 </div>
-
-                <blockquote className={s.quoteText}>
-                  "{item.quote}"
-                </blockquote>
-
-                {isLong && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedStory(item)}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      color: '#DC143C',
-                      fontSize: '0.8rem',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      padding: '0.25rem 0',
-                      textAlign: 'left',
-                      marginTop: '0.35rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}
-                  >
-                    Read full experience →
-                  </button>
-                )}
 
                 <div className={s.authorBlock}>
                   <div className={s.avatarWrap}>
