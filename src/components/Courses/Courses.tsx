@@ -8,29 +8,96 @@ import Testimonials from '../Testimonials/Testimonials'
 gsap.registerPlugin(ScrollTrigger)
 
 const COURSES = [
-  { badge:'Kshatra-Dharma · Shakti Sabha', title:'Warrior Spirit Certification', detail:'Guided by the Aaryaveera philosophy — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.', modules:'12 Modules', duration:'8 Weeks', level:'All Levels', featured:true },
-  { badge:'Parenting', title:'Vedic Parenting in Modern India', detail:'Raising resilient, rooted children in a fractured world. Drawing on Vedic wisdom, modern psychology, and lived experience.', modules:'8 Modules', duration:'6 Weeks', level:'Parents', featured:false },
-  { badge:'Discourse · Shakti Varta', title:'Understanding Paurush — True Masculinity', detail:'An honest inquiry into masculinity, Dharma, and the role of men in protecting and building a just society.', modules:'6 Modules', duration:'4 Weeks', level:'Open', featured:false },
-  { badge:'Self-Defense', title:'Lathi-Kaushal for Women', detail:"The ancient Indian art of Lathi — practical, powerful, rooted. Taught by Shakti Sabha's field instructors.", modules:'10 Modules', duration:'6 Weeks', level:'Beginners', featured:false },
-  { badge:'Research', title:'The Legal Collage — Know Your Rights', detail:'Understanding IPC, BNS, and systemic loopholes. Fact-based, lawyer-reviewed, essential for every woman in India.', modules:'5 Modules', duration:'3 Weeks', level:'Open', featured:false },
+  {
+    badge: 'Kshatra-Dharma · Shakti Sabha',
+    title: 'Warrior Spirit Certification',
+    detail: 'Guided by the Aaryaveera philosophy — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.',
+    modules: '12 Modules',
+    duration: '8 Weeks',
+    level: 'All Levels',
+    price: '₹1,800',
+    original_price: '₹2,500',
+    discount_percent: 28,
+    discount_tag: 'Save ₹700',
+    featured: true
+  },
+  {
+    badge: 'Parenting',
+    title: 'Vedic Parenting in Modern India',
+    detail: 'Raising resilient, rooted children in a fractured world. Drawing on Vedic wisdom, modern psychology, and lived experience.',
+    modules: '8 Modules',
+    duration: '6 Weeks',
+    level: 'Parents',
+    price: '₹1,500',
+    original_price: '₹2,000',
+    discount_percent: 25,
+    discount_tag: 'Save ₹500',
+    featured: false
+  },
+  {
+    badge: 'Discourse · Shakti Varta',
+    title: 'Understanding Paurush — True Masculinity',
+    detail: 'An honest inquiry into masculinity, Dharma, and the role of men in protecting and building a just society.',
+    modules: '6 Modules',
+    duration: '4 Weeks',
+    level: 'Open',
+    price: '₹1,800',
+    original_price: '₹2,600',
+    discount_percent: 31,
+    discount_tag: 'Save ₹800',
+    featured: false
+  },
+  {
+    badge: 'Self-Defense',
+    title: 'Lathi-Kaushal for Women',
+    detail: "The ancient Indian art of Lathi — practical, powerful, rooted. Taught by Shakti Sabha's field instructors.",
+    modules: '10 Modules',
+    duration: '6 Weeks',
+    level: 'Beginners',
+    price: '₹2,000',
+    original_price: '₹2,800',
+    discount_percent: 29,
+    discount_tag: 'Save ₹800',
+    featured: false
+  },
+  {
+    badge: 'Research',
+    title: 'The Legal Collage — Know Your Rights',
+    detail: 'Understanding IPC, BNS, and systemic loopholes. Fact-based, lawyer-reviewed, essential for every woman in India.',
+    modules: '5 Modules',
+    duration: '3 Weeks',
+    level: 'Open',
+    price: '₹1,400',
+    original_price: '₹2,000',
+    discount_percent: 30,
+    discount_tag: 'Save ₹600',
+    featured: false
+  },
 ]
-
 
 const getInitialCourses = () => {
   try {
     const local = typeof window !== 'undefined' ? localStorage.getItem('shakti_custom_courses') : null
     if (local) {
       const parsed = JSON.parse(local)
-      const published = parsed.filter((c: any) => c.published).map((c: any) => ({
-        badge: c.instructor ? `Instructor · ${c.instructor}` : 'Academy',
-        title: c.title,
-        detail: c.description || 'Comprehensive training curriculum.',
-        modules: c.syllabus?.length ? `${c.syllabus.length} Modules` : 'Self-Paced',
-        duration: c.duration || 'Flexible',
-        level: c.level || 'All Levels',
-        image: c.cover_image_url || '',
-        featured: false
-      }))
+      const published = parsed.filter((c: any) => c.published).map((c: any) => {
+        const origPrice = c.original_price ? (typeof c.original_price === 'number' ? `₹${c.original_price.toLocaleString()}` : c.original_price) : (c.price ? `₹${c.price.toLocaleString()}` : '')
+        const payablePrice = c.price ? (typeof c.price === 'number' ? `₹${c.price.toLocaleString()}` : c.price) : 'Free'
+        return {
+          badge: c.instructor ? `Instructor · ${c.instructor}` : 'Academy',
+          title: c.title,
+          detail: c.description || 'Comprehensive training curriculum.',
+          modules: c.syllabus?.length ? `${c.syllabus.length} Modules` : 'Self-Paced',
+          duration: c.duration || 'Flexible',
+          level: c.level || 'All Levels',
+          image: c.cover_image_url || '',
+          price: payablePrice,
+          original_price: origPrice,
+          discount_percent: c.discount_percent || 0,
+          discount_tag: c.discount_tag || '',
+          featured: false
+        }
+      })
       if (published.length > 0) {
         const titleSet = new Set<string>()
         const merged: any[] = []
@@ -153,7 +220,21 @@ export default function Courses() {
             <p className={s.cardDetail}>{c.detail}</p>
             <div className={s.cardFooter}>
               <div className={s.priceWrapper}>
-                <span className={s.priceText}>{c.price || '₹1,800'}</span>
+                {c.original_price && (
+                  <div className={s.discountRow}>
+                    <span className={s.originalPrice}>{c.original_price}</span>
+                    {c.discount_percent ? (
+                      <span className={s.discountBadge}>{c.discount_percent}% OFF</span>
+                    ) : null}
+                    {c.discount_tag ? (
+                      <span className={s.savingsTag}>{c.discount_tag}</span>
+                    ) : null}
+                  </div>
+                )}
+                <div className={s.priceRow}>
+                  <span className={s.priceText}>{c.price || '₹1,800'}</span>
+                  <span className={s.finalLabel}>Customer Price</span>
+                </div>
               </div>
               <Link to="/courses" className={s.enroll}>Enroll Now →</Link>
             </div>

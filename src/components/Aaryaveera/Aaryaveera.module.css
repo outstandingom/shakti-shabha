@@ -320,6 +320,35 @@
     margin-top: 0.4rem;
   }
 
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    max-width: 44rem;
+    margin: 0.25rem 0 0.4rem;
+  }
+
+  .card {
+    padding: 0.75rem 0.85rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cardHeader {
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .cardTitle {
+    font-size: 0.86rem;
+  }
+
+  .cardText {
+    font-size: 0.76rem;
+    line-height: 1.4;
+    padding-left: 0;
+  }
+
   .btnWarriorGold,
   .btnWarriorOutline {
     width: auto;

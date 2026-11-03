@@ -30,6 +30,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '4 Weeks',
     modules: '8 Video Modules + Quizzes',
     price: '₹1,800',
+    original_price: '₹2,500',
+    discount_percent: 28,
+    discount_tag: 'Save ₹700 · Flagship Offer',
     desc: 'Core biomechanics of human vulnerabilities, escaping holds, improvised weapon defense, and rapid emergency voice command protocols. Learn active perimeter management, recognizing pre-violence indicators, and executing explosive counter-strikes.',
     image: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -47,6 +50,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '6 Weeks',
     modules: '12 Deep Dives + Journal',
     price: '₹2,200',
+    original_price: '₹3,000',
+    discount_percent: 27,
+    discount_tag: 'Save ₹800 · Limited Time',
     desc: 'Unapologetic boundary setting, overcoming public anxiety, vocal projection, resilience training, and cultivating unshakeable self-worth grounded in Vedic models of feminine courage.',
     image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -66,6 +72,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '3 Weeks',
     modules: '6 Modules + Community',
     price: '₹1,500',
+    original_price: '₹2,000',
+    discount_percent: 25,
+    discount_tag: 'Save ₹500',
     desc: 'How classical Indian wisdom, sanskaras, and emotional anchoring build confident children resilient against toxic digital addiction and predatory influences.',
     image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -82,6 +91,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '8 Weeks',
     modules: '16 Modules + Live Mentorship',
     price: '₹3,000',
+    original_price: '₹4,500',
+    discount_percent: 33,
+    discount_tag: 'Save ₹1,500 · Special Grant',
     desc: 'Community organizing, legal literacy under Bharatiya Nyaya Sanhita, crisis mediation, and grassroots campaign management for impactful institutional change.',
     image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -103,6 +115,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '5 Weeks',
     modules: '10 Lectures + Source Texts',
     price: '₹1,800',
+    original_price: '₹2,600',
+    discount_percent: 31,
+    discount_tag: 'Save ₹800',
     desc: 'Master the art of rigorous intellectual debate, analyzing Western feminist narratives vs civilizational Bharatiya thought with verified sources.',
     image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -121,6 +136,9 @@ const COURSES_DATA: CourseItem[] = [
     duration: '6 Weeks',
     modules: '10 High-Def Form Drills',
     price: '₹2,000',
+    original_price: '₹2,800',
+    discount_percent: 29,
+    discount_tag: 'Save ₹800',
     desc: 'Step-by-step master angles, footwork, dual-strike blocks, and rhythmic flow drills from experienced Maharashtra lathi masters.',
     image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=600&auto=format&fit=crop&q=80',
     syllabus: [
@@ -177,18 +195,25 @@ export default function CoursesPage() {
       }
 
       if (fetched.length > 0) {
-        const mapped: CourseItem[] = fetched.map(c => ({
-          id: c.id,
-          title: c.title,
-          category: c.instructor ? `Instructor · ${c.instructor}` : 'Shakti Academy',
-          level: c.level ? c.level.charAt(0).toUpperCase() + c.level.slice(1) : 'All Levels',
-          duration: c.duration || 'Flexible',
-          modules: c.syllabus && c.syllabus.length > 0 ? `${c.syllabus.length} Modules` : 'Structured Curriculum',
-          price: c.price ? `₹${c.price.toLocaleString()}` : 'Free',
-          desc: c.description || '',
-          image: c.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
-          syllabus: c.syllabus,
-        }))
+                const mapped: CourseItem[] = fetched.map(c => {
+          const origPrice = c.original_price ? (typeof c.original_price === 'number' ? `₹${c.original_price.toLocaleString()}` : c.original_price) : (c.price ? `₹${c.price.toLocaleString()}` : undefined)
+          const payablePrice = c.price ? (typeof c.price === 'number' ? `₹${c.price.toLocaleString()}` : c.price) : 'Free'
+          return {
+            id: c.id,
+            title: c.title,
+            category: c.instructor ? `Instructor · ${c.instructor}` : 'Shakti Academy',
+            level: c.level ? c.level.charAt(0).toUpperCase() + c.level.slice(1) : 'All Levels',
+            duration: c.duration || 'Flexible',
+            modules: c.syllabus && c.syllabus.length > 0 ? `${c.syllabus.length} Modules` : 'Structured Curriculum',
+            price: payablePrice,
+            original_price: origPrice,
+            discount_percent: c.discount_percent || 0,
+            discount_tag: c.discount_tag || '',
+            desc: c.description || '',
+            image: c.cover_image_url || 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+            syllabus: c.syllabus,
+          }
+        })
         setDbCourses(mapped)
       }
     }
@@ -278,14 +303,19 @@ export default function CoursesPage() {
 
                 <div className={cp.cardFooter}>
                   <div className={cp.priceCol}>
-                    {course.original_price && course.discount_percent && course.discount_percent > 0 ? (
+                    {course.original_price && (
                       <div className={cp.discountRow}>
                         <span className={cp.originalPrice}>{course.original_price}</span>
-                        <span className={cp.discountTag}>{course.discount_percent}% OFF</span>
-                        {course.discount_tag && <span className={cp.eventTag}>{course.discount_tag}</span>}
+                        {course.discount_percent && course.discount_percent > 0 ? (
+                          <span className={cp.discountTag}>{course.discount_percent}% OFF</span>
+                        ) : null}
+                        {course.discount_tag ? <span className={cp.eventTag}>{course.discount_tag}</span> : null}
                       </div>
-                    ) : null}
-                    <span className={cp.priceText}>{course.price}</span>
+                    )}
+                    <div className={cp.priceRow}>
+                      <span className={cp.priceText}>{course.price}</span>
+                      <span className={cp.payableLabel}>Customer Price</span>
+                    </div>
                   </div>
                   <button
                     type="button"
