@@ -6,7 +6,7 @@
   min-height: 100vh;
   background: #FFFFFF;
   color: #111111;
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   padding-top: 0;
 }
 

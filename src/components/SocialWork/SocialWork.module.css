@@ -57,7 +57,7 @@
 }
 
 .statLabel {
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: clamp(0.6rem, 0.75vw, 0.68rem);
   color: #4B5563;
   text-transform: uppercase;
@@ -257,7 +257,7 @@
 }
 
 .slideSubtitle {
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: clamp(0.72rem, 0.95vw, 0.84rem);
   font-weight: 600;
   letter-spacing: 0.12ch;

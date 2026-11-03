@@ -520,7 +520,7 @@ function ArticlesSection() {
               ● {form.category.toUpperCase()} · {previewLang === 'hi' ? 'शक्ति सभा विशेष लेख' : 'Shakti Sabha Verified Article'}
             </div>
 
-            <h1 style={{ fontFamily: 'Cinzel, Georgia, serif', fontSize: '1.75rem', color: '#111827', margin: '0 0 0.5rem', lineHeight: 1.3 }}>
+            <h1 style={{ fontFamily: "'Cinzel', serif", fontSize: '1.75rem', color: '#111827', margin: '0 0 0.5rem', lineHeight: 1.3 }}>
               {previewLang === 'hi' ? (form.title_hi || 'हिंदी शीर्षक यहाँ दिखेगा') : (form.title_en || 'English Title will appear here')}
             </h1>
 
@@ -1357,7 +1357,7 @@ function GallerySection() {
                 >
                   <GoogleIcon name="arrow_back" size={16} /> Back to Folders
                 </button>
-                <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#F9FAFB', fontFamily: 'Cinzel, Georgia, serif', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#F9FAFB', fontFamily: "'Cinzel', serif", display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <GoogleIcon name="folder_open" size={24} style={{ color: '#DC143C' }} />
                   {currentCatObj.name}
                 </h3>
@@ -2493,7 +2493,7 @@ function CounsellingSection() {
       <div style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16, padding: '1.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
-            <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#F9FAFB', display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'Cinzel, Georgia, serif' }}>
+            <h3 style={{ margin: 0, fontSize: '1.15rem', color: '#F9FAFB', display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: "'Cinzel', serif" }}>
               <GoogleIcon name="public" size={22} style={{ color: '#DC143C' }} />
               Geographic Intake Analytics — Requests by Country
             </h3>
@@ -3334,7 +3334,7 @@ function FounderSection() {
             <div style={{ width: 56, height: 56, borderRadius: '50%', background: popupModal.type === 'success' ? 'rgba(16,185,129,0.15)' : 'rgba(220,20,60,0.15)', border: popupModal.type === 'success' ? '2px solid #10B981' : '2px solid #DC143C', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.25rem' }}>
               <GoogleIcon name={popupModal.type === 'success' ? 'check_circle' : 'error'} size={32} style={{ color: popupModal.type === 'success' ? '#10B981' : '#DC143C' }} />
             </div>
-            <h3 style={{ margin: '0 0 0.5rem', color: '#F9FAFB', fontSize: '1.2rem', fontFamily: 'Cinzel, Georgia, serif' }}>{popupModal.title}</h3>
+            <h3 style={{ margin: '0 0 0.5rem', color: '#F9FAFB', fontSize: '1.2rem', fontFamily: "'Cinzel', serif" }}>{popupModal.title}</h3>
             <p style={{ margin: '0 0 1.5rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.88rem', lineHeight: 1.6 }}>{popupModal.msg}</p>
             <button className={s.btnPrimary} style={{ width: '100%', justifyContent: 'center' }} onClick={() => setPopupModal(null)}>
               OK, Understood
@@ -3543,7 +3543,7 @@ function EventsSection() {
                     {ev.cover_image_url && (
                       <img src={ev.cover_image_url} alt="" style={{ width: 44, height: 28, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }} />
                     )}
-                    <p style={{ margin: 0, fontFamily: 'Cinzel, Georgia, serif', fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
+                    <p style={{ margin: 0, fontFamily: "'Cinzel', serif", fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
                   </div>
                 <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>
                   {ev.date}{ev.end_date ? ` → ${ev.end_date}` : ''} · {ev.location || 'Location TBA'}
@@ -3574,7 +3574,7 @@ function EventsSection() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }} data-lenis-prevent="true">
           <div style={{ background: '#111115', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: '2rem', width: '100%', maxWidth: 680, maxHeight: '90vh', overflowY: 'auto' }} data-lenis-prevent="true">
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-              <h3 style={{ margin: 0, fontFamily: 'Cinzel, Georgia, serif', color: '#f5ead6' }}>
+              <h3 style={{ margin: 0, fontFamily: "'Cinzel', serif", color: '#f5ead6' }}>
                 {editing ? 'Edit Event' : 'Create Event'}
               </h3>
               <button onClick={() => setShowModal(false)} style={{ background: 'transparent', border: 'none', color: '#666', cursor: 'pointer', fontSize: '1.25rem' }}>✕</button>
@@ -3939,7 +3939,7 @@ function DispatchSection() {
             <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#C9A96E', fontWeight: 700 }}>
               Weekly Insights Desk
             </span>
-            <h2 style={{ fontFamily: 'Cinzel, Georgia, serif', fontSize: '1.6rem', color: '#F9FAFB', margin: '0.35rem 0 0.5rem' }}>
+            <h2 style={{ fontFamily: "'Cinzel', serif", fontSize: '1.6rem', color: '#F9FAFB', margin: '0.35rem 0 0.5rem' }}>
               The Shakti Dispatch
             </h2>
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.75)', fontSize: '0.92rem', maxWidth: 640, lineHeight: 1.6, fontFamily: 'Noto Sans Devanagari, sans-serif' }}>

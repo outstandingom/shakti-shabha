@@ -21,7 +21,7 @@
 }
 
 .title {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.4rem;
   color: #FFFFFF;
   margin: 0 0 0.4rem;
@@ -133,7 +133,7 @@
   font-size: 0.95rem;
   color: #E5E7EB;
   text-align: center;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .closeBtn {

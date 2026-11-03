@@ -23,7 +23,7 @@
 }
 
 .heroEyebrow {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.7rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -33,7 +33,7 @@
 }
 
 .heroTitle {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 700;
   color: #111827;
@@ -69,7 +69,7 @@
   background: transparent;
   border: none;
   color: #6B7280;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.82rem;
   letter-spacing: 0.1em;
   cursor: pointer;
@@ -155,7 +155,7 @@
 }
 
 .cardDay {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.4rem;
   font-weight: 700;
   color: #DC143C;
@@ -201,7 +201,7 @@
 }
 
 .cardPrice {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.85rem;
   color: #854D0E;
   font-weight: 600;
@@ -368,7 +368,7 @@
 }
 
 .historyYear {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.4rem;
   font-weight: 700;
   color: #DC143C;

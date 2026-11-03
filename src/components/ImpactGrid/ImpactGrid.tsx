@@ -40,7 +40,7 @@ export default function ImpactGrid() {
               letterSpacing: '0.22em',
               color: '#DC143C',
               fontWeight: 700,
-              fontFamily: 'Cinzel, Georgia, serif',
+              fontFamily: "'Cinzel', serif",
               marginBottom: '0.5rem',
               display: 'inline-flex',
               alignItems: 'center',
@@ -53,7 +53,7 @@ export default function ImpactGrid() {
               <GoogleIcon name="verified" size={14} style={{ color: '#DC143C' }} />
               Verified Institutional Footprint
             </div>
-            <h2 style={{ fontFamily: 'Cinzel, Georgia, serif', fontSize: 'clamp(1.75rem, 3.5vw, 2.4rem)', color: '#111827', margin: 0, fontWeight: 700, lineHeight: 1.2 }}>
+            <h2 style={{ fontFamily: "'Cinzel', serif", fontSize: 'clamp(1.75rem, 3.5vw, 2.4rem)', color: '#111827', margin: 0, fontWeight: 700, lineHeight: 1.2 }}>
               High-Level Impact Summary
             </h2>
           </div>
@@ -120,7 +120,7 @@ export default function ImpactGrid() {
                 color: '#111827',
                 margin: '0 0 0.75rem',
                 lineHeight: 1.4,
-                fontFamily: 'Cinzel, Georgia, serif'
+                fontFamily: "'Cinzel', serif"
               }}>
                 {p.label}
               </h3>

@@ -10,7 +10,7 @@ ul, ol { list-style: none; }
 body {
   width: 100%;
   min-width: 0;
-  font-family: var(--ff-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   background: var(--theme-bg, #FFFFFF);
   color: var(--theme-text-body, #333333);
   line-height: 1.6;

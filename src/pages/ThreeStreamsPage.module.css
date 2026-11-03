@@ -8,7 +8,7 @@
   min-height: 100vh;
   background: #FFFFFF;
   color: #111827;
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   padding-bottom: 5rem;
 }
 
@@ -277,7 +277,7 @@
 }
 
 .streamName {
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.75rem;
   font-weight: 700;
   color: #111827;

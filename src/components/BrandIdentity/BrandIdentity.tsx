@@ -30,7 +30,7 @@ export default function BrandIdentity() {
             <div className={s.typeMeta}>Display · Headings · Cinzel 900 — Classical power, Sanskrit-adjacent</div>
           </div>
           <div className={s.typeRow}>
-            <div className={s.typeSample} style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.5rem', fontWeight: 400 }}>Outfit</div>
+            <div className={s.typeSample} style={{ fontFamily: 'Poppins, sans-serif', fontSize: '1.5rem', fontWeight: 400 }}>Poppins</div>
             <div className={s.typeMeta}>Body · UI · Outfit 300–600 — Clean, modern, legible</div>
           </div>
           <div className={s.typeRow}>

@@ -44,7 +44,7 @@
 }
 
 .tagline {
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.55);
   line-height: 1.5;
@@ -94,7 +94,7 @@
 }
 
 .link {
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: 0.88rem;
   color: rgba(255, 255, 255, 0.6);
   text-decoration: none;
@@ -109,7 +109,7 @@
 .infoLine {
   font-size: 0.82rem;
   color: rgba(255, 255, 255, 0.5);
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
 }
 
 .built {
@@ -134,7 +134,7 @@
 .copy {
   font-size: 0.78rem;
   color: rgba(255, 255, 255, 0.3);
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
 }
 
 /* Responsive */

@@ -114,7 +114,7 @@
 }
 
 .header h2 { 
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif); 
+  font-family: var(--font-display, 'Cinzel', serif); 
   font-size: clamp(1.6rem, 3.5vw, 2.5rem); 
   font-weight: 700; 
   color: #FFFFFF; 
@@ -124,7 +124,7 @@
 }
 
 .header p { 
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: clamp(0.82rem, 1.1vw, 0.95rem); 
   line-height: 1.65; 
   color: rgba(255, 255, 255, 0.88); 
@@ -199,7 +199,7 @@
 }
 
 .pillarName { 
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif); 
+  font-family: var(--font-display, 'Cinzel', serif); 
   font-size: 1.35rem; 
   font-weight: 700; 
   color: #111111; 

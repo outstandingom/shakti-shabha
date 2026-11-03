@@ -6,7 +6,7 @@
 .page {
   background: #FFFFFF;
   color: #1F2937;
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   line-height: 1.8;
 }
 
@@ -19,7 +19,7 @@
 
 .sectionEyebrow {
   display: block;
-  font-family: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.7rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
@@ -28,7 +28,7 @@
 }
 
 .sectionTitle {
-  font-family: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.6rem, 3vw, 2.5rem);
   font-weight: 700;
   color: #111827;
@@ -74,7 +74,7 @@
 }
 
 .heroEyebrow {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.72rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -95,7 +95,7 @@
 }
 
 .heroTagline {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1rem, 2.2vw, 1.35rem);
   color: #C2410C;
   letter-spacing: 0.08em;
@@ -118,7 +118,7 @@
 }
 
 .heroMotto {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.15rem;
   color: #C2410C;
   font-style: italic;
@@ -152,7 +152,7 @@
 
 .dualityLetter {
   display: block;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 700;
   color: #C2410C;
@@ -168,7 +168,7 @@
 }
 
 .dualityPlus {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 2.5rem;
   color: rgba(194,65,12,0.3);
   text-align: center;
@@ -207,7 +207,7 @@
   border-left: 3px solid #C2410C;
   padding: 1.5rem 1.5rem 1.5rem 2rem;
   margin: 0 0 1rem;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.05rem;
   color: #111827;
   line-height: 1.7;
@@ -267,7 +267,7 @@
 
 .paurushLabel {
   display: block;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.9rem;
   color: #C2410C;
   letter-spacing: 0.1em;
@@ -310,7 +310,7 @@
 }
 
 .symbolName {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.1rem;
   color: #111827;
   margin: 0 0 1rem;
@@ -336,7 +336,7 @@
 
 .symbolUnion {
   text-align: center;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1.05rem;
   color: #C2410C;
   max-width: 680px;
@@ -374,7 +374,7 @@
 
 .principleNum {
   display: block;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 2rem;
   font-weight: 900;
   color: rgba(194,65,12,0.18);
@@ -383,7 +383,7 @@
 }
 
 .principleTitle {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.95rem;
   color: #C2410C;
   letter-spacing: 0.06em;
@@ -425,7 +425,7 @@
 .worldviewRow:hover { border-color: #C2410C; }
 
 .worldviewWord {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1rem;
   font-weight: 700;
   color: #C2410C;
@@ -463,7 +463,7 @@
 }
 
 .distinctionLabel {
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 1rem;
   color: #C2410C;
   letter-spacing: 0.1em;
@@ -524,7 +524,7 @@
   color: rgba(194,65,12,0.2);
   line-height: 1.25;
   margin-bottom: 0.5rem;
-  font-family: Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
 }
 
 .questionText {
@@ -549,7 +549,7 @@
 }
 
 .closingTitle {
-  font-family: 'Cinzel', 'Trajan Pro', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.8rem, 4vw, 3.2rem);
   font-weight: 700;
   color: #111827;
@@ -579,7 +579,7 @@
   color: #fff;
   text-decoration: none;
   border-radius: 8px;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   transition: background 0.2s, transform 0.2s;
@@ -594,7 +594,7 @@
   color: #C2410C;
   text-decoration: none;
   border-radius: 8px;
-  font-family: 'Cinzel', Georgia, serif;
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: 0.85rem;
   letter-spacing: 0.08em;
   transition: border-color 0.2s, background 0.2s;

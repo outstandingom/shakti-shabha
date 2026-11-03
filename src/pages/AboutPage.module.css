@@ -6,7 +6,7 @@
   min-height: 100vh;
   background: #FFFFFF;
   color: #111111;
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   padding-top: 5.5rem;
 }
 
@@ -1460,7 +1460,7 @@
 }
 
 .showcaseDesc {
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   font-size: 0.92rem;
   color: rgba(255, 255, 255, 0.65);
   line-height: 1.6;

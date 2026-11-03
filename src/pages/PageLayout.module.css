@@ -7,7 +7,7 @@
   padding-top: 0;
   background: var(--theme-bg, #FFFFFF);
   color: var(--theme-text-heading, #111111);
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
 }
 
 /* Banner */
@@ -55,7 +55,7 @@
 }
 
 .bannerTitle {
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   font-weight: 700;
   color: #FFFFFF;

@@ -175,7 +175,7 @@ export default function BrandPage() {
             <div className={p.typeBlock}>
               <div className={p.typeLabel}>Body — Outfit</div>
               <div className={p.typeUsage}>Body copy, descriptions, UI labels, navigation</div>
-              <div className={p.typeSample} style={{ fontFamily: 'Outfit, sans-serif', fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)', fontWeight: 400, color: '#444444', lineHeight: 1.8 }}>
+              <div className={p.typeSample} style={{ fontFamily: 'Poppins, sans-serif', fontSize: 'clamp(0.9rem, 1.2vw, 1.05rem)', fontWeight: 400, color: '#444444', lineHeight: 1.8 }}>
                 Shakti Sabha is a movement rooted in 12 years of on-ground transformation. Every word we publish is backed by real stories, real training, and real change — from the villages of Maharashtra to the national stage.
               </div>
               <div className={p.typeMeta}>

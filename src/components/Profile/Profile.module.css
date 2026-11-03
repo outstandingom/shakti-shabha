@@ -7,7 +7,7 @@
   padding: clamp(1.5rem, 3vw, 3rem) clamp(1rem, 4vw, 2.5rem); 
   background-color: var(--theme-bg, #FFFFFF); 
   color: var(--theme-text-heading, #111111);
-  font-family: var(--font-body, 'Inter', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
   overflow: hidden;
   border-bottom: 1px solid var(--theme-border-light, rgba(0, 0, 0, 0.08));
   min-height: 100vh;
@@ -103,7 +103,7 @@
 }
 
 .heading { 
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(1.5rem, 3.5vw, 3rem); 
   color: var(--theme-text-heading, #111111); 
   line-height: 1.1; 
@@ -112,17 +112,17 @@
 }
 
 .nameBold {
-  font-family: var(--font-serif, 'Playfair Display', Georgia, serif);
+  font-family: var(--font-display, 'Cinzel', serif);
   font-weight: 700;
   color: var(--theme-text-heading, #111111);
 }
 
 .nameLight {
-  font-family: var(--font-cursive, 'Mea Culpa', cursive) !important;
+  font-family: var(--font-display, 'Cinzel', serif) !important;
   font-weight: 400;
   font-style: normal;
   color: var(--theme-text-heading, #222222);
-  font-size: 1.35em;
+  font-size: 1em;
   line-height: 1;
   display: inline-block;
   vertical-align: baseline;

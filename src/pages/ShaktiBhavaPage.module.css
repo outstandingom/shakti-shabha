@@ -7,7 +7,7 @@
   min-height: 100vh;
   background: #FFFFFF;
   color: #111827;
-  font-family: var(--font-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
 }
 
 /* ── Hero Banner ── */
