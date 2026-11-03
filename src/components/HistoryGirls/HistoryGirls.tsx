@@ -129,7 +129,6 @@ export default function HistoryGirls() {
               </div>
             ))}
           </div>
-          <p className={s.note}>Click any figure on the full page for their complete story, footnoted sources, and verified archives.</p>
         </div>
 
         <div data-hg="panel" className={s.panel}>
@@ -145,7 +144,6 @@ export default function HistoryGirls() {
               </div>
             ))}
           </div>
-          <p className={s.note}>Video testimonials and before/after journeys available on the full History page.</p>
         </div>
       </div>
 

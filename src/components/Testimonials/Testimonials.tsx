@@ -243,10 +243,6 @@ export default function Testimonials() {
         </div>
       </div>
 
-      <div className={s.scrollHint}>
-        <span>Hover or touch cards to pause marquee • Continuous auto-scrolling</span>
-      </div>
-
       {/* Full Testimonial Modal Dialog */}
       {selectedStory && (
         <div className={s.modalOverlay} onClick={() => setSelectedStory(null)}>

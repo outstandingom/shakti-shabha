@@ -1,17 +1,10 @@
 import { createClient } from '@supabase/supabase-js'
 
 const env = import.meta.env as Record<string, string | undefined>
-const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || ''
-const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || ''
+const supabaseUrl = env.VITE_SUPABASE_URL || env.SUPABASE_URL || 'https://ctzkucdgwdrqcubantcl.supabase.co'
+const supabaseKey = env.VITE_SUPABASE_PUBLISHABLE_KEY || env.SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_xvdEVDr0R0NZExUZ8VSfuA_JcMxUyYl'
 
-if (!supabaseUrl || !supabaseKey) {
-  console.warn('[Supabase] Environment variables not found. Check VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (or SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY on Vercel).')
-}
-
-// Safely instantiate client (use dummy url/key if missing so it does not throw on module load)
-export const supabase = (supabaseUrl && supabaseKey)
-  ? createClient(supabaseUrl, supabaseKey)
-  : createClient('https://placeholder-project.supabase.co', 'placeholder-anon-key')
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 export type Article = {
   id: string

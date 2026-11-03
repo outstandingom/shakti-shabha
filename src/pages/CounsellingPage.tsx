@@ -350,9 +350,21 @@ export default function CounsellingPage() {
                 <form
                   onSubmit={async e => {
                     e.preventDefault()
+                    if (!formData.name.trim()) {
+                      alert('Validation Alert: Please enter your Name or Preferred Alias.')
+                      return
+                    }
+                    if (!formData.email.trim() || !formData.email.includes('@')) {
+                      alert('Validation Alert: Please enter a valid Email Address.')
+                      return
+                    }
                     const cleanPhone = formData.phone.replace(/[^0-9]/g, '')
                     if (cleanPhone.length < 10) {
                       alert('Validation Error: Please enter a valid 10-digit mobile number (e.g. 9876543210). Letters and special characters are not allowed.')
+                      return
+                    }
+                    if (!formData.city.trim()) {
+                      alert('Validation Alert: Please enter your Location (City, District & State).')
                       return
                     }
                     setSubmitting(true)
@@ -391,7 +403,7 @@ export default function CounsellingPage() {
                   style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}
                 >
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Name or Preferred Alias</label>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Name or Preferred Alias *</label>
                     <input
                       required
                       type="text"
@@ -419,7 +431,7 @@ export default function CounsellingPage() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Email Address</label>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Email Address *</label>
                       <input
                         required
                         type="email"
@@ -430,7 +442,7 @@ export default function CounsellingPage() {
                       />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Phone / WhatsApp</label>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Phone / WhatsApp (10 Digits) *</label>
                       <input
                         required
                         type="tel"
@@ -448,7 +460,19 @@ export default function CounsellingPage() {
                   </div>
 
                   {/* Location Inputs (Country, State, City) */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Location (City, District & State) *</label>
+                    <input
+                      required
+                      type="text"
+                      placeholder="e.g. Pune, Maharashtra (or your current town/district)"
+                      value={formData.city}
+                      onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
+                      style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.9rem', marginBottom: '0.75rem' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>Country</label>
                       <select
@@ -466,24 +490,12 @@ export default function CounsellingPage() {
                       </select>
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>State / Province *</label>
+                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>State / Region</label>
                       <input
-                        required
                         type="text"
                         placeholder="e.g. Maharashtra"
                         value={formData.state}
                         onChange={e => setFormData(prev => ({ ...prev, state: e.target.value }))}
-                        style={{ width: '100%', padding: '0.75rem 0.85rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.86rem' }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#374151', marginBottom: '0.35rem' }}>City / District *</label>
-                      <input
-                        required
-                        type="text"
-                        placeholder="e.g. Nagpur"
-                        value={formData.city}
-                        onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
                         style={{ width: '100%', padding: '0.75rem 0.85rem', borderRadius: '8px', border: '1px solid #D1D5DB', fontSize: '0.86rem' }}
                       />
                     </div>

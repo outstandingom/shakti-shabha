@@ -267,6 +267,91 @@ function OverviewSection() {
 }
 
 /* ============================================================
+   CANVAS 16:9 / 1:1 IMAGE CROP & DIMENSION HELPERS
+   ============================================================ */
+const cropImageTo16_9 = (imgSrc: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const targetW = 1200
+      const targetH = 675
+      const targetRatio = targetW / targetH
+      const srcRatio = img.naturalWidth / img.naturalHeight
+
+      let cropX = 0
+      let cropY = 0
+      let cropW = img.naturalWidth
+      let cropH = img.naturalHeight
+
+      if (srcRatio > targetRatio) {
+        cropW = img.naturalHeight * targetRatio
+        cropX = (img.naturalWidth - cropW) / 2
+      } else {
+        cropH = img.naturalWidth / targetRatio
+        cropY = (img.naturalHeight - cropH) / 2
+      }
+
+      const canvas = document.createElement('canvas')
+      canvas.width = targetW
+      canvas.height = targetH
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(imgSrc)
+        return
+      }
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+      ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH)
+      resolve(canvas.toDataURL('image/jpeg', 0.88))
+    }
+    img.onerror = () => reject(new Error('Failed to load image for cropping'))
+    img.src = imgSrc
+  })
+}
+
+const cropImageTo1_1 = (imgSrc: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      const targetSize = 500
+      let cropSize = Math.min(img.naturalWidth, img.naturalHeight)
+      let cropX = (img.naturalWidth - cropSize) / 2
+      let cropY = (img.naturalHeight - cropSize) / 2
+
+      const canvas = document.createElement('canvas')
+      canvas.width = targetSize
+      canvas.height = targetSize
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(imgSrc)
+        return
+      }
+      ctx.imageSmoothingEnabled = true
+      ctx.imageSmoothingQuality = 'high'
+      ctx.drawImage(img, cropX, cropY, cropSize, cropSize, 0, 0, targetSize, targetSize)
+      resolve(canvas.toDataURL('image/jpeg', 0.88))
+    }
+    img.onerror = () => reject(new Error('Failed to load image for cropping'))
+    img.src = imgSrc
+  })
+}
+
+const getImageDimensions = (url: string): Promise<{ width: number; height: number }> => {
+  return new Promise((resolve) => {
+    if (!url) {
+      resolve({ width: 0, height: 0 })
+      return
+    }
+    const img = new Image()
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    img.onerror = () => resolve({ width: 0, height: 0 })
+    img.src = url
+  })
+}
+
+/* ============================================================
    ARTICLES SECTION
    ============================================================ */
 function ArticlesSection() {
@@ -664,15 +749,61 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
         </div>
 
         <div className={`${s.field} ${s.formFull}`}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                <label className={s.label} style={{ margin: 0 }}>Cover Image</label>
-                <span style={{ fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.15rem 0.55rem', borderRadius: 6, fontWeight: 600 }}>
-                  Aspect Ratio: 16:9 Landscape (1200 × 675 px) • Max 2MB
-                </span>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.4rem' }}>
+            <label className={s.label} style={{ margin: 0 }}>Cover Image</label>
+            <span style={{ fontSize: '0.75rem', color: '#C9A96E', background: 'rgba(201,169,110,0.12)', border: '1px solid rgba(201,169,110,0.3)', padding: '0.15rem 0.55rem', borderRadius: 6, fontWeight: 600 }}>
+              Aspect Ratio: 16:9 Landscape (1200 × 675 px) • Max 2MB
+            </span>
+          </div>
+
+          {form.cover_image_url ? (
+            <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
+              <img
+                src={form.cover_image_url}
+                alt="Cover Preview"
+                style={{ height: 130, maxWidth: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}
+              />
+              <button
+                type="button"
+                onClick={() => setForm((f: any) => ({ ...f, cover_image_url: '' }))}
+                className={s.btnDanger}
+                style={{ position: 'absolute', top: 6, right: 6, borderRadius: '50%', width: 26, height: 26, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                title="Remove image"
+              >
+                ✕
+              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  className={s.btnSecondary}
+                  style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem' }}
+                  onClick={async () => {
+                    try {
+                      const cropped = await cropImageTo16_9(form.cover_image_url)
+                      setForm((f: any) => ({ ...f, cover_image_url: cropped }))
+                    } catch (e) {
+                      console.error('Article image crop failed', e)
+                    }
+                  }}
+                >
+                  ✂️ Auto-Crop &amp; Optimize to 16:9
+                </button>
+                <button
+                  type="button"
+                  className={s.btnDanger}
+                  style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem' }}
+                  onClick={() => setForm((f: any) => ({ ...f, cover_image_url: '' }))}
+                >
+                  <GoogleIcon name="delete" size={14} /> Remove Image
+                </button>
               </div>
-          {form.cover_image_url && (
-            <img src={form.cover_image_url} alt="Cover" style={{ height: 120, objectFit: 'cover', borderRadius: 8, marginBottom: 8 }} />
+            </div>
+          ) : (
+            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>
+              No cover image selected. Upload an image file or paste an image URL below.
+            </div>
           )}
+
           <input
             ref={fileRef}
             type="file"
@@ -680,9 +811,18 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
             style={{ display: 'none' }}
             onChange={e => e.target.files?.[0] && uploadImage(e.target.files[0])}
           />
-          <button className={s.btnSecondary} onClick={() => fileRef.current?.click()} disabled={uploading}>
-            {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Upload Cover Image</>}
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button type="button" className={s.btnSecondary} onClick={() => fileRef.current?.click()} disabled={uploading}>
+              {uploading ? 'Uploading...' : <><GoogleIcon name="upload_file" size={16} style={{ marginRight: 6 }} /> Choose Cover Image</>}
+            </button>
+            <input
+              className={s.input}
+              style={{ flex: 1, minWidth: 220 }}
+              value={form.cover_image_url || ''}
+              onChange={e => setForm((f: any) => ({ ...f, cover_image_url: e.target.value }))}
+              placeholder="Or enter image URL directly"
+            />
+          </div>
         </div>
 
         <div className={s.field}>
@@ -720,6 +860,7 @@ function GallerySection() {
   const [renameModal, setRenameModal] = useState<{ id: string; name: string } | null>(null)
   const [mergeModal, setMergeModal] = useState<boolean>(false)
   const [mergeTargetId, setMergeTargetId] = useState<string>('')
+  const [mergeNewName, setMergeNewName] = useState<string>('')
 
   // ── Staged Photo Upload Confirmation State ──
   const [stagedFiles, setStagedFiles] = useState<File[]>([])
@@ -1222,7 +1363,10 @@ function GallerySection() {
                     className={s.btnSecondary}
                     style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                     onClick={() => {
-                      setMergeTargetId(selectedFolderIds[0])
+                      const initTid = selectedFolderIds[0]
+                      setMergeTargetId(initTid)
+                      const initCat = categories.find(c => c.id === initTid)
+                      setMergeNewName(initCat ? initCat.name : '')
                       setMergeModal(true)
                     }}
                   >
@@ -1655,62 +1799,7 @@ function GallerySection() {
 }
 
 
-/* ============================================================
-   CANVAS 16:9 IMAGE CROP & DIMENSION HELPER
-   ============================================================ */
-const cropImageTo16_9 = (imgSrc: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => {
-      const targetW = 1200
-      const targetH = 675
-      const targetRatio = targetW / targetH
-      const srcRatio = img.naturalWidth / img.naturalHeight
-
-      let cropX = 0
-      let cropY = 0
-      let cropW = img.naturalWidth
-      let cropH = img.naturalHeight
-
-      if (srcRatio > targetRatio) {
-        cropW = img.naturalHeight * targetRatio
-        cropX = (img.naturalWidth - cropW) / 2
-      } else {
-        cropH = img.naturalWidth / targetRatio
-        cropY = (img.naturalHeight - cropH) / 2
-      }
-
-      const canvas = document.createElement('canvas')
-      canvas.width = targetW
-      canvas.height = targetH
-      const ctx = canvas.getContext('2d')
-      if (!ctx) {
-        resolve(imgSrc)
-        return
-      }
-      ctx.imageSmoothingEnabled = true
-      ctx.imageSmoothingQuality = 'high'
-      ctx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH)
-      resolve(canvas.toDataURL('image/jpeg', 0.88))
-    }
-    img.onerror = () => reject(new Error('Failed to load image for cropping'))
-    img.src = imgSrc
-  })
-}
-
-const getImageDimensions = (url: string): Promise<{ width: number; height: number }> => {
-  return new Promise((resolve) => {
-    if (!url) {
-      resolve({ width: 0, height: 0 })
-      return
-    }
-    const img = new Image()
-    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
-    img.onerror = () => resolve({ width: 0, height: 0 })
-    img.src = url
-  })
-}
+// (Helpers moved to top)
 
 /* ============================================================
    COURSES SECTION
@@ -2167,12 +2256,12 @@ function CoursesSection() {
                       type="number"
                       min="0"
                       onKeyDown={e => { if (['e', 'E', '+', '-'].includes(e.key)) e.preventDefault() }}
-                      value={form.original_price || form.price || ''}
+                      value={form.original_price || ''}
                       onChange={e => {
-                        const base = Number(e.target.value) || 0
+                        const orig = Number(e.target.value) || 0
                         const pct = form.discount_percent || 0
-                        const payable = pct > 0 ? Math.round(base * (1 - pct / 100)) : base
-                        setForm(f => ({ ...f, original_price: base, price: payable }))
+                        const payable = pct > 0 && orig > 0 ? Math.round(orig * (1 - pct / 100)) : orig
+                        setForm(f => ({ ...f, original_price: orig, price: payable }))
                       }}
                       placeholder="e.g. 2500"
                     />
@@ -2187,9 +2276,14 @@ function CoursesSection() {
                       value={form.discount_percent || ''}
                       onChange={e => {
                         const pct = Math.min(100, Math.max(0, Number(e.target.value) || 0))
-                        const base = form.original_price || form.price || 0
-                        const payable = pct > 0 ? Math.round(base * (1 - pct / 100)) : base
-                        setForm(f => ({ ...f, discount_percent: pct, price: payable }))
+                        const orig = form.original_price || form.price || 0
+                        const payable = pct > 0 && orig > 0 ? Math.round(orig * (1 - pct / 100)) : orig
+                        setForm(f => ({
+                          ...f,
+                          discount_percent: pct,
+                          price: payable,
+                          discount_tag: pct > 0 ? `${pct}% Special Event Discount` : ''
+                        }))
                       }}
                       placeholder="e.g. 20"
                     />
@@ -2208,8 +2302,25 @@ function CoursesSection() {
                     <input
                       className={s.input}
                       type="number"
+                      min="0"
                       value={form.price || ''}
-                      onChange={e => setForm(f => ({ ...f, price: Number(e.target.value) }))}
+                      onChange={e => {
+                        const finalVal = Number(e.target.value) || 0
+                        let orig = form.original_price || 0
+                        if (orig <= 0 || finalVal > orig) {
+                          orig = finalVal
+                        }
+                        const pct = orig > 0 && finalVal < orig
+                          ? Math.round(((orig - finalVal) / orig) * 100)
+                          : 0
+                        setForm(f => ({
+                          ...f,
+                          price: finalVal,
+                          original_price: orig,
+                          discount_percent: pct,
+                          discount_tag: pct > 0 ? `${pct}% Special Discount` : ''
+                        }))
+                      }}
                       placeholder="Calculated price"
                       style={{ fontWeight: 700, color: '#10B981' }}
                     />
@@ -3057,13 +3168,44 @@ function TestimonialsSection() {
                   />
                 </div>
 
-                {/* Live Preview */}
-                {form.image_url && (
-                  <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {/* Live Preview & Adjust */}
+                {form.image_url ? (
+                  <div style={{ marginTop: '0.85rem', display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
                     <div style={{ width: 64, height: 64, borderRadius: '50%', overflow: 'hidden', border: '2px solid #DC143C' }}>
                       <img src={form.image_url} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
-                    <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Photo ready &amp; compressed</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Photo ready &amp; compressed</span>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          className={s.btnSecondary}
+                          style={{ padding: '0.25rem 0.65rem', fontSize: '0.74rem' }}
+                          onClick={async () => {
+                            try {
+                              const cropped = await cropImageTo1_1(form.image_url)
+                              setForm((f: any) => ({ ...f, image_url: cropped }))
+                            } catch (e) {
+                              console.error('Testimonial crop failed', e)
+                            }
+                          }}
+                        >
+                          ✂️ Crop 1:1 Square
+                        </button>
+                        <button
+                          type="button"
+                          className={s.btnDanger}
+                          style={{ padding: '0.25rem 0.65rem', fontSize: '0.74rem' }}
+                          onClick={() => setForm((f: any) => ({ ...f, image_url: '' }))}
+                        >
+                          <GoogleIcon name="delete" size={14} /> Delete Photo
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: '0.5rem', fontSize: '0.78rem', color: '#888' }}>
+                    No photo uploaded. Using avatar initial by default.
                   </div>
                 )}
               </div>
@@ -3444,6 +3586,8 @@ function EventsSection() {
   const [editing, setEditing] = useState<AdminEvent | null>(null)
   const [form, setForm] = useState<Omit<AdminEvent, 'id' | 'created_at'>>(EMPTY_EVENT)
   const [filterStatus, setFilterStatus] = useState<'all' | 'upcoming' | 'completed' | 'cancelled'>('all')
+  const [fromDate, setFromDate] = useState<string>('')
+  const [toDate, setToDate] = useState<string>('')
   const [saving, setSaving] = useState(false)
   const [eventImageDim, setEventImageDim] = useState<{ width: number; height: number } | null>(null)
   const [eventCropping, setEventCropping] = useState(false)
@@ -3517,11 +3661,24 @@ function EventsSection() {
     setEvents(updated)
   }
 
-  const filtered = events.filter(e => filterStatus === 'all' || e.status === filterStatus)
+  const filtered = events.filter(e => {
+    if (filterStatus !== 'all' && e.status !== filterStatus) return false
+    if (fromDate) {
+      const evDate = new Date(e.date)
+      const fDate = new Date(fromDate)
+      if (evDate < fDate) return false
+    }
+    if (toDate) {
+      const evDate = new Date(e.date)
+      const tDate = new Date(toDate + 'T23:59:59')
+      if (evDate > tDate) return false
+    }
+    return true
+  })
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {(['all', 'upcoming', 'completed', 'cancelled'] as const).map(st => (
             <button key={st} onClick={() => setFilterStatus(st)}
@@ -3544,6 +3701,57 @@ function EventsSection() {
             <GoogleIcon name="add" size={18} /> New Event
           </button>
         </div>
+      </div>
+
+      {/* ── CALENDAR DATE RANGE FILTER BAR ── */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.85rem',
+        background: 'rgba(255,255,255,0.03)',
+        border: '1px solid rgba(255,255,255,0.08)',
+        padding: '0.75rem 1.15rem',
+        borderRadius: 10,
+        marginBottom: '1.25rem',
+        flexWrap: 'wrap'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#C9A96E', fontSize: '0.86rem', fontWeight: 600 }}>
+          <GoogleIcon name="calendar_month" size={18} />
+          <span>Calendar Date Range:</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)' }}>From</span>
+          <input
+            type="date"
+            className={s.input}
+            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.15)' }}
+            value={fromDate}
+            onChange={e => setFromDate(e.target.value)}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)' }}>To</span>
+          <input
+            type="date"
+            className={s.input}
+            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.15)' }}
+            value={toDate}
+            onChange={e => setToDate(e.target.value)}
+          />
+        </div>
+        {(fromDate || toDate) && (
+          <button
+            type="button"
+            className={s.btnSecondary}
+            style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem', height: 'auto', minHeight: 0, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+            onClick={() => { setFromDate(''); setToDate('') }}
+          >
+            <GoogleIcon name="close" size={14} /> Clear Dates
+          </button>
+        )}
+        <span style={{ fontSize: '0.78rem', color: '#888', marginLeft: 'auto' }}>
+          Showing {filtered.length} of {events.length} events
+        </span>
       </div>
 
       {filtered.length === 0 ? (
