@@ -195,23 +195,12 @@ export default function Aaryaveera() {
       <div className={s.inner}>
         {/* LEFT: text + cards */}
         <div className={s.left}>
-          <span data-av="eyebrow" className={s.eyebrow}>फाउंडर दर्शन · The Founder's Ideology</span>
+          <span data-av="eyebrow" className={s.eyebrow}>The Founder's Ideology</span>
           <div className={s.titleClip}>
             <span data-av="title" className={s.title}>AARYAVEERA</span>
           </div>
-          <span data-av="sub"   className={s.sub}>आर्यवीरा · Ideological Identity of Founder Harshita Mankar</span>
-          <span data-av="motto" className={s.motto}>"Shakti Se Shanti — From Strength, Peace"</span>
-          <div data-av="identity" className={s.identity}>
-            <p className={s.identityLead}>
-              <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
-              {' '}Aaryaveera is not an operational event or program, but the personal philosophical identity of founder Harshita Mankar. It provides the ideological bedrock that guides Shakti Sabha&apos;s three institutional streams: <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
-            </p>
-            <ul className={s.identityList}>
-              <li><strong>संस्था (Institution):</strong> Shakti Sabha (The institutional platform and executive machinery)</li>
-              <li><strong>दर्शन (Philosophy):</strong> Aaryaveera (The founder's personal worldview: flame of revolution + lotus of peace)</li>
-              <li><strong>ध्येय (Motto):</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
-            </ul>
-          </div>
+          <span data-av="sub" className={s.sub}>The Warrior Spirit · Ideological Identity of Founder Harshita Mankar</span>
+          <span data-av="motto" className={s.motto}>"Shakti Se Shanti" — From Strength, Peace</span>
 
           <div className={s.grid}>
             {CARDS.map(c => (
