@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import Lenis from 'lenis'
+import { ReactLenis, useLenis } from 'lenis/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from './components/Navigation/Navigation'
@@ -33,17 +33,9 @@ import ThreeStreamsPage from './pages/ThreeStreamsPage'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const LenisContext = createContext<Lenis | null>(null)
-
-function FloatingSwitcher() {
-  const { pathname } = useLocation()
-  if (pathname.startsWith('/admin')) return null
-  return <FloatingSwitcher />
-}
-
 function ScrollToTop() {
   const { pathname } = useLocation()
-  const lenis = useContext(LenisContext)
+  const lenis = useLenis()
 
   useEffect(() => {
     lenis?.scrollTo(0, { immediate: true })
@@ -52,81 +44,72 @@ function ScrollToTop() {
   return null
 }
 
-function LenisProvider() {
-  const [lenis, setLenis] = useState<Lenis | null>(null)
-
-  useEffect(() => {
-    const instance = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-    })
-
-    const updateScrollTrigger = () => ScrollTrigger.update()
-    const updateLenis = (time: number) => instance.raf(time * 1000)
-
-    instance.on('scroll', updateScrollTrigger)
-    gsap.ticker.add(updateLenis)
-    gsap.ticker.lagSmoothing(0)
-    setLenis(instance)
-
-    return () => {
-      setLenis(null)
-      instance.off('scroll', updateScrollTrigger)
-      gsap.ticker.remove(updateLenis)
-      instance.destroy()
+function ScrollTriggerSync() {
+  useLenis((lenis) => {
+    ScrollTrigger.update()
+    if (typeof window !== 'undefined') {
+      ;(window as any).lenis = lenis
     }
-  }, [])
+  })
 
-  const value = useMemo(() => lenis, [lenis])
-
-  return (
-    <LenisContext.Provider value={value}>
-      <ScrollToTop />
-      {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
-      <FallingLeaves />
-      <Navigation />
-      <LanguageSwitcher floating />
-      <Routes>
-        <Route path="/"                     element={<HomePage />} />
-        <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
-        <Route path="/mardini"              element={<MardiniPage />} />
-        <Route path="/mission-mardini"      element={<MardiniPage />} />
-        <Route path="/shakti-bhava"         element={<ShaktiBhavaPage />} />
-        <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
-        <Route path="/social-work"          element={<SocialWorkPage />} />
-        <Route path="/events"               element={<EventsPage />} />
-        <Route path="/impact"               element={<ImpactPage />} />
-        <Route path="/impact-archive"       element={<ImpactPage />} />
-        <Route path="/sahyog"               element={<SahyogPage />} />
-        <Route path="/courses"              element={<CoursesPage />} />
-        <Route path="/history"              element={<HistoryPage />} />
-        <Route path="/gallery"              element={<GalleryPage />} />
-        <Route path="/articles"             element={<ArticlesPage />} />
-        <Route path="/counselling"          element={<CounsellingPage />} />
-        <Route path="/case-study"           element={<CaseStudyPage />} />
-        <Route path="/research"             element={<ResearchPage />} />
-        <Route path="/brand"                element={<BrandPage />} />
-        <Route path="/about"                element={<AboutPage />} />
-        <Route path="/three-streams"        element={<ThreeStreamsPage />} />
-        <Route path="/streams"              element={<ThreeStreamsPage />} />
-        <Route path="/peace-and-revolution" element={<ThreeStreamsPage />} />
-        <Route path="/login"                element={<LoginPage />} />
-        <Route path="/register"             element={<RegisterPage />} />
-        <Route path="/admin"                element={<AdminDashboard />} />
-      </Routes>
-    </LenisContext.Provider>
-  )
+  return null
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <LanguageProvider>
-          <LenisProvider />
-        </LanguageProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ReactLenis
+      root
+      options={{
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+        infinite: false,
+      }}
+    >
+      <BrowserRouter>
+        <AuthProvider>
+          <LanguageProvider>
+            <ScrollToTop />
+            <ScrollTriggerSync />
+            {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
+            <FallingLeaves />
+            <Navigation />
+            <LanguageSwitcher floating />
+            <Routes>
+              <Route path="/"                     element={<HomePage />} />
+              <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
+              <Route path="/mardini"              element={<MardiniPage />} />
+              <Route path="/mission-mardini"      element={<MardiniPage />} />
+              <Route path="/shakti-bhava"         element={<ShaktiBhavaPage />} />
+              <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
+              <Route path="/social-work"          element={<SocialWorkPage />} />
+              <Route path="/events"               element={<EventsPage />} />
+              <Route path="/impact"               element={<ImpactPage />} />
+              <Route path="/impact-archive"       element={<ImpactPage />} />
+              <Route path="/sahyog"               element={<SahyogPage />} />
+              <Route path="/courses"              element={<CoursesPage />} />
+              <Route path="/history"              element={<HistoryPage />} />
+              <Route path="/gallery"              element={<GalleryPage />} />
+              <Route path="/articles"             element={<ArticlesPage />} />
+              <Route path="/counselling"          element={<CounsellingPage />} />
+              <Route path="/case-study"           element={<CaseStudyPage />} />
+              <Route path="/research"             element={<ResearchPage />} />
+              <Route path="/brand"                element={<BrandPage />} />
+              <Route path="/about"                element={<AboutPage />} />
+              <Route path="/three-streams"        element={<ThreeStreamsPage />} />
+              <Route path="/streams"              element={<ThreeStreamsPage />} />
+              <Route path="/peace-and-revolution" element={<ThreeStreamsPage />} />
+              <Route path="/login"                element={<LoginPage />} />
+              <Route path="/register"             element={<RegisterPage />} />
+              <Route path="/admin"                element={<AdminDashboard />} />
+            </Routes>
+          </LanguageProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ReactLenis>
   )
 }
