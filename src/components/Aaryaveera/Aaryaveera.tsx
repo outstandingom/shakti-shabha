@@ -115,7 +115,6 @@ export default function Aaryaveera() {
       const p       = mkCircle()
       svg.insertBefore(p, svg.firstChild)
 
-      // Skip one color index (original does colorArray.length-1)+1
       const colorIdx = Math.floor(Math.random() * (COLORS.length - 1)) + 1
       const startR   = rnd(2, 10)
       const startCX  = rnd(250, 350)
@@ -170,7 +169,7 @@ export default function Aaryaveera() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
-        scrollTrigger: { trigger: secRef.current, start: 'top 70%', toggleActions: 'play none none none' }
+        scrollTrigger: { trigger: secRef.current, start: 'top 75%', toggleActions: 'play none none none' }
       })
       tl.from('[data-av="eyebrow"]', { opacity: 0, y: 10, duration: 0.4 })
         .from('[data-av="title"]',   { y: '110%', duration: 1, ease: 'power4.out' }, '-=0.2')
@@ -193,14 +192,27 @@ export default function Aaryaveera() {
       <div ref={glowRef} className={s.glow} />
 
       <div className={s.inner}>
-        {/* LEFT: text + cards */}
+        {/* LEFT: text + identity definition + cards */}
         <div className={s.left}>
-          <span data-av="eyebrow" className={s.eyebrow}>The Founder's Ideology</span>
+          <span data-av="eyebrow" className={s.eyebrow}>फाउंडर दर्शन · The Founder's Ideology</span>
           <div className={s.titleClip}>
             <span data-av="title" className={s.title}>AARYAVEERA</span>
           </div>
-          <span data-av="sub" className={s.sub}>The Warrior Spirit · Ideological Identity of Founder Harshita Mankar</span>
-          <span data-av="motto" className={s.motto}>"Shakti Se Shanti" — From Strength, Peace</span>
+          <span data-av="sub" className={s.sub}>आर्यवीरा · Ideological Identity of Founder Harshita Mankar</span>
+          <span data-av="motto" className={s.motto}>&quot;Shakti Se Shanti&quot; — From Strength, Peace</span>
+
+          {/* Core Institutional & Philosophical Distinction Block */}
+          <div data-av="identity" className={s.identity}>
+            <p className={s.identityLead}>
+              <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
+              {' '}Aaryaveera is not an operational event or program, but the personal philosophical identity of founder Harshita Mankar. It provides the ideological bedrock that guides Shakti Sabha&apos;s three institutional streams: <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
+            </p>
+            <ul className={s.identityList}>
+              <li><strong>संस्था (Institution):</strong> Shakti Sabha (The institutional platform and executive machinery)</li>
+              <li><strong>दर्शन (Philosophy):</strong> Aaryaveera (The founder&apos;s personal worldview: flame of revolution + lotus of peace)</li>
+              <li><strong>ध्येय (Motto):</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
+            </ul>
+          </div>
 
           <div className={s.grid}>
             {CARDS.map(c => (
@@ -220,7 +232,7 @@ export default function Aaryaveera() {
           </div>
         </div>
 
-        {/* RIGHT: SVG warrior — exact CodePen structure */}
+        {/* RIGHT: SVG warrior */}
         <div data-av="svgwrap" className={s.svgWrap}>
           <svg
             ref={svgRef}
@@ -230,9 +242,7 @@ export default function Aaryaveera() {
             overflow="visible"
           >
             <defs>
-              {/* Exact glow filter from reference */}
-              <filter id="avGlow" y="-50%" height="180%"
-                colorInterpolationFilters="sRGB">
+              <filter id="avGlow" y="-50%" height="180%" colorInterpolationFilters="sRGB">
                 <feGaussianBlur stdDeviation="4" result="coloredBlur" />
                 <feMerge>
                   <feMergeNode in="coloredBlur" />
