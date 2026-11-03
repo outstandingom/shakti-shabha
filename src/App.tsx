@@ -4,7 +4,6 @@ import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Navigation from './components/Navigation/Navigation'
-import FireCursor from './components/FireCursor/FireCursor'
 import FallingLeaves from './components/FallingLeaves/FallingLeaves'
 import { AuthProvider } from './lib/AuthContext'
 import { LanguageProvider } from './lib/LanguageContext'
@@ -77,8 +76,6 @@ function LenisProvider() {
   return (
     <LenisContext.Provider value={value}>
       <ScrollToTop />
-      {/* Global fire cursor — fixed, above all content, pointer-events: none */}
-      <FireCursor />
       {/* Global falling leaves — fixed across all pages, dynamic mouse physics, pointer-events: none */}
       <FallingLeaves />
       <Navigation />

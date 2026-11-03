@@ -147,15 +147,4 @@ input[type="text"], input[type="email"], input[type="tel"], textarea {
   cursor: text !important;
 }
 
-/* ── Custom cursor ring expand on links/buttons ── */
-@media (hover: hover) {
-  .cursorRing.expand {
-    width: 48px !important;
-    height: 48px !important;
-    margin-left: -24px !important;
-    margin-top: -24px !important;
-    border-color: rgba(220, 20, 60, 0.95) !important;
-    background: rgba(220, 20, 60, 0.12) !important;
-    box-shadow: 0 0 16px rgba(220, 20, 60, 0.45) !important;
-  }
-}
+
