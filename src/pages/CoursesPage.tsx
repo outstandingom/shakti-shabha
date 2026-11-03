@@ -242,7 +242,6 @@ export default function CoursesPage() {
       {/* Hero Banner */}
       <div className={cp.hero}>
         <div className={cp.heroInner}>
-          <Link to="/" className={cp.backLink}>← Back to Home</Link>
           <span className={cp.badge}>SRS Section 11 · DRM Protected LMS</span>
           <h1 className={cp.title}>Courses &amp; Learning</h1>
           <p className={cp.hindiSubtitle}>पाठ्यक्रम एवं ज्ञान मंच · Self-Defense &amp; Leadership</p>
@@ -564,7 +563,7 @@ export default function CoursesPage() {
                   <h4 className={cp.storeTitle}>{item.title}</h4>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.75rem' }}>
                     <span className={cp.storePrice}>{item.price}</span>
-                    <button style={{ padding: '0.35rem 0.85rem', background: '#111827', color: '#FFFFFF', border: 'none', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer' }}>Order Kit →</button>
+                    <button style={{ padding: '0.45rem 1.15rem', background: '#DC143C', color: '#FFFFFF', border: 'none', borderRadius: 9999, minHeight: '34px', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Order Kit →</button>
                   </div>
                 </div>
               </div>

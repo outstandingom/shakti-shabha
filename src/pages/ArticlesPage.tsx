@@ -284,7 +284,6 @@ export default function ArticlesPage() {
       {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={ap.hero}>
         <div className={ap.heroInner}>
-          <Link to="/" className={ap.backLink}>← Back to Home</Link>
           <span className={ap.badge}>Content Ka Dil · Investigative Journalism</span>
           <h1 className={ap.title}>Articles & Deep Investigations</h1>
           <p className={ap.hindiSubtitle}>गहन शोध, वीरांगना इतिहास एवं मानसिक स्वास्थ्य</p>

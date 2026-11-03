@@ -347,24 +347,28 @@
 }
 
 .enroll {
-  font-size: 0.76rem;
+  font-family: var(--btn-font, 'Poppins', sans-serif);
+  font-size: 0.8rem;
   color: #FFFFFF;
-  background: #111111;
-  letter-spacing: 0.05em;
+  background: var(--theme-primary, #DC143C);
+  letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
   padding: 0.55rem 1.25rem;
+  min-height: 38px;
   border-radius: 9999px;
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
+  justify-content: center;
+  gap: 0.35rem;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .enroll:hover {
-  background: var(--theme-primary, #DC143C);
+  background: #B01030;
   color: #FFFFFF;
   transform: translateY(-2px);
   box-shadow: 0 4px 14px rgba(220, 20, 60, 0.35);

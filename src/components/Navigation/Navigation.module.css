@@ -156,18 +156,30 @@
 }
 
 .cta {
+  font-family: var(--btn-font, 'Poppins', sans-serif);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   color: #FFFFFF;
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  padding: 0.55rem 1.4rem;
-  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  padding: 0.5rem 1.4rem;
+  min-height: 38px;
+  border-radius: 9999px;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  display: inline-block;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   will-change: transform;
+}
+
+.cta:hover {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #DC143C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
 .cta:hover {

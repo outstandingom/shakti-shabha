@@ -184,7 +184,6 @@ export default function SocialWorkPage() {
       {/* ── 1. Top Standard Hero Banner ─────────────────────────── */}
       <div className={sw.hero}>
         <div className={sw.heroInner}>
-          <Link to="/" className={sw.backLink}>← Back to Home</Link>
           <span className={sw.badge}>SRS Section 8 · Grassroots Impact</span>
           <h1 className={sw.title}>Social Work & Ground Action</h1>
           <p className={sw.hindiSubtitle}>कार्यक्रम और सामाजिक कार्य · Together On Ground</p>

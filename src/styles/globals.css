@@ -48,6 +48,7 @@ html.lenis { height: auto; }
   letter-spacing: var(--btn-letter-spacing, 0.05em);
   text-transform: uppercase;
   padding: var(--btn-padding, 0.65rem 2.25rem);
+  min-height: 42px;
   border-radius: var(--btn-radius, 9999px);
   will-change: transform;
   transition: var(--btn-transition);

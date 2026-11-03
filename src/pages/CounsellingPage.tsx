@@ -209,7 +209,6 @@ export default function CounsellingPage() {
       {/* ── Top Hero Banner ── */}
       <div className={cp.hero}>
         <div className={cp.heroInner}>
-          <Link to="/" className={cp.backLink}>← Back to Home</Link>
           <span className={cp.badge}>Mental Health & Confidential Intake</span>
           <h1 className={cp.title}>Counseling & Holistic Healing</h1>
           <p className={cp.hindiSubtitle}>परामर्श एवं मानसिक सशक्तिकरण · A Safe, Sacred Space</p>

@@ -13,7 +13,6 @@ export default function SahyogPage() {
       {/* Hero Banner */}
       <div className={sh.hero}>
         <div className={sh.heroInner}>
-          <Link to="/" className={sh.backLink}>← Back to Home</Link>
           <span className={sh.badge}>SRS Section 10 · Collaboration Ecosystem</span>
           <h1 className={sh.title}>Sahyog</h1>
           <p className={sh.hindiSubtitle}>सहयोग — Together We Rise</p>

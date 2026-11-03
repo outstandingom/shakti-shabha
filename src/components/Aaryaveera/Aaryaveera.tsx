@@ -168,17 +168,23 @@ export default function Aaryaveera() {
   /* ── GSAP entrance ── */
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: secRef.current, start: 'top 80%', toggleActions: 'play none none none' }
+      // Ensure all critical content is always visible by default
+      gsap.set('[data-av="card"], [data-av="identity"], [data-av="cta"], [data-av="title"], [data-av="sub"], [data-av="motto"], [data-av="eyebrow"], [data-av="svgwrap"]', {
+        opacity: 1,
+        visibility: 'visible',
       })
-      tl.from('[data-av="eyebrow"]', { opacity: 0, y: 8, duration: 0.35 })
-        .from('[data-av="title"]',   { y: '100%', duration: 0.7, ease: 'power4.out' }, '-=0.2')
-        .from('[data-av="sub"]',     { opacity: 0, y: 10, duration: 0.4 }, '-=0.3')
-        .from('[data-av="motto"]',   { opacity: 0, duration: 0.4 }, '-=0.2')
-        .from('[data-av="identity"]', { opacity: 0, y: 10, duration: 0.4 }, '-=0.2')
-        .from('[data-av="card"]',    { opacity: 0, y: 16, stagger: 0.08, duration: 0.4 }, '-=0.15')
-        .from('[data-av="cta"]',     { opacity: 0, y: 10, duration: 0.35 }, '-=0.1')
-        .from('[data-av="svgwrap"]', { opacity: 0, scale: 0.92, duration: 0.7, ease: 'power3.out' }, '-=0.7')
+
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: secRef.current, start: 'top 85%', toggleActions: 'play none none none' }
+      })
+      tl.from('[data-av="eyebrow"]', { opacity: 0, y: 8, duration: 0.35, clearProps: 'all' })
+        .from('[data-av="title"]',   { y: '100%', duration: 0.6, ease: 'power4.out', clearProps: 'transform' }, '-=0.2')
+        .from('[data-av="sub"]',     { opacity: 0, y: 10, duration: 0.35, clearProps: 'all' }, '-=0.25')
+        .from('[data-av="motto"]',   { opacity: 0, duration: 0.35, clearProps: 'all' }, '-=0.2')
+        .from('[data-av="identity"]', { opacity: 0, y: 10, duration: 0.35, clearProps: 'all' }, '-=0.2')
+        .from('[data-av="card"]',    { opacity: 0, y: 12, stagger: 0.08, duration: 0.35, clearProps: 'all' }, '-=0.15')
+        .from('[data-av="cta"]',     { opacity: 0, y: 8, duration: 0.3, clearProps: 'all' }, '-=0.1')
+        .from('[data-av="svgwrap"]', { scale: 0.95, duration: 0.6, ease: 'power3.out', clearProps: 'all' }, '-=0.5')
 
       gsap.to(glowRef.current, {
         opacity: 0.55, scale: 1.12, repeat: -1, yoyo: true, duration: 3.5, ease: 'sine.inOut'
