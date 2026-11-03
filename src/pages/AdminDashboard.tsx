@@ -1881,6 +1881,7 @@ function CoursesSection() {
       }
 
       localStorage.setItem('shakti_custom_courses', JSON.stringify(list))
+      window.dispatchEvent(new Event('shakti_courses_updated'))
       saved = true
     } catch (localErr) {
       console.warn('LocalStorage save error:', localErr)
@@ -2071,7 +2072,7 @@ function CoursesSection() {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
                   <span style={{ fontSize: '0.75rem', color: '#888' }}>Quick Discount Presets:</span>
-                  {[0, 10, 15, 20, 25, 30, 50].map(pct => (
+                  {[0, 10, 15, 20, 25, 28, 30, 50].map(pct => (
                     <button
                       key={pct}
                       type="button"
