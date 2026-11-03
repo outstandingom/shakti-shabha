@@ -118,8 +118,20 @@ const getInitialCourses = () => {
 }
 
 export default function Courses() {
-  const [coursesList] = useState(getInitialCourses)
+  const [coursesList, setCoursesList] = useState(getInitialCourses)
   const secRef  = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const handleUpdate = () => {
+      setCoursesList(getInitialCourses())
+    }
+    window.addEventListener('storage', handleUpdate)
+    window.addEventListener('shakti_courses_updated', handleUpdate)
+    return () => {
+      window.removeEventListener('storage', handleUpdate)
+      window.removeEventListener('shakti_courses_updated', handleUpdate)
+    }
+  }, [])
   const trackRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
 

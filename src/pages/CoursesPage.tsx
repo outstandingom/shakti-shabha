@@ -218,6 +218,12 @@ export default function CoursesPage() {
       }
     }
     loadCourses()
+    window.addEventListener('storage', loadCourses)
+    window.addEventListener('shakti_courses_updated', loadCourses)
+    return () => {
+      window.removeEventListener('storage', loadCourses)
+      window.removeEventListener('shakti_courses_updated', loadCourses)
+    }
   }, [])
 
   // Deduplicate all courses strictly by title so duplicates are never rendered

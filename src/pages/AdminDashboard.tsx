@@ -1707,6 +1707,113 @@ const getImageDimensions = (url: string): Promise<{ width: number; height: numbe
 /* ============================================================
    COURSES SECTION
    ============================================================ */
+
+const DEFAULT_COURSES: Course[] = [
+  {
+    id: 'course_warrior_spirit',
+    title: 'Warrior Spirit Certification',
+    description: 'Guided by the Aaryaveera philosophy — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.',
+    price: 1800,
+    original_price: 2500,
+    discount_percent: 28,
+    discount_tag: '28% OFF · Flagship Offer',
+    duration: '8 Weeks',
+    level: 'all' as any,
+    instructor: 'Harshita Mankar & Shakti Faculty',
+    cover_image_url: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=600&auto=format&fit=crop&q=80',
+    published: true,
+    syllabus: [
+      { week: 'Week 1', topic: 'Cognitive Radar & Threat Identification: Color-code awareness.' },
+      { week: 'Week 2', topic: 'Bio-mechanical Escapes & Sovereign Boundary Architecture.' },
+      { week: 'Week 3', topic: 'Empty-Hand High-Impact Strikes: Palm-heel, hammer-fist, elbows.' },
+      { week: 'Week 4', topic: 'Improvised Environmental Weapons & Post-Incident Protocol.' },
+    ],
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'course_vedic_parenting',
+    title: 'Vedic Parenting in Modern India',
+    description: 'Raising resilient, rooted children in a fractured world. Drawing on Vedic wisdom, modern psychology, and lived experience.',
+    price: 1500,
+    original_price: 2000,
+    discount_percent: 25,
+    discount_tag: 'Save ₹500',
+    duration: '6 Weeks',
+    level: 'all' as any,
+    instructor: 'Shakti Sabha Family Counselors',
+    cover_image_url: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=600&auto=format&fit=crop&q=80',
+    published: true,
+    syllabus: [
+      { week: 'Week 1', topic: 'Foundations of Dharmic Parenting: Sanskaras in the Digital Age.' },
+      { week: 'Week 2', topic: 'Emotional Regulation & Building Lifelong Trust with Teenagers.' },
+      { week: 'Week 3', topic: 'Countering Algorithm Addiction & Instilling Cultural Pride.' },
+    ],
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'course_paurush',
+    title: 'Understanding Paurush — True Masculinity',
+    description: 'An honest inquiry into masculinity, Dharma, and the role of men in protecting and building a just society.',
+    price: 1800,
+    original_price: 2600,
+    discount_percent: 31,
+    discount_tag: 'Save ₹800',
+    duration: '4 Weeks',
+    level: 'intermediate' as any,
+    instructor: 'Shakti Varta Research Forum',
+    cover_image_url: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=600&auto=format&fit=crop&q=80',
+    published: true,
+    syllabus: [
+      { week: 'Week 1', topic: 'Epistemic Frameworks of Indian Philosophy: Pramanas and Nyaya.' },
+      { week: 'Week 2', topic: 'Understanding Paurush: True Masculinity as Dharma-Rakshak.' },
+    ],
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'course_lathi',
+    title: 'Lathi-Kaushal for Women',
+    description: "The ancient Indian art of Lathi — practical, powerful, rooted. Taught by Shakti Sabha's field instructors.",
+    price: 2000,
+    original_price: 2800,
+    discount_percent: 29,
+    discount_tag: 'Save ₹800',
+    duration: '6 Weeks',
+    level: 'beginner' as any,
+    instructor: 'Maharashtra Lathi Masters',
+    cover_image_url: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=600&auto=format&fit=crop&q=80',
+    published: true,
+    syllabus: [
+      { week: 'Week 1', topic: 'Stance, Footwork (Chaal), and Grip Dynamics.' },
+      { week: 'Week 2', topic: 'The 12 Fundamental Target Strikes of Mardani Khel.' },
+    ],
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: 'course_legal',
+    title: 'The Legal Collage — Know Your Rights',
+    description: 'Understanding IPC, BNS, and systemic loopholes. Fact-based, lawyer-reviewed, essential for every woman in India.',
+    price: 1400,
+    original_price: 2000,
+    discount_percent: 30,
+    discount_tag: 'Save ₹600',
+    duration: '3 Weeks',
+    level: 'all' as any,
+    instructor: 'Adv. High Court Advocates Desk',
+    cover_image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&auto=format&fit=crop&q=80',
+    published: true,
+    syllabus: [
+      { week: 'Week 1', topic: 'Legal Shield: Statutory Protections under BNS, IPC, and POSH Act.' },
+      { week: 'Week 2', topic: 'Crisis Mediation, FIR Filing, and High-Risk Protection.' },
+    ],
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+]
+
 function CoursesSection() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
@@ -1769,7 +1876,21 @@ function CoursesSection() {
       console.warn('LocalStorage read error:', e)
     }
 
-    setCourses(fetchedCourses)
+    const courseMap = new Map<string, Course>()
+    for (const c of fetchedCourses) {
+      courseMap.set(c.id, c)
+      courseMap.set(`title:${c.title.trim().toLowerCase()}`, c)
+    }
+
+    const unseededDefaults: Course[] = []
+    for (const d of DEFAULT_COURSES) {
+      const titleKey = `title:${d.title.trim().toLowerCase()}`
+      if (!courseMap.has(d.id) && !courseMap.has(titleKey)) {
+        unseededDefaults.push(d)
+      }
+    }
+    const finalCourses = [...fetchedCourses, ...unseededDefaults]
+    setCourses(finalCourses)
     setLoading(false)
   }
   useEffect(() => { load() }, [])
@@ -1914,6 +2035,7 @@ function CoursesSection() {
     } catch (e) {
       console.warn(e)
     }
+    window.dispatchEvent(new Event('shakti_courses_updated'))
     load()
   }
 
