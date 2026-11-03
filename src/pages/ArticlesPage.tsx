@@ -231,6 +231,16 @@ export default function ArticlesPage() {
     setExpandedCardIds(prev => ({ ...prev, [id]: !prev[id] }))
   }
 
+  useEffect(() => {
+    if (activeModalArticle) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = prev
+      }
+    }
+  }, [activeModalArticle])
+
 
   useEffect(() => {
     async function loadArticles() {
@@ -297,54 +307,20 @@ export default function ArticlesPage() {
       {/* ── FULL ARTICLE READING MODAL ─────────────────────────────── */}
       {activeModalArticle && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.85)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.5rem',
-            zIndex: 999999,
-          }}
+          className={ap.modalOverlay}
+          data-lenis-prevent="true"
           onClick={() => setActiveModalArticle(null)}
         >
           <div
-            style={{
-              background: '#FFFFFF',
-              borderRadius: '20px',
-              maxWidth: '720px',
-              width: '100%',
-              maxHeight: '88vh',
-              overflowY: 'auto',
-              padding: 'clamp(1.75rem, 4vw, 3rem)',
-              position: 'relative',
-              boxShadow: '0 25px 60px rgba(0,0,0,0.4)',
-              border: '1px solid #E5E7EB',
-            }}
+            className={ap.modalContent}
+            data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
           >
             <button
               type="button"
               onClick={() => setActiveModalArticle(null)}
-              style={{
-                position: 'absolute',
-                top: '1.25rem',
-                right: '1.25rem',
-                background: '#F3F4F6',
-                border: 'none',
-                borderRadius: '50%',
-                width: '38px',
-                height: '38px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 'bold',
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
+              className={ap.modalCloseBtn}
               aria-label="Close modal"
             >
               <X size={18} color="#374151" />

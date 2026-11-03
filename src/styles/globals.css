@@ -1,7 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 /* Let grid and flex children shrink to the space their parent actually has. */
 :where(*) { min-width: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; }
 img, video { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
 button { cursor: pointer; border: none; background: none; font-family: inherit; }

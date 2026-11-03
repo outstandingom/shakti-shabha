@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import s from './PageLayout.module.css'
@@ -90,6 +90,16 @@ export default function CaseStudyPage() {
   const [activeModal, setActiveModal] = useState<CaseItem | null>(null)
   const [submittedStory, setSubmittedStory] = useState(false)
 
+  useEffect(() => {
+    if (activeModal) {
+      const prev = document.body.style.overflow
+      document.body.style.overflow = "hidden"
+      return () => {
+        document.body.style.overflow = prev
+      }
+    }
+  }, [activeModal])
+
   const filteredStories = selectedFilter === 'ALL'
     ? CASE_STUDIES
     : CASE_STUDIES.filter(c => c.category === selectedFilter)
@@ -174,31 +184,42 @@ export default function CaseStudyPage() {
 
         {/* Modal View for Case Study */}
         {activeModal && (
-          <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.75)',
-            backdropFilter: 'blur(5px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.5rem',
-            zIndex: 99999,
-          }}>
-            <div style={{
-              background: '#FFFFFF',
-              borderRadius: '16px',
-              maxWidth: '680px',
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              padding: '2.5rem',
-              position: 'relative',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.25)'
-            }}>
+          <div
+            data-lenis-prevent="true"
+            onClick={() => setActiveModal(null)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0, 0, 0, 0.75)',
+              backdropFilter: 'blur(5px)',
+              WebkitBackdropFilter: 'blur(5px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '1.5rem',
+              zIndex: 99999,
+              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+            }}
+          >
+            <div
+              data-lenis-prevent="true"
+              onClick={(e) => e.stopPropagation()}
+              onWheel={(e) => e.stopPropagation()}
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '16px',
+                maxWidth: '680px',
+                width: '100%',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                padding: '2.5rem',
+                position: 'relative',
+                boxShadow: '0 25px 50px rgba(0,0,0,0.25)',
+                overscrollBehavior: 'contain',
+                touchAction: 'pan-y',
+              }}
+            >
               <button
                 onClick={() => setActiveModal(null)}
                 style={{
