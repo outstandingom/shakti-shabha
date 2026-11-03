@@ -75,24 +75,38 @@ export async function fetchCategories(): Promise<GalleryCategoryItem[]> {
 }
 
 export async function saveCategory(category: Omit<GalleryCategoryItem, 'id' | 'created_at'> & { id?: string }): Promise<GalleryCategoryItem> {
+  const generatedId = (typeof crypto !== 'undefined' && crypto.randomUUID)
+    ? crypto.randomUUID()
+    : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = (Math.random() * 16) | 0
+        const v = c === 'x' ? r : (r & 0x3) | 0x8
+        return v.toString(16)
+      })
+
+  let finalId = category.id || generatedId
+
+  // 1. Try Supabase
+  try {
+    const { data, error } = await supabase.from('gallery_categories').insert([{
+      id: finalId,
+      name: category.name.trim(),
+      description: category.description?.trim() || '',
+      cover_url: category.cover_url || ''
+    }]).select().single()
+
+    if (!error && data?.id) {
+      finalId = data.id
+    }
+  } catch (err) {
+    console.warn('Supabase saveCategory error (using local storage fallback):', err)
+  }
+
   const newCat: GalleryCategoryItem = {
-    id: category.id || `cat-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    id: finalId,
     name: category.name.trim(),
     description: category.description?.trim() || '',
     cover_url: category.cover_url || '',
     created_at: new Date().toISOString()
-  }
-
-  // 1. Try Supabase
-  try {
-    await supabase.from('gallery_categories').insert([{
-      id: newCat.id,
-      name: newCat.name,
-      description: newCat.description,
-      cover_url: newCat.cover_url
-    }])
-  } catch (err) {
-    console.warn('Supabase saveCategory error (using local storage fallback):', err)
   }
 
   // 2. Save to local storage
@@ -206,14 +220,13 @@ export async function fetchPhotosForCategory(categoryId: string): Promise<Galler
 }
 
 export async function fetchAllPhotos(): Promise<GalleryPhotoItem[]> {
-  const localPhotos = getStoredPhotos()
   try {
     const { data, error } = await supabase
       .from('gallery_photos')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (!error && data && data.length > 0) {
+    if (!error && data) {
       const remotePhotos: GalleryPhotoItem[] = data.map(p => ({
         id: p.id,
         url: p.url,
@@ -221,19 +234,13 @@ export async function fetchAllPhotos(): Promise<GalleryPhotoItem[]> {
         category_id: p.category_id,
         created_at: p.created_at
       }))
-
-      const map = new Map<string, GalleryPhotoItem>(remotePhotos.map(p => [p.id, p]))
-      localPhotos.forEach(p => {
-        if (!map.has(p.id)) map.set(p.id, p)
-      })
-      const merged = Array.from(map.values())
-      localStorage.setItem(STORAGE_KEY_ALL_PHOTOS, JSON.stringify(merged))
-      return merged
+      localStorage.setItem(STORAGE_KEY_ALL_PHOTOS, JSON.stringify(remotePhotos))
+      return remotePhotos
     }
   } catch (err) {
     console.warn('Supabase fetchAllPhotos error, returning local:', err)
   }
-  return localPhotos
+  return getStoredPhotos()
 }
 
 export function saveUploadedPhotos(newPhotos: GalleryPhotoItem[], categoryId: string) {

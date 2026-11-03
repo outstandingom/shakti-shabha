@@ -66,12 +66,16 @@ const ALL_IMAGES = [...DEFAULT_SHAKTI_IMAGES, ...EXTRA_GALLERY_IMAGES]
 const INITIAL_IMAGE_LIMIT = 10
 const VISIBLE_CATEGORY_COUNT = 3
 
+export interface EnrichedGalleryImage extends DomeGalleryImage {
+  categoryId?: string
+  categoryName?: string
+}
+
 export default function GalleryPage() {
-  const [activeCategory, setActiveCategory] = useState<string>('ALL')
+  const [selectedCatId, setSelectedCatId] = useState<string>('ALL')
   const [categories, setCategories] = useState<GalleryCategoryItem[]>([])
-  const [dbImages, setDbImages] = useState<DomeGalleryImage[]>([])
+  const [dbImages, setDbImages] = useState<EnrichedGalleryImage[]>([])
   const [dropdownOpen, setDropdownOpen] = useState(false)
-  const [imageLimit, setImageLimit] = useState(INITIAL_IMAGE_LIMIT)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   const loadMedia = () => {
@@ -79,20 +83,26 @@ export default function GalleryPage() {
       fetchAllPhotos(),
       fetchCategories()
     ]).then(([photos, cats]) => {
+      // Only use categories from database
       setCategories(cats)
       const catMap = new Map<string, string>()
-      cats.forEach(c => catMap.set(c.id, c.name.toUpperCase()))
+      cats.forEach(c => catMap.set(c.id, c.name))
 
       if (photos.length > 0) {
-        // Shuffle photos slightly so each visit is dynamic and fresh
-        const shuffled = [...photos].sort(() => Math.random() - 0.5)
-        const mapped: DomeGalleryImage[] = shuffled.map(p => ({
-          src: p.url,
-          alt: p.caption || 'Shakti Sabha Field Documentation',
-          tag: p.category_id ? (catMap.get(p.category_id) || 'COMMUNITY') : 'COMMUNITY',
-          desc: p.caption || 'Authentic on-ground field photograph',
-        }))
+        const mapped: EnrichedGalleryImage[] = photos.map(p => {
+          const catName = p.category_id ? (catMap.get(p.category_id) || 'Gallery') : 'Gallery'
+          return {
+            src: p.url,
+            alt: p.caption || catName,
+            tag: catName.toUpperCase(),
+            desc: p.caption || 'Authentic on-ground field photograph',
+            categoryId: p.category_id || '',
+            categoryName: catName
+          }
+        })
         setDbImages(mapped)
+      } else {
+        setDbImages([])
       }
     }).catch(err => console.warn('Gallery photos fetch error:', err))
   }
@@ -121,33 +131,16 @@ export default function GalleryPage() {
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   }, [dropdownOpen])
 
-  // Reset image limit when changing category
-  const handleSelectCategory = (catName: string) => {
-    setActiveCategory(catName)
-    setImageLimit(INITIAL_IMAGE_LIMIT)
+    const handleSelectCategory = (catId: string) => {
+    setSelectedCatId(catId)
     setDropdownOpen(false)
   }
 
   const allGalleryImages = useMemo(() => {
-    return dbImages.length > 0 ? dbImages : ALL_IMAGES
+    return dbImages.length > 0 ? dbImages : (ALL_IMAGES as EnrichedGalleryImage[])
   }, [dbImages])
 
-  // Filtered by current category
-  const filteredImages = useMemo(() => {
-    if (activeCategory === 'ALL') return allGalleryImages
-    return allGalleryImages.filter(img =>
-      img.tag?.toLowerCase().includes(activeCategory.toLowerCase())
-    )
-  }, [activeCategory, allGalleryImages])
-
-  // On-demand limited images for performance
-  const displayedImages = useMemo(() => {
-    return filteredImages.slice(0, imageLimit)
-  }, [filteredImages, imageLimit])
-
-  const hasMoreImages = filteredImages.length > imageLimit
-
-  // Split categories: top 2-3 vs remaining
+  // Split categories: top 3 vs remaining
   const visibleCategories = useMemo(() => {
     return categories.slice(0, VISIBLE_CATEGORY_COUNT)
   }, [categories])
@@ -158,12 +151,22 @@ export default function GalleryPage() {
 
   // Check if active category is inside the "more" dropdown
   const isMoreCategoryActive = useMemo(() => {
-    return moreCategories.some(c => c.name.toLowerCase() === activeCategory.toLowerCase())
-  }, [moreCategories, activeCategory])
+    return moreCategories.some(c => c.id === selectedCatId)
+  }, [moreCategories, selectedCatId])
 
   const activeCategoryObj = useMemo(() => {
-    return moreCategories.find(c => c.name.toLowerCase() === activeCategory.toLowerCase())
-  }, [moreCategories, activeCategory])
+    return categories.find(c => c.id === selectedCatId)
+  }, [categories, selectedCatId])
+
+  // Filtered directly by category ID
+  const filteredImages = useMemo(() => {
+    if (selectedCatId === 'ALL') return allGalleryImages
+    return allGalleryImages.filter(img =>
+      img.categoryId === selectedCatId ||
+      (img.categoryName && activeCategoryObj && img.categoryName.toLowerCase() === activeCategoryObj.name.toLowerCase()) ||
+      (img.tag && activeCategoryObj && img.tag.toLowerCase().includes(activeCategoryObj.name.toLowerCase()))
+    )
+  }, [selectedCatId, allGalleryImages, activeCategoryObj])
 
   return (
     <div className={gp.pageContainer}>
@@ -200,27 +203,24 @@ export default function GalleryPage() {
           {/* 1. All Media */}
           <button
             onClick={() => handleSelectCategory('ALL')}
-            className={`${gp.filterBtn} ${activeCategory === 'ALL' ? gp.filterBtnActive : ''}`}
+            className={`${gp.filterBtn} ${selectedCatId === 'ALL' ? gp.filterBtnActive : ''}`}
           >
             All Media
             <span className={gp.countPill}>{allGalleryImages.length}</span>
           </button>
 
-          {/* 2. Top 2-3 Featured Categories */}
+          {/* 2. Top 2-3 Database Categories */}
           {visibleCategories.map(cat => {
-            const count = allGalleryImages.filter(img =>
-              img.tag?.toLowerCase().includes(cat.name.toLowerCase()) ||
-              img.tag?.toLowerCase().includes(cat.id.toLowerCase())
-            ).length
-            const isSelected = activeCategory === cat.name
+            const count = allGalleryImages.filter(img => img.categoryId === cat.id).length
+            const isSelected = selectedCatId === cat.id
             return (
               <button
                 key={cat.id}
-                onClick={() => handleSelectCategory(cat.name)}
+                onClick={() => handleSelectCategory(cat.id)}
                 className={`${gp.filterBtn} ${isSelected ? gp.filterBtnActive : ''}`}
               >
                 {cat.name}
-                {count > 0 && <span className={gp.countPill}>{count}</span>}
+                <span className={gp.countPill}>{count}</span>
               </button>
             )
           })}
@@ -228,7 +228,7 @@ export default function GalleryPage() {
           {/* 3. If a category from "more" is currently active, show it as an active pill */}
           {isMoreCategoryActive && activeCategoryObj && (
             <button
-              onClick={() => handleSelectCategory(activeCategoryObj.name)}
+              onClick={() => handleSelectCategory(activeCategoryObj.id)}
               className={`${gp.filterBtn} ${gp.filterBtnActive}`}
             >
               {activeCategoryObj.name}
@@ -238,7 +238,7 @@ export default function GalleryPage() {
             </button>
           )}
 
-          {/* 4. Dropdown for More Categories */}
+          {/* 4. Dropdown for Remaining Database Categories */}
           {moreCategories.length > 0 && (
             <div className={gp.dropdownWrapper} ref={dropdownRef}>
               <button
@@ -249,7 +249,7 @@ export default function GalleryPage() {
                 aria-haspopup="true"
               >
                 <span>
-                  {isMoreCategoryActive ? 'Switch Category' : `More Categories (${moreCategories.length})`}
+                  {isMoreCategoryActive ? `Category: ${activeCategoryObj?.name}` : `More Categories (${moreCategories.length})`}
                 </span>
                 <span className={`${gp.arrowIcon} ${dropdownOpen ? gp.arrowOpen : ''}`}>▼</span>
               </button>
@@ -257,16 +257,13 @@ export default function GalleryPage() {
               {dropdownOpen && (
                 <div className={gp.dropdownMenu} role="menu">
                   {moreCategories.map(cat => {
-                    const count = allGalleryImages.filter(img =>
-                      img.tag?.toLowerCase().includes(cat.name.toLowerCase()) ||
-                      img.tag?.toLowerCase().includes(cat.id.toLowerCase())
-                    ).length
-                    const isSelected = activeCategory === cat.name
+                    const count = allGalleryImages.filter(img => img.categoryId === cat.id).length
+                    const isSelected = selectedCatId === cat.id
                     return (
                       <button
                         key={cat.id}
                         type="button"
-                        onClick={() => handleSelectCategory(cat.name)}
+                        onClick={() => handleSelectCategory(cat.id)}
                         className={`${gp.dropdownItem} ${isSelected ? gp.dropdownItemActive : ''}`}
                         role="menuitem"
                       >
@@ -281,25 +278,18 @@ export default function GalleryPage() {
           )}
         </div>
 
-        {/* Load More Images Button (avoids loading all images upfront) */}
-        {hasMoreImages && (
-          <div className={gp.loadMoreBar}>
-            <button
-              type="button"
-              onClick={() => setImageLimit(prev => prev + 10)}
-              className={gp.loadMoreBtn}
-            >
-              <GoogleIcon name="add_photo_alternate" size={16} />
-              <span>Load More Photos ({filteredImages.length - imageLimit} remaining)</span>
-            </button>
-          </div>
-        )}
-      </div>
+        </div>
 
       {/* 3D Dome Gallery Sphere */}
       <div className={gp.sphereWrapper}>
-        <DomeGallery
-          images={displayedImages}
+        {filteredImages.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '5rem 2rem', color: '#9CA3AF' }}>
+            <p style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>No photos uploaded in this category yet.</p>
+            <p style={{ fontSize: '0.85rem' }}>Upload authentic field photos from the Admin Dashboard to populate this collection.</p>
+          </div>
+        ) : (
+          <DomeGallery
+            images={filteredImages}
           fit={0.46}
           fitBasis="auto"
           minRadius={460}
@@ -314,8 +304,9 @@ export default function GalleryPage() {
           imageBorderRadius="18px"
           openedImageBorderRadius="20px"
           grayscale={false}
-          autoRotateSpeed={0.12}
-        />
+            autoRotateSpeed={0.12}
+          />
+        )}
 
         <div className={gp.interactiveHint}>
           <GoogleIcon name="touch_app" size={15} />
