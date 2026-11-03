@@ -129,7 +129,7 @@ export default function GalleryPage() {
   }
 
   const allGalleryImages = useMemo(() => {
-    return [...dbImages, ...ALL_IMAGES]
+    return dbImages.length > 0 ? dbImages : ALL_IMAGES
   }, [dbImages])
 
   // Filtered by current category

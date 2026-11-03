@@ -25,96 +25,53 @@ export interface GalleryCategoryItem {
 /* Seed / Default Categories                                           */
 /* ------------------------------------------------------------------ */
 
-export const DEFAULT_GALLERY_CATEGORIES: GalleryCategoryItem[] = [
-  {
-    id: 'cat-mardini',
-    name: 'Mission Mardini & Lathi-Kaushal',
-    description: 'Martial arts, tactical self-defense, bamboo lathi combat, and residential camps.',
-    created_at: '2023-01-01T00:00:00.000Z'
-  },
-  {
-    id: 'cat-shakti-bhava',
-    name: 'Shakti Bhava & Consciousness',
-    description: 'Youth awakening, emotional resilience, survivor support circles, and crisis interventions.',
-    created_at: '2023-01-02T00:00:00.000Z'
-  },
-  {
-    id: 'cat-shakti-varta',
-    name: 'Shakti Varta & Seminars',
-    description: 'Intellectual discourses, academic symposiums, research forums, and Vedic dialogues.',
-    created_at: '2023-01-03T00:00:00.000Z'
-  },
-  {
-    id: 'cat-community',
-    name: 'Tribal Outreach & Community Assemblies',
-    description: 'Grassroots interventions, rural adolescent drives, and community stabilization.',
-    created_at: '2023-01-04T00:00:00.000Z'
-  },
-  {
-    id: 'cat-events',
-    name: 'National Symposia & Public Events',
-    description: 'Keynotes, large-scale civil assemblies (CIDCO, Lata Mangeshkar Auditorium, Ratlam).',
-    created_at: '2023-01-05T00:00:00.000Z'
-  },
-  {
-    id: 'cat-founder',
-    name: 'Aaryaveera & Training Frontline',
-    description: 'Tactical demonstrations, Karate drills, non-verbal profiling, and field leadership.',
-    created_at: '2023-01-06T00:00:00.000Z'
-  }
-]
-
 const STORAGE_KEY_CATEGORIES = 'shakti_gallery_categories'
 const STORAGE_KEY_ALL_PHOTOS = 'shakti_gallery_photos'
 export const GALLERY_UPDATE_EVENT = 'shakti_gallery_updated'
 
-/* ------------------------------------------------------------------ */
-/* Category Helpers                                                   */
-/* ------------------------------------------------------------------ */
+export const DEFAULT_GALLERY_CATEGORIES: GalleryCategoryItem[] = []
+
+const LEGACY_DEFAULT_IDS = new Set([
+  'cat-mardini',
+  'cat-shakti-bhava',
+  'cat-shakti-varta',
+  'cat-community',
+  'cat-events',
+  'cat-founder'
+])
 
 export function getStoredCategories(): GalleryCategoryItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_CATEGORIES)
     if (raw) {
       const parsed = JSON.parse(raw)
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed
+      if (Array.isArray(parsed)) {
+        // Strip out any legacy hardcoded default categories
+        const clean = parsed.filter(c => !LEGACY_DEFAULT_IDS.has(c.id))
+        return clean
       }
     }
   } catch (err) {
     console.warn('Error reading stored gallery categories:', err)
   }
-  // Initialize storage with defaults if empty
-  try {
-    localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(DEFAULT_GALLERY_CATEGORIES))
-  } catch { /* ignore */ }
-  return DEFAULT_GALLERY_CATEGORIES
+  return []
 }
 
 export async function fetchCategories(): Promise<GalleryCategoryItem[]> {
-  const localCats = getStoredCategories()
   try {
     const { data, error } = await supabase
       .from('gallery_categories')
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (!error && data && data.length > 0) {
-      // Merge remote categories with local ones (preserving custom local additions)
-      const remoteMap = new Map<string, GalleryCategoryItem>(data.map(c => [c.id, c]))
-      localCats.forEach(c => {
-        if (!remoteMap.has(c.id)) {
-          remoteMap.set(c.id, c)
-        }
-      })
-      const merged = Array.from(remoteMap.values())
-      localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(merged))
-      return merged
+    if (!error && data) {
+      localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(data))
+      return data as GalleryCategoryItem[]
     }
   } catch (err) {
     console.warn('Supabase fetchCategories fallback to local:', err)
   }
-  return localCats
+  return getStoredCategories()
 }
 
 export async function saveCategory(category: Omit<GalleryCategoryItem, 'id' | 'created_at'> & { id?: string }): Promise<GalleryCategoryItem> {

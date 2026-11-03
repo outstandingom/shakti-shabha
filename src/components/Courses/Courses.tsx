@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { supabase, Course } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -75,32 +76,33 @@ const COURSES = [
   },
 ]
 
+const mapCourseToCard = (c: any) => {
+  const origPrice = c.original_price ? (typeof c.original_price === 'number' ? `₹${c.original_price.toLocaleString()}` : c.original_price) : (c.price ? `₹${c.price.toLocaleString()}` : '')
+  const payablePrice = c.price ? (typeof c.price === 'number' ? `₹${c.price.toLocaleString()}` : c.price) : 'Free'
+  return {
+    id: c.id,
+    badge: c.instructor ? `Instructor · ${c.instructor}` : (c.level ? `${c.level.toUpperCase()} · Academy` : 'Academy'),
+    title: c.title,
+    detail: c.description || 'Comprehensive training curriculum.',
+    modules: c.syllabus && c.syllabus.length > 0 ? `${c.syllabus.length} Modules` : (c.duration || 'Self-Paced'),
+    duration: c.duration || 'Flexible',
+    level: c.level || 'All Levels',
+    image: c.cover_image_url || '',
+    price: payablePrice,
+    original_price: origPrice,
+    discount_percent: c.discount_percent || 0,
+    discount_tag: c.discount_tag || '',
+    featured: false
+  }
+}
+
 const getInitialCourses = () => {
   try {
     const local = typeof window !== 'undefined' ? localStorage.getItem('shakti_custom_courses') : null
     if (local) {
       const parsed = JSON.parse(local)
-      const published = parsed.filter((c: any) => c.published).map((c: any) => {
-        const origPrice = c.original_price ? (typeof c.original_price === 'number' ? `₹${c.original_price.toLocaleString()}` : c.original_price) : (c.price ? `₹${c.price.toLocaleString()}` : '')
-        const payablePrice = c.price ? (typeof c.price === 'number' ? `₹${c.price.toLocaleString()}` : c.price) : 'Free'
-        return {
-          badge: c.instructor ? `Instructor · ${c.instructor}` : 'Academy',
-          title: c.title,
-          detail: c.description || 'Comprehensive training curriculum.',
-          modules: c.syllabus?.length ? `${c.syllabus.length} Modules` : 'Self-Paced',
-          duration: c.duration || 'Flexible',
-          level: c.level || 'All Levels',
-          image: c.cover_image_url || '',
-          price: payablePrice,
-          original_price: origPrice,
-          discount_percent: c.discount_percent || 0,
-          discount_tag: c.discount_tag || '',
-          featured: false
-        }
-      })
-      if (published.length > 0) {
-        return published
-      }
+      const published = parsed.filter((c: any) => c.published).map(mapCourseToCard)
+      if (published.length > 0) return published
     }
   } catch (e) {
     // fallback
@@ -113,14 +115,58 @@ export default function Courses() {
   const secRef  = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const handleUpdate = () => {
-      setCoursesList(getInitialCourses())
+    let isMounted = true
+
+    async function loadCourses() {
+      let fetched: Course[] = []
+      try {
+        const { data, error } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('published', true)
+          .order('created_at', { ascending: false })
+
+        if (!error && data && data.length > 0) {
+          fetched = data as Course[]
+        }
+      } catch (err) {
+        console.warn('Courses fetch error on home page:', err)
+      }
+
+      // Check localStorage for local previews
+      try {
+        const local = localStorage.getItem('shakti_custom_courses')
+        if (local) {
+          const localList: Course[] = JSON.parse(local)
+          const published = localList.filter(c => c.published)
+          const existingIds = new Set(fetched.map(c => c.id))
+          const existingTitles = new Set(fetched.map(c => c.title.trim().toLowerCase()))
+          const unique = published.filter(c => !existingIds.has(c.id) && !existingTitles.has(c.title.trim().toLowerCase()))
+          fetched = [...unique, ...fetched]
+        }
+      } catch (e) {
+        // ignore
+      }
+
+      if (isMounted) {
+        if (fetched.length > 0) {
+          setCoursesList(fetched.map(mapCourseToCard))
+        } else {
+          setCoursesList(COURSES)
+        }
+        setTimeout(() => {
+          ScrollTrigger.refresh()
+        }, 150)
+      }
     }
-    window.addEventListener('storage', handleUpdate)
-    window.addEventListener('shakti_courses_updated', handleUpdate)
+
+    loadCourses()
+    window.addEventListener('storage', loadCourses)
+    window.addEventListener('shakti_courses_updated', loadCourses)
     return () => {
-      window.removeEventListener('storage', handleUpdate)
-      window.removeEventListener('shakti_courses_updated', handleUpdate)
+      isMounted = false
+      window.removeEventListener('storage', loadCourses)
+      window.removeEventListener('shakti_courses_updated', loadCourses)
     }
   }, [])
   const trackRef = useRef<HTMLDivElement>(null)
