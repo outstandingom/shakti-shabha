@@ -11,58 +11,115 @@ import DomeGallery, { DEFAULT_SHAKTI_IMAGES, type DomeGalleryImage } from '../co
 import GoogleIcon from '../components/GoogleIcon/GoogleIcon'
 import gp from './GalleryPage.module.css'
 
-const EXTRA_GALLERY_IMAGES: DomeGalleryImage[] = [
+const AWARDS_IMAGES: EnrichedGalleryImage[] = [
   {
-    src: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
-    alt: 'Lathi-Kaushal Dual Staff Defense',
-    tag: 'LATHI & SWORD',
-    desc: 'Demonstration of two-handed defensive staff circular sweeps at the Wardha district camp.'
+    src: 'https://images.unsplash.com/photo-1578269174936-2709b6aeb913?w=800&auto=format&fit=crop&q=80',
+    alt: 'Rashtriya Nari Shakti Samman Award',
+    tag: 'AWARDS',
+    desc: 'Founder Harshita Mankar receiving state leadership honor for grassroots safety reforms.',
+    categoryId: 'cat-awards',
+    categoryName: 'Awards'
   },
   {
-    src: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
-    alt: 'Traditional Maratha Talwar Parries',
-    tag: 'LATHI & SWORD',
-    desc: 'Practicing ancient sword stances, balance shifts, and rapid diagonal strikes.'
+    src: 'https://images.unsplash.com/photo-1567427017947-545c5f8d16ad?w=800&auto=format&fit=crop&q=80',
+    alt: 'Excellence in Martial Arts Education Trophy',
+    tag: 'AWARDS',
+    desc: 'Awarded for training over 50,000 students across 400+ schools in Maharashtra.',
+    categoryId: 'cat-awards',
+    categoryName: 'Awards'
   },
   {
-    src: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
-    alt: 'Joint-Lock & Escape Biomechanics',
-    tag: 'MISSION MARDINI',
-    desc: 'Intensive tactile counter-assault training during the 5-day residential Mission Mardini camp.'
+    src: 'https://images.unsplash.com/photo-1531545514256-b1400bc00f31?w=800&auto=format&fit=crop&q=80',
+    alt: 'Civic Impact Citation — District Collectorate',
+    tag: 'AWARDS',
+    desc: 'Official citation from Maharashtra Police & Education Department for crime reduction.',
+    categoryId: 'cat-awards',
+    categoryName: 'Awards'
   },
   {
-    src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80',
-    alt: 'Trauma Release & Peer Healing Circle',
-    tag: 'SHAKTI BHAVA',
-    desc: 'Guided somatic therapy and group affirmation circles for domestic abuse survivors.'
+    src: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800&auto=format&fit=crop&q=80',
+    alt: 'Bharatiya Veerta Puraskar Medal',
+    tag: 'AWARDS',
+    desc: 'Gold Medal recognition for traditional martial revival and civilizational security work.',
+    categoryId: 'cat-awards',
+    categoryName: 'Awards'
   },
   {
-    src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
-    alt: 'School Campus Street-Smart Training',
-    tag: 'SCHOOL OUTREACH',
-    desc: 'Empowering adolescent students with situational danger reflexes and confidence.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
-    alt: 'Mission Mardini Cadet Convocation',
-    tag: 'MISSION MARDINI',
-    desc: 'Over 120 girls receiving their verified physical warrior certificates in Pune.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&auto=format&fit=crop&q=80',
-    alt: 'Confidential Survivor Listening Circle',
-    tag: 'SHAKTI BHAVA',
-    desc: 'Safe, empathetic space where women share personal journeys and receive emotional anchoring.'
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
-    alt: 'High School Legal Literacy Assembly',
-    tag: 'SCHOOL OUTREACH',
-    desc: 'Instructing female students on self-defense rights, emergency helplines, and legal remedies.'
-  },
+    src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80',
+    alt: 'Social Innovation & Women Safety Conclave Award',
+    tag: 'AWARDS',
+    desc: 'Presented at the National Women Innovators Summit for the Mission Mardini model.',
+    categoryId: 'cat-awards',
+    categoryName: 'Awards'
+  }
 ]
 
-const ALL_IMAGES = [...DEFAULT_SHAKTI_IMAGES, ...EXTRA_GALLERY_IMAGES]
+const AARYAVEERA_TRAININGS_IMAGES: EnrichedGalleryImage[] = Array.from({ length: 20 }, (_, i) => {
+  const trainingUrls = [
+    'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80'
+  ]
+  return {
+    src: trainingUrls[i % trainingUrls.length],
+    alt: `Aaryaveera Training Drill Session #${i + 1}`,
+    tag: 'AARYAVEERA TRAININGS',
+    desc: `Batch #${i + 1}: Ethical sovereignty, physical mastery, and civilizational mental toughness.`,
+    categoryId: 'cat-trainings',
+    categoryName: 'Aaryaveera Trainings'
+  }
+})
+
+const SELF_DEFENCE_IMAGES: EnrichedGalleryImage[] = Array.from({ length: 13 }, (_, i) => {
+  const defenseUrls = [
+    'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?w=800&auto=format&fit=crop&q=80'
+  ]
+  return {
+    src: defenseUrls[i % defenseUrls.length],
+    alt: `Self Defence Practical Maneuver #${i + 1}`,
+    tag: 'SELF DEFENCE TRAINING',
+    desc: `Practical drill #${i + 1}: Choke escapes, improvised weapon disarms, and tactical bamboo lathi strikes.`,
+    categoryId: 'cat-selfdefense',
+    categoryName: 'Self defence training'
+  }
+})
+
+const CAMPS_IMAGES: EnrichedGalleryImage[] = Array.from({ length: 10 }, (_, i) => {
+  const campUrls = [
+    'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1526976668912-1a811878dd37?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1577495508048-b635879837f1?w=800&auto=format&fit=crop&q=80'
+  ]
+  return {
+    src: campUrls[i % campUrls.length],
+    alt: `Aaryaveera Residential Camp #${i + 1}`,
+    tag: 'AARYAVEERA CAMPS',
+    desc: `District Camp #${i + 1}: 5-day dawn martial routine, night perimeter safety, and survivor support pods.`,
+    categoryId: 'cat-camps',
+    categoryName: 'Aaryaveera Camps'
+  }
+})
+
+const ALL_IMAGES: EnrichedGalleryImage[] = [
+  ...AWARDS_IMAGES,
+  ...AARYAVEERA_TRAININGS_IMAGES,
+  ...SELF_DEFENCE_IMAGES,
+  ...CAMPS_IMAGES
+]
 const INITIAL_IMAGE_LIMIT = 10
 const VISIBLE_CATEGORY_COUNT = 3
 
@@ -158,15 +215,20 @@ export default function GalleryPage() {
     return categories.find(c => c.id === selectedCatId)
   }, [categories, selectedCatId])
 
-  // Filtered directly by category ID
+  // Filtered by category ID or Name
   const filteredImages = useMemo(() => {
     if (selectedCatId === 'ALL') return allGalleryImages
+    const activeCat = categories.find(c => c.id === selectedCatId)
+    const activeName = activeCat?.name?.toLowerCase() || ''
     return allGalleryImages.filter(img =>
       img.categoryId === selectedCatId ||
-      (img.categoryName && activeCategoryObj && img.categoryName.toLowerCase() === activeCategoryObj.name.toLowerCase()) ||
-      (img.tag && activeCategoryObj && img.tag.toLowerCase().includes(activeCategoryObj.name.toLowerCase()))
+      (activeName && (
+        img.categoryName?.toLowerCase() === activeName ||
+        img.tag?.toLowerCase() === activeName ||
+        img.tag?.toLowerCase().includes(activeName)
+      ))
     )
-  }, [selectedCatId, allGalleryImages, activeCategoryObj])
+  }, [selectedCatId, allGalleryImages, categories])
 
   return (
     <div className={gp.pageContainer}>
@@ -211,7 +273,13 @@ export default function GalleryPage() {
 
           {/* 2. Top 2-3 Database Categories */}
           {visibleCategories.map(cat => {
-            const count = allGalleryImages.filter(img => img.categoryId === cat.id).length
+            const count = allGalleryImages.filter(img => {
+              const targetName = cat.name.toLowerCase()
+              return img.categoryId === cat.id ||
+                img.categoryName?.toLowerCase() === targetName ||
+                img.tag?.toLowerCase() === targetName ||
+                img.tag?.toLowerCase().includes(targetName)
+            }).length
             const isSelected = selectedCatId === cat.id
             return (
               <button
@@ -257,7 +325,13 @@ export default function GalleryPage() {
               {dropdownOpen && (
                 <div className={gp.dropdownMenu} role="menu">
                   {moreCategories.map(cat => {
-                    const count = allGalleryImages.filter(img => img.categoryId === cat.id).length
+                    const count = allGalleryImages.filter(img => {
+              const targetName = cat.name.toLowerCase()
+              return img.categoryId === cat.id ||
+                img.categoryName?.toLowerCase() === targetName ||
+                img.tag?.toLowerCase() === targetName ||
+                img.tag?.toLowerCase().includes(targetName)
+            }).length
                     const isSelected = selectedCatId === cat.id
                     return (
                       <button

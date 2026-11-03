@@ -29,7 +29,12 @@ const STORAGE_KEY_CATEGORIES = 'shakti_gallery_categories'
 const STORAGE_KEY_ALL_PHOTOS = 'shakti_gallery_photos'
 export const GALLERY_UPDATE_EVENT = 'shakti_gallery_updated'
 
-export const DEFAULT_GALLERY_CATEGORIES: GalleryCategoryItem[] = []
+export const DEFAULT_GALLERY_CATEGORIES: GalleryCategoryItem[] = [
+  { id: 'cat-awards', name: 'Awards', description: 'State and national recognitions, honors and awards' },
+  { id: 'cat-trainings', name: 'Aaryaveera Trainings', description: 'Aaryaveera youth character, discipline and tactical leadership sessions' },
+  { id: 'cat-selfdefense', name: 'Self defence training', description: 'Practical and tactical combat self-defense for girls and women' },
+  { id: 'cat-camps', name: 'Aaryaveera Camps', description: 'Intensive residential camps and field workshops across districts' },
+]
 
 const LEGACY_DEFAULT_IDS = new Set([
   'cat-mardini',
@@ -45,16 +50,15 @@ export function getStoredCategories(): GalleryCategoryItem[] {
     const raw = localStorage.getItem(STORAGE_KEY_CATEGORIES)
     if (raw) {
       const parsed = JSON.parse(raw)
-      if (Array.isArray(parsed)) {
-        // Strip out any legacy hardcoded default categories
+      if (Array.isArray(parsed) && parsed.length > 0) {
         const clean = parsed.filter(c => !LEGACY_DEFAULT_IDS.has(c.id))
-        return clean
+        if (clean.length > 0) return clean
       }
     }
   } catch (err) {
     console.warn('Error reading stored gallery categories:', err)
   }
-  return []
+  return DEFAULT_GALLERY_CATEGORIES
 }
 
 export async function fetchCategories(): Promise<GalleryCategoryItem[]> {
@@ -64,7 +68,7 @@ export async function fetchCategories(): Promise<GalleryCategoryItem[]> {
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (!error && data) {
+    if (!error && data && data.length > 0) {
       localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(data))
       return data as GalleryCategoryItem[]
     }
