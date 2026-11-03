@@ -1,19 +1,19 @@
 /* ================================================================
-   Gallery Page — Dark Cinematic Aesthetics (Restored)
+   Gallery Page — White Theme Aesthetics
    Compact Category Filter with Dropdown & On-Demand Image Loading
    ================================================================ */
 
 .pageContainer {
   min-height: 100vh;
   width: 100%;
-  background: radial-gradient(circle at 50% 20%, #15080C 0%, #0D090B 50%, #060506 100%);
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #111827;
   display: flex;
   flex-direction: column;
   padding-top: 5.5rem;
   position: relative;
   overflow-x: hidden;
-  font-family: var(--ff-body, 'Outfit', sans-serif);
+  font-family: var(--font-body, 'Poppins', sans-serif);
 }
 
 .headerSection {
@@ -31,7 +31,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.65);
+  color: #4B5563;
   text-decoration: none;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -41,7 +41,7 @@
 }
 
 .backLink:hover {
-  color: #E8C98A;
+  color: #DC143C;
 }
 
 .badge {
@@ -50,9 +50,9 @@
   font-weight: 700;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #FFB3BA;
-  background: rgba(220, 20, 60, 0.15);
-  border: 1px solid rgba(220, 20, 60, 0.35);
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.25);
   padding: 0.35rem 1.1rem;
   border-radius: 9999px;
   margin-bottom: 0.85rem;
@@ -62,26 +62,25 @@
   font-family: var(--font-display, 'Cinzel', serif);
   font-size: clamp(2.2rem, 5vw, 4rem);
   font-weight: 700;
-  color: #FFFFFF;
+  color: #111827;
   line-height: 1.1;
   margin-bottom: 0.4rem;
 }
 
 .titleHighlight {
   color: #DC143C;
-  text-shadow: 0 0 25px rgba(220, 20, 60, 0.4);
 }
 
 .hindiSubtitle {
   font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
   font-size: 1.15rem;
-  color: #C9A96E;
+  color: #854D0E;
   margin-bottom: 0.75rem;
 }
 
 .desc {
   font-size: clamp(0.88rem, 1.1vw, 1rem);
-  color: rgba(255, 255, 255, 0.75);
+  color: #4B5563;
   max-width: 65ch;
   margin: 0 auto 1.5rem;
   line-height: 1.6;
@@ -103,9 +102,9 @@
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.75);
+  border: 1px solid #E5E7EB;
+  background: #F9FAFB;
+  color: #4B5563;
   cursor: pointer;
   transition: all 0.25s ease;
   display: inline-flex;
@@ -115,15 +114,15 @@
 
 .filterBtn:hover {
   border-color: #DC143C;
-  color: #FFFFFF;
-  background: rgba(220, 20, 60, 0.15);
+  color: #DC143C;
+  background: rgba(220, 20, 60, 0.05);
 }
 
 .filterBtnActive {
   background: #DC143C !important;
   color: #FFFFFF !important;
   border-color: #DC143C !important;
-  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.25) !important;
 }
 
 .countPill {
@@ -131,11 +130,12 @@
   opacity: 0.85;
   padding: 0.1rem 0.45rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.06);
+  color: #374151;
 }
 
 .filterBtnActive .countPill {
-  background: rgba(0, 0, 0, 0.28);
+  background: rgba(0, 0, 0, 0.25);
   color: #FFFFFF;
 }
 
@@ -151,9 +151,9 @@
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.05em;
-  border: 1px dashed rgba(220, 20, 60, 0.5);
-  background: rgba(220, 20, 60, 0.12);
-  color: #FFB3BA;
+  border: 1px dashed rgba(220, 20, 60, 0.45);
+  background: rgba(220, 20, 60, 0.06);
+  color: #DC143C;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -162,9 +162,9 @@
 }
 
 .dropdownToggle:hover {
-  background: rgba(220, 20, 60, 0.25);
+  background: rgba(220, 20, 60, 0.12);
   border-color: #DC143C;
-  color: #FFFFFF;
+  color: #991B1B;
 }
 
 .dropdownToggleActive {
@@ -188,10 +188,10 @@
   top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: #111115;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.65), 0 0 20px rgba(220, 20, 60, 0.15);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.12), 0 0 15px rgba(220, 20, 60, 0.06);
   min-width: 260px;
   max-width: 340px;
   max-height: 320px;
@@ -213,7 +213,7 @@
   border: none;
   border-radius: 8px;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: #374151;
   cursor: pointer;
   width: 100%;
   transition: background 0.15s ease, color 0.15s ease;
@@ -221,13 +221,13 @@
 }
 
 .dropdownItem:hover {
-  background: rgba(220, 20, 60, 0.22);
-  color: #FFFFFF;
+  background: rgba(220, 20, 60, 0.08);
+  color: #DC143C;
 }
 
 .dropdownItemActive {
-  background: rgba(220, 20, 60, 0.35);
-  color: #FFB3BA;
+  background: rgba(220, 20, 60, 0.12);
+  color: #DC143C;
   font-weight: 700;
 }
 
@@ -238,6 +238,7 @@
   height: clamp(520px, 62vh, 750px);
   min-height: 500px;
   overflow: hidden;
+  background: #FFFFFF;
 }
 
 .interactiveHint {
@@ -246,15 +247,15 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
-  background: rgba(15, 15, 18, 0.85);
-  border: 1px solid rgba(201, 169, 110, 0.3);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #E5E7EB;
   backdrop-filter: blur(8px);
   padding: 0.45rem 1.25rem;
   border-radius: 9999px;
   font-size: 0.75rem;
-  color: #E8C98A;
+  color: #854D0E;
   pointer-events: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   letter-spacing: 0.04em;
   display: flex;
   align-items: center;
@@ -275,29 +276,29 @@
   gap: 0.5rem;
   padding: 0.65rem 1.6rem;
   border-radius: 9999px;
-  background: rgba(220, 20, 60, 0.15);
-  border: 1px solid rgba(220, 20, 60, 0.4);
-  color: #FFB3BA;
+  background: rgba(220, 20, 60, 0.08);
+  border: 1px solid rgba(220, 20, 60, 0.3);
+  color: #DC143C;
   font-weight: 700;
   font-size: 0.82rem;
   letter-spacing: 0.04em;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .loadMoreBtn:hover {
   background: #DC143C;
   color: #FFFFFF;
   border-color: #DC143C;
-  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 6px 20px rgba(220, 20, 60, 0.25);
   transform: translateY(-2px);
 }
 
 /* ── Bottom Stats / Footer in Gallery ────────────────────────────── */
 .galleryFooter {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: #080708;
+  border-top: 1px solid #E5E7EB;
+  background: #F9FAFB;
   padding: 2.5rem clamp(1.5rem, 4vw, 3rem);
 }
 
@@ -325,7 +326,7 @@
 
 .statText {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: #6B7280;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
