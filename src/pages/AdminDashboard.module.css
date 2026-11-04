@@ -652,13 +652,17 @@ select option:checked,
 .photoOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.65);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.78);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   opacity: 0;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s ease-in-out;
+  border-radius: 11px;
+  z-index: 5;
 }
 
 .photoCard:hover .photoOverlay {

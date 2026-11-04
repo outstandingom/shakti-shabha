@@ -1602,20 +1602,37 @@ function GallerySection() {
                     />
                   </div>
 
-                  <img src={p.url} alt={p.caption || 'Gallery photo'} loading="lazy" style={{ width: '100%', height: 180, objectFit: 'cover', borderRadius: 8 }} />
+                  <img src={p.url} alt={p.caption || 'Gallery photo'} loading="lazy" />
                   {p.caption && (
-                    <div style={{ padding: '0.4rem 0.5rem', fontSize: '0.75rem', color: '#DDD', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    <div style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: '0.45rem 0.6rem',
+                      fontSize: '0.74rem',
+                      color: '#EEE',
+                      background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      zIndex: 3,
+                      pointerEvents: 'none'
+                    }}>
                       {p.caption}
                     </div>
                   )}
-                  <div className={s.photoOverlay} style={{ position: 'absolute', top: 6, right: 6 }}>
+                  <div className={s.photoOverlay}>
                     <button
                       className={s.btnDanger}
-                      style={{ borderRadius: '50%', width: 32, height: 32, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      onClick={() => handleDeletePhoto(p.id)}
+                      style={{ borderRadius: '50%', width: 38, height: 38, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,0,0,0.6)' }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeletePhoto(p.id);
+                      }}
                       title="Remove Photo"
                     >
-                      <GoogleIcon name="delete" size={16} />
+                      <GoogleIcon name="delete" size={18} />
                     </button>
                   </div>
                 </div>
