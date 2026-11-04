@@ -81,7 +81,7 @@ export default function GalleryPage() {
     ]).then(([photos, cats]) => {
       setCategories(cats)
       const catMap = new Map<string, string>()
-      cats.forEach(c => catMap.set(c.id, c.name.toUpperCase()))
+      cats.forEach(c => catMap.set(c.id, c.name.trim().toUpperCase()))
 
       if (photos.length > 0) {
         // Shuffle photos slightly so each visit is dynamic and fresh

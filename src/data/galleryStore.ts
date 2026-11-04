@@ -167,6 +167,111 @@ export async function deleteCategory(categoryId: string): Promise<void> {
 /* Photos Helpers                                                     */
 /* ------------------------------------------------------------------ */
 
+
+export async function renameGalleryCategory(categoryId: string, newName: string): Promise<void> {
+  const trimmed = newName.trim()
+  if (!trimmed) return
+
+  // 1. Supabase database
+  try {
+    const { error } = await supabase
+      .from('gallery_categories')
+      .update({ name: trimmed })
+      .eq('id', categoryId)
+    if (error) console.error('Supabase renameGalleryCategory error:', error)
+  } catch (err) {
+    console.warn('Supabase renameGalleryCategory failed:', err)
+  }
+
+  // 2. Local storage
+  try {
+    const cats = getStoredCategories().map(c => c.id === categoryId ? { ...c, name: trimmed } : c)
+    localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(cats))
+  } catch { /* ignore */ }
+
+  window.dispatchEvent(new Event(GALLERY_UPDATE_EVENT))
+  window.dispatchEvent(new Event('storage'))
+}
+
+export async function mergeGalleryCategories(
+  sourceCategoryIds: string[],
+  targetCategoryId: string,
+  newTargetName?: string
+): Promise<void> {
+  if (!sourceCategoryIds || sourceCategoryIds.length === 0 || !targetCategoryId) return
+  const finalName = newTargetName?.trim()
+
+  // 1. Supabase database: Migrate all photos from source categories into the target category
+  try {
+    const { error: photoErr } = await supabase
+      .from('gallery_photos')
+      .update({ category_id: targetCategoryId })
+      .in('category_id', sourceCategoryIds)
+    if (photoErr) console.error('Supabase merge photos error:', photoErr)
+  } catch (err) {
+    console.warn('Supabase merge photos failed:', err)
+  }
+
+  // 2. Supabase database: Rename target category if custom name provided
+  if (finalName) {
+    try {
+      const { error: catRenameErr } = await supabase
+        .from('gallery_categories')
+        .update({ name: finalName })
+        .eq('id', targetCategoryId)
+      if (catRenameErr) console.error('Supabase cat rename error:', catRenameErr)
+    } catch (err) {
+      console.warn('Supabase cat rename failed:', err)
+    }
+  }
+
+  // 3. Supabase database: Delete source categories (now safe since photos have been migrated)
+  try {
+    const { error: catDelErr } = await supabase
+      .from('gallery_categories')
+      .delete()
+      .in('id', sourceCategoryIds)
+    if (catDelErr) console.error('Supabase cat delete error:', catDelErr)
+  } catch (err) {
+    console.warn('Supabase cat delete failed:', err)
+  }
+
+  // 4. LocalStorage: Update all photos in shakti_gallery_photos
+  try {
+    const all = getStoredPhotos()
+    const updatedPhotos = all.map(p => {
+      if (sourceCategoryIds.includes(p.category_id)) {
+        return { ...p, category_id: targetCategoryId }
+      }
+      return p
+    })
+    localStorage.setItem(STORAGE_KEY_ALL_PHOTOS, JSON.stringify(updatedPhotos))
+
+    // 5. LocalStorage: Update target category cache and remove source category caches
+    const targetPhotos = updatedPhotos.filter(p => p.category_id === targetCategoryId)
+    localStorage.setItem(`shakti_gallery_photos_${targetCategoryId}`, JSON.stringify(targetPhotos))
+    localStorage.setItem(`shakti_cat_photos_${targetCategoryId}`, JSON.stringify(targetPhotos))
+
+    sourceCategoryIds.forEach(sId => {
+      localStorage.removeItem(`shakti_gallery_photos_${sId}`)
+      localStorage.removeItem(`shakti_cat_photos_${sId}`)
+    })
+
+    // 6. LocalStorage: Update categories
+    const localCats = getStoredCategories()
+    const updatedCats = localCats
+      .filter(c => !sourceCategoryIds.includes(c.id))
+      .map(c => (c.id === targetCategoryId && finalName) ? { ...c, name: finalName } : c)
+    localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(updatedCats))
+  } catch (err) {
+    console.warn('LocalStorage merge sync error:', err)
+  }
+
+  // 7. Dispatch events
+  window.dispatchEvent(new Event(GALLERY_UPDATE_EVENT))
+  window.dispatchEvent(new Event('storage'))
+}
+
 export function getStoredPhotos(): GalleryPhotoItem[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY_ALL_PHOTOS)

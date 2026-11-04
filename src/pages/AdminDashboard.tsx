@@ -11,6 +11,8 @@ import {
   fetchCategories,
   saveCategory,
   deleteCategory as deleteGalleryCategory,
+  mergeGalleryCategories,
+  renameGalleryCategory,
   fetchPhotosForCategory,
   saveUploadedPhotos,
   deleteStoredPhoto,
@@ -965,18 +967,10 @@ function GallerySection() {
   // ── Folder Rename ──
   const handleRenameFolder = async () => {
     if (!renameModal || !renameModal.name.trim()) return
+    const newName = renameModal.name.trim()
     try {
-      const local = localStorage.getItem('shakti_gallery_categories')
-      let cats: GalleryCategoryItem[] = local ? JSON.parse(local) : categories
-      cats = cats.map(c => c.id === renameModal.id ? { ...c, name: renameModal.name.trim() } : c)
-      localStorage.setItem('shakti_gallery_categories', JSON.stringify(cats))
-      window.dispatchEvent(new Event('shakti_gallery_updated'))
-
-      try {
-        await supabase.from('gallery_categories').update({ name: renameModal.name.trim() }).eq('id', renameModal.id)
-      } catch (e) { /* ignore */ }
-
-      setAlert({ type: 'success', msg: `Folder renamed to "${renameModal.name.trim()}".` })
+      await renameGalleryCategory(renameModal.id, newName)
+      setAlert({ type: 'success', msg: `Folder renamed to "${newName}".` })
       setRenameModal(null)
       await loadCats()
     } catch (err: any) {
@@ -992,57 +986,19 @@ function GallerySection() {
 
     const sourceIds = selectedFolderIds.filter(id => id !== mergeTargetId)
     const finalName = (mergeNewName.trim() || targetCat.name).trim()
-    if (!confirm(`Merge ${sourceIds.length} folder(s) into "${finalName}"? Photos will be transferred and the source folders will be merged.`)) return
+    if (!confirm(`Merge ${sourceIds.length} folder(s) into "${finalName}"? All photos will be migrated into this folder in the database and source folders will be permanently deleted.`)) return
 
     try {
-      const allPhotos = getStoredPhotos()
-      const updatedPhotos = allPhotos.map(p => {
-        if (sourceIds.includes(p.category_id)) {
-          return { ...p, category_id: mergeTargetId }
-        }
-        return p
-      })
-      localStorage.setItem('shakti_gallery_photos', JSON.stringify(updatedPhotos))
+      await mergeGalleryCategories(sourceIds, mergeTargetId, finalName)
 
-      // Update category-specific cache
-      const targetPhotos = updatedPhotos.filter(p => p.category_id === mergeTargetId)
-      localStorage.setItem(`shakti_cat_photos_${mergeTargetId}`, JSON.stringify(targetPhotos))
-
-      // Update destination category name in Supabase if changed
-      try {
-        await supabase.from('gallery_categories').update({ name: finalName }).eq('id', mergeTargetId)
-      } catch (e) {
-        console.warn('Supabase cat rename error:', e)
-      }
-
-      // Delete source folders
-      for (const sId of sourceIds) {
-        localStorage.removeItem(`shakti_cat_photos_${sId}`)
-        try {
-          await supabase.from('gallery_categories').delete().eq('id', sId)
-        } catch (e) { /* ignore */ }
-      }
-
-      // Update categories in localStorage (remove sources, update destination name)
-      const updatedCats = categories
-        .filter(c => !sourceIds.includes(c.id))
-        .map(c => c.id === mergeTargetId ? { ...c, name: finalName } : c)
-      localStorage.setItem('shakti_gallery_categories', JSON.stringify(updatedCats))
-
-      window.dispatchEvent(new Event('shakti_gallery_updated'))
-
-      setAlert({ type: 'success', msg: `Successfully merged and named folder "${finalName}"!` })
+      setAlert({ type: 'success', msg: `Successfully merged and renamed folder "${finalName}" in database!` })
       setSelectedFolderIds([])
       setMergeModal(false)
-      if (selectedCat && sourceIds.includes(selectedCat)) {
-        setSelectedCat(mergeTargetId)
-      }
+      setSelectedCat(mergeTargetId)
       await loadCats()
-      if (selectedCat === mergeTargetId) {
-        await loadPhotos(mergeTargetId)
-      }
+      await loadPhotos(mergeTargetId)
     } catch (err: any) {
-      setAlert({ type: 'error', msg: 'Failed to merge folders: ' + err.message })
+      setAlert({ type: 'error', msg: 'Failed to merge folders: ' + (err?.message || err) })
     }
   }
 
