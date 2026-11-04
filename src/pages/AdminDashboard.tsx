@@ -991,7 +991,8 @@ function GallerySection() {
     if (!targetCat) return
 
     const sourceIds = selectedFolderIds.filter(id => id !== mergeTargetId)
-    if (!confirm(`Merge ${sourceIds.length} folder(s) into "${targetCat.name}"? Photos will be transferred and the source folders will be merged.`)) return
+    const finalName = (mergeNewName.trim() || targetCat.name).trim()
+    if (!confirm(`Merge ${sourceIds.length} folder(s) into "${finalName}"? Photos will be transferred and the source folders will be merged.`)) return
 
     try {
       const allPhotos = getStoredPhotos()
@@ -1007,6 +1008,13 @@ function GallerySection() {
       const targetPhotos = updatedPhotos.filter(p => p.category_id === mergeTargetId)
       localStorage.setItem(`shakti_cat_photos_${mergeTargetId}`, JSON.stringify(targetPhotos))
 
+      // Update destination category name in Supabase if changed
+      try {
+        await supabase.from('gallery_categories').update({ name: finalName }).eq('id', mergeTargetId)
+      } catch (e) {
+        console.warn('Supabase cat rename error:', e)
+      }
+
       // Delete source folders
       for (const sId of sourceIds) {
         localStorage.removeItem(`shakti_cat_photos_${sId}`)
@@ -1015,13 +1023,15 @@ function GallerySection() {
         } catch (e) { /* ignore */ }
       }
 
-      // Remove source categories from list
-      const updatedCats = categories.filter(c => !sourceIds.includes(c.id))
+      // Update categories in localStorage (remove sources, update destination name)
+      const updatedCats = categories
+        .filter(c => !sourceIds.includes(c.id))
+        .map(c => c.id === mergeTargetId ? { ...c, name: finalName } : c)
       localStorage.setItem('shakti_gallery_categories', JSON.stringify(updatedCats))
 
       window.dispatchEvent(new Event('shakti_gallery_updated'))
 
-      setAlert({ type: 'success', msg: `Successfully merged folders into "${targetCat.name}"!` })
+      setAlert({ type: 'success', msg: `Successfully merged and named folder "${finalName}"!` })
       setSelectedFolderIds([])
       setMergeModal(false)
       if (selectedCat && sourceIds.includes(selectedCat)) {
@@ -1743,12 +1753,17 @@ function GallerySection() {
               Choose which folder should be the destination. All photos from the other {selectedFolderIds.length - 1} selected folder(s) will be merged into it, and source folders will be removed.
             </p>
 
-            <div className={s.field} style={{ marginBottom: '1.5rem' }}>
+            <div className={s.field} style={{ marginBottom: '1.25rem' }}>
               <label className={s.label}>Destination Folder *</label>
               <select
                 className={s.select}
                 value={mergeTargetId}
-                onChange={e => setMergeTargetId(e.target.value)}
+                onChange={e => {
+                  const newId = e.target.value
+                  setMergeTargetId(newId)
+                  const chosen = categories.find(c => c.id === newId)
+                  if (chosen) setMergeNewName(chosen.name)
+                }}
               >
                 {selectedFolderIds.map(id => {
                   const cat = categories.find(c => c.id === id)
@@ -1759,6 +1774,20 @@ function GallerySection() {
                   )
                 })}
               </select>
+            </div>
+
+            <div className={s.field} style={{ marginBottom: '1.5rem' }}>
+              <label className={s.label}>New Merged Folder Name *</label>
+              <input
+                type="text"
+                className={s.input}
+                value={mergeNewName}
+                onChange={e => setMergeNewName(e.target.value)}
+                placeholder="Enter name for the combined folder"
+              />
+              <span style={{ fontSize: '0.74rem', color: 'rgba(255,255,255,0.6)', marginTop: '0.35rem', display: 'block' }}>
+                Specify the custom name for this combined folder.
+              </span>
             </div>
 
             <div className={s.modalActions}>

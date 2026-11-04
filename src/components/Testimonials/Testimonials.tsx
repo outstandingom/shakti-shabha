@@ -173,7 +173,7 @@ export default function Testimonials() {
           }}
         >
           {marqueeItems.map((item, idx) => {
-            const isLong = item.quote.length > 135
+            const isLong = item.quote.length > 220
             return (
               <article key={`${item.id}-${idx}`} className={s.card}>
                 <div className={s.cardBody}>
