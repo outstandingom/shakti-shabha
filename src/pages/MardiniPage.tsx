@@ -9,7 +9,6 @@ export default function MardiniPage() {
       {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={m.hero}>
         <div className={m.heroInner}>
-          <Link to="/" className={m.backLink}>← Back to Home</Link>
           <span className={m.badge}>01 · Revolution · शारीरिक संप्रभुता</span>
           <h1 className={m.title}>Mission Mardini</h1>
           <p className={m.hindiSubtitle}>मर्दिनी · Physical Sovereignty. Mental Resilience. Tactical Preparedness.</p>

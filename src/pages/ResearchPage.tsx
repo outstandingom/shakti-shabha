@@ -80,7 +80,6 @@ export default function ResearchPage() {
       {/* Hero Banner */}
       <div className={rp.hero}>
         <div className={rp.heroInner}>
-          <Link to="/" className={rp.backLink}>← Back to Home</Link>
           <span className={rp.badge}>SRS Section 12 · Thought-Lab & Citations</span>
           <h1 className={rp.title}>Research & Thought-Lab</h1>
           <p className={rp.hindiSubtitle}>विचार-प्रयोगशाला · White Papers, Archives & Legal Analysis</p>

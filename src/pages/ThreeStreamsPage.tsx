@@ -8,10 +8,6 @@ export default function ThreeStreamsPage() {
       {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={s.hero}>
         <div className={s.heroInner}>
-          <Link to="/" className={s.backLink}>
-            <GoogleIcon name="arrow_back" size={16} />
-            Back to Home
-          </Link>
           <span className={s.badge}>Architecture · The Tri-Stream Doctrine</span>
           <h1 className={s.title}>OUR THREE STREAMS. ONE VISION.</h1>
           <p className={s.hindiSubtitle}>शान्ति और क्रान्ति का संगम · त्रिवेणी दर्शन</p>

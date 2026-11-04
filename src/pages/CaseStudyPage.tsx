@@ -109,7 +109,6 @@ export default function CaseStudyPage() {
       {/* Hero Banner */}
       <div className={cs.hero}>
         <div className={cs.heroInner}>
-          <Link to="/" className={cs.backLink}>← Back to Home</Link>
           <span className={cs.badge}>SRS Section 8 · Secure Case Study Archive</span>
           <h1 className={cs.title}>Case Studies & Field Stories</h1>
           <p className={cs.hindiSubtitle}>केस स्टडी — असली कहानियाँ · Anonymized & Verified</p>

@@ -47,9 +47,6 @@ export default function SahyogPage() {
       <div className={s.section}>
 
         <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto' }}>
-          <span style={{ fontSize: '0.72rem', letterSpacing: '0.2em', color: '#3D5A45', fontWeight: 700, textTransform: 'uppercase' }}>
-            Tri-Partite Collaboration
-          </span>
           <h2 className={s.sectionTitle} style={{ marginTop: '0.35rem', display: 'inline-block' }}>
             Who We Partner With
           </h2>

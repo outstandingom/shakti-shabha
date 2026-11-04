@@ -514,7 +514,6 @@ export default function AboutPage() {
       {/* ── HERO BANNER ────────────────────────────── */}
       <div className={p.hero}>
         <div className={p.heroInner}>
-          <Link to="/" className={p.backLink}>← Back to Home</Link>
           <span className={p.eyebrow}>Civilizational Leadership &amp; Tactical Sovereignty</span>
           <h1 className={p.heroTitle}>About Shakti Sabha</h1>
           <p className={p.heroHindi}>शांति और क्रांति का संगम · The Soul &amp; Strategy of the Movement</p>

@@ -117,7 +117,6 @@ export default function BrandPage() {
       {/* ── HERO ──────────────────────────────────── */}
       <div className={p.hero}>
         <div className={p.heroInner}>
-          <Link to="/" className={s.back}>← Back to Home</Link>
           <span className={p.eyebrow}>Visual Identity System</span>
           <h1 className={p.heroTitle}>Brand Identity</h1>
           <p className={p.heroHindi}>ब्रांड पहचान</p>

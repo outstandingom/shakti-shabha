@@ -9,7 +9,6 @@ export default function ShaktiBhavaPage() {
       {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={b.hero}>
         <div className={b.heroInner}>
-          <Link to="/" className={b.backLink}>← Back to Home</Link>
           <span className={b.badge}>02 · Consciousness · चेतना और संज्ञान</span>
           <h1 className={b.title}>Shakti Bhava</h1>
           <p className={b.hindiSubtitle}>शक्ति भव · Cognitive Awakening. Consciousness. Civilizational Awareness.</p>

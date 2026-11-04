@@ -9,7 +9,6 @@ export default function ShaktiVartaPage() {
       {/* ── TOP HERO BANNER ────────────────────────────────────────── */}
       <div className={v.hero}>
         <div className={v.heroInner}>
-          <Link to="/" className={v.backLink}>← Back to Home</Link>
           <span className={v.badge}>03 · Discourse · बौद्धिक विमर्श</span>
           <h1 className={v.title}>Shakti Varta</h1>
           <p className={v.hindiSubtitle}>शक्ति वार्ता · Intellectual Sovereignty. Critical Inquiry. Research-Based Dialogue.</p>

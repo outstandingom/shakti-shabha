@@ -392,10 +392,6 @@ export default function HistoryPage() {
       <header className={h.topHeaderBar}>
         <div className={h.headerInner}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link to="/" className={h.backHomeLink}>
-              <span>←</span>
-              <span>{lang === 'en' ? 'Back to Home' : 'मुख्य पृष्ठ पर लौटें'}</span>
-            </Link>
             <span className={h.brandPill}>
               {lang === 'en' ? 'Historic Journey (2012–2024)' : 'ऐतिहासिक यात्रा (२०१२–२०२४)'}
             </span>
