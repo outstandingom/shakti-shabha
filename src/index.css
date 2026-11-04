@@ -148,3 +148,21 @@ input[type="text"], input[type="email"], input[type="tel"], textarea {
 }
 
 
+
+/* ── HTML5 Date Picker Indicator - White Calendar Icon on Dark Backgrounds ── */
+input[type=date] {
+  color-scheme: dark !important;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.95;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+input[type=date]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: brightness(0) invert(1) !important;
+  transform: scale(1.15);
+}

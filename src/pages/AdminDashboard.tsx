@@ -4196,9 +4196,27 @@ function EventsSection() {
     return () => window.removeEventListener('storage', onStorage)
   }, [])
 
+  const getTodayDateStr = () => {
+    const d = new Date()
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const handleDateChange = (selectedDate: string) => {
+    const todayStr = getTodayDateStr()
+    const isPast = Boolean(selectedDate && selectedDate < todayStr)
+    setForm(f => ({
+      ...f,
+      date: selectedDate,
+      status: isPast ? 'completed' : (selectedDate ? 'upcoming' : f.status)
+    }))
+  }
+
   const openCreate = () => {
     setEditing(null)
-    setForm({ ...EMPTY_EVENT })
+    setForm({ ...EMPTY_EVENT, status: 'upcoming' })
     setShowModal(true)
   }
 
@@ -4206,19 +4224,30 @@ function EventsSection() {
     setEditing(ev)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id, created_at, ...rest } = ev
-    setForm(rest)
+    const todayStr = getTodayDateStr()
+    const isPast = Boolean(rest.date && rest.date < todayStr)
+    setForm({
+      ...rest,
+      status: isPast ? 'completed' : rest.status
+    })
     setShowModal(true)
   }
 
   const handleSave = () => {
     setSaving(true)
+    const todayStr = getTodayDateStr()
+    const isPast = Boolean(form.date && form.date < todayStr)
+    const safeForm = {
+      ...form,
+      status: isPast ? 'completed' : form.status
+    }
     const all = loadAdminEvents()
     if (editing) {
-      const updated = all.map(e => e.id === editing.id ? { ...editing, ...form } : e)
+      const updated = all.map(e => e.id === editing.id ? { ...editing, ...safeForm } : e)
       saveAdminEvents(updated)
       setEvents(updated)
     } else {
-      const newEv: AdminEvent = { ...form, id: `ev-${Date.now()}`, created_at: new Date().toISOString() }
+      const newEv: AdminEvent = { ...safeForm, id: `ev-${Date.now()}`, created_at: new Date().toISOString() }
       const updated = [newEv, ...all]
       saveAdminEvents(updated)
       setEvents(updated)
@@ -4303,26 +4332,26 @@ function EventsSection() {
         marginBottom: '1.25rem',
         flexWrap: 'wrap'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#C9A96E', fontSize: '0.86rem', fontWeight: 600 }}>
-          <GoogleIcon name="calendar_month" size={18} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#FFFFFF', fontSize: '0.86rem', fontWeight: 600 }}>
+          <GoogleIcon name="calendar_month" size={18} style={{ color: '#FFFFFF' }} />
           <span>Calendar Date Range:</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-          <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)' }}>From</span>
+          <span style={{ fontSize: '0.78rem', color: '#FFFFFF', fontWeight: 500 }}>From</span>
           <input
             type="date"
             className={s.input}
-            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.15)' }}
+            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)', colorScheme: 'dark' }}
             value={fromDate}
             onChange={e => setFromDate(e.target.value)}
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-          <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.6)' }}>To</span>
+          <span style={{ fontSize: '0.78rem', color: '#FFFFFF', fontWeight: 500 }}>To</span>
           <input
             type="date"
             className={s.input}
-            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.15)' }}
+            style={{ padding: '0.35rem 0.65rem', fontSize: '0.82rem', width: 'auto', background: '#18181D', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.25)', colorScheme: 'dark' }}
             value={toDate}
             onChange={e => setToDate(e.target.value)}
           />
@@ -4365,8 +4394,12 @@ function EventsSection() {
                     )}
                     <p style={{ margin: 0, fontFamily: "'Cinzel', serif", fontSize: '0.95rem', color: '#f5ead6' }}>{ev.title}</p>
                   </div>
-                <p style={{ margin: 0, fontSize: '0.8rem', color: '#666' }}>
-                  {ev.date}{ev.end_date ? ` → ${ev.end_date}` : ''} · {ev.location || 'Location TBA'}
+                <p style={{ margin: 0, fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                  <GoogleIcon name="calendar_today" size={14} style={{ color: '#FFFFFF' }} />
+                  <span style={{ color: '#FFFFFF', fontWeight: 500 }}>{ev.date}{ev.end_date ? ` → ${ev.end_date}` : ''}</span>
+                  <span style={{ color: 'rgba(255,255,255,0.3)' }}>·</span>
+                  <GoogleIcon name="location_on" size={14} style={{ color: '#C9A96E' }} />
+                  <span>{ev.location || 'Location TBA'}</span>
                   {ev.participant_count ? ` · ~${ev.participant_count.toLocaleString()}+ participants` : ''}
                 </p>
               </div>
@@ -4602,22 +4635,61 @@ function EventsSection() {
               </div>
 
               <div className={s.field}>
-                <label className={s.label}>Start Date *</label>
-                <input className={s.input} type="date" value={form.date} onChange={e => setForm(f => ({ ...f, date: e.target.value }))} />
+                <label className={s.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <GoogleIcon name="calendar_today" size={15} style={{ color: '#FFFFFF' }} />
+                  <span>Start Date *</span>
+                </label>
+                <input
+                  className={s.input}
+                  type="date"
+                  style={{ colorScheme: 'dark' }}
+                  value={form.date}
+                  onChange={e => handleDateChange(e.target.value)}
+                  required
+                />
               </div>
 
               <div className={s.field}>
-                <label className={s.label}>End Date (optional)</label>
-                <input className={s.input} type="date" value={form.end_date || ''} onChange={e => setForm(f => ({ ...f, end_date: e.target.value }))} />
+                <label className={s.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <GoogleIcon name="event" size={15} style={{ color: '#FFFFFF' }} />
+                  <span>End Date (optional)</span>
+                </label>
+                <input
+                  className={s.input}
+                  type="date"
+                  style={{ colorScheme: 'dark' }}
+                  value={form.end_date || ''}
+                  onChange={e => setForm(f => ({ ...f, end_date: e.target.value }))}
+                />
               </div>
 
               <div className={s.field}>
                 <label className={s.label}>Status</label>
-                <select className={s.select} value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value as AdminEvent['status'] }))}>
-                  <option value="upcoming">Upcoming</option>
+                <select
+                  className={s.select}
+                  value={form.status}
+                  onChange={e => {
+                    const nextVal = e.target.value as AdminEvent['status']
+                    const isPast = Boolean(form.date && form.date < getTodayDateStr())
+                    if (isPast && nextVal === 'upcoming') return
+                    setForm(f => ({ ...f, status: nextVal }))
+                  }}
+                >
+                  <option
+                    value="upcoming"
+                    disabled={Boolean(form.date && form.date < getTodayDateStr())}
+                  >
+                    Upcoming {Boolean(form.date && form.date < getTodayDateStr()) ? '(Unavailable for past dates)' : ''}
+                  </option>
                   <option value="completed">Completed</option>
                   <option value="cancelled">Cancelled</option>
                 </select>
+                {Boolean(form.date && form.date < getTodayDateStr()) && (
+                  <div style={{ fontSize: '0.74rem', color: '#F59E0B', marginTop: '0.35rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <GoogleIcon name="lock" size={14} style={{ color: '#F59E0B' }} />
+                    <span>Past date: Event is automatically marked as <strong>Completed</strong> and cannot be set to Upcoming.</span>
+                  </div>
+                )}
               </div>
 
               <div className={s.field}>

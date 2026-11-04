@@ -484,6 +484,25 @@ select option:checked,
   min-height: 120px;
 }
 
+/* ── Date Picker Indicator - White Calendar Icon ── */
+.input[type="date"] {
+  color-scheme: dark !important;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer !important;
+  filter: brightness(0) invert(1) !important;
+  opacity: 0.95;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: brightness(0) invert(1) !important;
+  transform: scale(1.15);
+}
+
+
 /* ── Tabs ── */
 .tabs {
   display: flex;
