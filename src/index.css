@@ -166,3 +166,53 @@ input[type=date]::-webkit-calendar-picker-indicator:hover {
   filter: brightness(0) invert(1) !important;
   transform: scale(1.15);
 }
+
+
+/* ==========================================================================
+   MOTION DESIGN — Premium Motion System (Shakti Sabha)
+   Personality: Elegant, Strength, cubic-bezier(0.4,0,0.2,1), 350-600ms
+   ========================================================================== */
+
+/* -- Motion tokens -- */
+:root {
+  --motion-ease:     cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --motion-dur-sm:   0.25s;
+  --motion-dur-md:   0.45s;
+  --motion-dur-lg:   0.75s;
+}
+
+/* -- Card hover lift (add class card-hover to any card) -- */
+.card-hover {
+  transition: transform var(--motion-dur-md) var(--motion-ease), box-shadow var(--motion-dur-md) var(--motion-ease);
+  will-change: transform;
+}
+.card-hover:hover {
+  transform:  translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.11), 0 4px 16px rgba(220,20,60,0.07);
+}
+
+/* -- Button press feedback -- */
+button:not([data-no-press]):active,
+a[class*="btn"]:not([data-no-press]):active,
+[role="button"]:not([data-no-press]):active {
+  transform: scale(0.97) !important;
+  transition: transform 0.08s cubic-bezier(0.4,0,0.2,1) !important;
+}
+
+/* -- Badge pulse -- */
+@keyframes badge-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220,20,60,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(220,20,60,0); }
+}
+
+/* -- Section fade-up CSS utility (fallback / no-JS) -- */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.4,0,0.2,1), transform 0.75s cubic-bezier(0.4,0,0.2,1);
+}
+.reveal-up.is-visible {
+  opacity:   1;
+  transform: translateY(0);
+}

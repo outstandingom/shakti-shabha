@@ -1,12 +1,17 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import s from './Footer.module.css'
+
+gsap.registerPlugin(ScrollTrigger)
 
 export default function Footer() {
   const [email, setEmail] = useState('')
   const [subscribed, setSubscribed] = useState(false)
   const year = new Date().getFullYear()
+  const footerRef = useRef<HTMLElement>(null)
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,11 +22,25 @@ export default function Footer() {
     }
   }
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('[data-ft="col"]', {
+        opacity: 0,
+        y: 20,
+        stagger: 0.09,
+        duration: 0.65,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: footerRef.current, start: 'top 90%', toggleActions: 'play none none none' }
+      })
+    }, footerRef)
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <footer className={s.footer}>
+    <footer ref={footerRef} className={s.footer}>
       <div className={s.grid}>
         {/* Brand & Mission Column */}
-        <div className={s.brand}>
+        <div data-ft="col" className={s.brand}>
           <div className={s.logoName}>Shakti Sabha</div>
           <div className={s.logoHindi}>शक्ति सभा</div>
           <p className={s.tagline}>
@@ -56,7 +75,7 @@ export default function Footer() {
         </div>
 
         {/* Explore Links */}
-        <div className={s.col}>
+        <div data-ft="col" className={s.col}>
           <div className={s.colTitle}>The Three Wings</div>
           <ul className={s.links}>
             <li><Link to="/three-streams" className={s.link} style={{ color: '#FDE047', fontWeight: 600 }}>The Union of Peace &amp; Revolution</Link></li>
@@ -65,29 +84,29 @@ export default function Footer() {
             <li><Link to="/shakti-varta" className={s.link} style={{ color: '#C7D2FE' }}>03 · Shakti Varta (Discourse)</Link></li>
             <li><Link to="/articles" className={s.link}>Latest Articles</Link></li>
             <li><Link to="/history" className={s.link}>Veeranganas</Link></li>
-            <li><Link to="/counselling" className={s.link}>Mental Health & Counselling</Link></li>
-            <li><Link to="/research" className={s.link}>Indian History & Thought-Lab</Link></li>
+            <li><Link to="/counselling" className={s.link}>Mental Health &amp; Counselling</Link></li>
+            <li><Link to="/research" className={s.link}>Indian History &amp; Thought-Lab</Link></li>
             <li><Link to="/gallery" className={s.link}>3D Media Vault</Link></li>
           </ul>
         </div>
 
         {/* Platform Links */}
-        <div className={s.col}>
+        <div data-ft="col" className={s.col}>
           <div className={s.colTitle}>Platform</div>
           <ul className={s.links}>
             <li><Link to="/about" className={s.link}>About Us</Link></li>
             <li><Link to="/aaryaveera" className={s.link}>Aaryaveera (फाउंडर दर्शन)</Link></li>
             <li><Link to="/counselling" className={s.link}>Counselling Services</Link></li>
             <li><Link to="/sahyog" className={s.link}>Community Ecosystem</Link></li>
-            <li><Link to="/courses" className={s.link}>Online Courses & LMS</Link></li>
-            <li><Link to="/events" className={s.link}>Events & Camps</Link></li>
+            <li><Link to="/courses" className={s.link}>Online Courses &amp; LMS</Link></li>
+            <li><Link to="/events" className={s.link}>Events &amp; Camps</Link></li>
             <li><Link to="/brand" className={s.link}>Brand Identity</Link></li>
-            <li><span className={s.infoLine}>Privacy Policy & Terms of Service</span></li>
+            <li><span className={s.infoLine}>Privacy Policy &amp; Terms of Service</span></li>
           </ul>
         </div>
 
         {/* Shakti Dispatch Newsletter */}
-        <div className={s.col}>
+        <div data-ft="col" className={s.col}>
           <div className={s.colTitle}>The Shakti Dispatch</div>
           <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.68)', lineHeight: 1.6, marginBottom: '0.85rem' }}>
             Har hafte — ek naya article, ek forgotten heroine ki kahani, ek psychological insight. Seedha aapke inbox mein.

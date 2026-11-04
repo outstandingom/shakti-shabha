@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { ReactLenis, useLenis } from 'lenis/react'
 import gsap from 'gsap'
@@ -55,6 +55,25 @@ function ScrollTriggerSync() {
   return null
 }
 
+/** Page wrapper — fades in on every route change */
+function PageTransition({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation()
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current) return
+    // skip admin routes — they manage their own layout
+    if (pathname.startsWith('/admin')) return
+    gsap.fromTo(
+      ref.current,
+      { opacity: 0 },
+      { opacity: 1, duration: 0.38, ease: 'power2.out' }
+    )
+  }, [pathname])
+
+  return <div ref={ref}>{children}</div>
+}
+
 export default function App() {
   return (
     <ReactLenis
@@ -79,34 +98,36 @@ export default function App() {
             <FallingLeaves />
             <Navigation />
             <LanguageSwitcher floating />
-            <Routes>
-              <Route path="/"                     element={<HomePage />} />
-              <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
-              <Route path="/mardini"              element={<MardiniPage />} />
-              <Route path="/mission-mardini"      element={<MardiniPage />} />
-              <Route path="/shakti-bhava"         element={<ShaktiBhavaPage />} />
-              <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
-              <Route path="/social-work"          element={<SocialWorkPage />} />
-              <Route path="/events"               element={<EventsPage />} />
-              <Route path="/impact"               element={<ImpactPage />} />
-              <Route path="/impact-archive"       element={<ImpactPage />} />
-              <Route path="/sahyog"               element={<SahyogPage />} />
-              <Route path="/courses"              element={<CoursesPage />} />
-              <Route path="/history"              element={<HistoryPage />} />
-              <Route path="/gallery"              element={<GalleryPage />} />
-              <Route path="/articles"             element={<ArticlesPage />} />
-              <Route path="/counselling"          element={<CounsellingPage />} />
-              <Route path="/case-study"           element={<CaseStudyPage />} />
-              <Route path="/research"             element={<ResearchPage />} />
-              <Route path="/brand"                element={<BrandPage />} />
-              <Route path="/about"                element={<AboutPage />} />
-              <Route path="/three-streams"        element={<ThreeStreamsPage />} />
-              <Route path="/streams"              element={<ThreeStreamsPage />} />
-              <Route path="/peace-and-revolution" element={<ThreeStreamsPage />} />
-              <Route path="/login"                element={<LoginPage />} />
-              <Route path="/register"             element={<RegisterPage />} />
-              <Route path="/admin"                element={<AdminDashboard />} />
-            </Routes>
+            <PageTransition>
+              <Routes>
+                <Route path="/"                     element={<HomePage />} />
+                <Route path="/aaryaveera"           element={<AaryaveeraPage />} />
+                <Route path="/mardini"              element={<MardiniPage />} />
+                <Route path="/mission-mardini"      element={<MardiniPage />} />
+                <Route path="/shakti-bhava"         element={<ShaktiBhavaPage />} />
+                <Route path="/shakti-varta"         element={<ShaktiVartaPage />} />
+                <Route path="/social-work"          element={<SocialWorkPage />} />
+                <Route path="/events"               element={<EventsPage />} />
+                <Route path="/impact"               element={<ImpactPage />} />
+                <Route path="/impact-archive"       element={<ImpactPage />} />
+                <Route path="/sahyog"               element={<SahyogPage />} />
+                <Route path="/courses"              element={<CoursesPage />} />
+                <Route path="/history"              element={<HistoryPage />} />
+                <Route path="/gallery"              element={<GalleryPage />} />
+                <Route path="/articles"             element={<ArticlesPage />} />
+                <Route path="/counselling"          element={<CounsellingPage />} />
+                <Route path="/case-study"           element={<CaseStudyPage />} />
+                <Route path="/research"             element={<ResearchPage />} />
+                <Route path="/brand"                element={<BrandPage />} />
+                <Route path="/about"                element={<AboutPage />} />
+                <Route path="/three-streams"        element={<ThreeStreamsPage />} />
+                <Route path="/streams"              element={<ThreeStreamsPage />} />
+                <Route path="/peace-and-revolution" element={<ThreeStreamsPage />} />
+                <Route path="/login"                element={<LoginPage />} />
+                <Route path="/register"             element={<RegisterPage />} />
+                <Route path="/admin"                element={<AdminDashboard />} />
+              </Routes>
+            </PageTransition>
           </LanguageProvider>
         </AuthProvider>
       </BrowserRouter>

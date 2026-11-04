@@ -1,5 +1,10 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import GoogleIcon from '../GoogleIcon/GoogleIcon'
+
+gsap.registerPlugin(ScrollTrigger)
 
 const PILLARS = [
   {
@@ -29,10 +34,43 @@ const PILLARS = [
 ]
 
 export default function ImpactGrid() {
+  const secRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Header reveal
+      gsap.from('[data-ig="header"]', {
+        opacity: 0,
+        y: 24,
+        duration: 0.65,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: secRef.current, start: 'top 82%' }
+      })
+
+      // Cards stagger entrance
+      gsap.from('[data-ig="card"]', {
+        opacity: 0,
+        y: 40,
+        stagger: 0.1,
+        duration: 0.65,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: secRef.current, start: 'top 78%' }
+      })
+    }, secRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section style={{ background: '#FFFFFF', padding: '4rem 1.5rem', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}>
+    <section
+      ref={secRef}
+      style={{ background: '#FFFFFF', padding: '4rem 1.5rem', borderTop: '1px solid #E5E7EB', borderBottom: '1px solid #E5E7EB' }}
+    >
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.25rem' }}>
+        <div
+          data-ig="header"
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '2.5rem', flexWrap: 'wrap', gap: '1.25rem' }}
+        >
           <div>
             <div style={{
               fontSize: '0.75rem',
@@ -86,6 +124,8 @@ export default function ImpactGrid() {
           {PILLARS.map((p, idx) => (
             <div
               key={idx}
+              data-ig="card"
+              className="card-hover"
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #E5E7EB',
@@ -97,11 +137,11 @@ export default function ImpactGrid() {
                 display: 'flex',
                 flexDirection: 'column',
                 height: '100%',
-                transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+                cursor: 'default'
               }}
             >
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: p.accent }} />
-              
+
               <div style={{
                 width: 44,
                 height: 44,
