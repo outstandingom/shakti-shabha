@@ -354,6 +354,331 @@ const getImageDimensions = (url: string): Promise<{ width: number; height: numbe
 }
 
 /* ============================================================
+   INTERACTIVE MANUAL IMAGE CROPPER MODAL (16:9, 4:3, 1:1, 4:5)
+   ============================================================ */
+interface ManualCropperProps {
+  imageSrc: string
+  onClose: () => void
+  onSaveCrop: (croppedDataUrl: string) => void
+  defaultRatio?: number
+  title?: string
+}
+
+function ManualImageCropperModal({ imageSrc, onClose, onSaveCrop, defaultRatio = 16 / 9, title = 'Manual Crop & Position Image' }: ManualCropperProps) {
+  const [ratio, setRatio] = useState<number>(defaultRatio)
+  const [zoom, setZoom] = useState<number>(1)
+  const [offsetX, setOffsetX] = useState<number>(0)
+  const [offsetY, setOffsetY] = useState<number>(0)
+  const [imgObj, setImgObj] = useState<HTMLImageElement | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => setImgObj(img)
+    img.onerror = () => {
+      const fallbackImg = new Image()
+      fallbackImg.onload = () => setImgObj(fallbackImg)
+      fallbackImg.src = imageSrc
+    }
+    img.src = imageSrc
+  }, [imageSrc])
+
+  useEffect(() => {
+    if (!imgObj || !canvasRef.current) return
+    const canvas = canvasRef.current
+    const previewW = 520
+    const previewH = Math.round(previewW / ratio)
+    canvas.width = previewW
+    canvas.height = previewH
+
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    ctx.clearRect(0, 0, previewW, previewH)
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+
+    const srcRatio = imgObj.naturalWidth / imgObj.naturalHeight
+    let baseW = imgObj.naturalWidth
+    let baseH = imgObj.naturalHeight
+    if (srcRatio > ratio) {
+      baseW = imgObj.naturalHeight * ratio
+    } else {
+      baseH = imgObj.naturalWidth / ratio
+    }
+
+    const cropW = baseW / zoom
+    const cropH = baseH / zoom
+    const maxShiftX = (imgObj.naturalWidth - cropW) / 2
+    const maxShiftY = (imgObj.naturalHeight - cropH) / 2
+
+    const cropX = Math.max(0, Math.min(imgObj.naturalWidth - cropW, ((imgObj.naturalWidth - cropW) / 2) + (offsetX * maxShiftX)))
+    const cropY = Math.max(0, Math.min(imgObj.naturalHeight - cropH, ((imgObj.naturalHeight - cropH) / 2) + (offsetY * maxShiftY)))
+
+    ctx.drawImage(imgObj, cropX, cropY, cropW, cropH, 0, 0, previewW, previewH)
+
+    // Rule of thirds guides
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(previewW / 3, 0)
+    ctx.lineTo(previewW / 3, previewH)
+    ctx.moveTo((previewW * 2) / 3, 0)
+    ctx.lineTo((previewW * 2) / 3, previewH)
+    ctx.moveTo(0, previewH / 3)
+    ctx.lineTo(previewW, previewH / 3)
+    ctx.moveTo(0, (previewH * 2) / 3)
+    ctx.lineTo(previewW, (previewH * 2) / 3)
+    ctx.stroke()
+  }, [imgObj, zoom, offsetX, offsetY, ratio])
+
+  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId)
+    setIsDragging(true)
+    setDragStart({ x: e.clientX, y: e.clientY })
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDragging || !canvasRef.current) return
+    const dx = e.clientX - dragStart.x
+    const dy = e.clientY - dragStart.y
+    setDragStart({ x: e.clientX, y: e.clientY })
+
+    const factor = 0.005 / Math.max(0.5, zoom)
+    setOffsetX(prev => Math.max(-1, Math.min(1, prev - dx * factor)))
+    setOffsetY(prev => Math.max(-1, Math.min(1, prev - dy * factor)))
+  }
+
+  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    setIsDragging(false)
+    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
+  }
+
+  const handleApply = () => {
+    if (!imgObj) return
+    const targetW = ratio === 1 ? 800 : ratio === 4 / 3 ? 1000 : ratio === 4 / 5 ? 800 : 1200
+    const targetH = Math.round(targetW / ratio)
+
+    const offscreen = document.createElement('canvas')
+    offscreen.width = targetW
+    offscreen.height = targetH
+    const ctx = offscreen.getContext('2d')
+    if (!ctx) return
+
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+
+    const srcRatio = imgObj.naturalWidth / imgObj.naturalHeight
+    let baseW = imgObj.naturalWidth
+    let baseH = imgObj.naturalHeight
+    if (srcRatio > ratio) {
+      baseW = imgObj.naturalHeight * ratio
+    } else {
+      baseH = imgObj.naturalWidth / ratio
+    }
+
+    const cropW = baseW / zoom
+    const cropH = baseH / zoom
+    const maxShiftX = (imgObj.naturalWidth - cropW) / 2
+    const maxShiftY = (imgObj.naturalHeight - cropH) / 2
+
+    const cropX = Math.max(0, Math.min(imgObj.naturalWidth - cropW, ((imgObj.naturalWidth - cropW) / 2) + (offsetX * maxShiftX)))
+    const cropY = Math.max(0, Math.min(imgObj.naturalHeight - cropH, ((imgObj.naturalHeight - cropH) / 2) + (offsetY * maxShiftY)))
+
+    ctx.drawImage(imgObj, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH)
+    const result = offscreen.toDataURL('image/jpeg', 0.92)
+    onSaveCrop(result)
+    onClose()
+  }
+
+  const targetDimLabel = ratio === 1 ? '800 × 800 px (1:1)' : ratio === 4 / 3 ? '1000 × 750 px (4:3)' : ratio === 4 / 5 ? '800 × 1000 px (4:5)' : '1200 × 675 px (16:9)'
+
+  return (
+    <div className={s.overlay} data-lenis-prevent="true" style={{ zIndex: 100000 }} onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className={s.modal} data-lenis-prevent="true" style={{ maxWidth: 620, width: '95%' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <div>
+            <h2 className={s.modalTitle} style={{ margin: 0, fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <GoogleIcon name="crop" size={20} style={{ color: '#D97706' }} /> {title}
+            </h2>
+            <div style={{ fontSize: '0.78rem', color: '#9CA3AF', marginTop: '2px' }}>
+              Drag the image to adjust framing, or use zoom and alignment presets
+            </div>
+          </div>
+          <button className={s.modalClose} onClick={onClose}><GoogleIcon name="close" size={18} /></button>
+        </div>
+
+        {/* Aspect Ratio Selector */}
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.78rem', color: '#888' }}>Aspect Ratio:</span>
+          {[
+            { label: '16:9 Landscape', value: 16 / 9 },
+            { label: '4:3 Standard', value: 4 / 3 },
+            { label: '1:1 Square', value: 1 },
+            { label: '4:5 Portrait', value: 4 / 5 }
+          ].map(opt => (
+            <button
+              key={opt.label}
+              type="button"
+              onClick={() => {
+                setRatio(opt.value)
+                setOffsetX(0)
+                setOffsetY(0)
+              }}
+              style={{
+                padding: '0.25rem 0.65rem',
+                fontSize: '0.75rem',
+                borderRadius: 6,
+                border: '1px solid',
+                borderColor: Math.abs(ratio - opt.value) < 0.01 ? '#D97706' : 'rgba(255,255,255,0.15)',
+                background: Math.abs(ratio - opt.value) < 0.01 ? 'rgba(217, 119, 6, 0.2)' : 'rgba(255,255,255,0.04)',
+                color: Math.abs(ratio - opt.value) < 0.01 ? '#FBBF24' : '#ccc',
+                cursor: 'pointer'
+              }}
+            >
+              {opt.label}
+            </button>
+          ))}
+          <span style={{ fontSize: '0.72rem', color: '#10B981', marginLeft: 'auto' }}>
+            Output: {targetDimLabel}
+          </span>
+        </div>
+
+        {/* Interactive Canvas Preview */}
+        <div style={{ position: 'relative', background: '#0B0F19', borderRadius: 10, padding: 8, display: 'flex', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <canvas
+            ref={canvasRef}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            style={{
+              width: '100%',
+              maxWidth: 520,
+              borderRadius: 6,
+              background: '#000',
+              cursor: isDragging ? 'grabbing' : 'grab',
+              display: 'block',
+              touchAction: 'none'
+            }}
+          />
+          <div style={{ position: 'absolute', bottom: 12, right: 16, background: 'rgba(0,0,0,0.65)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', pointerEvents: 'none' }}>
+            ✋ Drag to pan
+          </div>
+        </div>
+
+        {/* Controls: Zoom & Position */}
+        <div style={{ marginTop: '1rem', background: 'rgba(255,255,255,0.03)', padding: '0.85rem', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}>
+          {/* Zoom Slider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
+            <span style={{ fontSize: '0.78rem', color: '#888', minWidth: 60, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <GoogleIcon name="zoom_in" size={16} /> Zoom:
+            </span>
+            <button
+              type="button"
+              className={s.btnSecondary}
+              style={{ padding: '0.15rem 0.5rem', fontSize: '0.75rem' }}
+              onClick={() => setZoom(z => Math.max(1, Number((z - 0.1).toFixed(2))))}
+            >
+              -
+            </button>
+            <input
+              type="range"
+              min="1"
+              max="2.5"
+              step="0.05"
+              value={zoom}
+              onChange={e => setZoom(Number(e.target.value))}
+              style={{ flex: 1, accentColor: '#D97706', cursor: 'pointer' }}
+            />
+            <button
+              type="button"
+              className={s.btnSecondary}
+              style={{ padding: '0.15rem 0.5rem', fontSize: '0.75rem' }}
+              onClick={() => setZoom(z => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
+            >
+              +
+            </button>
+            <span style={{ fontSize: '0.75rem', color: '#FBBF24', minWidth: 42, textAlign: 'right' }}>
+              {zoom.toFixed(2)}x
+            </span>
+          </div>
+
+          {/* Quick Position Presets */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.78rem', color: '#888' }}>Quick Align:</span>
+            {[
+              { label: '⬆ Top', ox: 0, oy: -1 },
+              { label: '⏺ Center', ox: 0, oy: 0 },
+              { label: '⬇ Bottom', ox: 0, oy: 1 },
+              { label: '⬅ Left', ox: -1, oy: 0 },
+              { label: '➡ Right', ox: 1, oy: 0 },
+            ].map(p => (
+              <button
+                key={p.label}
+                type="button"
+                onClick={() => {
+                  setOffsetX(p.ox)
+                  setOffsetY(p.oy)
+                }}
+                style={{
+                  padding: '0.2rem 0.55rem',
+                  fontSize: '0.72rem',
+                  borderRadius: 4,
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                  color: '#EEE',
+                  cursor: 'pointer'
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={() => {
+                setZoom(1)
+                setOffsetX(0)
+                setOffsetY(0)
+              }}
+              style={{
+                padding: '0.2rem 0.55rem',
+                fontSize: '0.72rem',
+                borderRadius: 4,
+                background: 'rgba(220, 20, 60, 0.15)',
+                border: '1px solid rgba(220, 20, 60, 0.3)',
+                color: '#FF8095',
+                cursor: 'pointer',
+                marginLeft: 'auto'
+              }}
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Actions */}
+        <div className={s.modalActions} style={{ marginTop: '1.25rem' }}>
+          <button type="button" className={s.btnSecondary} onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            type="button"
+            className={s.btnPrimary}
+            style={{ background: '#D97706', borderColor: '#B45309', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+            onClick={handleApply}
+          >
+            <GoogleIcon name="check" size={16} /> Apply & Save Crop
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ============================================================
    ARTICLES SECTION
    ============================================================ */
 function ArticlesSection() {
@@ -685,6 +1010,7 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
   uploadImage: (f: File) => void;
   uploading: boolean;
 }) {
+  const [articleCropModal, setArticleCropModal] = useState(false)
   const [lang, setLang] = useState<'en' | 'hi'>('en')
 
   return (
@@ -759,26 +1085,47 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
           </div>
 
           {form.cover_image_url ? (
-            <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
-              <img
-                src={form.cover_image_url}
-                alt="Cover Preview"
-                style={{ height: 130, maxWidth: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}
-              />
-              <button
-                type="button"
-                onClick={() => setForm((f: any) => ({ ...f, cover_image_url: '' }))}
-                className={s.btnDanger}
-                style={{ position: 'absolute', top: 6, right: 6, borderRadius: '50%', width: 26, height: 26, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                title="Remove image"
-              >
-                ✕
-              </button>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <div style={{
+              position: 'relative',
+              borderRadius: 12,
+              overflow: 'hidden',
+              border: '1px solid rgba(255,255,255,0.15)',
+              background: 'rgba(0,0,0,0.5)',
+              marginBottom: '0.85rem',
+              maxWidth: 580
+            }}>
+              <div style={{ position: 'relative', width: '100%', height: 210, background: '#111' }}>
+                <img
+                  src={form.cover_image_url}
+                  alt="Article Cover Preview"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+
+              {/* Action Toolbar */}
+              <div style={{
+                display: 'flex',
+                gap: '0.6rem',
+                padding: '0.75rem 1rem',
+                background: 'rgba(20, 24, 33, 0.95)',
+                borderTop: '1px solid rgba(255,255,255,0.1)',
+                alignItems: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <button
+                  type="button"
+                  className={s.btnPrimary}
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#D97706', borderColor: '#B45309' }}
+                  onClick={() => setArticleCropModal(true)}
+                  title="Open interactive manual crop to adjust frame & zoom"
+                >
+                  <GoogleIcon name="crop" size={15} /> ✂️ Manual Crop
+                </button>
+
                 <button
                   type="button"
                   className={s.btnSecondary}
-                  style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem' }}
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
                   onClick={async () => {
                     try {
                       const cropped = await cropImageTo16_9(form.cover_image_url)
@@ -787,18 +1134,45 @@ function ArticleForm({ form, setForm, fileRef, uploadImage, uploading }: {
                       console.error('Article image crop failed', e)
                     }
                   }}
+                  title="Auto crop center to 16:9"
                 >
-                  ✂️ Auto-Crop &amp; Optimize to 16:9
+                  <GoogleIcon name="auto_fix_high" size={15} /> ⚡ Auto-Crop 16:9
                 </button>
+
+                <button
+                  type="button"
+                  className={s.btnSecondary}
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                  onClick={() => fileRef.current?.click()}
+                  title="Upload a new cover image"
+                >
+                  <GoogleIcon name="cached" size={15} /> Replace Cover
+                </button>
+
                 <button
                   type="button"
                   className={s.btnDanger}
-                  style={{ fontSize: '0.75rem', padding: '0.3rem 0.65rem' }}
-                  onClick={() => setForm((f: any) => ({ ...f, cover_image_url: '' }))}
+                  style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px', marginLeft: 'auto' }}
+                  onClick={() => {
+                    if (confirm('Delete current article cover image?')) {
+                      setForm((f: any) => ({ ...f, cover_image_url: '' }))
+                    }
+                  }}
+                  title="Delete cover image"
                 >
-                  <GoogleIcon name="delete" size={14} /> Remove Image
+                  <GoogleIcon name="delete" size={15} /> Delete Cover
                 </button>
               </div>
+
+              {articleCropModal && (
+                <ManualImageCropperModal
+                  imageSrc={form.cover_image_url}
+                  title="Manual Crop Article Cover"
+                  defaultRatio={16 / 9}
+                  onClose={() => setArticleCropModal(false)}
+                  onSaveCrop={(cropped) => setForm((f: any) => ({ ...f, cover_image_url: cropped }))}
+                />
+              )}
             </div>
           ) : (
             <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>
@@ -1913,329 +2287,6 @@ const DEFAULT_COURSES: Course[] = [
   },
 ]
 
-/* ============================================================
-   INTERACTIVE MANUAL IMAGE CROPPER MODAL (16:9, 4:3, 1:1)
-   ============================================================ */
-interface ManualCropperProps {
-  imageSrc: string
-  onClose: () => void
-  onSaveCrop: (croppedDataUrl: string) => void
-  defaultRatio?: number
-}
-
-function ManualImageCropperModal({ imageSrc, onClose, onSaveCrop, defaultRatio = 16 / 9 }: ManualCropperProps) {
-  const [ratio, setRatio] = useState<number>(defaultRatio)
-  const [zoom, setZoom] = useState<number>(1)
-  const [offsetX, setOffsetX] = useState<number>(0)
-  const [offsetY, setOffsetY] = useState<number>(0)
-  const [imgObj, setImgObj] = useState<HTMLImageElement | null>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
-  useEffect(() => {
-    const img = new Image()
-    img.crossOrigin = 'anonymous'
-    img.onload = () => setImgObj(img)
-    img.onerror = () => {
-      const fallbackImg = new Image()
-      fallbackImg.onload = () => setImgObj(fallbackImg)
-      fallbackImg.src = imageSrc
-    }
-    img.src = imageSrc
-  }, [imageSrc])
-
-  useEffect(() => {
-    if (!imgObj || !canvasRef.current) return
-    const canvas = canvasRef.current
-    const previewW = 540
-    const previewH = Math.round(previewW / ratio)
-    canvas.width = previewW
-    canvas.height = previewH
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    ctx.clearRect(0, 0, previewW, previewH)
-    ctx.imageSmoothingEnabled = true
-    ctx.imageSmoothingQuality = 'high'
-
-    const srcRatio = imgObj.naturalWidth / imgObj.naturalHeight
-    let baseW = imgObj.naturalWidth
-    let baseH = imgObj.naturalHeight
-    if (srcRatio > ratio) {
-      baseW = imgObj.naturalHeight * ratio
-    } else {
-      baseH = imgObj.naturalWidth / ratio
-    }
-
-    const cropW = baseW / zoom
-    const cropH = baseH / zoom
-    const maxShiftX = (imgObj.naturalWidth - cropW) / 2
-    const maxShiftY = (imgObj.naturalHeight - cropH) / 2
-
-    const cropX = Math.max(0, Math.min(imgObj.naturalWidth - cropW, ((imgObj.naturalWidth - cropW) / 2) + (offsetX * maxShiftX)))
-    const cropY = Math.max(0, Math.min(imgObj.naturalHeight - cropH, ((imgObj.naturalHeight - cropH) / 2) + (offsetY * maxShiftY)))
-
-    ctx.drawImage(imgObj, cropX, cropY, cropW, cropH, 0, 0, previewW, previewH)
-
-    // Rule of thirds guides
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)'
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.moveTo(previewW / 3, 0)
-    ctx.lineTo(previewW / 3, previewH)
-    ctx.moveTo((previewW * 2) / 3, 0)
-    ctx.lineTo((previewW * 2) / 3, previewH)
-    ctx.moveTo(0, previewH / 3)
-    ctx.lineTo(previewW, previewH / 3)
-    ctx.moveTo(0, (previewH * 2) / 3)
-    ctx.lineTo(previewW, (previewH * 2) / 3)
-    ctx.stroke()
-  }, [imgObj, zoom, offsetX, offsetY, ratio])
-
-  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    e.currentTarget.setPointerCapture(e.pointerId)
-    setIsDragging(true)
-    setDragStart({ x: e.clientX, y: e.clientY })
-  }
-
-  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!isDragging) return
-    const dx = e.clientX - dragStart.x
-    const dy = e.clientY - dragStart.y
-    setDragStart({ x: e.clientX, y: e.clientY })
-
-    const factor = 0.005 / Math.max(0.5, zoom)
-    setOffsetX(prev => Math.max(-1, Math.min(1, prev - dx * factor)))
-    setOffsetY(prev => Math.max(-1, Math.min(1, prev - dy * factor)))
-  }
-
-  const onPointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    setIsDragging(false)
-    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
-  }
-
-  const handleApply = () => {
-    if (!imgObj) return
-    const targetW = ratio === 1 ? 800 : ratio === 4 / 3 ? 1000 : 1200
-    const targetH = Math.round(targetW / ratio)
-
-    const offscreen = document.createElement('canvas')
-    offscreen.width = targetW
-    offscreen.height = targetH
-    const ctx = offscreen.getContext('2d')
-    if (!ctx) return
-
-    ctx.imageSmoothingEnabled = true
-    ctx.imageSmoothingQuality = 'high'
-
-    const srcRatio = imgObj.naturalWidth / imgObj.naturalHeight
-    let baseW = imgObj.naturalWidth
-    let baseH = imgObj.naturalHeight
-    if (srcRatio > ratio) {
-      baseW = imgObj.naturalHeight * ratio
-    } else {
-      baseH = imgObj.naturalWidth / ratio
-    }
-
-    const cropW = baseW / zoom
-    const cropH = baseH / zoom
-    const maxShiftX = (imgObj.naturalWidth - cropW) / 2
-    const maxShiftY = (imgObj.naturalHeight - cropH) / 2
-
-    const cropX = Math.max(0, Math.min(imgObj.naturalWidth - cropW, ((imgObj.naturalWidth - cropW) / 2) + (offsetX * maxShiftX)))
-    const cropY = Math.max(0, Math.min(imgObj.naturalHeight - cropH, ((imgObj.naturalHeight - cropH) / 2) + (offsetY * maxShiftY)))
-
-    ctx.drawImage(imgObj, cropX, cropY, cropW, cropH, 0, 0, targetW, targetH)
-    const result = offscreen.toDataURL('image/jpeg', 0.92)
-    onSaveCrop(result)
-    onClose()
-  }
-
-  const targetDimLabel = ratio === 1 ? '800 × 800 px (1:1)' : ratio === 4 / 3 ? '1000 × 750 px (4:3)' : '1200 × 675 px (16:9)'
-
-  return (
-    <div className={s.overlay} data-lenis-prevent="true" style={{ zIndex: 100000 }} onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className={s.modal} data-lenis-prevent="true" style={{ maxWidth: 620, width: '95%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <div>
-            <h2 className={s.modalTitle} style={{ margin: 0, fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <GoogleIcon name="crop" size={20} style={{ color: '#D97706' }} /> Manual Crop & Position Banner
-            </h2>
-            <div style={{ fontSize: '0.78rem', color: '#9CA3AF', marginTop: '2px' }}>
-              Drag the image to adjust position or use zoom & preset controls
-            </div>
-          </div>
-          <button className={s.modalClose} onClick={onClose}><GoogleIcon name="close" size={18} /></button>
-        </div>
-
-        {/* Aspect Ratio Selector */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.85rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.78rem', color: '#888' }}>Aspect Ratio:</span>
-          {[
-            { label: '16:9 Banner (Recommended)', value: 16 / 9 },
-            { label: '4:3 Standard', value: 4 / 3 },
-            { label: '1:1 Square', value: 1 }
-          ].map(opt => (
-            <button
-              key={opt.label}
-              type="button"
-              onClick={() => {
-                setRatio(opt.value)
-                setOffsetX(0)
-                setOffsetY(0)
-              }}
-              style={{
-                padding: '0.25rem 0.65rem',
-                fontSize: '0.75rem',
-                borderRadius: 6,
-                border: '1px solid',
-                borderColor: Math.abs(ratio - opt.value) < 0.01 ? '#D97706' : 'rgba(255,255,255,0.15)',
-                background: Math.abs(ratio - opt.value) < 0.01 ? 'rgba(217, 119, 6, 0.2)' : 'rgba(255,255,255,0.04)',
-                color: Math.abs(ratio - opt.value) < 0.01 ? '#FBBF24' : '#ccc',
-                cursor: 'pointer'
-              }}
-            >
-              {opt.label}
-            </button>
-          ))}
-          <span style={{ fontSize: '0.72rem', color: '#10B981', marginLeft: 'auto' }}>
-            Output: {targetDimLabel}
-          </span>
-        </div>
-
-        {/* Interactive Canvas Preview */}
-        <div style={{ position: 'relative', background: '#0B0F19', borderRadius: 10, padding: 8, display: 'flex', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <canvas
-            ref={canvasRef}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            style={{
-              width: '100%',
-              maxWidth: 540,
-              borderRadius: 6,
-              background: '#000',
-              cursor: isDragging ? 'grabbing' : 'grab',
-              display: 'block',
-              touchAction: 'none'
-            }}
-          />
-          <div style={{ position: 'absolute', bottom: 12, right: 16, background: 'rgba(0,0,0,0.65)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.7rem', color: 'rgba(255,255,255,0.7)', pointerEvents: 'none' }}>
-            ✋ Drag to pan
-          </div>
-        </div>
-
-        {/* Controls: Zoom & Position */}
-        <div style={{ marginTop: '1rem', background: 'rgba(255,255,255,0.03)', padding: '0.85rem', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}>
-          {/* Zoom Slider */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-            <span style={{ fontSize: '0.78rem', color: '#888', minWidth: 60, display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <GoogleIcon name="zoom_in" size={16} /> Zoom:
-            </span>
-            <button
-              type="button"
-              className={s.btnSecondary}
-              style={{ padding: '0.15rem 0.5rem', fontSize: '0.75rem' }}
-              onClick={() => setZoom(z => Math.max(1, Number((z - 0.1).toFixed(2))))}
-            >
-              -
-            </button>
-            <input
-              type="range"
-              min="1"
-              max="2.5"
-              step="0.05"
-              value={zoom}
-              onChange={e => setZoom(Number(e.target.value))}
-              style={{ flex: 1, accentColor: '#D97706', cursor: 'pointer' }}
-            />
-            <button
-              type="button"
-              className={s.btnSecondary}
-              style={{ padding: '0.15rem 0.5rem', fontSize: '0.75rem' }}
-              onClick={() => setZoom(z => Math.min(2.5, Number((z + 0.1).toFixed(2))))}
-            >
-              +
-            </button>
-            <span style={{ fontSize: '0.75rem', color: '#FBBF24', minWidth: 42, textAlign: 'right' }}>
-              {zoom.toFixed(2)}x
-            </span>
-          </div>
-
-          {/* Quick Position Presets */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '0.78rem', color: '#888' }}>Quick Align:</span>
-            {[
-              { label: '⬆ Top', ox: 0, oy: -1 },
-              { label: '⏺ Center', ox: 0, oy: 0 },
-              { label: '⬇ Bottom', ox: 0, oy: 1 },
-              { label: '⬅ Left', ox: -1, oy: 0 },
-              { label: '➡ Right', ox: 1, oy: 0 },
-            ].map(p => (
-              <button
-                key={p.label}
-                type="button"
-                onClick={() => {
-                  setOffsetX(p.ox)
-                  setOffsetY(p.oy)
-                }}
-                style={{
-                  padding: '0.2rem 0.55rem',
-                  fontSize: '0.72rem',
-                  borderRadius: 4,
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                  color: '#EEE',
-                  cursor: 'pointer'
-                }}
-              >
-                {p.label}
-              </button>
-            ))}
-            <button
-              type="button"
-              onClick={() => {
-                setZoom(1)
-                setOffsetX(0)
-                setOffsetY(0)
-              }}
-              style={{
-                padding: '0.2rem 0.55rem',
-                fontSize: '0.72rem',
-                borderRadius: 4,
-                background: 'rgba(220, 20, 60, 0.15)',
-                border: '1px solid rgba(220, 20, 60, 0.3)',
-                color: '#FF8095',
-                cursor: 'pointer',
-                marginLeft: 'auto'
-              }}
-            >
-              Reset
-            </button>
-          </div>
-        </div>
-
-        {/* Modal Actions */}
-        <div className={s.modalActions} style={{ marginTop: '1.25rem' }}>
-          <button type="button" className={s.btnSecondary} onClick={onClose}>
-            Cancel
-          </button>
-          <button
-            type="button"
-            className={s.btnPrimary}
-            style={{ background: '#D97706', borderColor: '#B45309', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-            onClick={handleApply}
-          >
-            <GoogleIcon name="check" size={16} /> Apply & Save Crop
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function CoursesSection() {
   const [courses, setCourses] = useState<Course[]>([])
   const [loading, setLoading] = useState(true)
@@ -2779,7 +2830,7 @@ function CoursesSection() {
                         type="button"
                         className={s.btnPrimary}
                         style={{
-                          padding: '0.4rem 0.9rem',
+                          padding: '0.4rem 0.85rem',
                           fontSize: '0.8rem',
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -2790,8 +2841,39 @@ function CoursesSection() {
                         onClick={() => setShowCropModal(true)}
                         title="Open interactive manual crop to adjust frame, zoom & position"
                       >
-                        <GoogleIcon name="crop" size={16} />
-                        ✂️ Manual Crop & Position
+                        <GoogleIcon name="crop" size={15} />
+                        ✂️ Manual Crop
+                      </button>
+
+                      <button
+                        type="button"
+                        className={s.btnSecondary}
+                        style={{
+                          padding: '0.4rem 0.85rem',
+                          fontSize: '0.8rem',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px'
+                        }}
+                        disabled={cropping}
+                        onClick={async () => {
+                          if (!form.cover_image_url) return
+                          setCropping(true)
+                          try {
+                            const cropped = await cropImageTo16_9(form.cover_image_url)
+                            setForm(f => ({ ...f, cover_image_url: cropped }))
+                            setImageDim({ width: 1200, height: 675 })
+                            setAlert({ type: 'success', msg: 'Banner auto-cropped to 16:9 (1200×675)!' })
+                          } catch (e) {
+                            console.error('Auto crop failed', e)
+                          } finally {
+                            setCropping(false)
+                          }
+                        }}
+                        title="Automatically center-crop to 16:9 (1200×675)"
+                      >
+                        <GoogleIcon name="auto_fix_high" size={15} />
+                        {cropping ? 'Auto-Cropping...' : '⚡ Auto-Crop 16:9'}
                       </button>
 
                       <button
@@ -3262,6 +3344,7 @@ function CounsellingSection() {
    ============================================================ */
 function TestimonialsSection() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [showTestimonialCropModal, setShowTestimonialCropModal] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editing, setEditing] = useState<Testimonial | null>(null)
@@ -3610,11 +3693,19 @@ function TestimonialsSection() {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                       <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Photo ready &amp; compressed</span>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          className={s.btnPrimary}
+                          style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem', background: '#D97706', borderColor: '#B45309', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          onClick={() => setShowTestimonialCropModal(true)}
+                        >
+                          <GoogleIcon name="crop" size={14} /> ✂️ Manual Crop
+                        </button>
                         <button
                           type="button"
                           className={s.btnSecondary}
-                          style={{ padding: '0.25rem 0.65rem', fontSize: '0.74rem' }}
+                          style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                           onClick={async () => {
                             try {
                               const cropped = await cropImageTo1_1(form.image_url)
@@ -3624,17 +3715,35 @@ function TestimonialsSection() {
                             }
                           }}
                         >
-                          ✂️ Crop 1:1 Square
+                          <GoogleIcon name="auto_fix_high" size={14} /> ⚡ Auto-Crop 1:1
+                        </button>
+                        <button
+                          type="button"
+                          className={s.btnSecondary}
+                          style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          onClick={() => fileRef.current?.click()}
+                        >
+                          <GoogleIcon name="cached" size={14} /> Replace Photo
                         </button>
                         <button
                           type="button"
                           className={s.btnDanger}
-                          style={{ padding: '0.25rem 0.65rem', fontSize: '0.74rem' }}
+                          style={{ padding: '0.3rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
                           onClick={() => setForm((f: any) => ({ ...f, image_url: '' }))}
                         >
                           <GoogleIcon name="delete" size={14} /> Delete Photo
                         </button>
                       </div>
+
+                      {showTestimonialCropModal && (
+                        <ManualImageCropperModal
+                          imageSrc={form.image_url}
+                          title="Manual Crop Testimonial Portrait"
+                          defaultRatio={1}
+                          onClose={() => setShowTestimonialCropModal(false)}
+                          onSaveCrop={(cropped) => setForm((f: any) => ({ ...f, image_url: cropped }))}
+                        />
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -3684,6 +3793,7 @@ function TestimonialsSection() {
    ============================================================ */
 function FounderSection() {
   const [data, setData] = useState<FounderProfileData>(getFounderData())
+  const [showFounderCropModal, setShowFounderCropModal] = useState(false)
   const [alert, setAlert] = useState<{ type: 'error' | 'success'; msg: string } | null>(null)
   const [popupModal, setPopupModal] = useState<{ title: string; msg: string; type: 'success' | 'error' } | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -3841,16 +3951,59 @@ function FounderSection() {
                   <div style={{ width: 64, height: 75, borderRadius: 8, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.2)' }}>
                     <img src={data.heroImage} alt="Portrait preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
                     <span style={{ fontSize: '0.82rem', color: '#10B981' }}>✓ Portrait active</span>
-                    <button
-                      type="button"
-                      className={s.btnDanger}
-                      style={{ padding: '0.35rem 0.75rem', fontSize: '0.78rem', display: 'inline-flex', alignItems: 'center', gap: '4px', width: 'fit-content' }}
-                      onClick={handleDeletePhoto}
-                    >
-                      <GoogleIcon name="delete" size={14} /> Delete Current Photo
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className={s.btnPrimary}
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem', background: '#D97706', borderColor: '#B45309', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        onClick={() => setShowFounderCropModal(true)}
+                      >
+                        <GoogleIcon name="crop" size={14} /> ✂️ Manual Crop
+                      </button>
+                      <button
+                        type="button"
+                        className={s.btnSecondary}
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        onClick={async () => {
+                          try {
+                            const cropped = await cropImageTo1_1(data.heroImage)
+                            setData(d => ({ ...d, heroImage: cropped }))
+                          } catch (e) {
+                            console.error('Founder crop failed', e)
+                          }
+                        }}
+                      >
+                        <GoogleIcon name="auto_fix_high" size={14} /> ⚡ Auto-Crop 1:1
+                      </button>
+                      <button
+                        type="button"
+                        className={s.btnSecondary}
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        onClick={() => fileRef.current?.click()}
+                      >
+                        <GoogleIcon name="cached" size={14} /> Replace Photo
+                      </button>
+                      <button
+                        type="button"
+                        className={s.btnDanger}
+                        style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        onClick={handleDeletePhoto}
+                      >
+                        <GoogleIcon name="delete" size={14} /> Delete Photo
+                      </button>
+                    </div>
+
+                    {showFounderCropModal && (
+                      <ManualImageCropperModal
+                        imageSrc={data.heroImage}
+                        title="Manual Crop Founder Portrait"
+                        defaultRatio={4 / 5}
+                        onClose={() => setShowFounderCropModal(false)}
+                        onSaveCrop={(cropped) => setData(d => ({ ...d, heroImage: cropped }))}
+                      />
+                    )}
                   </div>
                 </div>
               ) : (
@@ -4025,6 +4178,7 @@ function EventsSection() {
   const [saving, setSaving] = useState(false)
   const [eventImageDim, setEventImageDim] = useState<{ width: number; height: number } | null>(null)
   const [eventCropping, setEventCropping] = useState(false)
+  const [showEventCropModal, setShowEventCropModal] = useState(false)
   const eventFileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -4291,21 +4445,103 @@ function EventsSection() {
                 )}
 
                 {form.cover_image_url ? (
-                  <div style={{ position: 'relative', width: 'fit-content', marginBottom: '0.85rem' }}>
-                    <img
-                      src={form.cover_image_url}
-                      alt="Event Cover Preview"
-                      style={{ height: 130, maxWidth: '100%', objectFit: 'cover', borderRadius: 10, border: '1px solid rgba(255,255,255,0.2)' }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setForm(f => ({ ...f, cover_image_url: '' }))}
-                      className={s.btnDanger}
-                      style={{ position: 'absolute', top: 6, right: 6, borderRadius: '50%', width: 26, height: 26, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      title="Remove image"
-                    >
-                      ✕
-                    </button>
+                  <div style={{
+                    position: 'relative',
+                    borderRadius: 12,
+                    overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    background: 'rgba(0,0,0,0.5)',
+                    marginBottom: '0.85rem',
+                    maxWidth: 580
+                  }}>
+                    <div style={{ position: 'relative', width: '100%', height: 210, background: '#111' }}>
+                      <img
+                        src={form.cover_image_url}
+                        alt="Event Cover Preview"
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                    </div>
+
+                    <div style={{
+                      display: 'flex',
+                      gap: '0.6rem',
+                      padding: '0.75rem 1rem',
+                      background: 'rgba(20, 24, 33, 0.95)',
+                      borderTop: '1px solid rgba(255,255,255,0.1)',
+                      alignItems: 'center',
+                      flexWrap: 'wrap'
+                    }}>
+                      <button
+                        type="button"
+                        className={s.btnPrimary}
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px', background: '#D97706', borderColor: '#B45309' }}
+                        onClick={() => setShowEventCropModal(true)}
+                        title="Open interactive manual crop to adjust frame & zoom"
+                      >
+                        <GoogleIcon name="crop" size={15} /> ✂️ Manual Crop
+                      </button>
+
+                      <button
+                        type="button"
+                        className={s.btnSecondary}
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                        disabled={eventCropping}
+                        onClick={async () => {
+                          if (!form.cover_image_url) return
+                          setEventCropping(true)
+                          try {
+                            const cropped = await cropImageTo16_9(form.cover_image_url)
+                            setForm(f => ({ ...f, cover_image_url: cropped }))
+                            setEventImageDim({ width: 1200, height: 675 })
+                          } catch (e) {
+                            console.error('Event crop failed', e)
+                          } finally {
+                            setEventCropping(false)
+                          }
+                        }}
+                        title="Auto crop center to 16:9"
+                      >
+                        <GoogleIcon name="auto_fix_high" size={15} /> ⚡ Auto-Crop 16:9
+                      </button>
+
+                      <button
+                        type="button"
+                        className={s.btnSecondary}
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px' }}
+                        onClick={() => eventFileRef.current?.click()}
+                        title="Upload a new banner image file"
+                      >
+                        <GoogleIcon name="cached" size={15} /> Replace Banner
+                      </button>
+
+                      <button
+                        type="button"
+                        className={s.btnDanger}
+                        style={{ padding: '0.4rem 0.85rem', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '5px', marginLeft: 'auto' }}
+                        onClick={() => {
+                          if (confirm('Delete current event cover banner?')) {
+                            setForm(f => ({ ...f, cover_image_url: '' }))
+                            setEventImageDim(null)
+                          }
+                        }}
+                        title="Delete current banner"
+                      >
+                        <GoogleIcon name="delete" size={15} /> Delete Banner
+                      </button>
+                    </div>
+
+                    {showEventCropModal && (
+                      <ManualImageCropperModal
+                        imageSrc={form.cover_image_url}
+                        title="Manual Crop Event Banner"
+                        defaultRatio={16 / 9}
+                        onClose={() => setShowEventCropModal(false)}
+                        onSaveCrop={(cropped) => {
+                          setForm(f => ({ ...f, cover_image_url: cropped }))
+                          setEventImageDim({ width: 1200, height: 675 })
+                        }}
+                      />
+                    )}
                   </div>
                 ) : (
                   <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.4)', marginBottom: '0.5rem' }}>
