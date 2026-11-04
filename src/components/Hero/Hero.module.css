@@ -46,8 +46,7 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: clamp(1.5rem, 7.5vw, 2rem);
-  line-height: 1.25;
-  overflow-wrap: break-word;
+  line-height: 1.18;
   color: #000000;              /* remaining text = black */
   letter-spacing: -0.015em;
   text-align: center;
