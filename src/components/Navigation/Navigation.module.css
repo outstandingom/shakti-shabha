@@ -92,6 +92,7 @@
   display: flex;
   align-items: center;
   gap: 1.4rem;
+  flex-wrap: wrap;
 }
 
 .link {
