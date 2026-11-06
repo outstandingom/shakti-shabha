@@ -60,7 +60,7 @@ export default function Profile() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
 
-  // Reduced speed: 6.5s per image transition for a calm, comfortable pace
+  // Calmer slide progression (6.5s)
   useEffect(() => {
     if (isPaused || slides.length <= 1) return
     const SLIDE_DURATION = 6500
@@ -112,6 +112,12 @@ export default function Profile() {
     return () => ctx.revert()
   }, [])
 
+  const mainHeroImageSrc = profile.heroImage
+    ? (profile.heroImage.startsWith('/') || profile.heroImage.startsWith('http')
+        ? profile.heroImage
+        : `/${profile.heroImage}`)
+    : "/Gemini_Generated_Image_kdfkbukdfkbukdfk.png"
+
   return (
     <section ref={secRef} className={s.section}>
       <div className={s.inner}>
@@ -120,19 +126,24 @@ export default function Profile() {
             LEFT COLUMN
             ======================================== */}
         <div className={s.left}>
-          {/* Main Hero Image */}
+          {/* Main Hero Image — customized & responsive */}
           <div ref={photoRef} className={s.photoFrame}>
             <img 
-              src={profile.heroImage || "Gemini_Generated_Image_kdfkbukdfkbukdfk.png"} 
+              src={mainHeroImageSrc} 
               alt={profile.name} 
               className={s.heroImg}
+              onError={(e) => {
+                e.currentTarget.src = "/Gemini_Generated_Image_kdfkbukdfkbukdfk.png"
+              }}
             />
           </div>
 
           {/* Bottom Left: Text & Paragraph */}
           <div className={s.leftBottom}>
             <h3 data-p="subtitle" className={s.subTitle}>
-              Aaryaveera<br/>Harshita Mankar
+              <span className={s.aaryaveeraHighlight}>Aaryaveera</span>
+              <br/>
+              Harshita Mankar
             </h3>
             <p data-p="bio" className={s.bio}>
               {profile.bio}
@@ -146,7 +157,9 @@ export default function Profile() {
         <div className={s.right}>
           {/* Top Right: Heading & Button */}
           <div className={s.rightTop}>
-            <span data-p="eyebrow" className={s.eyebrow}>FOUNDER &amp; DIRECTOR · AARYAVEERA</span>
+            <span data-p="eyebrow" className={s.eyebrow}>
+              FOUNDER &amp; DIRECTOR · <span className={s.aaryaveeraHighlight}>AARYAVEERA</span>
+            </span>
             
             <h2 data-p="heading" className={s.heading}>
               <span className={s.nameBold}>Harshita</span>{' '}
@@ -231,6 +244,9 @@ export default function Profile() {
                     alt={slide.caption} 
                     className={s.slideImg}
                     loading={idx === 0 ? 'eager' : 'lazy'} 
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_FIELD_SLIDES[idx % DEFAULT_FIELD_SLIDES.length].url
+                    }}
                   />
                   <div className={s.slideOverlay}>
                     <div className={s.slideMeta}>

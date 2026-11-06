@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   getStoredPhotos,
   getStoredCategories,
@@ -13,10 +13,6 @@ import s from './SocialWork.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-/* ------------------------------------------------------------------ */
-/* 1. useReducer & Slides Data Model                                   */
-/* ------------------------------------------------------------------ */
-
 interface SlideData {
   title: string
   subtitle: string
@@ -25,7 +21,6 @@ interface SlideData {
   image: string
 }
 
-
 const SLIDE_CATEGORY_KEYWORDS: string[][] = [
   ['mardini', 'lathi', 'defense', 'combat'],
   ['shakti-bhava', 'consciousness', 'survivor', 'healing'],
@@ -33,6 +28,7 @@ const SLIDE_CATEGORY_KEYWORDS: string[][] = [
   ['mardini', 'sword', 'martial', 'aaryaveera'],
   ['community', 'tribal', 'outreach', 'youth']
 ]
+
 const SLIDES: SlideData[] = [
   {
     title: 'Village Defense Camp',
@@ -71,51 +67,13 @@ const SLIDES: SlideData[] = [
   },
 ]
 
-const STATS = [
-  { count: '12+', label: 'Years of Impact' },
-  { count: '50K+', label: 'Women Reached' },
-  { count: '200+', label: 'Villages Served' },
-  { count: '3', label: 'Active Programmes' },
-]
-
-interface SlidesState {
-  slideIndex: number
+// Calculates shortest circular offset on a ring of `total` items
+function getCircularOffset(index: number, current: number, total: number) {
+  let diff = index - current
+  while (diff > total / 2) diff -= total
+  while (diff < -total / 2) diff += total
+  return diff
 }
-
-type SlidesAction =
-  | { type: 'NEXT' }
-  | { type: 'PREV' }
-  | { type: 'GOTO'; index: number }
-
-const initialState: SlidesState = {
-  slideIndex: 0,
-}
-
-function slidesReducer(state: SlidesState, event: SlidesAction): SlidesState {
-  if (event.type === 'NEXT') {
-    return {
-      ...state,
-      slideIndex: (state.slideIndex + 1) % SLIDES.length,
-    }
-  }
-  if (event.type === 'PREV') {
-    return {
-      ...state,
-      slideIndex: state.slideIndex === 0 ? SLIDES.length - 1 : state.slideIndex - 1,
-    }
-  }
-  if (event.type === 'GOTO') {
-    return {
-      ...state,
-      slideIndex: event.index,
-    }
-  }
-  return state
-}
-
-/* ------------------------------------------------------------------ */
-/* 2. useTilt Hook (Mouse Coordinates & 3D Tilt on Hover)             */
-/* ------------------------------------------------------------------ */
 
 function useTilt(active: boolean) {
   const ref = useRef<HTMLDivElement>(null)
@@ -155,17 +113,14 @@ function useTilt(active: boolean) {
   return ref
 }
 
-/* ------------------------------------------------------------------ */
-/* 3. Slide Component (Offset, 3D Perspective, & Tilt)                */
-/* ------------------------------------------------------------------ */
-
 interface SlideProps {
   slide: SlideData
   offset: number
+  isWrapping: boolean
   onSelect: () => void
 }
 
-function Slide({ slide, offset, onSelect }: SlideProps) {
+function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
   const active = offset === 0
   const ref = useTilt(active)
 
@@ -178,11 +133,12 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
         {
           '--offset': offset,
           '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
+          opacity: Math.abs(offset) > 2 ? 0 : undefined,
+          pointerEvents: Math.abs(offset) > 2 ? 'none' : undefined,
         } as React.CSSProperties
       }
       onClick={!active ? onSelect : undefined}
     >
-      {/* Ambient background with parallax offset */}
       <div
         className={s.slideBackground}
         style={{
@@ -190,9 +146,12 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
         }}
       />
 
-      {/* 3D Tilted Card Content */}
-      <div className={s.slideContent}>
-        {/* Slightly blurred image layer */}
+      <div
+        className={s.slideContent}
+        style={{
+          transition: isWrapping ? 'none' : undefined,
+        }}
+      >
         <div
           className={s.slideImage}
           style={{
@@ -201,9 +160,7 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
         />
         <div className={s.slideGradient} />
 
-        {/* Crystal-sharp text on top */}
         <div className={s.slideContentInner}>
-          
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
           <p className={s.slideDescription}>{slide.description}</p>
@@ -213,22 +170,36 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
   )
 }
 
-/* ------------------------------------------------------------------ */
-/* 4. Main SocialWork Component (Section 4)                            */
-/* ------------------------------------------------------------------ */
-
 export default function SocialWork() {
-  const [state, dispatch] = useReducer(slidesReducer, initialState)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const prevIndexRef = useRef(0)
   const [slides, setSlides] = useState<SlideData[]>(SLIDES)
   const secRef = useRef<HTMLElement>(null)
 
-  /* Dynamically load & randomize photos according to categories from Admin Dashboard / DB */
+  const total = slides.length
+
+  const handleNext = () => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(prev => (prev + 1) % total)
+  }
+
+  const handlePrev = () => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(prev => (prev - 1 + total) % total)
+  }
+
+  const handleGoto = (idx: number) => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(idx)
+  }
+
+  // Load photos from DB/galleryStore
   useEffect(() => {
     const randomizeCategoryPhotos = () => {
       const allPhotos = getStoredPhotos()
       const categories = getStoredCategories()
 
-      setSlides(prev =>
+      setSlides(
         SLIDES.map((slide, idx) => {
           const kw = SLIDE_CATEGORY_KEYWORDS[idx] || ['all']
           const randomPhoto = getRandomCategoryPhoto(kw, slide.image, allPhotos, categories)
@@ -252,7 +223,7 @@ export default function SocialWork() {
     }
   }, [])
 
-  /* Intro GSAP scroll animations */
+  // Intro GSAP animations
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sw="header"]', {
@@ -275,38 +246,36 @@ export default function SocialWork() {
     return () => ctx.revert()
   }, [])
 
-  /* Keyboard arrow navigation */
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') {
-        dispatch({ type: 'PREV' })
+        handlePrev()
       } else if (e.key === 'ArrowRight') {
-        dispatch({ type: 'NEXT' })
+        handleNext()
       }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [])
+  }, [currentIndex])
 
   return (
     <section ref={secRef} className={s.section}>
-
-
-      {/* ── Section Header ───────────────────────────────────────── */}
+      {/* Section Header */}
       <div data-sw="header" className={s.carouselHeader}>
         <span className={s.eyebrow}>12 Years · 3 Streams · 1 Mission</span>
         <h2 className={s.carouselTitle}>Where Shakti Sabha Has Stood</h2>
         <p className={s.carouselSub}>जहाँ हम खड़े हैं — धरातलीय सामाजिक कार्य</p>
       </div>
 
-      {/* ── Keyframers 3D Carousel (useReducer + offset + tilt) ──── */}
+      {/* 3D Carousel Stage */}
       <div data-sw="stage" className={s.carouselWrap}>
         <div className={s.slidesContainer}>
           <div className={s.slides}>
             <button
               type="button"
               className={`${s.navBtn} ${s.btnPrev}`}
-              onClick={() => dispatch({ type: 'PREV' })}
+              onClick={handlePrev}
               aria-label="Previous Slide"
               title="Previous Slide"
             >
@@ -315,16 +284,19 @@ export default function SocialWork() {
               </svg>
             </button>
 
-            {[...SLIDES, ...SLIDES, ...SLIDES].map((slide, i) => {
-              const offset = SLIDES.length + (state.slideIndex - i)
-              // Only render slides within visible range (-2 to 2) for maximum smoothness
-              if (Math.abs(offset) > 2) return null
+            {slides.map((slide, i) => {
+              const currentOffset = getCircularOffset(i, currentIndex, total)
+              const previousOffset = getCircularOffset(i, prevIndexRef.current, total)
+              // If a slide is wrapping from -2 to +2 or vice-versa behind the scenes, disable transition
+              const isWrapping = Math.abs(currentOffset - previousOffset) > 2
+
               return (
                 <Slide
-                  key={`${slide.title}-${i}`}
+                  key={slide.title}
                   slide={slide}
-                  offset={offset}
-                  onSelect={() => dispatch({ type: 'GOTO', index: i % SLIDES.length })}
+                  offset={currentOffset}
+                  isWrapping={isWrapping}
+                  onSelect={() => handleGoto(i)}
                 />
               )
             })}
@@ -332,7 +304,7 @@ export default function SocialWork() {
             <button
               type="button"
               className={`${s.navBtn} ${s.btnNext}`}
-              onClick={() => dispatch({ type: 'NEXT' })}
+              onClick={handleNext}
               aria-label="Next Slide"
               title="Next Slide"
             >
@@ -345,21 +317,21 @@ export default function SocialWork() {
 
         {/* Dots Navigation */}
         <div className={s.dotsRow}>
-          {SLIDES.map((_, idx) => (
+          {slides.map((_, idx) => (
             <button
               key={idx}
               type="button"
-              className={`${s.dot} ${state.slideIndex === idx ? s.dotActive : ''}`}
-              onClick={() => dispatch({ type: 'GOTO', index: idx })}
+              className={`${s.dot} ${currentIndex === idx ? s.dotActive : ''}`}
+              onClick={() => handleGoto(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
         </div>
 
-        {/* CTA to complete Social Work archive */}
+        {/* CTA */}
         <div className={s.ctaRow}>
           <Link to="/social-work" className={s.exploreLink}>
-            Explore Full Social Work Archive & Field Reports →
+            Explore Full Social Work Archive &amp; Field Reports →
           </Link>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useLanguage } from '../../lib/LanguageContext'
 import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import s from './LanguageSwitcher.module.css'
@@ -9,40 +9,131 @@ interface LanguageSwitcherProps {
 }
 
 export default function LanguageSwitcher({ floating = false, className = '' }: LanguageSwitcherProps) {
-  const { language, setLanguage, toggleLanguage, isTranslating } = useLanguage()
+  const { language, setLanguage, isTranslating } = useLanguage()
+  const [isOpen, setIsOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
-  const content = (
-    <div className={`${s.switcher} ${isTranslating ? s.translating : ''} ${className}`} title="Translate website between English and Hindi">
-      <button type="button" className={s.iconWrap} onClick={toggleLanguage} title="Toggle language translation" aria-label="Toggle between English and Hindi">
-        <GoogleIcon name="translate" size={15} />
-      </button>
-      <button
-        type="button"
-        className={`${s.btn} ${language === 'en' ? s.btnActive : ''}`}
-        onClick={() => setLanguage('en')}
-        aria-label="Switch language to English"
-      >
-        EN
-      </button>
-      <div className={s.divider} />
-      <button
-        type="button"
-        className={`${s.btn} ${language === 'hi' ? s.btnActive : ''}`}
-        onClick={() => setLanguage('hi')}
-        aria-label="हिन्दी में अनुवाद करें"
-      >
-        हिन्दी
-      </button>
-    </div>
-  )
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
+  const handleSelect = (lang: 'en' | 'hi') => {
+    setLanguage(lang)
+    setIsOpen(false)
+  }
+
+  // Floating button style (bottom right of screen)
   if (floating) {
     return (
-      <div className={s.floatingWrapper} data-lenis-prevent="true">
-        {content}
+      <div ref={menuRef} className={`${s.floatingWrapper} ${className}`} data-lenis-prevent="true">
+        <button
+          type="button"
+          className={`${s.floatingBtn} ${isTranslating ? s.translating : ''}`}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label="Select Language"
+          title="Translate / भाषा चुनें"
+        >
+          <GoogleIcon name="translate" size={18} />
+          <span className={s.currentLangBadge}>{language === 'en' ? 'EN' : 'हिन्दी'}</span>
+        </button>
+
+        {isOpen && (
+          <div className={s.floatingDropdown}>
+            <div className={s.dropdownTitle}>Select Language / भाषा चुनें</div>
+            <button
+              type="button"
+              className={`${s.dropdownItem} ${language === 'en' ? s.activeItem : ''}`}
+              onClick={() => handleSelect('en')}
+            >
+              <span className={s.langCode}>EN</span>
+              <span className={s.langLabel}>English</span>
+              {language === 'en' && <GoogleIcon name="check" size={16} className={s.checkIcon} />}
+            </button>
+            <button
+              type="button"
+              className={`${s.dropdownItem} ${language === 'hi' ? s.activeItem : ''}`}
+              onClick={() => handleSelect('hi')}
+            >
+              <span className={s.langCode}>HI</span>
+              <span className={s.langLabel}>हिन्दी (Hindi)</span>
+              {language === 'hi' && <GoogleIcon name="check" size={16} className={s.checkIcon} />}
+            </button>
+          </div>
+        )}
       </div>
     )
   }
 
-  return content
+  // Header / Navbar style: Translate icon that opens language select options
+  return (
+    <div ref={menuRef} className={`${s.headerSwitcherWrap} ${className}`}>
+      <button
+        type="button"
+        className={`${s.headerIconBtn} ${isOpen ? s.headerIconBtnActive : ''} ${isTranslating ? s.translating : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Translate Website - Language Menu"
+        title="Translate Website / भाषा बदलें"
+      >
+        <span className={s.translateIconWrap}>
+          <GoogleIcon name="translate" size={18} />
+        </span>
+        <span className={s.activeLangTag}>
+          {language === 'en' ? 'EN' : 'हिन्दी'}
+        </span>
+        <svg
+          className={`${s.chevron} ${isOpen ? s.chevronOpen : ''}`}
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className={s.headerDropdown}>
+          <div className={s.dropdownHeader}>
+            <GoogleIcon name="language" size={14} />
+            <span>Select Language / भाषा</span>
+          </div>
+          <div className={s.dropdownList}>
+            <button
+              type="button"
+              className={`${s.dropdownOption} ${language === 'en' ? s.activeOption : ''}`}
+              onClick={() => handleSelect('en')}
+            >
+              <div className={s.optionLeft}>
+                <span className={s.optionCode}>EN</span>
+                <span className={s.optionName}>English</span>
+              </div>
+              {language === 'en' && <GoogleIcon name="check" size={16} className={s.checkIcon} />}
+            </button>
+            <button
+              type="button"
+              className={`${s.dropdownOption} ${language === 'hi' ? s.activeOption : ''}`}
+              onClick={() => handleSelect('hi')}
+            >
+              <div className={s.optionLeft}>
+                <span className={s.optionCode}>HI</span>
+                <span className={s.optionName}>हिन्दी (Hindi)</span>
+              </div>
+              {language === 'hi' && <GoogleIcon name="check" size={16} className={s.checkIcon} />}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }

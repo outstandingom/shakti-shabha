@@ -1,23 +1,19 @@
 /* ============================================================
-   Courses Section — Unified GSAP Horizontal Scroll (All Breakpoints)
+   Courses Section — Unified GSAP Horizontal Scroll (Proper Layout)
    ============================================================ */
 
 .section {
   position: relative;
   z-index: 16;
   border-radius: 0;
-  box-shadow: 0 -25px 80px rgba(0, 0, 0, 0.25);
-  padding: clamp(2.5rem, 5vh, 4rem) 0;
-  border-top: 1px solid var(--border);
+  box-shadow: 0 -25px 80px rgba(0, 0, 0, 0.08);
+  padding: clamp(3rem, 5vh, 4.5rem) 0;
+  border-top: 1px solid var(--border, #E5E7EB);
   background: var(--theme-bg, #FFFFFF);
-  /* min-height 100vh on every breakpoint so the pinned section
-     fills the viewport and GSAP has a clean canvas to work with */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: relative;
-  /* Clips cards that are currently off-screen to the right */
   overflow: hidden;
 }
 
@@ -35,6 +31,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  max-width: 650px;
 }
 
 .eyebrow {
@@ -54,6 +51,13 @@
   margin: 0;
 }
 
+.subtitle {
+  font-family: var(--font-devanagari, 'Noto Sans Devanagari', sans-serif);
+  font-size: 0.88rem;
+  color: #6B7280;
+  margin: 0.2rem 0 0;
+}
+
 .headerRight {
   display: flex;
   align-items: center;
@@ -66,12 +70,12 @@
 }
 
 .arrowBtn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  border: 1px solid var(--border);
+  border: 1.5px solid #E5E7EB;
   background: #FFFFFF;
-  color: var(--theme-text-heading, #111111);
+  color: #111111;
   font-size: 1.1rem;
   display: flex;
   align-items: center;
@@ -85,46 +89,45 @@
   border-color: var(--theme-primary, #DC143C);
   background: var(--theme-primary, #DC143C);
   color: #FFFFFF;
+  transform: scale(1.05);
 }
 
 .arrowDisabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
-/* ── Track ────────────────────────────────────────────────────
-   GSAP owns the x-position; strip out every native-scroll
-   property so the browser never fights the animation.       */
+/* ── Track ──────────────────────────────────────────────────── */
 .track {
   display: flex;
   align-items: stretch;
-  gap: 1.5rem;
+  gap: 1.6rem;
   padding: 0.5rem clamp(1.5rem, 4vw, 3.5rem) 1.5rem;
-  /* No overflow — section's overflow:hidden clips off-screen cards */
   will-change: transform;
 }
 
 /* ── Card ─────────────────────────────────────────────────── */
 .card {
-  flex: 0 0 320px;
-  min-height: 440px;
+  flex: 0 0 340px;
+  min-height: 490px;
   height: 100%;
-  padding: 2.25rem 2rem;
-  border: 1px solid var(--border);
+  padding: 1.5rem;
+  border: 1px solid #E5E7EB;
   background: #FFFFFF;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  transition: border-color 0.28s, box-shadow 0.28s, transform 0.28s;
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
 }
 
 .card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 3px;
+  height: 4px;
   background: var(--theme-primary, #DC143C);
   transform: scaleX(0);
   transform-origin: left;
@@ -133,25 +136,64 @@
 
 .card:hover {
   border-color: rgba(220, 20, 60, 0.35);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
 }
 
 .card:hover::before { transform: scaleX(1); }
 
 .featured {
-  border-color: rgba(220, 20, 60, 0.4);
+  border-color: rgba(220, 20, 60, 0.45);
   background: linear-gradient(180deg, rgba(220, 20, 60, 0.02) 0%, #FFFFFF 100%);
 }
 
 .featured::before { transform: scaleX(1); }
 
+.cardImgWrap {
+  width: 100%;
+  height: 170px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.15rem;
+  background: #F3F4F6;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.cardImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .cardImg {
+  transform: scale(1.06);
+}
+
+.cardLevelPill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(15, 15, 18, 0.75);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: #FFFFFF;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .cardBadge {
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--theme-primary, #DC143C);
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.4rem;
   font-weight: 700;
 }
 
@@ -160,131 +202,57 @@
   font-size: 1.15rem;
   font-weight: 700;
   color: var(--theme-text-heading, #111111);
-  margin-bottom: 0.6rem;
-  line-height: 1.25;
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
 }
 
 .cardDetail {
   font-size: 0.82rem;
   color: var(--theme-text-muted, #555555);
-  line-height: 1.65;
-  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
   flex-grow: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+/* Meta information row */
 .cardMeta {
   display: flex;
-  gap: 1.25rem;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
   flex-wrap: wrap;
-  margin-bottom: 1.6rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.cardMetaItem {
-  font-size: 0.72rem;
-  color: var(--theme-text-subtle, #777777);
-}
-
-.cardMetaItem strong {
-  color: var(--theme-text-heading, #111111);
-  display: block;
-  font-size: 0.82rem;
-  margin-bottom: 0.1rem;
-}
-
-.enroll {
-  font-size: 0.75rem;
-  color: var(--theme-primary, #DC143C);
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-weight: 700;
-  transition: opacity 0.2s, transform 0.2s;
+.metaPill {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-}
-
-.enroll:hover {
-  opacity: 0.85;
-  transform: translateX(3px);
-}
-
-/* ============================================================
-   RESPONSIVE — layout tweaks only, GSAP behaviour unchanged
-   ============================================================ */
-
-@media (max-width: 960px) {
-  /* Keep min-height: 100vh so the pinned section fills the viewport */
-  .section {
-    padding: 3.5rem 0;
-  }
-
-  .header {
-    padding: 0 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .track {
-    padding: 0.5rem 1.5rem 1.25rem;
-    gap: 1rem;
-  }
-
-  .card {
-    flex: 0 0 280px;
-    padding: 1.75rem 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .card {
-    /* Roughly one card + a peek of the next */
-    flex: 0 0 82vw;
-  }
-  /* Keep arrows visible — they drive window.scrollBy on mobile */
-}
-
-
-.cardImgWrap {
-  width: 100%;
-  height: 140px;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 1.25rem;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #4B5563;
   background: #F3F4F6;
-}
-
-.cardImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.card:hover .cardImg {
-  transform: scale(1.05);
+  padding: 0.25rem 0.65rem;
+  border-radius: 6px;
 }
 
 .cardFooter {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
   gap: 0.6rem;
   margin-top: auto;
-  padding-top: 1.1rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 1rem;
+  border-top: 1px solid #F3F4F6;
 }
 
 .priceWrapper {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
@@ -303,18 +271,17 @@
 }
 
 .discountBadge {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   color: #15803D;
   background: #DCFCE7;
-  padding: 0.1rem 0.4rem;
+  padding: 0.1rem 0.38rem;
   border-radius: 9999px;
-  letter-spacing: 0.02em;
   white-space: nowrap;
 }
 
 .savingsTag {
-  font-size: 0.62rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: #B45309;
   background: #FEF3C7;
@@ -326,7 +293,7 @@
 .priceRow {
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .priceText {
@@ -339,7 +306,7 @@
 }
 
 .finalLabel {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
   color: #6B7280;
   text-transform: uppercase;
@@ -348,16 +315,17 @@
 
 .enroll {
   font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.8rem;
-  color: #FFFFFF;
+  font-size: 0.76rem;
+  color: #FFFFFF !important;
   background: var(--theme-primary, #DC143C);
+  border: 1px solid var(--theme-primary, #DC143C);
   letter-spacing: 0.04em;
   text-decoration: none;
   text-transform: uppercase;
   font-weight: 700;
   padding: 0.55rem 1.25rem;
   min-height: 38px;
-  border-radius: 9999px;
+  border-radius: var(--btn-radius, 9999px);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
@@ -365,11 +333,45 @@
   gap: 0.35rem;
   white-space: nowrap;
   flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.25);
 }
 
 .enroll:hover {
-  background: #B01030;
+  background: var(--theme-primary-dark, #B01030);
+  border-color: var(--theme-primary-dark, #B01030);
   color: #FFFFFF;
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.35);
+  box-shadow: 0 8px 20px rgba(220, 20, 60, 0.35);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 960px) {
+  .section {
+    padding: 3.5rem 0;
+  }
+
+  .header {
+    padding: 0 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .track {
+    padding: 0.5rem 1.5rem 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .card {
+    flex: 0 0 300px;
+    min-height: 460px;
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    flex: 0 0 85vw;
+  }
 }

@@ -48,17 +48,17 @@
      5. HERO & PROFILE BUTTON PRESETS (Identical pill style across the entire site)
      -------------------------------------------------------------------------- */
   --btn-font: 'Poppins', sans-serif;
-  --btn-font-size: 0.78rem;
-  --btn-font-weight: 500;
+  --btn-font-size: 0.76rem;
+  --btn-font-weight: 600;
   --btn-letter-spacing: 0.05em;
   --btn-radius: 9999px;                          /* Pill rounded shape */
-  --btn-padding: 0.65rem 2.25rem;
+  --btn-padding: 0.62rem 1.85rem;
   --btn-transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                    background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease,
-                    color 0.25s ease;
+                    background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease,
+                    color 0.2s ease;
 
   /* --------------------------------------------------------------------------
-     6. UNIFIED HERITAGE & COMPATIBILITY TOKENS (Mapped to Hero/Profile Light Theme)
+     6. UNIFIED HERITAGE & COMPATIBILITY TOKENS
      -------------------------------------------------------------------------- */
   --night: #FFFFFF;                              /* Page Background */
   --ash: #F8F8F9;                                /* Subtle Section Alternation */
@@ -85,56 +85,134 @@
 }
 
 /* ==========================================================================
-   GLOBAL REUSABLE UTILITIES & BUTTON CLASSES
+   GLOBAL STANDARDIZED TYPOGRAPHY (Task 9)
+   Consistent Cinzel for headings, Poppins for copy, consistent line heights
    ========================================================================== */
 
-/* Universal Hero-Style Pill Button */
-.btn-hero,
-.btn-theme-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--btn-padding);
-  font-family: var(--btn-font);
-  font-size: var(--btn-font-size);
-  font-weight: var(--btn-font-weight);
-  text-transform: uppercase;
-  letter-spacing: var(--btn-letter-spacing);
-  color: var(--theme-primary);
-  background: var(--theme-primary-light);
-  border: 1px solid var(--theme-primary-border);
-  border-radius: var(--btn-radius);
-  cursor: pointer;
-  text-decoration: none;
-  transition: var(--btn-transition);
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+h1, h2 {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-weight: 700;
+  line-height: 1.18;
+  color: var(--theme-text-heading, #111111);
+  letter-spacing: -0.01em;
 }
 
-.btn-hero:hover,
-.btn-theme-pill:hover {
-  background: var(--theme-primary);
-  border-color: var(--theme-primary);
-  color: var(--theme-text-on-primary);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px var(--theme-primary-shadow);
+h3, h4 {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--theme-text-heading, #111111);
+}
+
+p {
+  font-family: var(--font-body, 'Poppins', sans-serif);
+  font-size: 0.92rem;
+  line-height: 1.68;
+  color: var(--theme-text-body, #333333);
+}
+
+/* Standard Eyebrow / Badges across all sections */
+.theme-eyebrow,
+.eyebrow,
+[class*="eyebrow"] {
+  font-family: var(--font-primary, 'Poppins', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 /* Crimson Accent Text */
 .theme-crimson {
-  color: var(--theme-primary);
+  color: var(--theme-primary, #DC143C);
 }
 
-/* Sub-heading & Eyebrow */
-.theme-eyebrow {
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--theme-text-subtle);
+/* Highlight Aaryaveera */
+.aaryaveera-highlight,
+[class*="aaryaveeraHighlight"] {
+  color: var(--theme-primary, #DC143C) !important;
+  font-weight: 800 !important;
 }
 
-/* ── Global Mouse Cursor — keep pointer visible for easy navigation sitewide ── */
+/* ==========================================================================
+   GLOBAL REUSABLE BUTTON CLASSES (Task 10)
+   Standardized padding, pill radius, hover elevation and active press effect
+   ========================================================================== */
+
+.btn-hero,
+.btn-theme-pill,
+[class*="ctaBtn"]:not([class*="Ghost"]):not([class*="Outline"]),
+[class*="btnWarriorGold"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: var(--btn-padding) !important;
+  font-family: var(--btn-font, 'Poppins', sans-serif) !important;
+  font-size: var(--btn-font-size, 0.76rem) !important;
+  font-weight: var(--btn-font-weight, 600) !important;
+  text-transform: uppercase !important;
+  letter-spacing: var(--btn-letter-spacing, 0.05em) !important;
+  color: #FFFFFF !important;
+  background: var(--theme-primary, #DC143C) !important;
+  border: 1px solid var(--theme-primary, #DC143C) !important;
+  border-radius: var(--btn-radius, 9999px) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: var(--btn-transition) !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
+  white-space: nowrap !important;
+  min-height: 40px !important;
+  box-shadow: 0 4px 14px rgba(220, 20, 60, 0.25) !important;
+}
+
+.btn-hero:hover,
+.btn-theme-pill:hover,
+[class*="ctaBtn"]:not([class*="Ghost"]):not([class*="Outline"]):hover,
+[class*="btnWarriorGold"]:hover {
+  background: var(--theme-primary-dark, #B01030) !important;
+  border-color: var(--theme-primary-dark, #B01030) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 25px var(--theme-primary-shadow, rgba(220, 20, 60, 0.35)) !important;
+}
+
+/* Ghost / Outline Button Variant */
+.btn-ghost,
+[class*="btnGhost"],
+[class*="ctaBtnGhost"],
+[class*="btnWarriorOutline"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: var(--btn-padding) !important;
+  font-family: var(--btn-font, 'Poppins', sans-serif) !important;
+  font-size: var(--btn-font-size, 0.76rem) !important;
+  font-weight: var(--btn-font-weight, 600) !important;
+  text-transform: uppercase !important;
+  letter-spacing: var(--btn-letter-spacing, 0.05em) !important;
+  color: #222222 !important;
+  background: transparent !important;
+  border: 1.5px solid rgba(0, 0, 0, 0.25) !important;
+  border-radius: var(--btn-radius, 9999px) !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  transition: var(--btn-transition) !important;
+  white-space: nowrap !important;
+  min-height: 40px !important;
+}
+
+.btn-ghost:hover,
+[class*="btnGhost"]:hover,
+[class*="ctaBtnGhost"]:hover,
+[class*="btnWarriorOutline"]:hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  border-color: #111111 !important;
+  color: #111111 !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ── Global Mouse Cursor ── */
 html, body {
   cursor: default;
 }
@@ -146,8 +224,6 @@ a, button, [role="button"], input[type="submit"], input[type="button"], select {
 input[type="text"], input[type="email"], input[type="tel"], textarea {
   cursor: text !important;
 }
-
-
 
 /* ── HTML5 Date Picker Indicator - White Calendar Icon on Dark Backgrounds ── */
 input[type=date] {
@@ -166,7 +242,6 @@ input[type=date]::-webkit-calendar-picker-indicator:hover {
   filter: brightness(0) invert(1) !important;
   transform: scale(1.15);
 }
-
 
 /* ==========================================================================
    MOTION DESIGN — Premium Motion System (Shakti Sabha)
@@ -192,7 +267,7 @@ input[type=date]::-webkit-calendar-picker-indicator:hover {
   box-shadow: 0 20px 48px rgba(0,0,0,0.11), 0 4px 16px rgba(220,20,60,0.07);
 }
 
-/* -- Button press feedback -- */
+/* -- Button press feedback (Active state micro-interaction) -- */
 button:not([data-no-press]):active,
 a[class*="btn"]:not([data-no-press]):active,
 [role="button"]:not([data-no-press]):active {

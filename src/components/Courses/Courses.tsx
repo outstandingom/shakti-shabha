@@ -3,16 +3,18 @@ import { supabase, Course } from '../../lib/supabase'
 import { Link } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import GoogleIcon from '../GoogleIcon/GoogleIcon'
 import s from './Courses.module.css'
 import Testimonials from '../Testimonials/Testimonials'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const COURSES = [
+const DEFAULT_COURSES = [
   {
+    id: 'default-1',
     badge: 'Kshatra-Dharma · Shakti Sabha',
     title: 'Warrior Spirit Certification',
-    detail: 'Guided by the Aaryaveera philosophy — self-defense, leadership, cultural identity, and character. 12 modules, lifetime access.',
+    detail: 'Guided by the Aaryaveera philosophy — somatic self-defense, leadership, cultural identity, and sovereign character. 12 modules, lifetime access.',
     modules: '12 Modules',
     duration: '8 Weeks',
     level: 'All Levels',
@@ -20,12 +22,14 @@ const COURSES = [
     original_price: '₹2,500',
     discount_percent: 28,
     discount_tag: 'Save ₹700',
+    image: 'https://images.unsplash.com/photo-1544027993-37dbfe43562a?q=80&w=800&auto=format&fit=crop',
     featured: true
   },
   {
-    badge: 'Parenting',
+    id: 'default-2',
+    badge: 'Parenting · Vedic Wisdom',
     title: 'Vedic Parenting in Modern India',
-    detail: 'Raising resilient, rooted children in a fractured world. Drawing on Vedic wisdom, modern psychology, and lived experience.',
+    detail: 'Raising resilient, rooted children in a fractured world. Drawing on timeless civilizational principles, modern psychology, and lived experience.',
     modules: '8 Modules',
     duration: '6 Weeks',
     level: 'Parents',
@@ -33,12 +37,14 @@ const COURSES = [
     original_price: '₹2,000',
     discount_percent: 25,
     discount_tag: 'Save ₹500',
+    image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop',
     featured: false
   },
   {
+    id: 'default-3',
     badge: 'Discourse · Shakti Varta',
     title: 'Understanding Paurush — True Masculinity',
-    detail: 'An honest inquiry into masculinity, Dharma, and the role of men in protecting and building a just society.',
+    detail: 'An honest inquiry into noble masculinity, Dharma, protective ethics, and the role of men in building and safeguarding a just society.',
     modules: '6 Modules',
     duration: '4 Weeks',
     level: 'Open',
@@ -46,12 +52,14 @@ const COURSES = [
     original_price: '₹2,600',
     discount_percent: 31,
     discount_tag: 'Save ₹800',
+    image: 'https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?q=80&w=800&auto=format&fit=crop',
     featured: false
   },
   {
-    badge: 'Self-Defense',
+    id: 'default-4',
+    badge: 'Self-Defense · Mission Mardini',
     title: 'Lathi-Kaushal for Women',
-    detail: "The ancient Indian art of Lathi — practical, powerful, rooted. Taught by Shakti Sabha's field instructors.",
+    detail: "The ancient Indian martial discipline of Lathi — practical, biomechanically superior, and rooted. Taught by certified Shakti Sabha instructors.",
     modules: '10 Modules',
     duration: '6 Weeks',
     level: 'Beginners',
@@ -59,12 +67,14 @@ const COURSES = [
     original_price: '₹2,800',
     discount_percent: 29,
     discount_tag: 'Save ₹800',
+    image: 'https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?q=80&w=800&auto=format&fit=crop',
     featured: false
   },
   {
-    badge: 'Research',
+    id: 'default-5',
+    badge: 'Legal Shield · Research',
     title: 'The Legal Collage — Know Your Rights',
-    detail: 'Understanding IPC, BNS, and systemic loopholes. Fact-based, lawyer-reviewed, essential for every woman in India.',
+    detail: 'Understanding IPC, BNS, and procedural legal safeguards. Fact-based, advocate-reviewed, and indispensable for every woman in India.',
     modules: '5 Modules',
     duration: '3 Weeks',
     level: 'Open',
@@ -72,27 +82,30 @@ const COURSES = [
     original_price: '₹2,000',
     discount_percent: 30,
     discount_tag: 'Save ₹600',
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=800&auto=format&fit=crop',
     featured: false
   },
 ]
 
-const mapCourseToCard = (c: any) => {
+const mapCourseToCard = (c: any, index: number) => {
   const origPrice = c.original_price ? (typeof c.original_price === 'number' ? `₹${c.original_price.toLocaleString()}` : c.original_price) : (c.price ? `₹${c.price.toLocaleString()}` : '')
   const payablePrice = c.price ? (typeof c.price === 'number' ? `₹${c.price.toLocaleString()}` : c.price) : 'Free'
+  const fallbackImg = DEFAULT_COURSES[index % DEFAULT_COURSES.length].image
+
   return {
     id: c.id,
     badge: c.instructor ? `Instructor · ${c.instructor}` : (c.level ? `${c.level.toUpperCase()} · Academy` : 'Academy'),
     title: c.title,
-    detail: c.description || 'Comprehensive training curriculum.',
+    detail: c.description || 'Comprehensive training curriculum with verified field instruction.',
     modules: c.syllabus && c.syllabus.length > 0 ? `${c.syllabus.length} Modules` : (c.duration || 'Self-Paced'),
     duration: c.duration || 'Flexible',
     level: c.level || 'All Levels',
-    image: c.cover_image_url || '',
+    image: c.cover_image_url || fallbackImg,
     price: payablePrice,
     original_price: origPrice,
     discount_percent: c.discount_percent || 0,
     discount_tag: c.discount_tag || '',
-    featured: false
+    featured: Boolean(c.featured)
   }
 }
 
@@ -107,12 +120,14 @@ const getInitialCourses = () => {
   } catch (e) {
     // fallback
   }
-  return COURSES
+  return DEFAULT_COURSES
 }
 
 export default function Courses() {
   const [coursesList, setCoursesList] = useState(getInitialCourses)
   const secRef  = useRef<HTMLElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     let isMounted = true
@@ -152,7 +167,7 @@ export default function Courses() {
         if (fetched.length > 0) {
           setCoursesList(fetched.map(mapCourseToCard))
         } else {
-          setCoursesList(COURSES)
+          setCoursesList(DEFAULT_COURSES)
         }
         setTimeout(() => {
           ScrollTrigger.refresh()
@@ -169,17 +184,13 @@ export default function Courses() {
       window.removeEventListener('shakti_courses_updated', loadCourses)
     }
   }, [])
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
 
-  // GSAP maps horizontal px 1:1 to vertical scroll px (end = `+=${totalScroll}`),
-  // so scrolling one card-width vertically moves one card-width horizontally.
   const scrollByCards = (dir: 1 | -1) => {
     const track = trackRef.current
     if (!track) return
     const cardW = (track.querySelector('[data-c="card"]') as HTMLElement | null)
-      ?.offsetWidth ?? 300
-    window.scrollBy({ top: dir * cardW, behavior: 'smooth' })
+      ?.offsetWidth ?? 340
+    window.scrollBy({ top: dir * (cardW + 24), behavior: 'smooth' })
   }
 
   useEffect(() => {
@@ -188,7 +199,6 @@ export default function Courses() {
       const section = secRef.current
       if (!track || !section) return
 
-      // ── Horizontal scroll — ALL breakpoints (no matchMedia gate) ──────────
       const totalScroll = track.scrollWidth - section.offsetWidth
 
       if (totalScroll > 0) {
@@ -208,19 +218,18 @@ export default function Courses() {
         })
       }
 
-      // ── Cards entrance ─────────────────────────────────────────────────────
       gsap.from('[data-c="card"]', {
         opacity: 0,
-        y: 24,
-        stagger: 0.08,
-        duration: 0.55,
+        y: 28,
+        stagger: 0.09,
+        duration: 0.6,
         ease: 'power3.out',
         scrollTrigger: { trigger: section, start: 'top 80%' },
       })
     }, secRef)
 
     return () => ctx.revert()
-  }, [])
+  }, [coursesList.length])
 
   const canScrollLeft  = progress > 0.02
   const canScrollRight = progress < 0.98
@@ -228,68 +237,98 @@ export default function Courses() {
   return (
     <>
       <section ref={secRef} className={s.section} data-courses-section>
-      <div className={s.header}>
-        <div className={s.headerLeft}>
-          <span className={s.eyebrow}>Programmes &amp; Learning</span>
-          <h2 className={s.title}>Courses</h2>
-        </div>
-
-        <div className={s.headerRight}>
-          <div className={s.navArrows}>
-            <button
-              type="button"
-              className={`${s.arrowBtn} ${!canScrollLeft ? s.arrowDisabled : ''}`}
-              onClick={() => scrollByCards(-1)}
-              aria-label="Previous courses"
-              disabled={!canScrollLeft}
-            >←</button>
-            <button
-              type="button"
-              className={`${s.arrowBtn} ${!canScrollRight ? s.arrowDisabled : ''}`}
-              onClick={() => scrollByCards(1)}
-              aria-label="Next courses"
-              disabled={!canScrollRight}
-            >→</button>
+        <div className={s.header}>
+          <div className={s.headerLeft}>
+            <span className={s.eyebrow}>Programmes &amp; Learning</span>
+            <h2 className={s.title}>Courses</h2>
+            <p className={s.subtitle}>आत्मरक्षा, विचार और चरित्र निर्माण — शक्ति सभा की प्रामाणिक कार्यशालाएं</p>
           </div>
-          <Link to="/courses" className="btn-magnetic btn-ghost">All Courses →</Link>
-        </div>
-      </div>
 
-      {/* GSAP translates this element — no native overflow scroll */}
-      <div ref={trackRef} className={s.track}>
-        {coursesList.map((c: any) => (
-          <div key={c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
-            {c.image && (
+          <div className={s.headerRight}>
+            <div className={s.navArrows}>
+              <button
+                type="button"
+                className={`${s.arrowBtn} ${!canScrollLeft ? s.arrowDisabled : ''}`}
+                onClick={() => scrollByCards(-1)}
+                aria-label="Previous courses"
+                disabled={!canScrollLeft}
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                className={`${s.arrowBtn} ${!canScrollRight ? s.arrowDisabled : ''}`}
+                onClick={() => scrollByCards(1)}
+                aria-label="Next courses"
+                disabled={!canScrollRight}
+              >
+                →
+              </button>
+            </div>
+            <Link to="/courses" className="btn-hero">
+              All Courses →
+            </Link>
+          </div>
+        </div>
+
+        {/* GSAP horizontal track */}
+        <div ref={trackRef} className={s.track}>
+          {coursesList.map((c: any) => (
+            <div key={c.id || c.title} data-c="card" className={`${s.card} ${c.featured ? s.featured : ''}`}>
               <div className={s.cardImgWrap}>
-                <img src={c.image} alt={c.title} className={s.cardImg} loading="lazy" />
+                <img 
+                  src={c.image} 
+                  alt={c.title} 
+                  className={s.cardImg} 
+                  loading="lazy" 
+                  onError={(e) => {
+                    e.currentTarget.src = DEFAULT_COURSES[0].image
+                  }}
+                />
+                <span className={s.cardLevelPill}>{c.level}</span>
               </div>
-            )}
-            <div className={s.cardBadge}>{c.badge}</div>
-            <div className={s.cardTitle}>{c.title}</div>
-            <p className={s.cardDetail}>{c.detail}</p>
-            <div className={s.cardFooter}>
-              <div className={s.priceWrapper}>
-                {c.original_price && (
-                  <div className={s.discountRow}>
-                    <span className={s.originalPrice}>{c.original_price}</span>
-                    {c.discount_percent ? (
-                      <span className={s.discountBadge}>{c.discount_percent}% OFF</span>
-                    ) : null}
-                    {c.discount_tag ? (
-                      <span className={s.savingsTag}>{c.discount_tag}</span>
-                    ) : null}
-                  </div>
-                )}
-                <div className={s.priceRow}>
-                  <span className={s.priceText}>{c.price || '₹1,800'}</span>
-                  <span className={s.finalLabel}>Customer Price</span>
+
+              <div className={s.cardBadge}>{c.badge}</div>
+              <h3 className={s.cardTitle}>{c.title}</h3>
+              <p className={s.cardDetail}>{c.detail}</p>
+
+              {/* Meta information row */}
+              <div className={s.cardMeta}>
+                <div className={s.metaPill}>
+                  <GoogleIcon name="schedule" size={14} />
+                  <span>{c.duration}</span>
+                </div>
+                <div className={s.metaPill}>
+                  <GoogleIcon name="menu_book" size={14} />
+                  <span>{c.modules}</span>
                 </div>
               </div>
-              <Link to="/courses" className={s.enroll}>Enroll Now →</Link>
+
+              <div className={s.cardFooter}>
+                <div className={s.priceWrapper}>
+                  {c.original_price && (
+                    <div className={s.discountRow}>
+                      <span className={s.originalPrice}>{c.original_price}</span>
+                      {c.discount_percent ? (
+                        <span className={s.discountBadge}>{c.discount_percent}% OFF</span>
+                      ) : null}
+                      {c.discount_tag ? (
+                        <span className={s.savingsTag}>{c.discount_tag}</span>
+                      ) : null}
+                    </div>
+                  )}
+                  <div className={s.priceRow}>
+                    <span className={s.priceText}>{c.price || '₹1,800'}</span>
+                    <span className={s.finalLabel}>Total Price</span>
+                  </div>
+                </div>
+                <Link to="/courses" className={s.enroll}>
+                  Enroll Now →
+                </Link>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       </section>
       <Testimonials />
     </>
