@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   getStoredPhotos,
   getStoredCategories,
@@ -67,6 +67,14 @@ const SLIDES: SlideData[] = [
   },
 ]
 
+// Calculates shortest circular offset on a ring of `total` items
+function getCircularOffset(index: number, current: number, total: number) {
+  let diff = index - current
+  while (diff > total / 2) diff -= total
+  while (diff < -total / 2) diff += total
+  return diff
+}
+
 function useTilt(active: boolean) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -77,7 +85,10 @@ function useTilt(active: boolean) {
     let rect: DOMRect | null = null
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!rect) rect = el.getBoundingClientRect()
+      if (!el) return
+      if (!rect) {
+        rect = el.getBoundingClientRect()
+      }
       const px = (e.clientX - rect.left) / rect.width
       const py = (e.clientY - rect.top) / rect.height
       el.style.setProperty('--px', String(px))
@@ -105,12 +116,12 @@ function useTilt(active: boolean) {
 interface SlideProps {
   slide: SlideData
   offset: number
+  isWrapping: boolean
   onSelect: () => void
 }
 
-function Slide({ slide, offset, onSelect }: SlideProps) {
+function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
   const active = offset === 0
-  const hidden = Math.abs(offset) > 2
   const ref = useTilt(active)
 
   return (
@@ -118,27 +129,38 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
       ref={ref}
       className={s.slide}
       data-active={active ? 'true' : 'false'}
-      aria-hidden={hidden ? 'true' : undefined}
       style={
         {
           '--offset': offset,
           '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
-          opacity: hidden ? 0 : undefined,
-          pointerEvents: hidden ? 'none' : undefined,
-          visibility: Math.abs(offset) > 3 ? 'hidden' : 'visible',
+          opacity: Math.abs(offset) > 2 ? 0 : undefined,
+          pointerEvents: Math.abs(offset) > 2 ? 'none' : undefined,
         } as React.CSSProperties
       }
-      onClick={!active && !hidden ? onSelect : undefined}
+      onClick={!active ? onSelect : undefined}
     >
-      <div className={s.slideContent}>
+      <div
+        className={s.slideBackground}
+        style={{
+          backgroundImage: `url('${slide.image}')`,
+        }}
+      />
+
+      <div
+        className={s.slideContent}
+        style={{
+          transition: isWrapping ? 'none' : undefined,
+        }}
+      >
         <div
           className={s.slideImage}
-          style={{ backgroundImage: `url('${slide.image}')` }}
+          style={{
+            backgroundImage: `url('${slide.image}')`,
+          }}
         />
         <div className={s.slideGradient} />
 
         <div className={s.slideContentInner}>
-          <span className={s.slideStat}>{slide.stat}</span>
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
           <p className={s.slideDescription}>{slide.description}</p>
@@ -149,31 +171,27 @@ function Slide({ slide, offset, onSelect }: SlideProps) {
 }
 
 export default function SocialWork() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const prevIndexRef = useRef(0)
   const [slides, setSlides] = useState<SlideData[]>(SLIDES)
-  // Continuous virtual position allowing seamless infinite scroll in both directions
-  const [position, setPosition] = useState(0)
   const secRef = useRef<HTMLElement>(null)
-  const touchStartX = useRef<number | null>(null)
 
   const total = slides.length
 
-  // Current active slide index (0 to total - 1)
-  const activeIndex = ((position % total) + total) % total
+  const handleNext = () => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(prev => (prev + 1) % total)
+  }
 
-  const handleNext = useCallback(() => {
-    setPosition(prev => prev + 1)
-  }, [])
+  const handlePrev = () => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(prev => (prev - 1 + total) % total)
+  }
 
-  const handlePrev = useCallback(() => {
-    setPosition(prev => prev - 1)
-  }, [])
-
-  const handleGoto = useCallback((targetIdx: number) => {
-    let diff = targetIdx - activeIndex
-    while (diff > total / 2) diff -= total
-    while (diff < -total / 2) diff += total
-    setPosition(prev => prev + diff)
-  }, [activeIndex, total])
+  const handleGoto = (idx: number) => {
+    prevIndexRef.current = currentIndex
+    setCurrentIndex(idx)
+  }
 
   // Load photos from DB/galleryStore
   useEffect(() => {
@@ -185,7 +203,10 @@ export default function SocialWork() {
         SLIDES.map((slide, idx) => {
           const kw = SLIDE_CATEGORY_KEYWORDS[idx] || ['all']
           const randomPhoto = getRandomCategoryPhoto(kw, slide.image, allPhotos, categories)
-          return { ...slide, image: randomPhoto.url }
+          return {
+            ...slide,
+            image: randomPhoto.url
+          }
         })
       )
     }
@@ -225,31 +246,18 @@ export default function SocialWork() {
     return () => ctx.revert()
   }, [])
 
-  // Keyboard navigation (infinite both ways)
+  // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') handlePrev()
-      else if (e.key === 'ArrowRight') handleNext()
+      if (e.key === 'ArrowLeft') {
+        handlePrev()
+      } else if (e.key === 'ArrowRight') {
+        handleNext()
+      }
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [handlePrev, handleNext])
-
-  // Touch swipe
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-  }
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    touchStartX.current = null
-    if (Math.abs(dx) < 40) return
-    if (dx < 0) handleNext()
-    else handlePrev()
-  }
-
-  // Virtual window around current position [-3 to +3] ensuring uninterrupted continuous motion
-  const virtualRange = [-3, -2, -1, 0, 1, 2, 3]
+  }, [currentIndex])
 
   return (
     <section ref={secRef} className={s.section}>
@@ -260,13 +268,9 @@ export default function SocialWork() {
         <p className={s.carouselSub}>जहाँ हम खड़े हैं — धरातलीय सामाजिक कार्य</p>
       </div>
 
-      {/* Infinite 3D Carousel Stage */}
+      {/* 3D Carousel Stage */}
       <div data-sw="stage" className={s.carouselWrap}>
-        <div
-          className={s.slidesContainer}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
+        <div className={s.slidesContainer}>
           <div className={s.slides}>
             <button
               type="button"
@@ -280,17 +284,19 @@ export default function SocialWork() {
               </svg>
             </button>
 
-            {virtualRange.map(delta => {
-              const virtualIndex = position + delta
-              const slideIdx = ((virtualIndex % total) + total) % total
-              const slide = slides[slideIdx]
+            {slides.map((slide, i) => {
+              const currentOffset = getCircularOffset(i, currentIndex, total)
+              const previousOffset = getCircularOffset(i, prevIndexRef.current, total)
+              // If a slide is wrapping from -2 to +2 or vice-versa behind the scenes, disable transition
+              const isWrapping = Math.abs(currentOffset - previousOffset) > 2
 
               return (
                 <Slide
-                  key={virtualIndex}
+                  key={slide.title}
                   slide={slide}
-                  offset={delta}
-                  onSelect={() => setPosition(virtualIndex)}
+                  offset={currentOffset}
+                  isWrapping={isWrapping}
+                  onSelect={() => handleGoto(i)}
                 />
               )
             })}
@@ -315,7 +321,7 @@ export default function SocialWork() {
             <button
               key={idx}
               type="button"
-              className={`${s.dot} ${activeIndex === idx ? s.dotActive : ''}`}
+              className={`${s.dot} ${currentIndex === idx ? s.dotActive : ''}`}
               onClick={() => handleGoto(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             />
