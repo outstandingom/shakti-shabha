@@ -155,9 +155,9 @@ export default function AaryaveeraPage() {
             flexWrap: 'wrap',
             textAlign: 'center'
           }}>
-            <span style={{ fontWeight: 700 }}>शक्ति सभा = संस्थागत ढांचा (Institutional Body)</span>
+            <span style={{ fontWeight: 700 }}>शक्ति सभा — संस्थागत ढांचा</span>
             <span style={{ color: '#C2410C' }}>•</span>
-            <span style={{ fontWeight: 700 }}>आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन</span>
+            <span style={{ fontWeight: 700 }}>आर्यवीरा — मूल दर्शन</span>
           </div>
 
           <p className={`${p.heroBody} avHeroIn`}>

@@ -209,15 +209,12 @@ export default function Aaryaveera() {
 
           {/* Core Institutional & Philosophical Distinction Block */}
           <div data-av="identity" className={s.identity}>
-            <p className={s.identityLead}>
-              <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
-              {' '}Aaryaveera is not an operational event or program, but the personal philosophical identity of founder Harshita Mankar. It provides the ideological bedrock that guides Shakti Sabha&apos;s three institutional streams: <Link to="/mardini" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Mission Mardini</Link>, <Link to="/shakti-bhava" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Bhava</Link>, and <Link to="/shakti-varta" style={{ color: "#FA9417", fontWeight: 600, textDecoration: "underline" }}>Shakti Varta</Link>.
+            <p className={s.identityHindi}>
+              शक्ति सभा — संस्थागत ढांचा · आर्यवीरा — मूल दर्शन
             </p>
-            <ul className={s.identityList}>
-              <li><strong>संस्था (Institution):</strong> Shakti Sabha (The institutional platform and executive machinery)</li>
-              <li><strong>दर्शन (Philosophy):</strong> Aaryaveera (The founder&apos;s personal worldview: flame of revolution + lotus of peace)</li>
-              <li><strong>ध्येय (Motto):</strong> &quot;Shakti Se Shanti&quot; — From Strength, Peace</li>
-            </ul>
+            <p className={s.identityText}>
+              Aaryaveera represents the philosophical identity and worldview of founder Harshita Mankar — providing the ideological bedrock that guides Shakti Sabha's three institutional streams: <Link to="/mardini" className={s.streamLink}>Mission Mardini</Link>, <Link to="/shakti-bhava" className={s.streamLink}>Shakti Bhava</Link>, and <Link to="/shakti-varta" className={s.streamLink}>Shakti Varta</Link>.
+            </p>
           </div>
 
           <div className={s.grid}>

@@ -296,7 +296,7 @@ export default function BrandPage() {
               <h3 className={p.aaryaveeraTitle}>Aaryaveera</h3>
               <p className={p.aaryaveeraHindi}>आर्यवीरा · The Founder's Philosophy</p>
               <p className={p.aaryaveeraDesc}>
-                <strong>शक्ति सभा = संस्थागत ढांचा (Institutional Body) · आर्यवीरा = फाउंडर की व्यक्तिगत विचारधारा और दर्शन।</strong>
+                <strong>शक्ति सभा — संस्थागत ढांचा · आर्यवीरा — मूल दर्शन।</strong>
                 {' '}Aaryaveera is not an operational event or program, but the personal ideological identity and worldview of founder Harshita Mankar. The Warrior Emblem (flame + lotus composite) is its philosophical emblem, using a dedicated matte brass gold palette and Cinzel display typography.
               </p>
               <div className={p.aaryaveeraColors}>
