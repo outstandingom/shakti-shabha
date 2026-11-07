@@ -212,6 +212,59 @@ p {
   transform: translateY(-2px) !important;
 }
 
+
+/* ==========================================================================
+   REUSABLE CARD & DIV CONTAINERS
+   ========================================================================== */
+.theme-card,
+.card-standard {
+  background: var(--theme-surface-card, #FFFFFF);
+  border: 1px solid var(--theme-border-light, #E5E7EB);
+  border-radius: 16px;
+  padding: 1.85rem 1.6rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--motion-dur-md, 0.45s) var(--motion-ease, cubic-bezier(0.4, 0, 0.2, 1)),
+              box-shadow var(--motion-dur-md, 0.45s) var(--motion-ease, cubic-bezier(0.4, 0, 0.2, 1));
+}
+.theme-card:hover,
+.card-standard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.11), 0 4px 16px rgba(220, 20, 60, 0.07);
+}
+
+/* ==========================================================================
+   REUSABLE SECTION HEADER & PARAGRAPH ALIGNMENTS
+   ========================================================================== */
+.section-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 2.5rem;
+}
+
+.section-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 800px;
+  margin-bottom: 2.5rem;
+}
+
+.section-paragraph {
+  font-family: var(--font-body, 'Poppins', sans-serif);
+  font-size: clamp(0.86rem, 1.1vw, 0.95rem);
+  line-height: 1.68;
+  color: var(--theme-text-muted, #555555);
+  margin: 0;
+}
+
 /* ── Global Mouse Cursor ── */
 html, body {
   cursor: default;
