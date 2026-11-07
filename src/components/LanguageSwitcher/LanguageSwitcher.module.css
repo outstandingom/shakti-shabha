@@ -4,61 +4,45 @@
 
 .headerSwitcherWrap {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   user-select: none;
 }
 
+/* Translator Icon Button: Clean circular button, NO rectangle border */
 .headerIconBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 9999px;
-  padding: 0.42rem 0.85rem;
+  justify-content: center;
+  background: transparent;
+  border: none !important;
+  outline: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
   color: #FFFFFF;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.76rem;
-  font-weight: 600;
-  white-space: nowrap;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  margin: 0;
 }
 
 .headerIconBtn:hover,
 .headerIconBtnActive {
-  background: rgba(255, 255, 255, 0.22);
-  border-color: #FFFFFF;
-  color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #FFFFFF !important;
+  transform: scale(1.08);
 }
 
-.translateIconWrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #FFFFFF;
-}
-
-.activeLangTag {
-  letter-spacing: 0.05em;
-  font-weight: 700;
-}
-
-.chevron {
-  transition: transform 0.25s ease;
-  stroke: #FFFFFF;
-  opacity: 0.85;
-}
-
-.chevronOpen {
-  transform: rotate(180deg);
+.headerIconBtn:active {
+  transform: scale(0.94);
 }
 
 /* Header Dropdown Menu */
 .headerDropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + 10px);
   right: 0;
   min-width: 190px;
   background: #FFFFFF;
@@ -148,67 +132,64 @@
 
 .activeOption .optionName {
   color: #DC143C;
+  font-weight: 700;
 }
 
 .checkIcon {
   color: #DC143C;
 }
 
-/* ============================================================
-   Floating Mode (Quick Action at Bottom Right)
-   ============================================================ */
-
+/* Floating Language Switcher (Fixed Bottom Right) */
 .floatingWrapper {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 999;
+  z-index: 150;
   user-select: none;
 }
 
 .floatingBtn {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  background: #111115;
-  border: 1.5px solid rgba(220, 20, 60, 0.6);
+  gap: 0.5rem;
+  background: var(--theme-primary, #DC143C);
   color: #FFFFFF;
-  padding: 0.55rem 0.95rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
   border-radius: 9999px;
+  padding: 0.55rem 1rem;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 12px rgba(220, 20, 60, 0.25);
-  transition: all 0.25s ease;
   font-family: var(--btn-font, 'Poppins', sans-serif);
-  font-size: 0.76rem;
+  font-size: 0.8rem;
   font-weight: 700;
+  box-shadow: 0 8px 24px rgba(220, 20, 60, 0.4), 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .floatingBtn:hover {
+  background: var(--theme-primary-dark, #B01030);
   transform: translateY(-2px);
-  border-color: #DC143C;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 18px rgba(220, 20, 60, 0.4);
+  box-shadow: 0 12px 28px rgba(220, 20, 60, 0.5);
 }
 
 .currentLangBadge {
-  background: #DC143C;
-  color: #FFFFFF;
-  font-size: 0.65rem;
-  padding: 0.1rem 0.45rem;
-  border-radius: 9999px;
-  font-weight: 800;
+  font-size: 0.72rem;
   letter-spacing: 0.05em;
+  background: rgba(255, 255, 255, 0.22);
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
 }
 
 .floatingDropdown {
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 10px);
   right: 0;
-  min-width: 200px;
-  background: #18181C;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 14px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7);
+  min-width: 190px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 0.5rem;
+  z-index: 300;
   animation: dropUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -224,13 +205,13 @@
 }
 
 .dropdownTitle {
-  font-size: 0.64rem;
+  font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #9CA3AF;
+  color: #6B7280;
   padding: 0.35rem 0.5rem 0.45rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #F3F4F6;
   margin-bottom: 0.3rem;
 }
 
@@ -244,42 +225,56 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: #FFFFFF;
   transition: background 0.18s ease;
   text-align: left;
 }
 
 .dropdownItem:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: #F3F4F6;
 }
 
 .activeItem {
-  background: rgba(220, 20, 60, 0.2) !important;
-  color: #FFB3BA !important;
+  background: #FFF1F2 !important;
+  color: #DC143C !important;
 }
 
 .langCode {
   font-size: 0.68rem;
   font-weight: 800;
+  letter-spacing: 0.05em;
   color: #DC143C;
-  background: rgba(220, 20, 60, 0.2);
+  background: rgba(220, 20, 60, 0.1);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
-  margin-right: 0.5rem;
 }
 
 .langLabel {
   font-size: 0.82rem;
   font-weight: 600;
-  flex: 1;
+  color: #111827;
+  margin-left: 0.5rem;
 }
 
+.activeItem .langLabel {
+  color: #DC143C;
+  font-weight: 700;
+}
+
+/* Translating animation pulse */
 .translating {
-  animation: pulseTranslate 1.2s infinite;
+  opacity: 0.7;
+  pointer-events: none;
+  animation: pulse 1s infinite alternate;
 }
 
-@keyframes pulseTranslate {
-  0% { opacity: 1; }
-  50% { opacity: 0.6; }
-  100% { opacity: 1; }
+@keyframes pulse {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 900px) {
+  .floatingWrapper {
+    bottom: 16px;
+    right: 16px;
+  }
 }

@@ -71,7 +71,7 @@ export default function LanguageSwitcher({ floating = false, className = '' }: L
     )
   }
 
-  // Header / Navbar style: Translate icon that opens language select options
+  // Header / Navbar style: Clean ONLY translator icon button (no rectangle border, no extra text)
   return (
     <div ref={menuRef} className={`${s.headerSwitcherWrap} ${className}`}>
       <button
@@ -81,25 +81,7 @@ export default function LanguageSwitcher({ floating = false, className = '' }: L
         aria-label="Translate Website - Language Menu"
         title="Translate Website / भाषा बदलें"
       >
-        <span className={s.translateIconWrap}>
-          <GoogleIcon name="translate" size={18} />
-        </span>
-        <span className={s.activeLangTag}>
-          {language === 'en' ? 'EN' : 'हिन्दी'}
-        </span>
-        <svg
-          className={`${s.chevron} ${isOpen ? s.chevronOpen : ''}`}
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+        <GoogleIcon name="translate" size={20} />
       </button>
 
       {isOpen && (

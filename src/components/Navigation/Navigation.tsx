@@ -127,7 +127,6 @@ export default function Navigation() {
       </div>
 
       <div className={s.navActions}>
-        <LanguageSwitcher className={s.navLangDesktop} />
         <Link
           to="/sahyog"
           ref={ctaRef}
@@ -137,6 +136,7 @@ export default function Navigation() {
         >
           Join Sabha →
         </Link>
+        <LanguageSwitcher className={s.navLangDesktop} />
       </div>
 
       <button
