@@ -106,7 +106,6 @@ export default function Profile() {
         // Animate sub images
         .from('[data-p="subimg"]',  { opacity: 0, y: 30, stagger: 0.2, duration: 0.6 }, '-=0.2')
         // Animate left bottom text
-        .from('[data-p="subtitle"]',{ opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
         .from('[data-p="bio"]',     { opacity: 0, y: 15, duration: 0.5 }, '-=0.4')
     }, secRef)
     return () => ctx.revert()
@@ -138,15 +137,11 @@ export default function Profile() {
             />
           </div>
 
-          {/* Bottom Left: Text & Paragraph */}
+          {/* Bottom Left: Bio Paragraph with Highlighted Aaryaveera */}
           <div className={s.leftBottom}>
-            <h3 data-p="subtitle" className={s.subTitle}>
-              <span className={s.aaryaveeraHighlight}>Aaryaveera</span>
-              <br/>
-              Harshita Mankar
-            </h3>
             <p data-p="bio" className={s.bio}>
-              {profile.bio}
+              <span className={s.aaryaveeraDropWord}>Aaryaveera</span>
+              is a civilizational strategist, tactical combat instructor, and non-verbal behaviour profiler dedicated to cultivating independent thinking, psychological resilience, and tactical preparedness among women and youth across India.
             </p>
           </div>
         </div>

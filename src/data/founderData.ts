@@ -37,7 +37,7 @@ export const DEFAULT_FOUNDER_DATA: FounderProfileData = {
   subTitle: 'Civilizational Strategist | Tactical Combat Instructor | Non-Verbal Behaviour Profiler',
   honorific_hi: 'श्रीमती हर्षिता मानकरी',
   heroQuote: 'We do not build dependent victims; we forge sovereign, intellectually fortified, and tactically capable guardians of Indian civilization.',
-  bio: 'Aaryaveera Harshita Mankar is a civilizational strategist, tactical combat instructor, and non-verbal behaviour profiler dedicated to cultivating independent thinking, psychological resilience, and tactical preparedness among women and youth across India.',
+  bio: 'Aaryaveera is a civilizational strategist, tactical combat instructor, and non-verbal behaviour profiler dedicated to cultivating independent thinking, psychological resilience, and tactical preparedness among women and youth across India.',
   heroImage: 'Gemini_Generated_Image_kdfkbukdfkbukdfk.png',
   genesisLead: 'From Grassroots Activism to Strategic Sovereignty',
   genesisP1: 'Aaryaveera’s journey began at an early age through grassroots activism, youth engagement, and work across diverse institutional and cultural ecosystems. Her experiences in schools, colleges, community settings, and social initiatives exposed her to the complex challenges confronting young people, particularly women and adolescent girls.',
@@ -69,7 +69,12 @@ export function getFounderData(): FounderProfileData {
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem('shakti_founder_data')
       if (stored) {
-        return { ...DEFAULT_FOUNDER_DATA, ...JSON.parse(stored) }
+        const parsed = JSON.parse(stored)
+        if (parsed.bio && (parsed.bio.startsWith('Aaryaveera Harshita Mankar') || parsed.bio.startsWith('Harshita Mankar is') || parsed.bio.startsWith('cHarshita Mankar'))) {
+          parsed.bio = DEFAULT_FOUNDER_DATA.bio
+          localStorage.setItem('shakti_founder_data', JSON.stringify(parsed))
+        }
+        return { ...DEFAULT_FOUNDER_DATA, ...parsed }
       }
     }
   } catch (e) {
