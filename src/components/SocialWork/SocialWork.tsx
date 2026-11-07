@@ -1,15 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import type { CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import {
   getStoredPhotos,
   getStoredCategories,
   getRandomCategoryPhoto,
   fetchAllPhotos,
-  GALLERY_UPDATE_EVENT,
+  GALLERY_UPDATE_EVENT
 } from '../../data/galleryStore'
+import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './SocialWork.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -27,7 +26,7 @@ const SLIDE_CATEGORY_KEYWORDS: string[][] = [
   ['shakti-bhava', 'consciousness', 'survivor', 'healing'],
   ['shakti-varta', 'seminar', 'discourse', 'research'],
   ['mardini', 'sword', 'martial', 'aaryaveera'],
-  ['community', 'tribal', 'outreach', 'youth'],
+  ['community', 'tribal', 'outreach', 'youth']
 ]
 
 const SLIDES: SlideData[] = [
@@ -68,53 +67,102 @@ const SLIDES: SlideData[] = [
   },
 ]
 
-// How many full copies of the list we render (3 is enough for a clean infinite row)
-const COPIES = 3
+// Minimum number of cards in the ring so the wrap-around always happens
+// far outside the visible range (±2) and is never seen.
+const MIN_RING_SIZE = 9
+const VISIBLE_RANGE = 2
 
-// Shortest circular offset of `index` from `current` on a ring of `total` items
+// Shortest circular offset on a ring of `total` items
 function getCircularOffset(index: number, current: number, total: number) {
   let diff = index - current
-  const half = total / 2
-  while (diff > half) diff -= total
-  while (diff < -half) diff += total
+  while (diff > total / 2) diff -= total
+  while (diff < -total / 2) diff += total
   return diff
 }
 
-interface RowCardProps {
+const mod = (n: number, m: number) => ((n % m) + m) % m
+
+function useTilt(active: boolean) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!ref.current || !active) return
+
+    const el = ref.current
+    let rect: DOMRect | null = null
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!rect) rect = el.getBoundingClientRect()
+      const px = (e.clientX - rect.left) / rect.width
+      const py = (e.clientY - rect.top) / rect.height
+      el.style.setProperty('--px', String(px))
+      el.style.setProperty('--py', String(py))
+    }
+
+    const handleMouseLeave = () => {
+      rect = null
+      el.style.setProperty('--px', '0.5')
+      el.style.setProperty('--py', '0.5')
+    }
+
+    el.addEventListener('mousemove', handleMouseMove)
+    el.addEventListener('mouseleave', handleMouseLeave)
+
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove)
+      el.removeEventListener('mouseleave', handleMouseLeave)
+    }
+  }, [active])
+
+  return ref
+}
+
+interface SlideProps {
   slide: SlideData
   offset: number
   isWrapping: boolean
-  step: number
   onSelect: () => void
 }
 
-function RowCard({ slide, offset, isWrapping, step, onSelect }: RowCardProps) {
-  const abs = Math.abs(offset)
+function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
   const active = offset === 0
-
-  const scale = abs === 0 ? 1 : abs === 1 ? 0.88 : 0.78
-  const opacity = abs > 2 ? 0 : abs === 2 ? 0.5 : 1
+  const hidden = Math.abs(offset) > VISIBLE_RANGE
+  const ref = useTilt(active)
 
   return (
     <div
+      ref={ref}
       className={s.slide}
       data-active={active ? 'true' : 'false'}
-      style={{
-        transform: `translate(-50%, -50%) translateX(${offset * step}px) scale(${scale})`,
-        opacity,
-        zIndex: 100 - abs,
-        pointerEvents: abs <= 2 ? 'auto' : 'none',
-        transition: isWrapping ? 'none' : undefined,
-      }}
-      onClick={!active && abs <= 2 ? onSelect : undefined}
-      aria-hidden={abs > 2}
+      aria-hidden={hidden ? 'true' : undefined}
+      style={
+        {
+          '--offset': offset,
+          '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
+          opacity: hidden ? 0 : undefined,
+          pointerEvents: hidden ? 'none' : undefined,
+          // Cards that jump from one end of the ring to the other
+          // (while hidden) must teleport, not animate across the row.
+          transition: isWrapping ? 'none' : undefined,
+        } as React.CSSProperties
+      }
+      onClick={!active && !hidden ? onSelect : undefined}
     >
-      <div className={s.slideContent}>
+      <div
+        className={s.slideBackground}
+        style={{ backgroundImage: `url('${slide.image}')` }}
+      />
+
+      <div
+        className={s.slideContent}
+        style={{ transition: isWrapping ? 'none' : undefined }}
+      >
         <div
           className={s.slideImage}
           style={{ backgroundImage: `url('${slide.image}')` }}
         />
         <div className={s.slideGradient} />
+
         <div className={s.slideContentInner}>
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
@@ -127,82 +175,50 @@ function RowCard({ slide, offset, isWrapping, step, onSelect }: RowCardProps) {
 
 export default function SocialWork() {
   const [slides, setSlides] = useState<SlideData[]>(SLIDES)
+  // `pos` is an ever-growing/shrinking integer (never wraps) -> true infinite scroll
+  const [pos, setPos] = useState(0)
+  const posRef = useRef(0)
+  const prevPosRef = useRef(0)
+  const secRef = useRef<HTMLElement>(null)
+  const touchStartX = useRef<number | null>(null)
+
   const total = slides.length
 
-  // 3 copies of the list → the wrap point is far off-screen, so it is invisible
-  const loopSlides = useMemo(() => {
-    const arr: SlideData[] = []
-    for (let c = 0; c < COPIES; c++) {
-      for (const sl of slides) arr.push(sl)
-    }
-    return arr
-  }, [slides])
+  // Build a ring that is a multiple of `total` and at least MIN_RING_SIZE long
+  const ring = useMemo(() => {
+    const copies = Math.max(1, Math.ceil(MIN_RING_SIZE / total))
+    const ringSize = total * copies
+    return Array.from({ length: ringSize }, (_, r) => ({
+      slide: slides[r % total],
+      origIndex: r % total,
+      ringIndex: r,
+    }))
+  }, [slides, total])
 
-  const loopLen = loopSlides.length
+  const ringSize = ring.length
+  const activeIndex = mod(pos, total) // for dots
 
-  const [pos, setPos] = useState(0)
-  const prevPosRef = useRef(0)
-
-  const [dims, setDims] = useState({ step: 328, cardW: 300 })
-
-  const secRef = useRef<HTMLElement>(null)
-
-  // Responsive card sizing
-  useEffect(() => {
-    const calc = () => {
-      const vw = window.innerWidth
-      let cardW = 300
-      let gap = 28
-      if (vw < 520) {
-        cardW = 200
-        gap = 14
-      } else if (vw < 768) {
-        cardW = 240
-        gap = 18
-      } else if (vw < 1100) {
-        cardW = 270
-        gap = 24
-      }
-      setDims({ step: cardW + gap, cardW })
-    }
-    calc()
-    window.addEventListener('resize', calc)
-    return () => window.removeEventListener('resize', calc)
+  const move = useCallback((delta: number) => {
+    prevPosRef.current = posRef.current
+    posRef.current += delta
+    setPos(posRef.current)
   }, [])
 
-  // Core movement helpers -----------------------------------------------------
-  const moveBy = (delta: number) => {
-    setPos(prev => {
-      prevPosRef.current = prev
-      return ((prev + delta) % loopLen + loopLen) % loopLen
-    })
+  const handleNext = useCallback(() => move(1), [move])
+  const handlePrev = useCallback(() => move(-1), [move])
+
+  // Jump to an original slide index via the shortest path (still loops)
+  const handleGotoOriginal = (idx: number) => {
+    const delta = getCircularOffset(idx, mod(posRef.current, total), total)
+    if (delta !== 0) move(delta)
   }
 
-  const handleNext = () => moveBy(1)
-  const handlePrev = () => moveBy(-1)
-
-  // Clicking a card in the row → bring it to the centre
-  const handleSelectCard = (loopIdx: number) => {
-    setPos(prev => {
-      prevPosRef.current = prev
-      const off = getCircularOffset(loopIdx, prev, loopLen)
-      return ((prev + off) % loopLen + loopLen) % loopLen
-    })
+  // Click a side card -> move by exactly its offset
+  const handleSelectRing = (offset: number) => {
+    if (offset !== 0) move(offset)
   }
 
-  // Dot click → move the shortest distance to that logical slide
-  const handleDot = (logicalIdx: number) => {
-    setPos(prev => {
-      prevPosRef.current = prev
-      const cur = ((prev % total) + total) % total
-      let delta = logicalIdx - cur
-      while (delta > total / 2) delta -= total
-      while (delta < -total / 2) delta += total
-      return ((prev + delta) % loopLen + loopLen) % loopLen
-    })
-  }
-
-  // Load photos from DB / gallery store ---------------------------------------
+  // Load photos from DB/galleryStore
   useEffect(() => {
     const randomizeCategoryPhotos = () => {
       const allPhotos = getStoredPhotos()
@@ -229,7 +245,7 @@ export default function SocialWork() {
     }
   }, [])
 
-  // Intro GSAP animations ------------------------------------------------------
+  // Intro GSAP animations
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sw="header"]', {
@@ -252,7 +268,7 @@ export default function SocialWork() {
     return () => ctx.revert()
   }, [])
 
-  // Keyboard navigation
+  // Keyboard navigation (infinite both ways)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'ArrowLeft') handlePrev()
@@ -260,13 +276,23 @@ export default function SocialWork() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loopLen])
+  }, [handlePrev, handleNext])
 
-  const activeLogical = ((pos % total) + total) % total
+  // Touch swipe
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+  }
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    touchStartX.current = null
+    if (Math.abs(dx) < 40) return
+    if (dx < 0) handleNext()
+    else handlePrev()
+  }
 
-  const trackStyle = { '--card-w': `${dims.cardW}px` } as CSSProperties
-  const viewportHeight = Math.round(dims.cardW * (4 / 3) + 100)
+  const currentRingPos = mod(pos, ringSize)
+  const prevRingPos = mod(prevPosRef.current, ringSize)
 
   return (
     <section ref={secRef} className={s.section}>
@@ -277,54 +303,55 @@ export default function SocialWork() {
         <p className={s.carouselSub}>जहाँ हम खड़े हैं — धरातलीय सामाजिक कार्य</p>
       </div>
 
-      {/* Infinite horizontal gallery stage */}
+      {/* Infinite 3D Carousel Stage */}
       <div data-sw="stage" className={s.carouselWrap}>
-        <div className={s.viewportWrap}>
-          <div className={s.rowViewport} style={{ height: viewportHeight }}>
-            <div className={s.rowTrack} style={trackStyle}>
-              {loopSlides.map((slide, i) => {
-                const currentOffset = getCircularOffset(i, pos, loopLen)
-                const previousOffset = getCircularOffset(i, prevPosRef.current, loopLen)
-                // Only true when a slide actually wraps off-screen → snap it instantly
-                const isWrapping = Math.abs(currentOffset - previousOffset) > 2
+        <div
+          className={s.slidesContainer}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className={s.slides}>
+            <button
+              type="button"
+              className={`${s.navBtn} ${s.btnPrev}`}
+              onClick={handlePrev}
+              aria-label="Previous Slide"
+              title="Previous Slide"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+            </button>
 
-                return (
-                  <RowCard
-                    key={i}
-                    slide={slide}
-                    offset={currentOffset}
-                    isWrapping={isWrapping}
-                    step={dims.step}
-                    onSelect={() => handleSelectCard(i)}
-                  />
-                )
-              })}
-            </div>
+            {ring.map(({ slide, ringIndex }) => {
+              const currentOffset = getCircularOffset(ringIndex, currentRingPos, ringSize)
+              const previousOffset = getCircularOffset(ringIndex, prevRingPos, ringSize)
+              // A card that travels far in one step is wrapping behind the scenes
+              const isWrapping = Math.abs(currentOffset - previousOffset) > VISIBLE_RANGE + 1
+
+              return (
+                <Slide
+                  key={`${slide.title}-${ringIndex}`}
+                  slide={slide}
+                  offset={currentOffset}
+                  isWrapping={isWrapping}
+                  onSelect={() => handleSelectRing(currentOffset)}
+                />
+              )
+            })}
+
+            <button
+              type="button"
+              className={`${s.navBtn} ${s.btnNext}`}
+              onClick={handleNext}
+              aria-label="Next Slide"
+              title="Next Slide"
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </button>
           </div>
-
-          <button
-            type="button"
-            className={`${s.navBtn} ${s.btnPrev}`}
-            onClick={handlePrev}
-            aria-label="Previous Slide"
-            title="Previous Slide"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="15 18 9 12 15 6" />
-            </svg>
-          </button>
-
-          <button
-            type="button"
-            className={`${s.navBtn} ${s.btnNext}`}
-            onClick={handleNext}
-            aria-label="Next Slide"
-            title="Next Slide"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 18 15 12 9 6" />
-            </svg>
-          </button>
         </div>
 
         {/* Dots Navigation */}
@@ -333,8 +360,8 @@ export default function SocialWork() {
             <button
               key={idx}
               type="button"
-              className={`${s.dot} ${activeLogical === idx ? s.dotActive : ''}`}
-              onClick={() => handleDot(idx)}
+              className={`${s.dot} ${activeIndex === idx ? s.dotActive : ''}`}
+              onClick={() => handleGotoOriginal(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
