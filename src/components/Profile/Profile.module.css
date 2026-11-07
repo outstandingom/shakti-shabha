@@ -60,20 +60,7 @@
 }
 
 
-.aaryaveeraDropWord {
-  float: left;
-  font-family: var(--font-primary, 'Poppins', sans-serif);
-  font-size: clamp(2rem, 3vw, 2.65rem);
-  font-weight: 800;
-  color: #DC143C;
-  line-height: 0.9;
-  margin-right: 0.45rem;
-  margin-bottom: 0.15rem;
-  padding-top: 3px;
-  margin-top: 2px;
-  letter-spacing: 0.02em;
-  text-shadow: 0 2px 14px rgba(220, 20, 60, 0.18);
-}
+
 
 .leftBottom {
   display: block;
@@ -94,19 +81,17 @@
   color: #DC143C !important;
   font-weight: 800 !important;
   letter-spacing: 0.02em;
-  display: inline-block;
-  text-shadow: 0 2px 10px rgba(220, 20, 60, 0.15);
+  display: inline;
 }
 
 .bio .aaryaveeraHighlight {
-  font-size: clamp(1.55rem, 2.4vw, 2.15rem);
+  font-size: 1.15em;
   font-weight: 800 !important;
-  letter-spacing: 0.02em;
-  line-height: 1.15;
-  margin-right: 0.25rem;
-  display: inline-block;
-  vertical-align: -2px;
+  color: #DC143C !important;
+  display: inline;
 }
+
+
 
 .bio { 
   font-size: clamp(0.76rem, 1vw, 0.86rem); 

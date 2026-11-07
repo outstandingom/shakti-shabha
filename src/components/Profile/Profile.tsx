@@ -140,8 +140,7 @@ export default function Profile() {
           {/* Bottom Left: Bio Paragraph with Highlighted Aaryaveera */}
           <div className={s.leftBottom}>
             <p data-p="bio" className={s.bio}>
-              <span className={s.aaryaveeraDropWord}>Aaryaveera</span>
-              is a civilizational strategist, tactical combat instructor, and non-verbal behaviour profiler dedicated to cultivating independent thinking, psychological resilience, and tactical preparedness among women and youth across India.
+              <span className={s.aaryaveeraHighlight}>Aaryaveera</span> is a civilizational strategist, tactical combat instructor, and non-verbal behaviour profiler dedicated to cultivating independent thinking, psychological resilience, and tactical preparedness among women and youth across India.
             </p>
           </div>
         </div>
