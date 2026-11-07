@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import {
   getStoredPhotos,
   getStoredCategories,
@@ -67,21 +67,6 @@ const SLIDES: SlideData[] = [
   },
 ]
 
-// Minimum number of cards in the ring so the wrap-around always happens
-// far outside the visible range (±2) and is never seen.
-const MIN_RING_SIZE = 9
-const VISIBLE_RANGE = 2
-
-// Shortest circular offset on a ring of `total` items
-function getCircularOffset(index: number, current: number, total: number) {
-  let diff = index - current
-  while (diff > total / 2) diff -= total
-  while (diff < -total / 2) diff += total
-  return diff
-}
-
-const mod = (n: number, m: number) => ((n % m) + m) % m
-
 function useTilt(active: boolean) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -120,13 +105,12 @@ function useTilt(active: boolean) {
 interface SlideProps {
   slide: SlideData
   offset: number
-  isWrapping: boolean
   onSelect: () => void
 }
 
-function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
+function Slide({ slide, offset, onSelect }: SlideProps) {
   const active = offset === 0
-  const hidden = Math.abs(offset) > VISIBLE_RANGE
+  const hidden = Math.abs(offset) > 2
   const ref = useTilt(active)
 
   return (
@@ -141,22 +125,12 @@ function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
           '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
           opacity: hidden ? 0 : undefined,
           pointerEvents: hidden ? 'none' : undefined,
-          // Cards that jump from one end of the ring to the other
-          // (while hidden) must teleport, not animate across the row.
-          transition: isWrapping ? 'none' : undefined,
+          visibility: Math.abs(offset) > 3 ? 'hidden' : 'visible',
         } as React.CSSProperties
       }
       onClick={!active && !hidden ? onSelect : undefined}
     >
-      <div
-        className={s.slideBackground}
-        style={{ backgroundImage: `url('${slide.image}')` }}
-      />
-
-      <div
-        className={s.slideContent}
-        style={{ transition: isWrapping ? 'none' : undefined }}
-      >
+      <div className={s.slideContent}>
         <div
           className={s.slideImage}
           style={{ backgroundImage: `url('${slide.image}')` }}
@@ -164,6 +138,7 @@ function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
         <div className={s.slideGradient} />
 
         <div className={s.slideContentInner}>
+          <span className={s.slideStat}>{slide.stat}</span>
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
           <p className={s.slideDescription}>{slide.description}</p>
@@ -175,48 +150,30 @@ function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
 
 export default function SocialWork() {
   const [slides, setSlides] = useState<SlideData[]>(SLIDES)
-  // `pos` is an ever-growing/shrinking integer (never wraps) -> true infinite scroll
-  const [pos, setPos] = useState(0)
-  const posRef = useRef(0)
-  const prevPosRef = useRef(0)
+  // Continuous virtual position allowing seamless infinite scroll in both directions
+  const [position, setPosition] = useState(0)
   const secRef = useRef<HTMLElement>(null)
   const touchStartX = useRef<number | null>(null)
 
   const total = slides.length
 
-  // Build a ring that is a multiple of `total` and at least MIN_RING_SIZE long
-  const ring = useMemo(() => {
-    const copies = Math.max(1, Math.ceil(MIN_RING_SIZE / total))
-    const ringSize = total * copies
-    return Array.from({ length: ringSize }, (_, r) => ({
-      slide: slides[r % total],
-      origIndex: r % total,
-      ringIndex: r,
-    }))
-  }, [slides, total])
+  // Current active slide index (0 to total - 1)
+  const activeIndex = ((position % total) + total) % total
 
-  const ringSize = ring.length
-  const activeIndex = mod(pos, total) // for dots
-
-  const move = useCallback((delta: number) => {
-    prevPosRef.current = posRef.current
-    posRef.current += delta
-    setPos(posRef.current)
+  const handleNext = useCallback(() => {
+    setPosition(prev => prev + 1)
   }, [])
 
-  const handleNext = useCallback(() => move(1), [move])
-  const handlePrev = useCallback(() => move(-1), [move])
+  const handlePrev = useCallback(() => {
+    setPosition(prev => prev - 1)
+  }, [])
 
-  // Jump to an original slide index via the shortest path (still loops)
-  const handleGotoOriginal = (idx: number) => {
-    const delta = getCircularOffset(idx, mod(posRef.current, total), total)
-    if (delta !== 0) move(delta)
-  }
-
-  // Click a side card -> move by exactly its offset
-  const handleSelectRing = (offset: number) => {
-    if (offset !== 0) move(offset)
-  }
+  const handleGoto = useCallback((targetIdx: number) => {
+    let diff = targetIdx - activeIndex
+    while (diff > total / 2) diff -= total
+    while (diff < -total / 2) diff += total
+    setPosition(prev => prev + diff)
+  }, [activeIndex, total])
 
   // Load photos from DB/galleryStore
   useEffect(() => {
@@ -291,8 +248,8 @@ export default function SocialWork() {
     else handlePrev()
   }
 
-  const currentRingPos = mod(pos, ringSize)
-  const prevRingPos = mod(prevPosRef.current, ringSize)
+  // Virtual window around current position [-3 to +3] ensuring uninterrupted continuous motion
+  const virtualRange = [-3, -2, -1, 0, 1, 2, 3]
 
   return (
     <section ref={secRef} className={s.section}>
@@ -323,19 +280,17 @@ export default function SocialWork() {
               </svg>
             </button>
 
-            {ring.map(({ slide, ringIndex }) => {
-              const currentOffset = getCircularOffset(ringIndex, currentRingPos, ringSize)
-              const previousOffset = getCircularOffset(ringIndex, prevRingPos, ringSize)
-              // A card that travels far in one step is wrapping behind the scenes
-              const isWrapping = Math.abs(currentOffset - previousOffset) > VISIBLE_RANGE + 1
+            {virtualRange.map(delta => {
+              const virtualIndex = position + delta
+              const slideIdx = ((virtualIndex % total) + total) % total
+              const slide = slides[slideIdx]
 
               return (
                 <Slide
-                  key={`${slide.title}-${ringIndex}`}
+                  key={virtualIndex}
                   slide={slide}
-                  offset={currentOffset}
-                  isWrapping={isWrapping}
-                  onSelect={() => handleSelectRing(currentOffset)}
+                  offset={delta}
+                  onSelect={() => setPosition(virtualIndex)}
                 />
               )
             })}
@@ -361,7 +316,7 @@ export default function SocialWork() {
               key={idx}
               type="button"
               className={`${s.dot} ${activeIndex === idx ? s.dotActive : ''}`}
-              onClick={() => handleGotoOriginal(idx)}
+              onClick={() => handleGoto(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
