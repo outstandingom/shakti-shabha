@@ -1,99 +1,162 @@
-/* ---------- Section shell ---------- */
+/* ============================================================
+   SocialWork.module.css  — Infinite 3D Carousel
+   ============================================================ */
+
 .section {
+  --accent: #d4a24c;
+  --accent-soft: rgba(212, 162, 76, 0.25);
+  --bg: #0b0b0f;
+  --text: #f5f1e8;
+  --text-dim: rgba(245, 241, 232, 0.72);
+
+  --card-w: 380px;
+  --card-h: 500px;
+
   position: relative;
-  width: 100%;
-  padding: 5rem 1rem 6rem;
+  padding: 96px 0 80px;
+  background: var(--bg);
+  color: var(--text);
   overflow: hidden;
 }
 
 /* ---------- Header ---------- */
+
 .carouselHeader {
-  max-width: 900px;
-  margin: 0 auto 2.75rem;
   text-align: center;
-  padding: 0 1rem;
+  padding: 0 24px;
+  margin-bottom: 48px;
 }
 
 .eyebrow {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #c9a24b;
-  margin-bottom: 0.9rem;
-  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 14px;
 }
 
 .carouselTitle {
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4.5vw, 52px);
+  line-height: 1.1;
   font-weight: 700;
-  color: #f5f1e6;
-  margin: 0 0 0.6rem;
-  line-height: 1.15;
 }
 
 .carouselSub {
-  font-size: 1rem;
-  color: #a9a396;
   margin: 0;
+  font-size: clamp(14px, 1.6vw, 18px);
+  color: var(--text-dim);
 }
 
 /* ---------- Stage ---------- */
+
 .carouselWrap {
   position: relative;
   width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.viewportWrap {
+.slidesContainer {
   position: relative;
   width: 100%;
+  height: calc(var(--card-h) + 60px);
+  perspective: 1600px;
+  perspective-origin: 50% 45%;
+  touch-action: pan-y;          /* allow vertical scroll, we handle horizontal swipe */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.rowViewport {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
-}
-
-.rowTrack {
+.slides {
   position: relative;
   width: 100%;
   height: 100%;
+  transform-style: preserve-3d;
 }
 
-/* ---------- Slide card ---------- */
+/* ---------- Slide (one card) ---------- */
+
 .slide {
+  --abs: calc(var(--offset) * var(--dir));   /* |offset| */
+  --px: 0.5;
+  --py: 0.5;
+
   position: absolute;
   top: 50%;
   left: 50%;
-  width: var(--card-w, 300px);
-  aspect-ratio: 3 / 4;
-  border-radius: 20px;
-  overflow: hidden;
+  width: var(--card-w);
+  height: var(--card-h);
   cursor: pointer;
+  transform-style: preserve-3d;
+
+  transform:
+    translate(-50%, -50%)
+    translateX(calc(var(--offset) * 68%))
+    translateZ(calc(var(--abs) * -140px))
+    rotateY(calc(var(--offset) * -16deg))
+    scale(calc(1 - var(--abs) * 0.06));
+
+  opacity: calc(1 - var(--abs) * 0.28);
+  filter: brightness(calc(1 - var(--abs) * 0.22));
+  z-index: calc(20 - var(--abs));
+
+  /* NOTE: component sets inline `transition: none` on wrapping cards */
+  transition:
+    transform 0.7s cubic-bezier(0.22, 0.8, 0.24, 1),
+    opacity 0.5s ease,
+    filter 0.5s ease;
   will-change: transform, opacity;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.5s ease,
-              box-shadow 0.4s ease;
-  transform-origin: center center;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .slide[data-active='true'] {
   cursor: default;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.6),
-              0 0 0 1px rgba(201, 162, 75, 0.35);
+  opacity: 1;
+  filter: none;
 }
 
+/* Soft glow behind the active card */
+.slideBackground {
+  position: absolute;
+  inset: 4% 6%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 28px;
+  filter: blur(40px) saturate(1.3);
+  opacity: 0;
+  transform: translateZ(-1px);
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.slide[data-active='true'] .slideBackground {
+  opacity: 0.55;
+}
+
+/* Card body */
 .slideContent {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  border-radius: 24px;
   overflow: hidden;
+  background: #15151b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+
+  /* mouse-tilt on the active card only */
+  transform:
+    rotateX(calc((var(--py) - 0.5) * -8deg))
+    rotateY(calc((var(--px) - 0.5) * 8deg));
+  transition: transform 0.25s ease-out, box-shadow 0.5s ease;
+}
+
+.slide[data-active='true'] .slideContent {
+  border-color: var(--accent-soft);
+  box-shadow:
+    0 40px 80px -24px rgba(0, 0, 0, 0.85),
+    0 0 0 1px var(--accent-soft);
 }
 
 .slideImage {
@@ -101,8 +164,12 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  transform: scale(1.03);
-  filter: saturate(0.95);
+  transform: scale(1.06);
+  transition: transform 1.2s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+.slide[data-active='true'] .slideImage {
+  transform: scale(1);
 }
 
 .slideGradient {
@@ -110,151 +177,197 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(6, 6, 8, 0.94) 0%,
-    rgba(6, 6, 8, 0.6) 38%,
-    rgba(6, 6, 8, 0.08) 72%,
-    transparent 100%
+    rgba(8, 8, 12, 0.92) 0%,
+    rgba(8, 8, 12, 0.55) 38%,
+    rgba(8, 8, 12, 0) 70%
   );
+  pointer-events: none;
 }
 
+/* Text */
 .slideContentInner {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1.4rem 1.3rem 1.5rem;
-  color: #fff;
-  text-align: left;
+  padding: 28px 26px 30px;
 }
 
 .slideTitle {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0 0 0.3rem;
+  margin: 0 0 4px;
+  font-size: 24px;
   line-height: 1.2;
-  color: #fff;
+  font-weight: 700;
 }
 
 .slideSubtitle {
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #d9b45f;
-  margin: 0 0 0.6rem;
+  margin: 0;
+  font-size: 13px;
   font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 .slideDescription {
-  font-size: 0.85rem;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.82);
   margin: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-dim);
+  transition: max-height 0.5s ease, opacity 0.5s ease, margin 0.5s ease;
 }
 
-/* ---------- Nav arrows ---------- */
+.slide[data-active='true'] .slideDescription {
+  max-height: 140px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+/* ---------- Nav buttons ---------- */
+
 .navBtn {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  z-index: 200;
-  width: 54px;
-  height: 54px;
+  z-index: 50;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(15, 15, 18, 0.72);
-  color: #f5f1e6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+  background: rgba(20, 20, 26, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  color: var(--text);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
 }
 
 .navBtn:hover {
-  background: rgba(201, 162, 75, 0.92);
-  border-color: rgba(201, 162, 75, 1);
-  color: #0d0d0f;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #111;
+  transform: translateY(-50%) scale(1.08);
 }
 
 .navBtn:active {
-  transform: translateY(-50%) scale(0.94);
+  transform: translateY(-50%) scale(0.95);
 }
 
-.btnPrev {
-  left: clamp(0.5rem, 2vw, 2.5rem);
+.navBtn:focus-visible,
+.dot:focus-visible,
+.exploreLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
-.btnNext {
-  right: clamp(0.5rem, 2vw, 2.5rem);
-}
+.btnPrev { left: 4%; }
+.btnNext { right: 4%; }
 
 /* ---------- Dots ---------- */
+
 .dotsRow {
   display: flex;
   justify-content: center;
-  gap: 0.55rem;
-  margin-top: 2rem;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .dot {
   width: 9px;
   height: 9px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.25);
-  cursor: pointer;
   padding: 0;
-  transition: background 0.25s ease, transform 0.25s ease;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: width 0.35s ease, background 0.35s ease;
 }
 
 .dot:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.55);
 }
 
-.dotActive {
-  background: #c9a24b;
-  transform: scale(1.35);
+.dotActive,
+.dotActive:hover {
+  width: 28px;
+  background: var(--accent);
 }
 
 /* ---------- CTA ---------- */
+
 .ctaRow {
-  display: flex;
-  justify-content: center;
-  margin-top: 1.6rem;
+  text-align: center;
+  margin-top: 40px;
+  padding: 0 24px;
 }
 
 .exploreLink {
-  color: #c9a24b;
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-soft);
+  color: var(--accent);
+  font-size: 15px;
   font-weight: 600;
-  font-size: 0.95rem;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s ease, color 0.25s ease;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 }
 
 .exploreLink:hover {
-  border-bottom-color: #c9a24b;
-  color: #e3c47e;
+  background: var(--accent);
+  color: #111;
+  transform: translateY(-2px);
 }
 
 /* ---------- Responsive ---------- */
+
+@media (max-width: 1024px) {
+  .section {
+    --card-w: 320px;
+    --card-h: 440px;
+  }
+}
+
 @media (max-width: 640px) {
   .section {
-    padding: 3.5rem 0.75rem 4.5rem;
+    --card-w: 260px;
+    --card-h: 380px;
+    padding: 64px 0 56px;
   }
+
+  .slide {
+    transform:
+      translate(-50%, -50%)
+      translateX(calc(var(--offset) * 58%))
+      translateZ(calc(var(--abs) * -120px))
+      rotateY(calc(var(--offset) * -12deg))
+      scale(calc(1 - var(--abs) * 0.08));
+  }
+
+  .slideTitle { font-size: 20px; }
+  .slideDescription { font-size: 14px; }
+
   .navBtn {
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
   }
-  .slideContentInner {
-    padding: 1rem 1rem 1.1rem;
-  }
-  .slideTitle {
-    font-size: 1.05rem;
-  }
-  .slideDescription {
-    font-size: 0.78rem;
+  .btnPrev { left: 8px; }
+  .btnNext { right: 8px; }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .slide,
+  .slideContent,
+  .slideImage,
+  .slideDescription,
+  .slideBackground {
+    transition-duration: 0.01ms !important;
   }
 }
