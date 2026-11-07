@@ -294,12 +294,6 @@ export default function CounsellingPage() {
               </div>
             </div>
           ))}
-
-          {/* Bottom Scroll Hint */}
-          <div className={cp.wheelScrollHint}>
-            <GoogleIcon name="south" size={15} />
-            <span>Scroll down to explore all services</span>
-          </div>
         </div>
       </section>
 

@@ -601,7 +601,7 @@ export default function AboutPage() {
                 <GoogleIcon name="architecture" size={16} />
                 STRATEGIC BLUEPRINT · रणनीतिक कार्यप्रणाली
               </span>
-              <h3 className={p.blueprintMainTitle}>The Architecture of Sovereignty</h3>
+              <h3 className={`${p.blueprintMainTitle} ${p.animatedHeading}`}>The Architecture of Sovereignty</h3>
               <p className={p.blueprintSubtitle}>
                 Explore the foundational philosophy, frontline rescue operations, tactical combat curriculum, and institutional tri-stream framework.
               </p>
@@ -853,13 +853,13 @@ export default function AboutPage() {
           <span style={{ fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.2em', textTransform: 'uppercase', color: '#DC143C', display: 'block', marginBottom: '1rem' }}>
             THE SHAKTI SABHA PHILOSOPHY
           </span>
-          <h3 style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.6vw, 2rem)', color: '#881337', marginBottom: '1.25rem' }}>
+          <h3 className={p.animatedHeading} style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: 'clamp(1.4rem, 2.6vw, 2rem)', color: '#881337', marginBottom: '1.25rem' }}>
             Strength Without Hatred. Knowledge Without Blindness. Power With Responsibility.
           </h3>
-          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
+          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'center', maxWidth: '780px', margin: '0 auto 1.5rem' }}>
             Shakti Sabha believes that genuine empowerment must develop the whole human being. Physical strength without self-control can become aggression. Knowledge without critical inquiry can become dogma. Freedom without responsibility can become directionless. Peace without courage can become passive acceptance of injustice.
           </p>
-          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'left' }}>
+          <p style={{ color: '#374151', fontSize: '0.95rem', lineHeight: 1.75, marginBottom: '1.5rem', textAlign: 'center', maxWidth: '780px', margin: '0 auto 1.5rem' }}>
             We encourage women to recognize their strength without developing hostility towards men. We encourage young people to question ideas without becoming prisoners of cynicism. We promote cultural awareness without blind glorification and modern thinking without blind imitation.
           </p>
           <blockquote style={{ fontFamily: 'var(--font-display, "Cinzel", serif)', fontSize: '1.15rem', lineHeight: 1.6, color: '#DC143C', fontStyle: 'italic', margin: '0 0 1rem' }}>
@@ -872,7 +872,7 @@ export default function AboutPage() {
       <section className={p.timelineSection} ref={timelineRef}>
         <div className={p.sectionInner}>
           <span className={p.sectionEyebrow}>Our Journey</span>
-          <h2 className={p.sectionTitle}>12 Years of Impact</h2>
+          <h2 className={`${p.sectionTitle} ${p.animatedHeading}`}>12 Years of Impact</h2>
           <div className={p.timeline}>
             {TIMELINE.map((t, i) => (
               <div key={i} className={p.timelineItem}>
@@ -897,7 +897,7 @@ export default function AboutPage() {
       <section className={p.valuesSection} ref={valuesRef}>
         <div className={p.sectionInner}>
           <span className={p.sectionEyebrow}>What We Stand For</span>
-          <h2 className={p.sectionTitle}>Our Core Values</h2>
+          <h2 className={`${p.sectionTitle} ${p.animatedHeading}`}>Our Core Values</h2>
           <div className={p.valuesGrid}>
             {VALUES.map((v) => (
               <div key={v.name} className={p.valueCard}>
@@ -920,7 +920,7 @@ export default function AboutPage() {
               <GoogleIcon name="public" size={15} />
               आधिकारिक सोशल मीडिया · Digital Vanguard
             </span>
-            <h2 className={p.socialTitle}>Official Movement Portals &amp; Channels</h2>
+            <h2 className={`${p.socialTitle} ${p.animatedHeading}`}>Official Movement Portals &amp; Channels</h2>
             <p className={p.socialSubtitle}>
               Select any platform from the bar below to view and access verified accounts of Shakti Sabha and Founder Harshita Mankar.
             </p>

@@ -414,10 +414,9 @@ export default function ImpactPage() {
         <div className={s.clustersGrid}>
           {/* Cluster 1 */}
           <div className={s.clusterCard}>
-            <span className={s.clusterBadge}>Cluster 01</span>
+            <span className={s.clusterBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><GoogleIcon name="place" size={14} />Cluster 01</span>
             <h3 className={s.clusterTitle}>Central MP &amp; Satpura Basin</h3>
             <div className={s.clusterRegion}>
-              <GoogleIcon name="place" size={15} />
               Betul, Bhopal Highway Corridor, KGBV Hostels
             </div>
             <p className={s.clusterFocus}>
@@ -428,10 +427,9 @@ export default function ImpactPage() {
 
           {/* Cluster 2 */}
           <div className={s.clusterCard}>
-            <span className={s.clusterBadge}>Cluster 02</span>
+            <span className={s.clusterBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><GoogleIcon name="place" size={14} />Cluster 02</span>
             <h3 className={s.clusterTitle}>Vidarbha &amp; Western Maharashtra</h3>
             <div className={s.clusterRegion}>
-              <GoogleIcon name="place" size={15} />
               Akola, Amravati, Hivarkhed, Navi Mumbai
             </div>
             <p className={s.clusterFocus}>
@@ -442,10 +440,9 @@ export default function ImpactPage() {
 
           {/* Cluster 3 */}
           <div className={s.clusterCard}>
-            <span className={s.clusterBadge}>Cluster 03</span>
+            <span className={s.clusterBadge} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}><GoogleIcon name="place" size={14} />Cluster 03</span>
             <h3 className={s.clusterTitle}>Malwa &amp; Western Belt</h3>
             <div className={s.clusterRegion}>
-              <GoogleIcon name="place" size={15} />
               Ratlam, Ajmer Academic Circuit
             </div>
             <p className={s.clusterFocus}>

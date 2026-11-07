@@ -237,7 +237,7 @@ export default function SocialWorkPage() {
             {REGIONS.map((r) => (
               <div key={r.name} className={sw.regionCard} data-region>
                 <div className={sw.regionIcon}>
-                  <GoogleIcon name={r.icon} size={28} style={{ color: '#DC143C' }} />
+                  <GoogleIcon name={r.icon} size={34} style={{ color: '#DC143C' }} />
                 </div>
                 <div className={sw.regionName}>{r.name}</div>
                 <div className={sw.regionStat}>{r.stat}</div>
