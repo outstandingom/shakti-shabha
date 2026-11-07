@@ -14,7 +14,7 @@
   color: #F0EBE3;
   border-top: 1px solid rgba(201, 169, 110, 0.2);
   border-bottom: 1px solid rgba(201, 169, 110, 0.2);
-  padding: 2.25rem 1rem 2.25rem;
+  padding: 1.5rem 1rem 1.6rem;
   scroll-margin-top: 75px;
 }
 
@@ -382,19 +382,20 @@
 
   .identity {
     max-width: 44rem;
-    margin: 0.15rem 0 0.45rem;
-    padding: 0.85rem 1.15rem;
+    margin: 0.15rem 0 0.55rem;
+    padding: 0;
+    background: transparent;
+    border: none;
   }
 
-  .identityLead {
-    font-size: 0.88rem;
-    line-height: 1.58;
-    margin-bottom: 0.45rem;
+  .identityHindi {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
   }
 
-  .identityList {
-    gap: 0.25rem;
+  .identityText {
     font-size: 0.84rem;
+    line-height: 1.55;
   }
 
   .poweredBy {

@@ -9,9 +9,9 @@ import s from './Aaryaveera.module.css'
 gsap.registerPlugin(ScrollTrigger, Physics2DPlugin)
 
 const CARDS = [
-  { icon: 'sports_martial_arts',  title: 'Self-Mastery & Kshatra-Dharma', text: 'Rooted in the Aaryaveera philosophy, Shakti Sabha conducts Mission Mardini tactical self-defense camps — building fearlessness and physical sovereignty.' },
-  { icon: 'local_fire_department', title: 'Moral Autonomy & Character',   text: 'The founder’s worldview cultivates inner mastery, ethical courage, and personal responsibility without falling into victimhood.' },
-  { icon: 'podcasts',             title: 'Epistemic & Civilizational Dialogue', text: 'Powering Shakti Varta’s intellectual inquiries — uncompromising civilizational discourse on noble masculinity (Paurush) and Dharma.' },
+  { icon: 'sports_martial_arts',  title: 'Self-Mastery & Kshatra-Dharma', text: 'Rooted in Aaryaveera philosophy, Mission Mardini conducts tactical self-defense camps — building somatic fearlessness and physical sovereignty.' },
+  { icon: 'local_fire_department', title: 'Moral Autonomy & Character',   text: 'Cultivating inner mastery, ethical courage, and personal responsibility without falling into passive victimhood.' },
+  { icon: 'podcasts',             title: 'Epistemic & Civilizational Dialogue', text: 'Powering Shakti Varta’s intellectual inquiries — uncompromising civilizational discourse on Dharma and noble masculinity (Paurush).' },
 ]
 
 const COLORS = ['#CC230C','#E0550D','#C8433E','#FA9417','#F7A958','#F4BEA2','#D57A84']
