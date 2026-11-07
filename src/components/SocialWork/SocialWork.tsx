@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties } from 'react'
+import { Link } from 'react-router-dom'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   getStoredPhotos,
   getStoredCategories,
   getRandomCategoryPhoto,
   fetchAllPhotos,
-  GALLERY_UPDATE_EVENT
+  GALLERY_UPDATE_EVENT,
 } from '../../data/galleryStore'
-import { Link } from 'react-router-dom'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import s from './SocialWork.module.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -26,7 +27,7 @@ const SLIDE_CATEGORY_KEYWORDS: string[][] = [
   ['shakti-bhava', 'consciousness', 'survivor', 'healing'],
   ['shakti-varta', 'seminar', 'discourse', 'research'],
   ['mardini', 'sword', 'martial', 'aaryaveera'],
-  ['community', 'tribal', 'outreach', 'youth']
+  ['community', 'tribal', 'outreach', 'youth'],
 ]
 
 const SLIDES: SlideData[] = [
@@ -67,99 +68,53 @@ const SLIDES: SlideData[] = [
   },
 ]
 
-// Calculates shortest circular offset on a ring of `total` items
+// How many full copies of the list we render (3 is enough for a clean infinite row)
+const COPIES = 3
+
+// Shortest circular offset of `index` from `current` on a ring of `total` items
 function getCircularOffset(index: number, current: number, total: number) {
   let diff = index - current
-  while (diff > total / 2) diff -= total
-  while (diff < -total / 2) diff += total
+  const half = total / 2
+  while (diff > half) diff -= total
+  while (diff < -half) diff += total
   return diff
 }
 
-function useTilt(active: boolean) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!ref.current || !active) return
-
-    const el = ref.current
-    let rect: DOMRect | null = null
-
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!el) return
-      if (!rect) {
-        rect = el.getBoundingClientRect()
-      }
-      const px = (e.clientX - rect.left) / rect.width
-      const py = (e.clientY - rect.top) / rect.height
-      el.style.setProperty('--px', String(px))
-      el.style.setProperty('--py', String(py))
-    }
-
-    const handleMouseLeave = () => {
-      rect = null
-      el.style.setProperty('--px', '0.5')
-      el.style.setProperty('--py', '0.5')
-    }
-
-    el.addEventListener('mousemove', handleMouseMove)
-    el.addEventListener('mouseleave', handleMouseLeave)
-
-    return () => {
-      el.removeEventListener('mousemove', handleMouseMove)
-      el.removeEventListener('mouseleave', handleMouseLeave)
-    }
-  }, [active])
-
-  return ref
-}
-
-interface SlideProps {
+interface RowCardProps {
   slide: SlideData
   offset: number
   isWrapping: boolean
+  step: number
   onSelect: () => void
 }
 
-function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
+function RowCard({ slide, offset, isWrapping, step, onSelect }: RowCardProps) {
+  const abs = Math.abs(offset)
   const active = offset === 0
-  const ref = useTilt(active)
+
+  const scale = abs === 0 ? 1 : abs === 1 ? 0.88 : 0.78
+  const opacity = abs > 2 ? 0 : abs === 2 ? 0.5 : 1
 
   return (
     <div
-      ref={ref}
       className={s.slide}
       data-active={active ? 'true' : 'false'}
-      style={
-        {
-          '--offset': offset,
-          '--dir': offset === 0 ? 0 : offset > 0 ? 1 : -1,
-          opacity: Math.abs(offset) > 2 ? 0 : undefined,
-          pointerEvents: Math.abs(offset) > 2 ? 'none' : undefined,
-        } as React.CSSProperties
-      }
-      onClick={!active ? onSelect : undefined}
+      style={{
+        transform: `translate(-50%, -50%) translateX(${offset * step}px) scale(${scale})`,
+        opacity,
+        zIndex: 100 - abs,
+        pointerEvents: abs <= 2 ? 'auto' : 'none',
+        transition: isWrapping ? 'none' : undefined,
+      }}
+      onClick={!active && abs <= 2 ? onSelect : undefined}
+      aria-hidden={abs > 2}
     >
-      <div
-        className={s.slideBackground}
-        style={{
-          backgroundImage: `url('${slide.image}')`,
-        }}
-      />
-
-      <div
-        className={s.slideContent}
-        style={{
-          transition: isWrapping ? 'none' : undefined,
-        }}
-      >
+      <div className={s.slideContent}>
         <div
           className={s.slideImage}
-          style={{
-            backgroundImage: `url('${slide.image}')`,
-          }}
+          style={{ backgroundImage: `url('${slide.image}')` }}
         />
         <div className={s.slideGradient} />
-
         <div className={s.slideContentInner}>
           <h2 className={s.slideTitle}>{slide.title}</h2>
           <h3 className={s.slideSubtitle}>{slide.subtitle}</h3>
@@ -171,29 +126,83 @@ function Slide({ slide, offset, isWrapping, onSelect }: SlideProps) {
 }
 
 export default function SocialWork() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const prevIndexRef = useRef(0)
   const [slides, setSlides] = useState<SlideData[]>(SLIDES)
-  const secRef = useRef<HTMLElement>(null)
-
   const total = slides.length
 
-  const handleNext = () => {
-    prevIndexRef.current = currentIndex
-    setCurrentIndex(prev => (prev + 1) % total)
+  // 3 copies of the list → the wrap point is far off-screen, so it is invisible
+  const loopSlides = useMemo(() => {
+    const arr: SlideData[] = []
+    for (let c = 0; c < COPIES; c++) {
+      for (const sl of slides) arr.push(sl)
+    }
+    return arr
+  }, [slides])
+
+  const loopLen = loopSlides.length
+
+  const [pos, setPos] = useState(0)
+  const prevPosRef = useRef(0)
+
+  const [dims, setDims] = useState({ step: 328, cardW: 300 })
+
+  const secRef = useRef<HTMLElement>(null)
+
+  // Responsive card sizing
+  useEffect(() => {
+    const calc = () => {
+      const vw = window.innerWidth
+      let cardW = 300
+      let gap = 28
+      if (vw < 520) {
+        cardW = 200
+        gap = 14
+      } else if (vw < 768) {
+        cardW = 240
+        gap = 18
+      } else if (vw < 1100) {
+        cardW = 270
+        gap = 24
+      }
+      setDims({ step: cardW + gap, cardW })
+    }
+    calc()
+    window.addEventListener('resize', calc)
+    return () => window.removeEventListener('resize', calc)
+  }, [])
+
+  // Core movement helpers -----------------------------------------------------
+  const moveBy = (delta: number) => {
+    setPos(prev => {
+      prevPosRef.current = prev
+      return ((prev + delta) % loopLen + loopLen) % loopLen
+    })
   }
 
-  const handlePrev = () => {
-    prevIndexRef.current = currentIndex
-    setCurrentIndex(prev => (prev - 1 + total) % total)
+  const handleNext = () => moveBy(1)
+  const handlePrev = () => moveBy(-1)
+
+  // Clicking a card in the row → bring it to the centre
+  const handleSelectCard = (loopIdx: number) => {
+    setPos(prev => {
+      prevPosRef.current = prev
+      const off = getCircularOffset(loopIdx, prev, loopLen)
+      return ((prev + off) % loopLen + loopLen) % loopLen
+    })
   }
 
-  const handleGoto = (idx: number) => {
-    prevIndexRef.current = currentIndex
-    setCurrentIndex(idx)
+  // Dot click → move the shortest distance to that logical slide
+  const handleDot = (logicalIdx: number) => {
+    setPos(prev => {
+      prevPosRef.current = prev
+      const cur = ((prev % total) + total) % total
+      let delta = logicalIdx - cur
+      while (delta > total / 2) delta -= total
+      while (delta < -total / 2) delta += total
+      return ((prev + delta) % loopLen + loopLen) % loopLen
+    })
   }
 
-  // Load photos from DB/galleryStore
+  // Load photos from DB / gallery store ---------------------------------------
   useEffect(() => {
     const randomizeCategoryPhotos = () => {
       const allPhotos = getStoredPhotos()
@@ -203,10 +212,7 @@ export default function SocialWork() {
         SLIDES.map((slide, idx) => {
           const kw = SLIDE_CATEGORY_KEYWORDS[idx] || ['all']
           const randomPhoto = getRandomCategoryPhoto(kw, slide.image, allPhotos, categories)
-          return {
-            ...slide,
-            image: randomPhoto.url
-          }
+          return { ...slide, image: randomPhoto.url }
         })
       )
     }
@@ -223,7 +229,7 @@ export default function SocialWork() {
     }
   }, [])
 
-  // Intro GSAP animations
+  // Intro GSAP animations ------------------------------------------------------
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from('[data-sw="header"]', {
@@ -249,15 +255,18 @@ export default function SocialWork() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') {
-        handlePrev()
-      } else if (e.key === 'ArrowRight') {
-        handleNext()
-      }
+      if (e.key === 'ArrowLeft') handlePrev()
+      else if (e.key === 'ArrowRight') handleNext()
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [currentIndex])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loopLen])
+
+  const activeLogical = ((pos % total) + total) % total
+
+  const trackStyle = { '--card-w': `${dims.cardW}px` } as CSSProperties
+  const viewportHeight = Math.round(dims.cardW * (4 / 3) + 100)
 
   return (
     <section ref={secRef} className={s.section}>
@@ -268,51 +277,54 @@ export default function SocialWork() {
         <p className={s.carouselSub}>जहाँ हम खड़े हैं — धरातलीय सामाजिक कार्य</p>
       </div>
 
-      {/* 3D Carousel Stage */}
+      {/* Infinite horizontal gallery stage */}
       <div data-sw="stage" className={s.carouselWrap}>
-        <div className={s.slidesContainer}>
-          <div className={s.slides}>
-            <button
-              type="button"
-              className={`${s.navBtn} ${s.btnPrev}`}
-              onClick={handlePrev}
-              aria-label="Previous Slide"
-              title="Previous Slide"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
+        <div className={s.viewportWrap}>
+          <div className={s.rowViewport} style={{ height: viewportHeight }}>
+            <div className={s.rowTrack} style={trackStyle}>
+              {loopSlides.map((slide, i) => {
+                const currentOffset = getCircularOffset(i, pos, loopLen)
+                const previousOffset = getCircularOffset(i, prevPosRef.current, loopLen)
+                // Only true when a slide actually wraps off-screen → snap it instantly
+                const isWrapping = Math.abs(currentOffset - previousOffset) > 2
 
-            {slides.map((slide, i) => {
-              const currentOffset = getCircularOffset(i, currentIndex, total)
-              const previousOffset = getCircularOffset(i, prevIndexRef.current, total)
-              // If a slide is wrapping from -2 to +2 or vice-versa behind the scenes, disable transition
-              const isWrapping = Math.abs(currentOffset - previousOffset) > 2
-
-              return (
-                <Slide
-                  key={slide.title}
-                  slide={slide}
-                  offset={currentOffset}
-                  isWrapping={isWrapping}
-                  onSelect={() => handleGoto(i)}
-                />
-              )
-            })}
-
-            <button
-              type="button"
-              className={`${s.navBtn} ${s.btnNext}`}
-              onClick={handleNext}
-              aria-label="Next Slide"
-              title="Next Slide"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
+                return (
+                  <RowCard
+                    key={i}
+                    slide={slide}
+                    offset={currentOffset}
+                    isWrapping={isWrapping}
+                    step={dims.step}
+                    onSelect={() => handleSelectCard(i)}
+                  />
+                )
+              })}
+            </div>
           </div>
+
+          <button
+            type="button"
+            className={`${s.navBtn} ${s.btnPrev}`}
+            onClick={handlePrev}
+            aria-label="Previous Slide"
+            title="Previous Slide"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            className={`${s.navBtn} ${s.btnNext}`}
+            onClick={handleNext}
+            aria-label="Next Slide"
+            title="Next Slide"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
 
         {/* Dots Navigation */}
@@ -321,8 +333,8 @@ export default function SocialWork() {
             <button
               key={idx}
               type="button"
-              className={`${s.dot} ${currentIndex === idx ? s.dotActive : ''}`}
-              onClick={() => handleGoto(idx)}
+              className={`${s.dot} ${activeLogical === idx ? s.dotActive : ''}`}
+              onClick={() => handleDot(idx)}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
