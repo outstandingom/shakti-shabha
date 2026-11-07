@@ -420,23 +420,7 @@ export default function EventsPage() {
                   All figures follow our anti-inflation verification policy.
                 </p>
               </div>
-              <Link
-                to="/impact"
-                style={{
-                  padding: '0.55rem 1.25rem',
-                  borderRadius: 9999,
-                  background: 'rgba(201,169,110,0.15)',
-                  border: '1px solid #C9A96E',
-                  color: '#F9FAFB',
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.35rem'
-                }}
-              >
+              <Link to="/impact" className={ep.dossierBtn}>
                 <span>Full Impact &amp; 3-Depth Dossier</span>
                 <GoogleIcon name="arrow_forward" size={14} />
               </Link>
